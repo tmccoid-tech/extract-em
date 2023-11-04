@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "Extract 'Em!",
+  "description": "Extracts attachments from messages under the selected folder or account.",
+  "version": "1.0",
+  "author": "tmccoid.tech",
+  "background": {
+    "page": "background.html"
+  },
+  "options_ui": {
+    "page": "/options/options.html",
+    "open_in_tab": false,
+    "browser_style": true
+  },
+  "permissions": [
+    "messagesRead",
+    "accountsRead",
+    "menus",
+    "menus.overrideContext",
+    "storage",
+    "downloads"
+  ]
+}

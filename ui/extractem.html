@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Extract 'Em!</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="extractem.css">
+</head>
+
+<body>
+    <div id="flex-container">
+        <section id="quickmenu-section" class="hidden">
+            <div id="quickmenu-extract-single-div">
+                <button type="button" class="quickmenu-button" action="extract-single">Extract 'Em!</button>
+                Extracts attachments from the selected folder, omitting sub-folders
+            </div>
+            <div id="quickmenu-extract-recursive-div" class="hidden">
+                <button type="button" class="quickmenu-button" action="extract-recursive">Extract 'Em!<br/>(+ subfolders)</button>
+                Extracts attachments from the selected folders and sub-folders (recursive)
+            </div>
+            <div>
+                <button type="button" class="quickmenu-button" action="standard-selection">Let Me Choose</button>
+                Allows you to choose specific folders, or even specific attachments for discovery and extraction
+            </div>
+            <label id="quickmenu-option-label" class="hidden"><input type="checkbox" id="always-show-quickmenu-checkbox"/> Always show this Quickmenu</label>
+        </section>
+        <section id="main-section" class="hidden">
+            <nav>
+                <button type="button" class="nav-button active" context="summary">Attachment Summary</button>
+                <button type="button" class="nav-button invisible" context="list" disabled="disabled">Attachment List</button>
+                <div id="spinner-logo-div" class="spinner-logo-div">
+                    <img id="logo-img" class="logo-img" src="paperclip.png" />
+                </div>
+            </nav>
+            <div class="tab-content-div" context="summary">
+                <div>
+                    <table id="stats-table">
+                        <colgroup>
+                            <col span="2" class="folders-column">
+                            <col span="3" class="messages-column">
+                            <col span="2" class="attachments-column">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="summary-header">Folders</th>
+                                <th colspan="3" class="summary-header">Messages</th>
+                                <th class="summary-header">Attachments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="2"><span id="selected-folder-count-span">0</span> / <span id="folder-count-span"></span> selected</td>
+                                <td colspan="3"><span id="summary-selected-message-count-span">0</span> selected</td>
+                                <td><span id="summary-selected-attachment-count-span">0</span> selected</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><br/></td>
+
+                                <td class="summary-header">Count</td>
+                                <td class="summary-header">Processed</td>
+                                <td class="summary-header">w/Attachments</td>
+
+                                <td class="summary-header">Count</td>
+                            </tr>
+                            <tr id="stats-summary-tr" class="hidden">
+                                <td colspan="2"><br/></td>
+
+                                <td id="summary-message-count-span">0</td>
+                                <td id="summary-processed-message-count-td">0</td>
+                                <td id="summary-attachment-message-count-td">0</td>
+                                
+                                <td id="summary-attachment-count-span">0</td>
+                            </tr>
+                        </tbody>
+                        <tbody id="stats-summary-tbody">
+
+                        </tbody>
+                        <tfoot>
+                            <th colspan="2"></th>
+                            <th colspan="3"></th>
+                            <th></th>
+                        </tfoot>
+                    </table>
+                </div>
+                <div id="summary-buttons-div">
+                    <div>
+                        <button type="button" id="discover-attachments-button" class="summary-button">Discover Attachments</button>
+                        <progress id="discover-attachments-progress" max="1" value="0"></progress>
+                    </div>                    
+                    <button type="button" id="extract-all-button" class="summary-button" disabled="disabled">Extract 'Em!</button>
+                    <button type="button" id="reset-summary-button" class="summary-button">Reset</button>
+                </div>
+            </div>
+            <div class="tab-content-div hidden" context="list">
+                <div id="list-header-div">
+                    <div><span id="selected-attachment-count-span">0</span> selected</div>
+                    <button type="button" id="extract-selected-button">Extract 'Em!</button>
+                </div>
+                <div id="attachment-list-div"></div>
+            </div>
+        </div>
+    </section>
+
+    <div id="zoom-overlay" class="modal-overlay hidden">
+        <img id="zoom-image" title="Click on image to close." src="" />
+    </div>
+
+    <div id="zip-overlay" class="modal-overlay hidden">
+        <div id="zip-panel">
+            <div id="zip-panel-header">
+                <div id="zip-attachment-context-div">
+                    <div id="zip-account-name-label"></div>
+                    <div id="zip-attachment-context-span" class="hidden"><span id="zip-folder-name-span"></span><span id="zip-subfolders-span" class="hidden"> (+ subfolders)</span></div>
+                </div>
+                <div class="spinner-logo-div">
+                    <img id="zip-logo-img" class="logo-img" src="paperclip.png" />
+                </div>
+            </div>
+            <div id="immediate-discovery-div" class="hidden">
+                <div class="zip-operation-label">Discovering</div>
+                <div><span id="immediate-discovery-attachment-count-span">0</span> attachment(s) in <span id="immediate-discovery-attachment-message-count-span">0</span> of <span id="immediate-discovery-message-count-span">0</span> message(s)</div>
+                <progress id="immediate-discovery-progress"></progress>
+            </div>
+            <div id="packaging-div">
+                <div class="zip-operation-label">Packaging</div>
+                <div><span id="packaging-current-span">0</span> of <span id="packaging-total-span">0</span> (<span id="packaging-size-span">0 bytes</span>)</div>
+                <div><span id="packaging-skipped-span">0</span> duplicate(s) skipped</div>
+                <progress id="packaging-progress"></progress>
+            </div>
+            <div id="save-result-div">
+                <div class="zip-operation-label">Result</div>
+                <span id="save-result-label"></span>
+                <div>
+                    <button id="close-zip-panel-button" class="close-button" disabled="disabled">Close</button>
+                    <button id="exit-extension-button" class="close-button" disabled="disabled">Close & Exit</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+    
+    <template id="folder-stats-template">
+        <tr class="message-stats-tr">
+            <td><input type="checkbox" class="folder-checkbox" checked="checked" /></td>
+            <td class="folder-td"><span class="spacer"></span><button type="button" class="folder-selector-button"></button></td>
+
+            <td class="message-count-td">0</td>
+            <td class="processed-message-count-td">0</td>
+            <td class="attachment-message-count-td">0</td>
+
+            <td class="attachment-count-td">0</td>
+        </tr>
+    </template>
+
+    <template id="attachment-grouping-header-template">
+        <div class="attachment-grouping-header"><label><input type="checkbox" class="attachment-grouping-checkbox" checked="checked" /> <span class="grouping-key-span"></span></label></div>
+    </template> 
+    
+    <template id="attachment-panel-template">
+        <div class="attachment-panel">
+            <input type="checkbox" class="attachment-checkbox" message-id="" part-name="" file-size="" timestamp="" extension="" checked="checked" />
+            <div class="extension-label"></div>
+            <div class="file-name-label"></div>
+            <div class="author-label"></div>
+            <div class="subject-label"></div>
+            <div class="file-size-label"></div>
+            <div class="message-date-label"></div>
+            <div class="preview-wrapper">
+                <img class="preview-image hidden" alt="error" />
+            </div>
+        </div>
+    </template>
+
+    <script type="module" src="/module/optionsmanager.js"></script>
+    <script type="module" src="/module/jszip.min.js"></script>
+    <script type="module" src="/module/attachmentmanager.js"></script>
+    <script type="module" src="extractem.js"></script>
+</body>
+</html>

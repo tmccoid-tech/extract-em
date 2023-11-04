@@ -1,0 +1,96 @@
+Attachment Properties
+	PartName (unique ID)
+	Name
+	ContentType
+	Size
+	Extension*
+
+Message Properties
+	Author
+	Subject
+	Date
+
+Grouping
+	Author
+	ContentType
+	Extension
+
+Filtering/Selection
+	Extension
+	ContentType
+	Author
+
+XXX Sorting
+
+Search
+
+XXX Size Display
+	bytes
+	KB
+	MB
+	GB
+
+Layout
+	Select	Name	Ext.	Size
+	Author			Date
+	Subject
+
+XXX Preview
+	None
+	Small
+	Medium
+	Large
+
+XXX Duplicates
+
+XXX Stats
+
+XXX Header Tabs
+
+Elapsed / Remaining
+
+XXX Options
+	Extract Immediate
+		Include Subfolders
+	Grouping
+		Folder
+		Extension
+		Author
+
+XXX Replace getBackgroundPage
+
+Single Folder
+	Disable Selection
+	XXX	Hide selected attachment count
+
+XXX Reset
+
+XXX Issues with "Extract Now" from Quickmenu (single folder when there are )
+
+Attachment List: Disable Extract button if nothing selected
+
+LQ
+
+XXX where
+
+XXX join
+XXX ljoin
+XXX rjoin
+XXX cross
+
+union
+
+XXX asc
+XXX desc
+
+group
+
+XXX project
+
+agg
+
+toMap
+toSet
+exec or ()
+
+

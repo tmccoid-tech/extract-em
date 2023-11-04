@@ -1,0 +1,19 @@
+Extracts attachments from a folder or within an entire account, or allows you to select specific attachments to extract.  Extracted attachments are saved to a single .zip file.
+
+1. Select an account, a folder, or a message to provide the attachment source.  (Selecting a message sets the containing folder as the source.)
+2. If an entire account is selected, a screen is displayed allowing for the selection of a subset of folders for extraction (the "Let Me Choose" option).
+   If a folder or message is selected, the Quick Menu is displayed with the following options:
+     a. Extract 'Em!: discovers all attachments in the selected folder and packages them in the .zip file immediately (subfolders omitted)
+     b. Extract 'Em!: (+ subfolders): includes subfolders in the immediate extraction
+     c. Let Me Choose: allows selection of specific folders/subfolders for discovery, and specific attachments for extraction
+3. Extract Immediate: when this option is selected, a screen is displayed detailing the progress of discovery and packaging; once complete, a prompt is provided for .zip file destination and filename assignment.
+4. Let Me Choose: when this option is selected, a screen presenting all folders and subfolders in the selected source is displayed.
+    a. Select the specific folders to be included in attachment discovery, using the checkbox for individual folder selection and the folder label for toggling selection of associated subfolders.
+    b. Click the Discover Attachments button to find all attachments in the selected folders.
+    c. If desired, select specific folders to further reduce the set of attachments to be included in packaging.
+    d. To extract:
+        i. Click the Extract Em'! button to package and extract all attachments in the selected folders.
+        ii. Alternatively, specific attachments can be included/excluded by selecting the Attachment List tab and using the provided checkboxes for individual attachment selection.
+    e. When the Save prompt is presented, a destination filesystem folder and filename may be provided to replace the defaults.
+
+For comprehensive instructions, please visit https://tmccoid.tech/extractem/manual

@@ -93,6 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const packagingProgress = document.getElementById("packaging-progress");
 
     const saveResultDiv = document.getElementById("save-result-div");
+    const saveResultBorderDiv = document.getElementById("save-result-border-div");
     const saveResultLabel = document.getElementById("save-result-label");
     const closeZipPanelButton = document.getElementById("close-zip-panel-button");
     const exitExtensionButton = document.getElementById("exit-extension-button");
@@ -247,6 +248,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.querySelectorAll(".close-button").forEach((button) => { button.disabled = false; });            
 
             saveResultDiv.classList.add("materialize");
+
+            const saveResult = (info.status == "success") ? "success" : "error";
+
+            saveResultBorderDiv.classList.add(saveResult);
         }
     };
 
@@ -929,6 +934,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         packagingProgress.removeAttribute("value");
         packagingProgress.removeAttribute("max");
 
+        saveResultBorderDiv.classList.remove("success", "error");
         saveResultDiv.classList.remove("materialize");
         saveResultLabel.innerText = "";
 

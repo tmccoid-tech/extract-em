@@ -30,8 +30,6 @@ body {
     display: grid;
     align-items: center;
     justify-items: center;
-    height: 44px;
-    width: 44px;
     overflow: hidden;
 }
 
@@ -39,6 +37,12 @@ body {
     background-color: white;
     border: solid 2px #d3d3d3b8;
     height: 42px;
+    width: 44px;
+}
+
+#zip-spinner-logo-div {
+    height: 52px;
+    width: 52px;
 }
 
 @keyframes logo-spin {
@@ -49,9 +53,14 @@ body {
 }
 
 
-.logo-img {
-    height: 90%;
-    width: 90%;
+#logo-img {
+    height: 100%;
+    width: 100%;
+}
+
+#zip-logo-img {
+    height: 44px;
+    width: 44px;
 }
 
 .logo-img.initializing {
@@ -450,7 +459,7 @@ folder-selector-button:disabled:active {
 #zip-panel-header {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 44px;
+    grid-template-columns: 1fr 52px;
 }
 
 #zip-attachment-context-div {
@@ -474,7 +483,39 @@ folder-selector-button:disabled:active {
 }
 
 #save-result-div {
+    position: relative;
     margin-bottom: 24px;
+    padding: 8px;
+}
+
+#save-result-border-div {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    background-color: transparent;
+    border-radius: 10px;
+    clip-path: inset(0 0 0 100%);    
+}
+
+@keyframes save-result {
+    from { clip-path: inset(0 0 0 100%); }
+    to { clip-path: inset(0); }
+}
+
+#save-result-border-div.success {
+    border: solid 6px green;
+    animation: save-result 1.5s forwards;
+}
+
+#save-result-border-div.error {
+    border: solid 6px red;
+    animation: save-result 1.5s forwards;
+}
+
+.save-result-content-div {
+    position: relative;
 }
 
 .zip-operation-label {

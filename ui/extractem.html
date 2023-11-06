@@ -29,7 +29,7 @@
                 <button type="button" class="nav-button active" context="summary">Attachment Summary</button>
                 <button type="button" class="nav-button invisible" context="list" disabled="disabled">Attachment List</button>
                 <div id="spinner-logo-div" class="spinner-logo-div">
-                    <img id="logo-img" class="logo-img" src="paperclip.png" />
+                    <img id="logo-img" class="logo-img" src="paperclip_logo.png" />
                 </div>
             </nav>
             <div class="tab-content-div" context="summary">
@@ -112,8 +112,8 @@
                     <div id="zip-account-name-label"></div>
                     <div id="zip-attachment-context-span" class="hidden"><span id="zip-folder-name-span"></span><span id="zip-subfolders-span" class="hidden"> (+ subfolders)</span></div>
                 </div>
-                <div class="spinner-logo-div">
-                    <img id="zip-logo-img" class="logo-img" src="paperclip.png" />
+                <div id="zip-spinner-logo-div" class="spinner-logo-div">
+                    <img id="zip-logo-img" class="logo-img" src="paperclip_logo.png" />
                 </div>
             </div>
             <div id="immediate-discovery-div" class="hidden">
@@ -128,9 +128,12 @@
                 <progress id="packaging-progress"></progress>
             </div>
             <div id="save-result-div">
-                <div class="zip-operation-label">Result</div>
-                <span id="save-result-label"></span>
-                <div>
+                <div id="save-result-border-div"></div>
+                <div class="save-result-content-div">
+                    <div class="zip-operation-label">Result</div>
+                    <span id="save-result-label"></span>
+                </div>
+                <div class="save-result-content-div">
                     <button id="close-zip-panel-button" class="close-button" disabled="disabled">Close</button>
                     <button id="exit-extension-button" class="close-button" disabled="disabled">Close & Exit</button>
                 </div>

@@ -4,6 +4,17 @@
   "description": "Extracts attachments from messages under the selected folder or account.",
   "version": "1.0",
   "author": "tmccoid.tech",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "extractem@tmccoid.tech",
+      "strict_min_version": "102.0"
+    }
+  },
+  "icons": {
+    "64": "icons/extractem-64px.png",
+    "32": "icons/extractem-32px.png",
+    "16": "icons/extractem-16px.png"
+},
   "background": {
     "page": "background.html"
   },

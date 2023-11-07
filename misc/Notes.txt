@@ -67,7 +67,11 @@ XXX Reset
 
 XXX Issues with "Extract Now" from Quickmenu (single folder when there are )
 
-Attachment List: Disable Extract button if nothing selected
+XXX Attachment List: Disable Extract button if nothing selected
+
+Issue with Account label in zip panel not displaying on second package attempt
+
+
 
 LQ
 

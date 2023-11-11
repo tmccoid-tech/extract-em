@@ -183,8 +183,10 @@ export class AttachmentManager {
         }
     }
 
-    async #processMessage(message, folderStats) {
+    async #processMessage(message, folderStats, isNested = false) {
         const messageAttachmentList = await messenger.messages.listAttachments(message.id);
+
+        const hasAttachments = (messageAttachmentList.length > 0);
 
         if (messageAttachmentList.length > 0) {
             if (!this.messageList.has(message.id)) {
@@ -195,51 +197,67 @@ export class AttachmentManager {
                 });
             }
 
+            console.log(`(${messageAttachmentList.length}) ${message.subject}`);
+
             for (const attachment of messageAttachmentList) {
-                let extension = "--";
+                let hasNestedAttachments = false;
 
-                const segments = attachment.name.split(".");
+                if(attachment.message) {
+                    const nestedMessage = await messenger.messages.get(attachment.message.id);
 
-                if (segments.length > 1) {
-                    if (segments[segments.length - 1].length < 6) {
-                        extension = segments.pop().toLowerCase();
+                    hasNestedAttachments = await this.#processMessage(nestedMessage, folderStats, true);
+                }
+
+                if(!hasNestedAttachments) {
+                    let extension = "--";
+
+                    const segments = attachment.name.split(".");
+
+                    if (segments.length > 1) {
+                        if (segments[segments.length - 1].length < 6) {
+                            extension = segments.pop().toLowerCase();
+                        }
                     }
+
+                    const attachmentInfo = {
+                        messageId: message.id,
+                        name: this.#normalizeFileName(attachment.name),
+                        date: message.date,
+                        partName: attachment.partName,
+                        contentType: attachment.contentType,
+                        size: attachment.size,
+                        extension: extension,
+                        isPreviewable: this.#previewSet.has(extension)
+                    };
+
+                    if(attachmentInfo.size < 1) {
+                        const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
+
+                        attachmentInfo.size = attachmentFile.size;
+                    }
+
+                    this.attachmentList.push(attachmentInfo);
+
+                    this.#attachmentCount++;
+                    folderStats.attachmentCount++;
                 }
-
-                const attachmentInfo = {
-                    messageId: message.id,
-                    name: this.#normalizeFileName(attachment.name),
-                    date: message.date,
-                    partName: attachment.partName,
-                    contentType: attachment.contentType,
-                    size: attachment.size,
-                    extension: extension,
-                    isPreviewable: this.#previewSet.has(extension)
-                };
-
-                if(attachmentInfo.size < 1) {
-                    const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
-
-                    attachmentInfo.size = attachmentFile.size;
-                }
-
-                this.attachmentList.push(attachmentInfo);
-
-                this.#attachmentCount++;
-                folderStats.attachmentCount++;
             }
 
-            this.#attachmentMessageCount++;
-            folderStats.attachmentMessageCount++;
+            if(!isNested) {
+                this.#attachmentMessageCount++;
+                folderStats.attachmentMessageCount++;
 
-            this.#reportAttachmentStats({
-                summaryAttachmentMessageCount: this.#attachmentMessageCount,
-                summaryAttachmentCount: this.#attachmentCount,
-                folderPath: folderStats.folderPath,
-                attachmentMessageCount: folderStats.attachmentMessageCount,
-                attachmentCount: folderStats.attachmentCount
-            });
+                this.#reportAttachmentStats({
+                    summaryAttachmentMessageCount: this.#attachmentMessageCount,
+                    summaryAttachmentCount: this.#attachmentCount,
+                    folderPath: folderStats.folderPath,
+                    attachmentMessageCount: folderStats.attachmentMessageCount,
+                    attachmentCount: folderStats.attachmentCount
+                });
+            }
         }
+
+        return hasAttachments;
     }
 
     reset() {

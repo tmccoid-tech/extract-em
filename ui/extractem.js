@@ -914,7 +914,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         zipOverlay.classList.add("hidden");
         flexContainer.classList.remove("modal");
 
-        zipAccountNameLabel.innerHTML = "";
         zipAttachmentContextSpan.classList.add("hidden");
         zipFolderNameSpan.innerText = "";
         zipSubfoldersSpan.classList.add("hidden");

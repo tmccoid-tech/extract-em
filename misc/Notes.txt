@@ -69,7 +69,7 @@ XXX Issues with "Extract Now" from Quickmenu (single folder when there are )
 
 XXX Attachment List: Disable Extract button if nothing selected
 
-Issue with Account label in zip panel not displaying on second package attempt
+XXX Issue with Account label in zip panel not displaying on second package attempt
 
 
 

@@ -12,8 +12,8 @@ Extracts attachments from a folder or within an entire account, or allows you to
     b. Click the Discover Attachments button to find all attachments in the selected folders.
     c. If desired, select specific folders to further reduce the set of attachments to be included in packaging.
     d. To extract:
-        i. Click the Extract Em'! button to package and extract all attachments in the selected folders.
+        i. Click the Extract 'Em! button to package and extract all attachments in the selected folders.
         ii. Alternatively, specific attachments can be included/excluded by selecting the Attachment List tab and using the provided checkboxes for individual attachment selection.
     e. When the Save prompt is presented, a destination filesystem folder and filename may be provided to replace the defaults.
 
-For comprehensive instructions, please visit https://tmccoid.tech/extractem/manual
+For comprehensive instructions, please visit https://tmccoid.tech/extractem

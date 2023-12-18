@@ -300,7 +300,7 @@ export class AttachmentManager {
                 case "Folder":
                     subKey = this.messageList.get(attachment.messageId).folderPath;
                     break;
-                case "Extension":
+                case "Author":
                     subKey = this.messageList.get(attachment.messageId).author;
                     break;
             }

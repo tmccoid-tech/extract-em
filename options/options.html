@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Extract 'Em! Options</title>
+    <title>__MSG_extensionName__ __MSG_options__</title>
     <style>
         label {
             font-weight: bold;
@@ -17,66 +17,67 @@
 <body>
     <dl>
         <dt>
-            <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> Use interactive UI</label>
+            <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> __MSG_useInteractiveUi__</label>
         </dt>
         <dd>
-            Fully interactive UI; allows for selection of specific attachments to extract
+            __MSG_useInteractiveUiDescription__
         </dd>
 
         <dt>
-            <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> Display QuickMenu</label>
+            <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> __MSG_displayQuickMenu__</label>
         </dt>
         <dd>
-            Displays a shortcut menu when Extract 'Em! is opened
+            __MSG_displayQuickMenuDescription__
         </dd>
         
         <dt>
-            <label><input type="radio" name="user-interaction-option" id="extract-immediate-checkbox" value="immediate"/> Extract immediate</label>
+            <label><input type="radio" name="user-interaction-option" id="extract-immediate-checkbox" value="immediate"/> __MSG_extractImmediate__</label>
         </dt>
         <dd>
-            Saves all attachments from messages in the selected folder with limited user intervention; excludes sub-folders
+            __MSG_extractImmediateDescription__
             <dl>
-                <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" disabled="disabled"/> Include sub-folders</label></dt>
-                <dd>Includes attachments in sub-folders during immediate extraction</dd>
+                <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" disabled="disabled"/> __MSG_includeSubFolders__</label></dt>
+                <dd>__MSG_includeSubFoldersDescription__</dd>
 
-                <dt><label><input type="checkbox" id="use-silent-mode-checkbox" disabled="disabled"/> Use "silent" mode</label></dt>
-                <dd>Omits UI presentation, with the exception of the save prompt</dd>
+                <dt><label><input type="checkbox" id="use-silent-mode-checkbox" disabled="disabled"/> __MSG_useSilentMode__</label></dt>
+                <dd>__MSG_useSilentModeDescription__</dd>
             </dl>
         </dd>
         <dt><hr/></dt>
         <dd></dd>
         <dt>
-            <label><input type="checkbox" id="preserve-folder-structure-checkbox" /> Preserve folder structure</label>
+            <label><input type="checkbox" id="preserve-folder-structure-checkbox" /> __MSG_preserveFolderStructure__</label>
         </dt>
         <dd>
-            Stores the attachments in the .zip archive in the same folders they reside under in Thunderbird
+            __MSG_preserveFolderStructureDescription__
         </dd>
 
         <dt>
-            <label>Default grouping: <select id="default-grouping-select">
-                <option value="None" selected>None</option>
-                <option value="Author">By author</option>
-                <option value="Folder">By folder</option>
-                <option value="Extension">By file extension</option>
+            <label>__MSG_defaultGrouping__: <select id="default-grouping-select">
+                <option value="None" selected>__MSG_none__</option>
+                <option value="Author">__MSG_defaultGroupingByAuthor__</option>
+                <option value="Folder">__MSG_defaultGroupingByFolder__</option>
+                <option value="Extension">__MSG_defaultGroupingByExtension__</option>
             </select></label>
         </dt>
         <dd>
-            Groups items in the Attachment List according to the specified attribute
+            __MSG_defaultGroupingDescription__
         </dd>
 
         <dt>
-            <label>Image preview: <select id="image-preview-select">
-                <option value="none">None</option>
-                <option value="sm" selected>Small</option>
-                <option value="md">Medium</option>
-                <option value="lg">Large</option>
+            <label>__MSG_imagePreview__: <select id="image-preview-select">
+                <option value="none">__MSG_none__</option>
+                <option value="sm" selected>__MSG_imagePreviewSmall__</option>
+                <option value="md">__MSG_imagePreviewMedium__</option>
+                <option value="lg">__MSG_imagePreviewLarge__</option>
             </select></label>
         </dt>
         <dd>
-            Specifies the size of the Preview Image for items in the Attachment List
+            __MSG_imagePreviewDescription__
         </dd>
     </dl>
-<script type="module" src="/module/optionsmanager.js"></script>
-<script type="module" src="options.js"></script>
+    <script src="/module/i18n.js"></script>
+    <script type="module" src="/module/optionsmanager.js"></script>
+    <script type="module" src="options.js"></script>
 </body>
 </html>

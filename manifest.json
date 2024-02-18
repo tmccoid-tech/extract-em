@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Extract 'Em!",
-  "description": "Extracts attachments from messages under the selected folder or account.",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
   "version": "1.0.2",
   "author": "tmccoid.tech",
   "browser_specific_settings": {
@@ -14,7 +14,7 @@
     "64": "icons/extractem-64px.png",
     "32": "icons/extractem-32px.png",
     "16": "icons/extractem-16px.png"
-},
+  },
   "background": {
     "page": "background.html"
   },
@@ -30,5 +30,6 @@
     "menus.overrideContext",
     "storage",
     "downloads"
-  ]
+  ],
+  "default_locale": "en"
 }

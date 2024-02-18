@@ -1,8 +1,10 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 
+    const documentTitle = messenger.i18n.getMessage("extensionName");
+
     let menuId = messenger.menus.create({
-        title: "Extract 'Em!",
+        title: documentTitle,
         contexts: [
             "folder_pane",
             "message_list"
@@ -12,6 +14,8 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
     let params = null;
 
     let popupId = null;
+
+    document.addEventListener("DOMContentLoaded", () => { document.title =documentTitle; });
 
     async function extractSilently(params) {
         const attachmentManager = new AttachmentManager({

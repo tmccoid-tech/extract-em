@@ -1,6 +1,8 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    i18n.updateDocument();
+
     const standardUiModeCheckbox = document.getElementById("standard-ui-mode-checkbox");
     const displayQuickMenuCheckbox = document.getElementById("display-quickmenu-checkbox");
     const extractImmediateCheckbox = document.getElementById("extract-immediate-checkbox");

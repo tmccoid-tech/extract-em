@@ -1,0 +1,163 @@
+{
+    "extensionName": {
+        "message": "Extract 'Em!"
+    },
+    
+    "extensionDescription": {
+        "message": "Extracts attachments from messages under the selected folder or account."
+    },
+
+    "extractSingleDescription": {
+        "message": "Extracts attachments from the selected folder, omitting sub-folders",
+        "description": "Action description for extract-single QuickMenu button"
+    },
+
+    "subfolders": {
+        "message": "subfolders"
+    },
+
+    "extractRecursiveDescription": {
+        "message": "Extracts attachments from the selected folders and sub-folders (recursive)",
+        "description": "Action description for extract-recursive QuickMenu button"
+    },
+
+    "letMeChoose": {
+        "message": "Let Me Choose",
+        "description": "Label for standard-selection QuickMenu button"
+    },
+
+    "standardSelectionDescription": {
+        "message": "Allows you to choose specific folders, or even specific attachments for discovery and extraction",
+        "description": "Action description for single-selection QuickMenu button"
+    },
+
+    "alwaysShowQuickMenu": {
+        "message": "Always show this QuickMenu",
+        "description": "Label for QuickMenu persistence checkbox"
+    },
+
+    "attachmentSummary": { "message": "Attachment Summary" },
+    "attachmentList": { "message": "Attachment List" },
+    "folders": { "message": "Folders" },
+    "messages": { "message": "Messages" },
+    "attachments": { "message": "Attachments" },
+    "selected": { "message": "selected" },
+    "count": { "message": "Count" },
+    "processed": { "message": "Processed" },
+    "withAttachments": { "message": "w/Attachments" },
+
+    "discoverAttachments": {
+        "message": "Discover Attachments",
+        "description": "Label for discover-attachments-button"
+    },
+
+    "reset": { "message": "Reset" },
+
+    "discovering": { "message": "Discovering" },
+    "packaging": { "message": "Packaging" },
+    "duplicatesSkipped": { "message": "duplicate(s) skipped" },
+    "result": { "message": "Result" },
+    "close":{ "message": "Close" },
+    "closeAndExit": { "message": "Close & Exit" },
+
+    
+    "options": { "message": "Options" },
+
+    "none": { "message": "None" },
+
+    "useInteractiveUi": {
+        "message": "Use interactive UI",
+        "description": ""
+    },
+    "useInteractiveUiDescription": {
+        "message": "Fully interactive UI; allows for selection of specific attachments to extract",
+        "description": ""
+    },
+
+    "displayQuickMenu": {
+        "message": "Display QuickMenu",
+        "description": ""
+    },
+    "displayQuickMenuDescription": {
+        "message": "Displays a shortcut menu when Extract 'Em! is opened",
+        "description": ""
+    },
+
+    "extractImmediate": {
+        "message": "Extract immediate",
+        "description": ""
+    },
+    "extractImmediateDescription": {
+        "message": "Saves all attachments from messages in the selected folder with limited user intervention; excludes sub-folders",
+        "description": ""
+    },
+
+    "includeSubFolders": {
+        "message": "Include sub-folders",
+        "description": ""
+    },
+    "includeSubFoldersDescription": {
+        "message": "Includes attachments in sub-folders during immediate extraction",
+        "description": ""
+    },
+
+    "useSilentMode": {
+        "message": "Use \"silent\" mode",
+        "description": ""
+    },
+    "useSilentModeDescription": {
+        "message": "Omits UI presentation, with the exception of the save prompt",
+        "description": ""
+    },
+
+    "preserveFolderStructure": {
+        "message": "Preserve folder structure",
+        "description": ""
+    },
+    "preserveFolderStructureDescription": {
+        "message": "Stores the attachments in the .zip archive in the same folders they reside under in Thunderbird",
+        "description": ""
+    },
+
+    "defaultGrouping": {
+        "message": "Default grouping",
+        "description": ""
+    },
+    "defaultGroupingByAuthor": {
+        "message": "By author",
+        "description": ""
+    },
+    "defaultGroupingByFolder": {
+        "message": "By folder",
+        "description": ""
+    },
+    "defaultGroupingByExtension": {
+        "message": "By file extension",
+        "description": ""
+    },
+    "defaultGroupingDescription": {
+        "message": "Groups items in the Attachment List according to the specified attribute",
+        "description": ""
+    },
+
+    "imagePreview": {
+        "message": "Image preview",
+        "description": ""
+    },
+    "imagePreviewSmall": {
+        "message": "Small",
+        "description": ""
+    },
+    "imagePreviewMedium": {
+        "message": "Medium",
+        "description": ""
+    },
+    "imagePreviewLarge": {
+        "message": "Large",
+        "description": ""
+    },
+    "imagePreviewDescription": {
+        "message": "Specifies the size of the Preview Image for items in the Attachment List",
+        "description": ""
+    }
+}

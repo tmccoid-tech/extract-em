@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Extract 'Em!</title>
+    <title>__MSG_extensionName__</title>
     <link rel="icon" type="image/x-icon" href="/icons/extractem-32px.ico">
     <link rel="stylesheet" type="text/css" media="screen" href="extractem.css">
 </head>
@@ -12,23 +12,23 @@
     <div id="flex-container">
         <section id="quickmenu-section" class="hidden">
             <div id="quickmenu-extract-single-div">
-                <button type="button" class="quickmenu-button" action="extract-single">Extract 'Em!</button>
-                Extracts attachments from the selected folder, omitting sub-folders
+                <button type="button" class="quickmenu-button" action="extract-single">__MSG_extensionName__</button>
+                __MSG_extractSingleDescription__
             </div>
             <div id="quickmenu-extract-recursive-div" class="hidden">
-                <button type="button" class="quickmenu-button" action="extract-recursive">Extract 'Em!<br/>(+ subfolders)</button>
-                Extracts attachments from the selected folders and sub-folders (recursive)
+                <button type="button" class="quickmenu-button" action="extract-recursive">__MSG_extensionName__<br/>(+ __MSG_subfolders__)</button>
+                __MSG_extractRecursiveDescription__
             </div>
             <div>
-                <button type="button" class="quickmenu-button" action="standard-selection">Let Me Choose</button>
-                Allows you to choose specific folders, or even specific attachments for discovery and extraction
+                <button type="button" class="quickmenu-button" action="standard-selection">__MSG_letMeChoose__</button>
+                __MSG_standardSelectionDescription__
             </div>
-            <label id="quickmenu-option-label" class="hidden"><input type="checkbox" id="always-show-quickmenu-checkbox"/> Always show this Quickmenu</label>
+            <label id="quickmenu-option-label" class="hidden"><input type="checkbox" id="always-show-quickmenu-checkbox"/> __MSG_alwaysShowQuickMenu__</label>
         </section>
         <section id="main-section" class="hidden">
             <nav>
-                <button type="button" class="nav-button active" context="summary">Attachment Summary</button>
-                <button type="button" class="nav-button invisible" context="list" disabled="disabled">Attachment List</button>
+                <button type="button" class="nav-button active" context="summary">__MSG_attachmentSummary__</button>
+                <button type="button" class="nav-button invisible" context="list" disabled="disabled">__MSG_attachmentList__</button>
                 <div id="spinner-logo-div" class="spinner-logo-div">
                     <img id="logo-img" class="logo-img" src="paperclip_logo.png" />
                 </div>
@@ -43,25 +43,25 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <th colspan="2" class="summary-header">Folders</th>
-                                <th colspan="3" class="summary-header">Messages</th>
-                                <th class="summary-header">Attachments</th>
+                                <th colspan="2" class="summary-header">__MSG_folders__</th>
+                                <th colspan="3" class="summary-header">__MSG_messages__</th>
+                                <th class="summary-header">__MSG_attachments__</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="2"><span id="selected-folder-count-span">0</span> / <span id="folder-count-span"></span> selected</td>
-                                <td colspan="3"><span id="summary-selected-message-count-span">0</span> selected</td>
-                                <td><span id="summary-selected-attachment-count-span">0</span> selected</td>
+                                <td colspan="2"><span id="selected-folder-count-span">0</span> / <span id="folder-count-span"></span> __MSG_selected__</td>
+                                <td colspan="3"><span id="summary-selected-message-count-span">0</span> __MSG_selected__</td>
+                                <td><span id="summary-selected-attachment-count-span">0</span> __MSG_selected__</td>
                             </tr>
                             <tr>
                                 <td colspan="2"><br/></td>
 
-                                <td class="summary-header">Count</td>
-                                <td class="summary-header">Processed</td>
-                                <td class="summary-header">w/Attachments</td>
+                                <td class="summary-header">__MSG_count__</td>
+                                <td class="summary-header">__MSG_processed__</td>
+                                <td class="summary-header">__MSG_withAttachments__</td>
 
-                                <td class="summary-header">Count</td>
+                                <td class="summary-header">__MSG_count__</td>
                             </tr>
                             <tr id="stats-summary-tr" class="hidden">
                                 <td colspan="2"><br/></td>
@@ -85,17 +85,17 @@
                 </div>
                 <div id="summary-buttons-div">
                     <div>
-                        <button type="button" id="discover-attachments-button" class="summary-button">Discover Attachments</button>
+                        <button type="button" id="discover-attachments-button" class="summary-button">__MSG_discoverAttachments__</button>
                         <progress id="discover-attachments-progress" max="1" value="0"></progress>
                     </div>                    
-                    <button type="button" id="extract-all-button" class="summary-button" disabled="disabled">Extract 'Em!</button>
-                    <button type="button" id="reset-summary-button" class="summary-button">Reset</button>
+                    <button type="button" id="extract-all-button" class="summary-button" disabled="disabled">__MSG_extensionName__</button>
+                    <button type="button" id="reset-summary-button" class="summary-button">__MSG_reset__</button>
                 </div>
             </div>
             <div class="tab-content-div hidden" context="list">
                 <div id="list-header-div">
-                    <div><span id="selected-attachment-count-span">0</span> selected</div>
-                    <button type="button" id="extract-selected-button">Extract 'Em!</button>
+                    <div><span id="selected-attachment-count-span">0</span> __MSG_selected__</div>
+                    <button type="button" id="extract-selected-button">__MSG_extensionName__</button>
                 </div>
                 <div id="attachment-list-div"></div>
             </div>
@@ -111,32 +111,32 @@
             <div id="zip-panel-header">
                 <div id="zip-attachment-context-div">
                     <div id="zip-account-name-label"></div>
-                    <div id="zip-attachment-context-span" class="hidden"><span id="zip-folder-name-span"></span><span id="zip-subfolders-span" class="hidden"> (+ subfolders)</span></div>
+                    <div id="zip-attachment-context-span" class="hidden"><span id="zip-folder-name-span"></span><span id="zip-subfolders-span" class="hidden"> (+ __MSG_subfolders__)</span></div>
                 </div>
                 <div id="zip-spinner-logo-div" class="spinner-logo-div">
                     <img id="zip-logo-img" class="logo-img" src="paperclip_logo.png" />
                 </div>
             </div>
             <div id="immediate-discovery-div" class="hidden">
-                <div class="zip-operation-label">Discovering</div>
+                <div class="zip-operation-label">__MSG_discovering__</div>
                 <div><span id="immediate-discovery-attachment-count-span">0</span> attachment(s) in <span id="immediate-discovery-attachment-message-count-span">0</span> of <span id="immediate-discovery-message-count-span">0</span> message(s)</div>
                 <progress id="immediate-discovery-progress"></progress>
             </div>
             <div id="packaging-div">
-                <div class="zip-operation-label">Packaging</div>
+                <div class="zip-operation-label">__MSG_packaging__</div>
                 <div><span id="packaging-current-span">0</span> of <span id="packaging-total-span">0</span> (<span id="packaging-size-span">0 bytes</span>)</div>
-                <div><span id="packaging-skipped-span">0</span> duplicate(s) skipped</div>
+                <div><span id="packaging-skipped-span">0</span> __MSG_duplicatesSkipped__</div>
                 <progress id="packaging-progress"></progress>
             </div>
             <div id="save-result-div">
                 <div id="save-result-border-div"></div>
                 <div class="save-result-content-div">
-                    <div class="zip-operation-label">Result</div>
+                    <div class="zip-operation-label">__MSG_result__</div>
                     <span id="save-result-label"></span>
                 </div>
                 <div class="save-result-content-div">
-                    <button id="close-zip-panel-button" class="close-button" disabled="disabled">Close</button>
-                    <button id="exit-extension-button" class="close-button" disabled="disabled">Close & Exit</button>
+                    <button id="close-zip-panel-button" class="close-button" disabled="disabled">__MSG_close__</button>
+                    <button id="exit-extension-button" class="close-button" disabled="disabled">__MSG_closeAndExit__</button>
                 </div>
             </div>
         </div>
@@ -174,6 +174,7 @@
         </div>
     </template>
 
+    <script src="/module/i18n.js"></script>
     <script type="module" src="/module/optionsmanager.js"></script>
     <script type="module" src="/module/jszip.js"></script>
     <script type="module" src="/module/attachmentmanager.js"></script>

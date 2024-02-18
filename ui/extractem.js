@@ -26,6 +26,8 @@ NodeList.prototype.toSet = _toSet;
 
 
 document.addEventListener("DOMContentLoaded", async () => {
+    i18n.updateDocument();
+
     const folderStatsTemplate = document.getElementById("folder-stats-template");
     const attachmentGroupingHeaderTemplate = document.getElementById("attachment-grouping-header-template");
     const attachmentPanelTemplate = document.getElementById("attachment-panel-template");

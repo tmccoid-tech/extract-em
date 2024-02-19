@@ -103,7 +103,7 @@
     </section>
 
     <div id="zoom-overlay" class="modal-overlay hidden">
-        <img id="zoom-image" title="Click on image to close." src="" />
+        <img id="zoom-image" title="__MSG_closeZoomMessage__" src="" />
     </div>
 
     <div id="zip-overlay" class="modal-overlay hidden">
@@ -119,12 +119,13 @@
             </div>
             <div id="immediate-discovery-div" class="hidden">
                 <div class="zip-operation-label">__MSG_discovering__</div>
-                <div><span id="immediate-discovery-attachment-count-span">0</span> attachment(s) in <span id="immediate-discovery-attachment-message-count-span">0</span> of <span id="immediate-discovery-message-count-span">0</span> message(s)</div>
+                <div id="discovery-progress-message"><span id="immediate-discovery-attachment-count-span">0</span> attachment(s) in <span id="immediate-discovery-attachment-message-count-span">0</span> of <span id="immediate-discovery-message-count-span">0</span> message(s)</div>
+<!--            <div id="discovery-progress-message"><span id="immediate-discovery-attachment-count-span">0</span> attachment(s) in <span id="immediate-discovery-attachment-message-count-span">0</span> of <span id="immediate-discovery-message-count-span">0</span> message(s)</div>  -->
                 <progress id="immediate-discovery-progress"></progress>
             </div>
             <div id="packaging-div">
                 <div class="zip-operation-label">__MSG_packaging__</div>
-                <div><span id="packaging-current-span">0</span> of <span id="packaging-total-span">0</span> (<span id="packaging-size-span">0 bytes</span>)</div>
+                <div><span id="packaging-current-span">0</span> __MSG_of__ <span id="packaging-total-span">0</span> (<span id="packaging-size-span">0 __MSG_bytesLabel__</span>)</div>
                 <div><span id="packaging-skipped-span">0</span> __MSG_duplicatesSkipped__</div>
                 <progress id="packaging-progress"></progress>
             </div>
@@ -169,7 +170,7 @@
             <div class="file-size-label"></div>
             <div class="message-date-label"></div>
             <div class="preview-wrapper">
-                <img class="preview-image hidden" alt="error" />
+                <img class="preview-image hidden" alt="__MSG_error__" />
             </div>
         </div>
     </template>

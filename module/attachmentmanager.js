@@ -177,6 +177,8 @@ export class AttachmentManager {
 
             this.#reportMessageStats({
                 summaryProcessedMessageCount: this.#processedMessageCount,
+                summaryAttachmentMessageCount: this.#attachmentMessageCount,
+                summaryAttachmentCount: this.#attachmentCount,
                 folderPath: folderStats.folderPath,
                 processedMessageCount: folderStats.processedMessageCount
             });
@@ -197,7 +199,7 @@ export class AttachmentManager {
                 });
             }
 
-            console.log(`(${messageAttachmentList.length}) ${message.subject}`);
+//            console.log(`(${messageAttachmentList.length}) ${message.subject}`);
 
             for (const attachment of messageAttachmentList) {
                 let hasNestedAttachments = false;
@@ -248,6 +250,7 @@ export class AttachmentManager {
                 folderStats.attachmentMessageCount++;
 
                 this.#reportAttachmentStats({
+                    summaryProcessedMessageCount: this.#processedMessageCount,
                     summaryAttachmentMessageCount: this.#attachmentMessageCount,
                     summaryAttachmentCount: this.#attachmentCount,
                     folderPath: folderStats.folderPath,
@@ -378,7 +381,7 @@ export class AttachmentManager {
             packagingProgressInfo.includedCount++;
             packagingProgressInfo.totalBytes += attachmentFile.size;
 
-            console.log(fileName);
+//            console.log(fileName);
 
             if(extractOptions.preserveFolderStructure) {
                 const message = this.messageList.get(info.messageId);
@@ -397,7 +400,7 @@ export class AttachmentManager {
 
         const zipParams = {
             url: URL.createObjectURL(zipFile),
-            filename: `Attachments-${new Date().getTime()}.zip`,
+            filename: `${messenger.i18n.getMessage("attachments")}-${new Date().getTime()}.zip`,
             conflictAction: "uniquify"
         };
 
@@ -409,13 +412,13 @@ export class AttachmentManager {
                 if(progress.state.current == "complete") {
                     info = {
                         status: "success",
-                        message: "Save complete!"
+                        message: messenger.i18n.getMessage("saveComplete")
                     };
                 }
                 else if(progress.state.current  == "interrupted") {
                     info = {
                         status: "error",
-                        message: (progress.error) ? progress.error : "Save failed; unknown error."
+                        message: (progress.error) ? progress.error : messenger.i18n.getMessage("saveFailed")
                     };
                 }
 

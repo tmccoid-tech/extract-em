@@ -82,9 +82,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const zipLogoImage = document.getElementById("zip-logo-img");
 
     const immediateDiscoveryDiv = document.getElementById("immediate-discovery-div");
+    const discoveryProgressMessage = document.getElementById("discovery-progress-message");
+
+/*
     const immediateDiscoveryAttachmentCountSpan = document.getElementById("immediate-discovery-attachment-count-span");
     const immediateDiscoveryAttachmentMessageCountSpan = document.getElementById("immediate-discovery-attachment-message-count-span");
     const immediateDiscoveryMessageCountSpan = document.getElementById("immediate-discovery-message-count-span");
+*/
     const immediateDiscoveryProgress = document.getElementById("immediate-discovery-progress");
 
     const packagingDiv = document.getElementById("packaging-div");
@@ -108,6 +112,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         ["lg", 400]
     ]);
 
+    const storageUnitMap = new Map([
+        ["by", messenger.i18n.getMessage("bytesLabel")],
+        ["kb", messenger.i18n.getMessage("kbLabel")],
+        ["mb", messenger.i18n.getMessage("mbLabel")],
+        ["gb", messenger.i18n.getMessage("gbLabel")]
+    ]);
+
     var options;
     var attachmentManager;
     var useImmediateMode = false;
@@ -127,7 +138,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const updateMessageStats = (folderStats) => {
         if(useImmediateMode) {
-            immediateDiscoveryMessageCountSpan.innerText = folderStats.summaryProcessedMessageCount.toString();
+            updateDiscoveryProgressMessage(folderStats.summaryAttachmentCount, folderStats.summaryAttachmentMessageCount, folderStats.summaryProcessedMessageCount);
+
+            //            immediateDiscoveryMessageCountSpan.innerText = folderStats.summaryProcessedMessageCount.toString();
+
             immediateDiscoveryProgress.value = folderStats.summaryProcessedMessageCount;
         }
         else {
@@ -142,8 +156,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const updateAttachmentStats = (folderStats) => {
         if(useImmediateMode) {
-            immediateDiscoveryAttachmentMessageCountSpan.innerText = folderStats.summaryAttachmentMessageCount.toString();
-            immediateDiscoveryAttachmentCountSpan.innerText = folderStats.summaryAttachmentCount.toString();
+            updateDiscoveryProgressMessage(folderStats.summaryAttachmentCount, folderStats.summaryAttachmentMessageCount, folderStats.summaryProcessedMessageCount);
+
+            //            immediateDiscoveryAttachmentMessageCountSpan.innerText = folderStats.summaryAttachmentMessageCount.toString();
+            //            immediateDiscoveryAttachmentCountSpan.innerText = folderStats.summaryAttachmentCount.toString();
 
             hasAttachments = folderStats.summaryAttachmentCount > 0;
         }
@@ -191,7 +207,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             else {
                 const info = {
                     status: "error",
-                    message: "There are no attachments in the selected folder."
+                    message: messenger.i18n.getMessage("noAttachmentsMessage")
                 }
 
                 updateSaveResult(info);
@@ -257,16 +273,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
+    function updateDiscoveryProgressMessage(attachmentCount = 0, attachmentMessageCount = 0 , messageCount = 0) {
+        discoveryProgressMessage.innerHTML = messenger.i18n.getMessage("discoveryProgressMessage", [attachmentCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
+    }
 
     async function main() {
         closeZipPanelButton.addEventListener("click", closeZipPanel);
         exitExtensionButton.addEventListener("click", (event) => { window.close(); });
 
+        updateDiscoveryProgressMessage();
+
         const params = await messenger.runtime.sendMessage({ action: "getParams" });
 
         if(params?.accountId) {
             const account = await messenger.accounts.get(params.accountId, false);
-            document.title = `Extract Em! (${account.name})`;
+            document.title = `${messenger.i18n.getMessage("extensionName")} (${account.name})`;
             zipAccountNameLabel.innerHTML = account.name;
         }
 
@@ -380,7 +401,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             
             const info = {
                 status: "error",
-                message: "There are no messages in the selected folder."
+                message: messenger.i18n.getMessage("noMessagesMessage")
             }
 
             packagingDiv.classList.add("hidden");
@@ -921,16 +942,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         zipSubfoldersSpan.classList.add("hidden");
 
         immediateDiscoveryDiv.classList.add("hidden");
+
+        updateDiscoveryProgressMessage();
+
+/*
         immediateDiscoveryAttachmentCountSpan.innerText = "0";
         immediateDiscoveryAttachmentMessageCountSpan.innerText = "0";
         immediateDiscoveryMessageCountSpan.innerText = "0";
+*/
+
         immediateDiscoveryProgress.removeAttribute("value");
         immediateDiscoveryProgress.removeAttribute("max");
 
         packagingDiv.classList.remove("hidden", "materialize");
         packagingCurrentSpan.innerText = "0";
         packagingTotalSpan.innerText = "0";
-        packagingSizeSpan.innerText = "0 bytes";
+        packagingSizeSpan.innerText = `0 ${messenger.i18n.getMessage("bytesLabel")}}`;
         packagingSkippedSpan.innerText = "0";
         packagingProgress.removeAttribute("value");
         packagingProgress.removeAttribute("max");
@@ -955,18 +982,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         let result = "";
 
+        let divisor = 1;
+        let unitKey = "by";
+        let precision = 1;
+
         if (size < kb) {
-            result = size.toString() + " bytes";
+            precision = 0;
         }
         else if (size < mb) {
-            result = (size / kb).toFixed(1) + " kB";
+            divisor = kb;
+            unitKey = "kb";
         }
         else if (size < gb) {
-            result = (size / mb).toFixed(1) + " MB";
+            divisor = mb;
+            unitKey = "mb";
         }
         else {
-            result = (size / gb).toFixed(1) + " GB";
+            divisor = gb;
+            unitKey = "gb";
         }
+
+        result = `${(size / divisor).toFixed(precision)} ${storageUnitMap.get(unitKey)}`;
 
         return result;
     }

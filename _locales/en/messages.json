@@ -36,6 +36,16 @@
         "description": "Label for QuickMenu persistence checkbox"
     },
 
+    "noAttachmentsMessage": {
+        "message": "There are no attachments in the selected folder.",
+        "description": ""
+    },
+
+    "noMessagesMessage": {
+        "message": "There are no messages in the selected folder.",
+        "description": ""
+    },
+
     "attachmentSummary": { "message": "Attachment Summary" },
     "attachmentList": { "message": "Attachment List" },
     "folders": { "message": "Folders" },
@@ -53,14 +63,24 @@
 
     "reset": { "message": "Reset" },
 
+    "closeZoomMessage": {
+        "message": "Click on image to close."
+    },
+
     "discovering": { "message": "Discovering" },
+    "discoveryProgressMessage": {
+        "message": "$1 attachment(s) in $2 of $3 message(s)",
+        "description": "{# of discovered} attachment(s) in {# of messages including attachments)} of {total # of discovered messages}"
+    },
+
     "packaging": { "message": "Packaging" },
+    "of": { "message": "of" },
     "duplicatesSkipped": { "message": "duplicate(s) skipped" },
     "result": { "message": "Result" },
     "close":{ "message": "Close" },
     "closeAndExit": { "message": "Close & Exit" },
 
-    
+
     "options": { "message": "Options" },
 
     "none": { "message": "None" },
@@ -159,5 +179,16 @@
     "imagePreviewDescription": {
         "message": "Specifies the size of the Preview Image for items in the Attachment List",
         "description": ""
-    }
+    },
+
+
+    "saveComplete": { "message": "Save complete!" },
+    "saveFailed": { "message": "Save failed; unknown error." },
+
+    "bytesLabel": { "message": "bytes" },
+    "kbLabel": { "message": "kB" },
+    "mbLabel": { "message": "MB" },
+    "gbLabel": { "message": "GB" },
+
+    "error": { "message": "error" }
 }

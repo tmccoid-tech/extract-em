@@ -34,6 +34,5 @@ export class OptionsManager {
 
     static #logOptions(context) {
         const message = `${context}: ${JSON.stringify(this.#options)}`;
-        console.log(message);
     }
 }

@@ -27,6 +27,7 @@ NodeList.prototype.toSet = _toSet;
 
 document.addEventListener("DOMContentLoaded", async () => {
     i18n.updateDocument();
+    const errorText = messenger.i18n.getMessage("error");
 
     const folderStatsTemplate = document.getElementById("folder-stats-template");
     const attachmentGroupingHeaderTemplate = document.getElementById("attachment-grouping-header-template");
@@ -642,6 +643,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 const image = attachmentPanel.querySelector(".preview-image");
                 image.classList.add(defaultImagePreview);
+                image.setAttribute("alt", errorText);
 
                 image.setAttribute("message-id", attachment.messageId);
                 image.setAttribute("part-name", attachment.partName);

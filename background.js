@@ -15,7 +15,7 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
 
     let popupId = null;
 
-    document.addEventListener("DOMContentLoaded", () => { document.title =documentTitle; });
+    document.addEventListener("DOMContentLoaded", () => { document.title = documentTitle; });
 
     async function extractSilently(params) {
         const attachmentManager = new AttachmentManager({

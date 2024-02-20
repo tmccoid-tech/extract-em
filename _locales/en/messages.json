@@ -28,7 +28,7 @@
 
     "standardSelectionDescription": {
         "message": "Allows you to choose specific folders, or even specific attachments for discovery and extraction",
-        "description": "Action description for single-selection QuickMenu button"
+        "description": "Action description for standard-selection QuickMenu button"
     },
 
     "alwaysShowQuickMenu": {
@@ -74,7 +74,10 @@
     },
 
     "packaging": { "message": "Packaging" },
-    "of": { "message": "of" },
+    "of": {
+        "message": "of",
+        "description": "Used in the sense of 'x items out of y total items'"
+    },
     "duplicatesSkipped": { "message": "duplicate(s) skipped" },
     "result": { "message": "Result" },
     "close":{ "message": "Close" },
@@ -113,11 +116,11 @@
     },
 
     "includeSubFolders": {
-        "message": "Include sub-folders",
+        "message": "Include subfolders",
         "description": ""
     },
     "includeSubFoldersDescription": {
-        "message": "Includes attachments in sub-folders during immediate extraction",
+        "message": "Includes attachments in subfolders during immediate extraction",
         "description": ""
     },
 

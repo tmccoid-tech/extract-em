@@ -199,8 +199,6 @@ export class AttachmentManager {
                 });
             }
 
-//            console.log(`(${messageAttachmentList.length}) ${message.subject}`);
-
             for (const attachment of messageAttachmentList) {
                 let hasNestedAttachments = false;
 
@@ -342,8 +340,6 @@ export class AttachmentManager {
         this.#reportPackagingProgress(packagingProgressInfo);
 
         for (const item of list) {
-//            console.log(JSON.stringify(item));
-
             const info = getInfo(item);
 
             const attachmentFile = await this.#getAttachmentFile(info.messageId, info.partName);
@@ -380,8 +376,6 @@ export class AttachmentManager {
 
             packagingProgressInfo.includedCount++;
             packagingProgressInfo.totalBytes += attachmentFile.size;
-
-//            console.log(fileName);
 
             if(extractOptions.preserveFolderStructure) {
                 const message = this.messageList.get(info.messageId);

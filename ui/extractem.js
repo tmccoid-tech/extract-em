@@ -141,8 +141,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(useImmediateMode) {
             updateDiscoveryProgressMessage(folderStats.summaryAttachmentCount, folderStats.summaryAttachmentMessageCount, folderStats.summaryProcessedMessageCount);
 
-            //            immediateDiscoveryMessageCountSpan.innerText = folderStats.summaryProcessedMessageCount.toString();
-
             immediateDiscoveryProgress.value = folderStats.summaryProcessedMessageCount;
         }
         else {
@@ -158,9 +156,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const updateAttachmentStats = (folderStats) => {
         if(useImmediateMode) {
             updateDiscoveryProgressMessage(folderStats.summaryAttachmentCount, folderStats.summaryAttachmentMessageCount, folderStats.summaryProcessedMessageCount);
-
-            //            immediateDiscoveryAttachmentMessageCountSpan.innerText = folderStats.summaryAttachmentMessageCount.toString();
-            //            immediateDiscoveryAttachmentCountSpan.innerText = folderStats.summaryAttachmentCount.toString();
 
             hasAttachments = folderStats.summaryAttachmentCount > 0;
         }
@@ -946,12 +941,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         immediateDiscoveryDiv.classList.add("hidden");
 
         updateDiscoveryProgressMessage();
-
-/*
-        immediateDiscoveryAttachmentCountSpan.innerText = "0";
-        immediateDiscoveryAttachmentMessageCountSpan.innerText = "0";
-        immediateDiscoveryMessageCountSpan.innerText = "0";
-*/
 
         immediateDiscoveryProgress.removeAttribute("value");
         immediateDiscoveryProgress.removeAttribute("max");

@@ -126,6 +126,7 @@
                 <div class="zip-operation-label">__MSG_packaging__</div>
                 <div><span id="packaging-current-span">0</span> __MSG_of__ <span id="packaging-total-span">0</span> (<span id="packaging-size-span">0 __MSG_bytesLabel__</span>)</div>
                 <div><span id="packaging-skipped-span">0</span> __MSG_duplicatesSkipped__</div>
+                <div><span id="packaging-last-filename-span">...</span></div>
                 <progress id="packaging-progress"></progress>
             </div>
             <div id="save-result-div">
@@ -133,6 +134,9 @@
                 <div class="save-result-content-div">
                     <div class="zip-operation-label">__MSG_result__</div>
                     <span id="save-result-label"></span>
+                </div>
+                <div class="save-result-content-div">
+                    <button id="permanently-detach-button" class="close-button hidden" disabled="disabled"><img id="hazard-image" src="hazard-sign.png" /> __MSG_permanentlyDetach__</button>
                 </div>
                 <div class="save-result-content-div">
                     <button id="close-zip-panel-button" class="close-button" disabled="disabled">__MSG_close__</button>

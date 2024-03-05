@@ -473,6 +473,10 @@ folder-selector-button:disabled:active {
     font-style: italic;
 }
 
+#packaging-last-filename-span {
+    text-overflow: ellipsis;
+}
+
 #packaging-div, #save-result-div {
     opacity: 0.0;
 }
@@ -526,4 +530,16 @@ folder-selector-button:disabled:active {
     height: 40px;
     width: 120px;
     margin: 8px;
+}
+
+#permanently-detach-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 259px;
+}
+
+#hazard-image {
+    height: 24px;
 }

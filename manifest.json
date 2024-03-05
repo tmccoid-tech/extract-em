@@ -29,7 +29,8 @@
     "menus",
     "menus.overrideContext",
     "storage",
-    "downloads"
+    "downloads",
+    "messagesModifyPermanent"
   ],
   "default_locale": "en"
 }

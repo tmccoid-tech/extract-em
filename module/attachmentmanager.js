@@ -332,10 +332,13 @@ export class AttachmentManager {
             includedCount: 0,
             skippedCount: 0,
             totalBytes: 0,
-            hasDuplicate: false
+            hasDuplicate: false,
+            lastFileName: ""
         };
 
         const duplicateTracker = new Map();
+
+        const deletionMap = new Map();
 
         this.#reportPackagingProgress(packagingProgressInfo);
 
@@ -345,7 +348,17 @@ export class AttachmentManager {
             const attachmentFile = await this.#getAttachmentFile(info.messageId, info.partName);
 
             let fileName = this.#normalizeFileName(attachmentFile.name);
+            packagingProgressInfo.lastFileName = attachmentFile.name;
             const size = attachmentFile.size;
+
+            const attachmentInfo = { partName: info.partName, fileName: attachmentFile.name };
+
+            if(deletionMap.has(info.messageId)) {
+                deletionMap.get(info.messageId).push(attachmentInfo);
+            }
+            else {
+                deletionMap.set(info.messageId, [attachmentInfo]);
+            }
 
             const duplicateKey = fileName.toLowerCase();
 
@@ -388,6 +401,9 @@ export class AttachmentManager {
             this.#reportPackagingProgress(packagingProgressInfo);
         }
 
+        packagingProgressInfo.lastFileName = "...";
+        this.#reportPackagingProgress(packagingProgressInfo);
+
         const zipFile = await jsZip.generateAsync({ type: "blob" });
 
         let downloadId = null;
@@ -406,7 +422,8 @@ export class AttachmentManager {
                 if(progress.state.current == "complete") {
                     info = {
                         status: "success",
-                        message: messenger.i18n.getMessage("saveComplete")
+                        message: messenger.i18n.getMessage("saveComplete"),
+                        deletionMap: deletionMap
                     };
                 }
                 else if(progress.state.current  == "interrupted") {
@@ -446,6 +463,29 @@ export class AttachmentManager {
                     URL.revokeObjectURL(zipParams.url);
                 }
             );
+    }
+
+
+    deleteAttachments(list, getInfo) {
+        const attachmentMap = new Map();
+
+        for(const item of list) {
+            const info = getInfo(item);
+            const messageId = info.messageId;
+
+            if(attachmentMap.has(messageId)) {
+                attachmentMap.get(messageId).push(info.partName);
+            }
+            else {
+                attachmentMap.set(messageId, [info.partName])
+            }
+        }
+
+        for (const item of attachmentMap) {
+            console.log(`${item[0]} : ${item[1]}`);
+
+            // messenger.messages.deleteAttachments(item[0], item[1]);    
+        }
     }
 
     async getAttachmentFileData(messageId, partName) {

@@ -80,6 +80,10 @@
     },
     "duplicatesSkipped": { "message": "duplicate(s) skipped" },
     "result": { "message": "Result" },
+
+    "permanentlyDetach": { "message": "Permanently Detach" },
+    "confirmDetachMessage": { "message": "This action will PERMANENTLY delete the extracted attachments from their source messages; click OK to confirm." },
+
     "close":{ "message": "Close" },
     "closeAndExit": { "message": "Close & Exit" },
 

@@ -97,11 +97,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const packagingTotalSpan = document.getElementById("packaging-total-span");
     const packagingSizeSpan = document.getElementById("packaging-size-span");
     const packagingSkippedSpan = document.getElementById("packaging-skipped-span");
+    const packagingLastFileNameSpan = document.getElementById("packaging-last-filename-span");
     const packagingProgress = document.getElementById("packaging-progress");
 
     const saveResultDiv = document.getElementById("save-result-div");
     const saveResultBorderDiv = document.getElementById("save-result-border-div");
     const saveResultLabel = document.getElementById("save-result-label");
+    const permanentlyDetachButton = document.getElementById("permanently-detach-button");
     const closeZipPanelButton = document.getElementById("close-zip-panel-button");
     const exitExtensionButton = document.getElementById("exit-extension-button");
 
@@ -245,6 +247,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         else {
             packagingCurrentSpan.innerText = info.includedCount.toString();
+            packagingLastFileNameSpan.innerText = info.lastFileName;
             packagingProgress.value = info.includedCount;
             packagingSizeSpan.innerText = abbreviateFileSize(info.totalBytes.toString());
         }
@@ -255,15 +258,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(info.status == "started") {
         }
         else {
+            const success = (info.status == "success");
+
             zipLogoImage.classList.remove("rotating");
 
             saveResultLabel.innerHTML = info.message;
 
             document.querySelectorAll(".close-button").forEach((button) => { button.disabled = false; });            
 
+            if(success && messenger.messages.deleteAttachments && info.deletionMap.size > 0) {
+                permanentlyDetachButton.classList.remove("hidden");
+            }
+
             saveResultDiv.classList.add("materialize");
 
-            const saveResult = (info.status == "success") ? "success" : "error";
+            const saveResult = (success) ? "success" : "error";
 
             saveResultBorderDiv.classList.add(saveResult);
         }
@@ -736,7 +745,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    function extract(list, getInfo) {
+    async function extract(list, getInfo) {
         packagingTotalSpan.innerText = list.length.toString();
         packagingProgress.setAttribute("max", list.length);
         packagingDiv.classList.add("materialize");
@@ -950,6 +959,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         packagingTotalSpan.innerText = "0";
         packagingSizeSpan.innerText = `0 ${messenger.i18n.getMessage("bytesLabel")}}`;
         packagingSkippedSpan.innerText = "0";
+        packagingLastFileNameSpan.innerText = "...";
         packagingProgress.removeAttribute("value");
         packagingProgress.removeAttribute("max");
 

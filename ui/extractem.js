@@ -82,14 +82,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const zipSubfoldersSpan = document.getElementById("zip-subfolders-span");
     const zipLogoImage = document.getElementById("zip-logo-img");
 
+    const zipExtractPanelBody = document.getElementById("zip-extract-panel-body");
+
     const immediateDiscoveryDiv = document.getElementById("immediate-discovery-div");
     const discoveryProgressMessage = document.getElementById("discovery-progress-message");
-
-/*
-    const immediateDiscoveryAttachmentCountSpan = document.getElementById("immediate-discovery-attachment-count-span");
-    const immediateDiscoveryAttachmentMessageCountSpan = document.getElementById("immediate-discovery-attachment-message-count-span");
-    const immediateDiscoveryMessageCountSpan = document.getElementById("immediate-discovery-message-count-span");
-*/
     const immediateDiscoveryProgress = document.getElementById("immediate-discovery-progress");
 
     const packagingDiv = document.getElementById("packaging-div");
@@ -97,8 +93,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const packagingTotalSpan = document.getElementById("packaging-total-span");
     const packagingSizeSpan = document.getElementById("packaging-size-span");
     const packagingSkippedSpan = document.getElementById("packaging-skipped-span");
-    const packagingLastFileNameSpan = document.getElementById("packaging-last-filename-span");
     const packagingProgress = document.getElementById("packaging-progress");
+
+    const lastFileNameDiv = document.getElementById("last-filename-div");
 
     const saveResultDiv = document.getElementById("save-result-div");
     const saveResultBorderDiv = document.getElementById("save-result-border-div");
@@ -106,6 +103,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const permanentlyDetachButton = document.getElementById("permanently-detach-button");
     const closeZipPanelButton = document.getElementById("close-zip-panel-button");
     const exitExtensionButton = document.getElementById("exit-extension-button");
+
+    const zipDetachPanelBody = document.getElementById("zip-detach-panel-body");
+    const detachActionButtonsDiv = document.getElementById("detach-action-buttons-div");
+    const proceedDetachButton = document.getElementById("proceed-detach-button");
+    const cancelDetachButton = document.getElementById("cancel-detach-button");
+    const detachProgressDiv = document.getElementById("detach-progress-div");
+    const permanentDetachCurrentSpan = document.getElementById("permanent-detach-current-span");
+    const permanentDetachTotalSpan = document.getElementById("permanent-detach-total-span");
+    const detachmentProgress = document.getElementById("detachment-progress");
+    const detachResultDiv = document.getElementById("detach-result-div");
+    const detachResultBorderDiv = document.getElementById("detach-result-border-div");
+    const detachResultLabel = document.getElementById("detach-result-label");
+    const detachExitExtensionButton = document.getElementById("detach-exit-extension-button");
+
 
     const folderRowSet = new Map();
 
@@ -158,6 +169,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const updateAttachmentStats = (folderStats) => {
         if(useImmediateMode) {
             updateDiscoveryProgressMessage(folderStats.summaryAttachmentCount, folderStats.summaryAttachmentMessageCount, folderStats.summaryProcessedMessageCount);
+            lastFileNameDiv.innerText = folderStats.lastFileName;
 
             hasAttachments = folderStats.summaryAttachmentCount > 0;
         }
@@ -247,7 +259,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         else {
             packagingCurrentSpan.innerText = info.includedCount.toString();
-            packagingLastFileNameSpan.innerText = info.lastFileName;
+            lastFileNameDiv.innerText = info.lastFileName;
             packagingProgress.value = info.includedCount;
             packagingSizeSpan.innerText = abbreviateFileSize(info.totalBytes.toString());
         }
@@ -266,8 +278,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.querySelectorAll(".close-button").forEach((button) => { button.disabled = false; });            
 
-            if(success && messenger.messages.deleteAttachments && info.deletionMap.size > 0) {
-                permanentlyDetachButton.classList.remove("hidden");
+            if(success && messenger.messages.deleteAttachments && info.attachmentCount > 0) {
+                permanentDetachTotalSpan.innerText = info.attachmentCount.toString();
+                detachmentProgress.setAttribute("max", info.attachmentCount);
+            }
+            else {
+                permanentlyDetachButton.classList.add("hidden");
             }
 
             saveResultDiv.classList.add("materialize");
@@ -278,6 +294,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
+    const updateDetachProgress = (info) => {
+        permanentDetachCurrentSpan.innerText = info.processedCount.toString();
+        detachmentProgress.value = info.processedCount;
+        lastFileNameDiv.innerText = info.lastFileName;
+    };
+
+    const updateDetachResult = (info) => {
+        detachResultDiv.classList.add("materialize");
+
+        if(!info.success) {
+            detachResultLabel.innerHTML = messenger.i18n.getMessage("detachErrorMessage");
+        }
+
+        const detachResult = (info.success) ? "success" : "error";
+
+        detachResultBorderDiv.classList.add(detachResult);
+    };
+
     function updateDiscoveryProgressMessage(attachmentCount = 0, attachmentMessageCount = 0 , messageCount = 0) {
         discoveryProgressMessage.innerHTML = messenger.i18n.getMessage("discoveryProgressMessage", [attachmentCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
     }
@@ -285,6 +319,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     async function main() {
         closeZipPanelButton.addEventListener("click", closeZipPanel);
         exitExtensionButton.addEventListener("click", (event) => { window.close(); });
+        
+        permanentlyDetachButton.addEventListener("click", displayPermanentDetachPanel);
+        proceedDetachButton.addEventListener("click", proceedDetach);
+        cancelDetachButton.addEventListener("click", cancelDetach);
+        detachExitExtensionButton.addEventListener("click", (event) => { window.close(); });
 
         updateDiscoveryProgressMessage();
 
@@ -333,7 +372,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportProcessingComplete: updateProcessingComplete,
                 
                 reportPackagingProgress: updatePackagingProgress,
-                reportSaveResult: updateSaveResult
+                reportSaveResult: updateSaveResult,
+
+                reportDetachProgress: updateDetachProgress,
+                reportDetachResult: updateDetachResult
             });
 
 
@@ -808,6 +850,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
     }
 
+    function displayPermanentDetachPanel() {
+        zipExtractPanelBody.classList.add("hidden");
+        zipDetachPanelBody.classList.remove("hidden");
+    }
+
+    function cancelDetach() {
+        zipDetachPanelBody.classList.add("hidden");
+        zipExtractPanelBody.classList.remove("hidden");
+    }
+
+    function proceedDetach() {
+        detachActionButtonsDiv.classList.add("hidden");
+        detachProgressDiv.classList.add("materialize");
+
+        attachmentManager.deleteAttachments();
+    }
+
     function resetSummary() {
         attachmentManager.reset();
 
@@ -959,13 +1018,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         packagingTotalSpan.innerText = "0";
         packagingSizeSpan.innerText = `0 ${messenger.i18n.getMessage("bytesLabel")}}`;
         packagingSkippedSpan.innerText = "0";
-        packagingLastFileNameSpan.innerText = "...";
+        lastFileNameDiv.innerText = "...";
         packagingProgress.removeAttribute("value");
         packagingProgress.removeAttribute("max");
 
         saveResultBorderDiv.classList.remove("success", "error");
         saveResultDiv.classList.remove("materialize");
         saveResultLabel.innerText = "";
+
+        deletionMap = null;
 
         document.querySelectorAll(".close-button").forEach((button) => { button.disabled = true; });            
     }

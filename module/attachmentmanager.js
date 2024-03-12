@@ -18,6 +18,10 @@ export class AttachmentManager {
     #reportPackagingProgress = (info) => {};
     #reportSaveResult;
 
+    #deletionTracker
+    #reportDetachProgress = (info) => {};
+    #reportDetachResult = (info) => {};
+
 
     #selectedFolderPaths;
 
@@ -69,6 +73,9 @@ export class AttachmentManager {
             this.#reportFolderProcessed = options.reportFolderProcessed;
 
             this.#reportPackagingProgress = options.reportPackagingProgress;
+
+            this.#reportDetachProgress = options.reportDetachProgress;
+            this.#reportDetachResult = options.reportDetachResult;
         }
 
         this.#reportProcessingComplete = options.reportProcessingComplete;
@@ -152,7 +159,8 @@ export class AttachmentManager {
             folderPath: folder.path,
             processedMessageCount: 0,
             attachmentMessageCount: 0,
-            attachmentCount: 0
+            attachmentCount: 0,
+            lastFileName: ""
         };
 
         this.#reportFolderProcessing(folder.path);
@@ -238,6 +246,8 @@ export class AttachmentManager {
 
                     this.attachmentList.push(attachmentInfo);
 
+                    folderStats.lastFileName = attachment.name;
+
                     this.#attachmentCount++;
                     folderStats.attachmentCount++;
                 }
@@ -253,7 +263,8 @@ export class AttachmentManager {
                     summaryAttachmentCount: this.#attachmentCount,
                     folderPath: folderStats.folderPath,
                     attachmentMessageCount: folderStats.attachmentMessageCount,
-                    attachmentCount: folderStats.attachmentCount
+                    attachmentCount: folderStats.attachmentCount,
+                    lastFileName: folderStats.lastFileName
                 });
             }
         }
@@ -269,6 +280,8 @@ export class AttachmentManager {
         this.#attachmentCount = 0;
 
         this.#selectedFolderPaths = undefined;
+
+        this.#deletionTracker = null;
 
         this.attachmentList.length = 0;
         this.messageList.clear();
@@ -338,7 +351,12 @@ export class AttachmentManager {
 
         const duplicateTracker = new Map();
 
-        const deletionMap = new Map();
+        this.#deletionTracker = {
+            attachmentCount: 0,
+            items: new Map()
+        };
+
+        const deletionTracker = this.#deletionTracker;
 
         this.#reportPackagingProgress(packagingProgressInfo);
 
@@ -351,13 +369,15 @@ export class AttachmentManager {
             packagingProgressInfo.lastFileName = attachmentFile.name;
             const size = attachmentFile.size;
 
+            deletionTracker.attachmentCount++;
+
             const attachmentInfo = { partName: info.partName, fileName: attachmentFile.name };
 
-            if(deletionMap.has(info.messageId)) {
-                deletionMap.get(info.messageId).push(attachmentInfo);
+            if(deletionTracker.items.has(info.messageId)) {
+                deletionTracker.items.get(info.messageId).push(attachmentInfo);
             }
             else {
-                deletionMap.set(info.messageId, [attachmentInfo]);
+                deletionTracker.items.set(info.messageId, [attachmentInfo]);
             }
 
             const duplicateKey = fileName.toLowerCase();
@@ -423,7 +443,7 @@ export class AttachmentManager {
                     info = {
                         status: "success",
                         message: messenger.i18n.getMessage("saveComplete"),
-                        deletionMap: deletionMap
+                        attachmentCount: deletionTracker.attachmentCount
                     };
                 }
                 else if(progress.state.current  == "interrupted") {
@@ -466,26 +486,35 @@ export class AttachmentManager {
     }
 
 
-    deleteAttachments(list, getInfo) {
-        const attachmentMap = new Map();
+    deleteAttachments() {
+        const info = {
+            processedCount: 0,
+            lastFileName: "..."
+        };
 
-        for(const item of list) {
-            const info = getInfo(item);
-            const messageId = info.messageId;
+        let success = true;
 
-            if(attachmentMap.has(messageId)) {
-                attachmentMap.get(messageId).push(info.partName);
+        for(const item of this.#deletionTracker.items) {
+            const messageId = item[0];
+            const attachments = item[1];
+
+            for(const attachmentInfo of attachments) {
+
+                console.log(`${messageId} : ${attachmentInfo.partName} - ${attachmentInfo.fileName}`);
+
+                try {
+                    messenger.messages.deleteAttachments(messageId, attachmentInfo);
+                    info.processedCount++;
+                }
+                catch(e) {
+                    success = false;
+                }
             }
-            else {
-                attachmentMap.set(messageId, [info.partName])
-            }
+
+            this.#reportDetachProgress(info);
         }
 
-        for (const item of attachmentMap) {
-            console.log(`${item[0]} : ${item[1]}`);
-
-            // messenger.messages.deleteAttachments(item[0], item[1]);    
-        }
+        this.#reportDetachResult({ success: success });
     }
 
     async getAttachmentFileData(messageId, partName) {

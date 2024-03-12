@@ -87,6 +87,13 @@
     "close":{ "message": "Close" },
     "closeAndExit": { "message": "Close & Exit" },
 
+    "permanentDetachWarning": {
+        "message": "WARNING: This action will permanently remove the extracted attachments from their source email messages."
+    },
+    "proceed": { "message": "Proceed" },
+    "cancel": { "message": "Cancel" },
+    "detached": { "message": "detached" },
+
 
     "options": { "message": "Options" },
 
@@ -197,5 +204,6 @@
     "mbLabel": { "message": "MB" },
     "gbLabel": { "message": "GB" },
 
-    "error": { "message": "error" }
+    "error": { "message": "error" },
+    "detachErrorMessage": { "message": "One or more attachments were not detached." }
 }

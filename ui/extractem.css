@@ -449,10 +449,8 @@ folder-selector-button:disabled:active {
     width: 100%;
     height: 100%;
     background: white url("tiled_paperclip.png") center/124px repeat;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-rows: auto 1fr;
     text-align: center;
 }
 
@@ -460,6 +458,31 @@ folder-selector-button:disabled:active {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 52px;
+}
+
+#zip-extract-panel-body {
+    display: grid;
+    place-items: center;
+}
+
+#zip-operation-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.last-filename-div {
+    width: 100%;
+    background-color: rgba(192, 192, 192, .25);
+    margin: 8px 0px;
+}
+
+#zip-detach-panel-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 #zip-attachment-context-div {
@@ -477,22 +500,23 @@ folder-selector-button:disabled:active {
     text-overflow: ellipsis;
 }
 
-#packaging-div, #save-result-div {
+#packaging-div, #save-result-div, #detach-progress-div, #detach-result-div {
     opacity: 0.0;
 }
 
-#packaging-div.materialize, #save-result-div.materialize {
+#packaging-div.materialize, #save-result-div.materialize,
+#detach-progress-div.materialize, #detach-result-div.materialize {
     opacity: 1.0;
     -moz-transition: opacity 500ms ease-in;
 }
 
-#save-result-div {
+#save-result-div, #detach-result-div {
     position: relative;
     margin-bottom: 24px;
     padding: 8px;
 }
 
-#save-result-border-div {
+#save-result-border-div, #detach-result-border-div {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -508,12 +532,12 @@ folder-selector-button:disabled:active {
     to { clip-path: inset(0); }
 }
 
-#save-result-border-div.success {
+#save-result-border-div.success, #detach-result-border-div.success {
     border: solid 6px green;
     animation: save-result 1.5s forwards;
 }
 
-#save-result-border-div.error {
+#save-result-border-div.error, #detach-result-border-div.error {
     border: solid 6px red;
     animation: save-result 1.5s forwards;
 }
@@ -532,14 +556,23 @@ folder-selector-button:disabled:active {
     margin: 8px;
 }
 
-#permanently-detach-button {
+.permanently-detach-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
+}
+
+#detach-warning-message {
+  width: 80%;
+  padding: 8px 20%;
+}
+
+#permanently-detach-button {
     width: 259px;
 }
 
-#hazard-image {
+.hazard-image {
     height: 24px;
+    padding-right: 12px;
 }

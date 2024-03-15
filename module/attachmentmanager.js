@@ -400,12 +400,11 @@ export class AttachmentManager {
         extractionSubsets.push(extractionSet.length);
 
         const duplicateTracker = new Map();
+        
         this.#deletionTracker = {
             attachmentCount: 0,
             items: new Map()
         };
-
-        const deletionTracker = this.#deletionTracker;
 
         let subsetIndex = 0;
         let start = 0;
@@ -413,7 +412,7 @@ export class AttachmentManager {
         while(subsetIndex < extractionSubsets.length) {
             let nextStart = extractionSubsets[subsetIndex];
 
-            const success = await this.#package(extractionSet, start, nextStart, extractOptions, packagingProgressInfo, duplicateTracker, deletionMap, (extractionSubsets.length == subsetIndex + 1));
+            const success = await this.#package(extractionSet, start, nextStart, extractOptions, packagingProgressInfo, duplicateTracker, (extractionSubsets.length == subsetIndex + 1));
 
             if(!success) {
                 this.#reportSaveResult({
@@ -430,8 +429,10 @@ export class AttachmentManager {
         }
     }
 
-    async #package(extractionSet, start, nextStart, extractOptions, packagingProgressInfo, duplicateTracker, deletionMap, isFinal) {
+    async #package(extractionSet, start, nextStart, extractOptions, packagingProgressInfo, duplicateTracker, isFinal) {
         const jsZip = JSZip();
+
+        const deletionTracker = this.#deletionTracker;
 
         for (let i = start; i < nextStart; i++) {
             const info = extractionSet[i];

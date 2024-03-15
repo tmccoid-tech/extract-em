@@ -325,8 +325,6 @@ export class AttachmentManager {
     }
 
     async extract(list, getInfo, extractOptions) {
-        const jsZip = JSZip();
-
         const packagingProgressInfo = {
             totalItems: list.length,
             includedCount: 0,
@@ -336,16 +334,99 @@ export class AttachmentManager {
             lastFileName: ""
         };
 
-        const duplicateTracker = new Map();
-
-        const deletionMap = new Map();
-
         this.#reportPackagingProgress(packagingProgressInfo);
 
-        for (const item of list) {
-            const info = getInfo(item);
+        const sizeRegistration = new Map(this.attachmentList.map((item) => [`${item.messageId}:${item.partName}`, item.size]));
 
-            const attachmentFile = await this.#getAttachmentFile(info.messageId, info.partName);
+        let cumulativeSize = 0;
+
+        const extractionSet = list
+            .map((item) => {
+                const info = getInfo(item);
+
+                const size = sizeRegistration.get(`${item.messageId}:${item.partName}`);
+
+                cumulativeSize += size;
+
+                return {
+                    messageId: info.messageId,
+                    partName: info.partName,
+                    size: size,
+                    timestamp: info.timestamp
+                }
+            })
+            .sort((a, b) => b.size - a.size);
+
+        
+        const extractionSubsets = [];
+        const maxSize = 750000000;
+
+        if(cumulativeSize > maxSize) {
+            let currentSize = 0;
+            let currentStart = 0;
+
+            for(const item of extractionSet) {
+                if(currentSize + item.size > maxSize) {
+
+                    extractionSubsets.push(currentStart);
+
+                    cumulativeSize -= currentSize;
+
+                    if(cumulativeSize <= maxSize) {
+                        break;
+                    }
+
+                    currentSize = 0;
+                }
+    
+                currentSize += item.size;
+                currentStart++;
+            }
+        }
+
+        extractionSubsets.push(extractionSet.length);
+
+        const duplicateTracker = new Map();
+        const deletionMap = new Map();
+
+        let subsetIndex = 0;
+        let start = 0;
+
+        while(subsetIndex < extractionSubsets.length) {
+            let nextStart = extractionSubsets[subsetIndex];
+
+            const success = await this.#package(extractionSet, start, nextStart, extractOptions, packagingProgressInfo, duplicateTracker, deletionMap, (extractionSubsets.length == subsetIndex + 1));
+
+            if(!success) {
+                this.#reportSaveResult({
+                    status: "error",
+                    message: messenger.i18n.getMessage("saveFailed")
+                });
+
+                return;
+            }
+
+            start = nextStart;
+
+            subsetIndex++;
+        }
+    }
+
+    async #package(extractionSet, start, nextStart, extractOptions, packagingProgressInfo, duplicateTracker, deletionMap, isFinal) {
+        const jsZip = JSZip();
+
+        for (let i = start; i < nextStart; i++) {
+            const info = extractionSet[i];
+
+            let attachmentFile;
+
+            try {
+                attachmentFile = await this.#getAttachmentFile(info.messageId, info.partName);
+            }
+            catch(e) {
+                console.log(e);
+                continue;
+            }
 
             let fileName = this.#normalizeFileName(attachmentFile.name);
             packagingProgressInfo.lastFileName = attachmentFile.name;
@@ -404,7 +485,16 @@ export class AttachmentManager {
         packagingProgressInfo.lastFileName = "...";
         this.#reportPackagingProgress(packagingProgressInfo);
 
-        const zipFile = await jsZip.generateAsync({ type: "blob" });
+        let zipFile;
+
+        try {
+            zipFile = await jsZip.generateAsync({ type: "blob" });
+        }
+        catch(e) {
+            console.log(e);
+
+            return false;
+        }
 
         let downloadId = null;
 
@@ -434,7 +524,9 @@ export class AttachmentManager {
                 }
 
                 if(info) {
-                    this.#reportSaveResult(info);
+                    if(isFinal) {
+                        this.#reportSaveResult(info);
+                    }
 
                     browser.downloads.onChanged.removeListener(listen);
         
@@ -450,19 +542,25 @@ export class AttachmentManager {
             .then(
                 (id) => {
                     downloadId = id;
-                    this.#reportSaveResult({ status: "started" });
+                    if(isFinal) {
+                        this.#reportSaveResult({ status: "started" });
+                    }
                 },
                 (error) => {
-                    this.#reportSaveResult({
-                        status: "error",
-                        message: error.message
-                    });
+                    if(isFinal) {
+                        this.#reportSaveResult({
+                            status: "error",
+                            message: error.message
+                        });
+                    }
 
                     browser.downloads.onChanged.removeListener(listen);
 
                     URL.revokeObjectURL(zipParams.url);
                 }
             );
+
+        return true;
     }
 
 

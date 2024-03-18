@@ -496,7 +496,7 @@ folder-selector-button:disabled:active {
     font-style: italic;
 }
 
-#packaging-last-filename-span {
+.last-filename-div {
     text-overflow: ellipsis;
 }
 

@@ -45,7 +45,7 @@
                             <tr>
                                 <th colspan="2" class="summary-header">__MSG_folders__</th>
                                 <th colspan="3" class="summary-header">__MSG_messages__</th>
-                                <th class="summary-header">__MSG_attachments__</th>
+                                <th  class="summary-header">__MSG_attachments__</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -118,19 +118,57 @@
                 </div>
             </div>
 
+            <table>
+                <tr>
+                    <td>
+                        <div class="zip-operation-label">__MSG_discovering__</div>
+                        <progress id="immediate-discovery-progress" value="0" max="1"></progress>
+                    </td>
+                    <td>
+                        <div id="discovery-progress-message"></div>
+                        <div id="discovery-size-label">0 __MSG_bytesLabel__</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="zip-operation-label">__MSG_preparing__</div>
+                        <progress id="preparation-progress" value="0" max="1"></progress>
+                    </td>
+                    <td>
+                        <span id="packaging-skipped-span">0</span> __MSG_duplicatesIdentified__
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="zip-operation-label">__MSG_packaging__</div>
+                        <progress id="packaging-progress" value="0" max="1"></progress>
+                    </td>
+                    <td>
+                        <div><span id="packaging-current-span">0</span> __MSG_of__ <span id="packaging-total-span">0</span> (<span id="packaging-size-span">0 __MSG_bytesLabel__</span>)</div>
+                        <div><span id="packaging-file-current-span">0</span> __MSG_of__ <span id="packaging-file-total-span">0</span> __MSG_packageFilesSaved__</div>
+                        <div><span id="packaging-error-count-span">0</span> __MSG_errorsEncountered__</div>
+                    </td>
+                </tr>
+            </table>
+
+
             <div id="zip-extract-panel-body">
                 <div id="zip-operation-div">
                     <div id="immediate-discovery-div" class="hidden">
+<!--                        
                         <div class="zip-operation-label">__MSG_discovering__</div>
                         <div id="discovery-progress-message"></div>
                         <progress id="immediate-discovery-progress"></progress>
+-->                        
                     </div>
                     
                     <div id="packaging-div">
+<!--
                         <div class="zip-operation-label">__MSG_packaging__</div>
                         <div><span id="packaging-current-span">0</span> __MSG_of__ <span id="packaging-total-span">0</span> (<span id="packaging-size-span">0 __MSG_bytesLabel__</span>)</div>
                         <progress id="packaging-progress"></progress>
                         <div><span id="packaging-skipped-span">0</span> __MSG_duplicatesSkipped__</div>
+-->                                                
                     </div>
                 </div>    
 

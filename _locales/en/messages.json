@@ -73,12 +73,16 @@
         "description": "{# of discovered} attachment(s) in {# of messages including attachments)} of {total # of discovered messages}"
     },
 
+    "preparing": { "message": "Preparing" },
+    "duplicatesIdentified": { "message": "duplicate(s) identified" },
+
     "packaging": { "message": "Packaging" },
     "of": {
         "message": "of",
         "description": "Used in the sense of 'x items out of y total items'"
     },
-    "duplicatesSkipped": { "message": "duplicate(s) skipped" },
+    "packageFilesSaved": { "message": "package file(s) saved" },
+    "errorsEncountered": { "message": "errors encountered" },
     "result": { "message": "Result" },
 
     "permanentlyDetach": { "message": "Permanently Detach" },

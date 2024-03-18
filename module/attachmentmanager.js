@@ -8,6 +8,7 @@ export class AttachmentManager {
     #processedMessageCount = 0;
     #attachmentMessageCount = 0;
     #attachmentCount = 0;
+    #cumulativeAttachmentSize = 0;
 
     #reportFolderProcessing = (folderPath) => {};
     #reportMessageStats = (folderStats) => {};
@@ -194,6 +195,7 @@ export class AttachmentManager {
                 summaryProcessedMessageCount: this.#processedMessageCount,
                 summaryAttachmentMessageCount: this.#attachmentMessageCount,
                 summaryAttachmentCount: this.#attachmentCount,
+                summaryAttachmentSize: this.#cumulativeAttachmentSize,
                 folderPath: folderStats.folderPath,
                 processedMessageCount: folderStats.processedMessageCount
             });
@@ -257,6 +259,8 @@ export class AttachmentManager {
 
                     this.#attachmentCount++;
                     folderStats.attachmentCount++;
+
+                    this.#cumulativeAttachmentSize += attachmentInfo.size;
                 }
             }
 
@@ -268,6 +272,7 @@ export class AttachmentManager {
                     summaryProcessedMessageCount: this.#processedMessageCount,
                     summaryAttachmentMessageCount: this.#attachmentMessageCount,
                     summaryAttachmentCount: this.#attachmentCount,
+                    summaryAttachmentSize: this.#cumulativeAttachmentSize,
                     folderPath: folderStats.folderPath,
                     attachmentMessageCount: folderStats.attachmentMessageCount,
                     attachmentCount: folderStats.attachmentCount,
@@ -349,6 +354,15 @@ export class AttachmentManager {
     async extract(list, getInfo, extractOptions) {
         // Preparation phase
 
+        const preparationProgressInfo = {
+            status: "started",
+            duplicateCount: 0
+        }
+
+        this.#reportPreparationProgress(preparationProgressInfo);
+
+        preparationProgressInfo.status = "executing";
+
         const selectedItemKeys = new Set(list.map((item) => {
             const info = getInfo(item);
 
@@ -358,7 +372,8 @@ export class AttachmentManager {
         this.#packagingTracker = {
             items: [],
             extractionSubsets: [],
-            currentPackageIndex: 0
+            currentPackageIndex: 0,
+            preserveFolderStructure: extractOptions.preserveFolderStructure
         };
 
         const items = this.#packagingTracker.items;
@@ -382,81 +397,27 @@ export class AttachmentManager {
                 }
                 else {
                     this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName});
+
+                    preparationProgressInfo.duplicateCount++;
+
+                    this.#reportPreparationProgress(preparationProgressInfo);
                 }
             }
         }
 
         // Determine packaging sets
 
-        items.sort((a, b) => b.size - a.size);
+        items.sort((a, b) => a.size - b.size);
 
         const maxSize = 750000000;
+//        const maxSize = 250000000;
         let currentSize = 0;
         let currentStart = 0;
 
         const extractionSubsets = this.#packagingTracker.extractionSubsets;
 
-        for(const item of items) {
-            if(currentSize + item.size > maxSize) {
-
-                extractionSubsets.push(currentStart);
-
-                cumulativeSize -= currentSize;
-
-                if(cumulativeSize <= maxSize) {
-                    break;
-                }
-
-                currentSize = 0;
-            }
-
-            currentSize += item.size;
-            currentStart++;
-        }
-
-        extractionSubsets.push(items.length);
-
-        const packagingProgressInfo = {
-            totalItems: items.length,
-            includedCount: 0,
-            skippedCount: 0,
-            totalBytes: 0,
-            hasDuplicate: false,
-            lastFileName: ""
-        };
-
-        this.#reportPackagingProgress(packagingProgressInfo);
-
-/*
-
-        const sizeRegistration = new Map(this.attachmentList.map((item) => [`${item.messageId}:${item.partName}`, item.size]));
-
-
-        const extractionSet = list
-            .map((item) => {
-                const info = getInfo(item);
-
-                const size = sizeRegistration.get(`${item.messageId}:${item.partName}`);
-
-                cumulativeSize += size;
-
-                return {
-                    messageId: info.messageId,
-                    partName: info.partName,
-                    size: size,
-                    timestamp: info.timestamp
-                }
-            })
-            .sort((a, b) => b.size - a.size);
-
-        
-//        const extractionSubsets = [];
-
         if(cumulativeSize > maxSize) {
-            let currentSize = 0;
-            let currentStart = 0;
-
-            for(const item of extractionSet) {
+            for(const item of items) {
                 if(currentSize + item.size > maxSize) {
 
                     extractionSubsets.push(currentStart);
@@ -469,58 +430,47 @@ export class AttachmentManager {
 
                     currentSize = 0;
                 }
-    
+
                 currentSize += item.size;
                 currentStart++;
             }
         }
 
+        extractionSubsets.push(items.length);
 
-        const duplicateTracker = new Map();
-        
-        this.#deletionTracker = {
-            attachmentCount: 0,
-            items: new Map()
+        preparationProgressInfo.status = "complete";
+
+        this.#reportPreparationProgress(preparationProgressInfo);
+
+
+        // Begin Packaging phase...
+
+        const packagingProgressInfo = {
+            status: "started",
+            totalItems: items.length,
+            includedCount: 0,
+            errorCount: 0,
+            totalBytes: 0,
+//            hasDuplicate: false,
+            filesCreated: 0,
+            fileCount: this.#packagingTracker.extractionSubsets.length,
+            lastFileName: ""
         };
-*/
+
+        this.#reportPackagingProgress(packagingProgressInfo);
+
+        packagingProgressInfo.status = "executing";
 
         this.#duplicateFileNameTracker = new Map();
 
         this.#package(packagingProgressInfo);        
-
-/*
-
-        let subsetIndex = 0;
-        let start = 0;
-
-        while(subsetIndex < extractionSubsets.length) {
-            let nextStart = extractionSubsets[subsetIndex];
-
-            const success = await this.#package(extractionSet, start, nextStart, extractOptions, packagingProgressInfo, duplicateTracker, (extractionSubsets.length == subsetIndex + 1));
-
-            if(!success) {
-                this.#reportSaveResult({
-                    status: "error",
-                    message: messenger.i18n.getMessage("saveFailed")
-                });
-
-                return;
-            }
-
-            start = nextStart;
-
-            subsetIndex++;
-        }
-
-*/
-
     }
 
     async #package(packagingProgressInfo) {
         const jsZip = JSZip();
 
         const packagingTracker = this.#packagingTracker;
-        currentPackageIndex = packagingTracker.currentPackageIndex;
+        const currentPackageIndex = packagingTracker.currentPackageIndex;
 
         let start = (currentPackageIndex == 0) ? 0 : packagingTracker.extractionSubsets[currentPackageIndex - 1];
         let nextStart = packagingTracker.extractionSubsets[currentPackageIndex];
@@ -534,42 +484,36 @@ export class AttachmentManager {
                 attachmentFile = await this.#getAttachmentFile(item.messageId, item.partName);
             }
             catch(e) {
+                packagingProgressInfo.errorCount++;
+                this.#reportPackagingProgress;
                 console.log(e);
                 continue;
             }
 
-            const fileName = item.name;
+            let fileName = item.name;
             packagingProgressInfo.lastFileName = fileName;
             
 //            const attachmentInfo = { partName: info.partName, fileName: attachmentFile.name };
 
-            const duplicateFilenameTracker = this.#duplicateFileNameTracker;
+            const duplicateFileNameTracker = this.#duplicateFileNameTracker;
 
-            const duplicateKey = filename.toLowerCase();
+            const duplicateKey = fileName.toLowerCase();
 
-            if(duplicateFilenameTracker.has(duplicateKey)) {
-                const sequenceNumber = duplicateFilenameTracker.get(duplicateKey);
-
-//                packagingProgressInfo.totalItems--;
-//                packagingProgressInfo.skippedCount++;
-//                packagingProgressInfo.hasDuplicate = true;
-
-//                this.#reportPackagingProgress(packagingProgressInfo);
-
-//                packagingProgressInfo.hasDuplicate = false;
+            if(duplicateFileNameTracker.has(duplicateKey)) {
+                let sequenceNumber = duplicateFileNameTracker.get(duplicateKey);
 
                 fileName = this.#sequentializeFileName(fileName, ++sequenceNumber);
 
-                duplicateFilenameTracker.set(duplicateKey, sequenceNumber);
+                duplicateFileNameTracker.set(duplicateKey, sequenceNumber);
             }
             else {
-                duplicateTracker.set(duplicateKey, 1);
+                duplicateFileNameTracker.set(duplicateKey, 1);
             }
 
             packagingProgressInfo.includedCount++;
             packagingProgressInfo.totalBytes += item.size;
 
-            if(extractOptions.preserveFolderStructure) {
+            if(packagingTracker.preserveFolderStructure) {
                 const message = this.messageList.get(item.messageId);
                 fileName = `${message.folderPath.slice(1)}/${fileName}`;
             }
@@ -614,14 +558,17 @@ export class AttachmentManager {
         {
             if(progress.id == downloadId && progress.state) {
                 let info = null;
-                const success = false;
+                let success = false;
 
                 if(progress.state.current == "complete") {
                     info = {
                         status: "success",
                         message: messenger.i18n.getMessage("saveComplete"),
-                        attachmentCount: deletionTracker.attachmentCount
+                        attachmentCount: "NOT IMPLEMENTED"                    //deletionTracker.attachmentCount
                     };
+
+                    packagingProgressInfo.filesCreated++;
+                    this.#reportPackagingProgress(packagingProgressInfo);
 
                     success = true;
                 }

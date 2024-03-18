@@ -15,10 +15,15 @@ export class AttachmentManager {
     #reportFolderProcessed = (folderPath) => {};
     #reportProcessingComplete = () => {};
 
+    #reportPreparationProgress = (info) => {};
+
     #reportPackagingProgress = (info) => {};
     #reportSaveResult;
 
-    #deletionTracker
+    #packagingTracker;
+    #duplicateFileTracker;
+    #duplicateFileNameTracker;
+
     #reportDetachProgress = (info) => {};
     #reportDetachResult = (info) => {};
 
@@ -71,6 +76,8 @@ export class AttachmentManager {
             this.#reportMessageStats = options.reportMessageStats;
             this.#reportAttachmentStats = options.reportAttachmentStats;
             this.#reportFolderProcessed = options.reportFolderProcessed;
+
+            this.#reportPreparationProgress = options.reportPreparationProgress;
 
             this.#reportPackagingProgress = options.reportPackagingProgress;
 
@@ -281,7 +288,9 @@ export class AttachmentManager {
 
         this.#selectedFolderPaths = undefined;
 
-        this.#deletionTracker = null;
+        this.#packagingTracker = null;
+        this.#duplicateFileTracker = null;
+        this.#duplicateFileTracker = null;
 
         this.attachmentList.length = 0;
         this.messageList.clear();
@@ -338,8 +347,77 @@ export class AttachmentManager {
     }
 
     async extract(list, getInfo, extractOptions) {
+        // Preparation phase
+
+        const selectedItemKeys = new Set(list.map((item) => {
+            const info = getInfo(item);
+
+            return `${info.messageId}:${info.partName}`;
+        }));
+
+        this.#packagingTracker = {
+            items: [],
+            extractionSubsets: [],
+            currentPackageIndex: 0
+        };
+
+        const items = this.#packagingTracker.items;
+
+        this.#duplicateFileTracker = [];
+
+        const duplicateKeys = new Set();
+
+        let cumulativeSize = 0;
+
+        // Determine selected items and identify/isolate duplicates
+
+        for(const item of this.attachmentList) {
+            if(selectedItemKeys.has(`${item.messageId}:${item.partName}`)) {
+                const duplicateKey = `${item.name}${item.size}`;
+
+                if(!duplicateKeys.has(duplicateKey)) {
+                    items.push(item);
+                    duplicateKeys.add(duplicateKey);
+                    cumulativeSize += item.size;
+                }
+                else {
+                    this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName});
+                }
+            }
+        }
+
+        // Determine packaging sets
+
+        items.sort((a, b) => b.size - a.size);
+
+        const maxSize = 750000000;
+        let currentSize = 0;
+        let currentStart = 0;
+
+        const extractionSubsets = this.#packagingTracker.extractionSubsets;
+
+        for(const item of items) {
+            if(currentSize + item.size > maxSize) {
+
+                extractionSubsets.push(currentStart);
+
+                cumulativeSize -= currentSize;
+
+                if(cumulativeSize <= maxSize) {
+                    break;
+                }
+
+                currentSize = 0;
+            }
+
+            currentSize += item.size;
+            currentStart++;
+        }
+
+        extractionSubsets.push(items.length);
+
         const packagingProgressInfo = {
-            totalItems: list.length,
+            totalItems: items.length,
             includedCount: 0,
             skippedCount: 0,
             totalBytes: 0,
@@ -349,9 +427,10 @@ export class AttachmentManager {
 
         this.#reportPackagingProgress(packagingProgressInfo);
 
+/*
+
         const sizeRegistration = new Map(this.attachmentList.map((item) => [`${item.messageId}:${item.partName}`, item.size]));
 
-        let cumulativeSize = 0;
 
         const extractionSet = list
             .map((item) => {
@@ -371,8 +450,7 @@ export class AttachmentManager {
             .sort((a, b) => b.size - a.size);
 
         
-        const extractionSubsets = [];
-        const maxSize = 750000000;
+//        const extractionSubsets = [];
 
         if(cumulativeSize > maxSize) {
             let currentSize = 0;
@@ -397,7 +475,6 @@ export class AttachmentManager {
             }
         }
 
-        extractionSubsets.push(extractionSet.length);
 
         const duplicateTracker = new Map();
         
@@ -405,6 +482,13 @@ export class AttachmentManager {
             attachmentCount: 0,
             items: new Map()
         };
+*/
+
+        this.#duplicateFileNameTracker = new Map();
+
+        this.#package(packagingProgressInfo);        
+
+/*
 
         let subsetIndex = 0;
         let start = 0;
@@ -427,78 +511,71 @@ export class AttachmentManager {
 
             subsetIndex++;
         }
+
+*/
+
     }
 
-    async #package(extractionSet, start, nextStart, extractOptions, packagingProgressInfo, duplicateTracker, isFinal) {
+    async #package(packagingProgressInfo) {
         const jsZip = JSZip();
 
-        const deletionTracker = this.#deletionTracker;
+        const packagingTracker = this.#packagingTracker;
+        currentPackageIndex = packagingTracker.currentPackageIndex;
+
+        let start = (currentPackageIndex == 0) ? 0 : packagingTracker.extractionSubsets[currentPackageIndex - 1];
+        let nextStart = packagingTracker.extractionSubsets[currentPackageIndex];
 
         for (let i = start; i < nextStart; i++) {
-            const info = extractionSet[i];
+            const item = packagingTracker.items[i];
 
             let attachmentFile;
 
             try {
-                attachmentFile = await this.#getAttachmentFile(info.messageId, info.partName);
+                attachmentFile = await this.#getAttachmentFile(item.messageId, item.partName);
             }
             catch(e) {
                 console.log(e);
                 continue;
             }
 
-            let fileName = this.#normalizeFileName(attachmentFile.name);
-            packagingProgressInfo.lastFileName = attachmentFile.name;
-            const size = attachmentFile.size;
+            const fileName = item.name;
+            packagingProgressInfo.lastFileName = fileName;
+            
+//            const attachmentInfo = { partName: info.partName, fileName: attachmentFile.name };
 
-            deletionTracker.attachmentCount++;
+            const duplicateFilenameTracker = this.#duplicateFileNameTracker;
 
-            const attachmentInfo = { partName: info.partName, fileName: attachmentFile.name };
+            const duplicateKey = filename.toLowerCase();
 
-            if(deletionTracker.items.has(info.messageId)) {
-                deletionTracker.items.get(info.messageId).push(attachmentInfo);
+            if(duplicateFilenameTracker.has(duplicateKey)) {
+                const sequenceNumber = duplicateFilenameTracker.get(duplicateKey);
+
+//                packagingProgressInfo.totalItems--;
+//                packagingProgressInfo.skippedCount++;
+//                packagingProgressInfo.hasDuplicate = true;
+
+//                this.#reportPackagingProgress(packagingProgressInfo);
+
+//                packagingProgressInfo.hasDuplicate = false;
+
+                fileName = this.#sequentializeFileName(fileName, ++sequenceNumber);
+
+                duplicateFilenameTracker.set(duplicateKey, sequenceNumber);
             }
             else {
-                deletionTracker.items.set(info.messageId, [attachmentInfo]);
-            }
-
-            const duplicateKey = fileName.toLowerCase();
-
-            if(duplicateTracker.has(duplicateKey)) {
-                const duplicateSet = duplicateTracker.get(duplicateKey);
-
-                if(duplicateSet.has(size)) {
-                    packagingProgressInfo.totalItems--;
-                    packagingProgressInfo.skippedCount++;
-                    packagingProgressInfo.hasDuplicate = true;
-
-                    this.#reportPackagingProgress(packagingProgressInfo);
-
-                    packagingProgressInfo.hasDuplicate = false;
-
-                    continue;
-                }
-
-                duplicateSet.add(size);
-
-                const sequenceNumber = duplicateSet.size;
-
-                fileName = this.#sequentializeFileName(fileName, sequenceNumber);
-            }
-            else {
-                duplicateTracker.set(duplicateKey, new Set([size]));
+                duplicateTracker.set(duplicateKey, 1);
             }
 
             packagingProgressInfo.includedCount++;
-            packagingProgressInfo.totalBytes += attachmentFile.size;
+            packagingProgressInfo.totalBytes += item.size;
 
             if(extractOptions.preserveFolderStructure) {
-                const message = this.messageList.get(info.messageId);
+                const message = this.messageList.get(item.messageId);
                 fileName = `${message.folderPath.slice(1)}/${fileName}`;
             }
 
             const fileData = await attachmentFile.arrayBuffer();
-            jsZip.file(fileName, fileData, { date: info.timestamp });
+            jsZip.file(fileName, fileData, { date: item.date });
 
             this.#reportPackagingProgress(packagingProgressInfo);
         }
@@ -517,18 +594,27 @@ export class AttachmentManager {
             return false;
         }
 
-        let downloadId = null;
-
         const zipParams = {
             url: URL.createObjectURL(zipFile),
             filename: `${messenger.i18n.getMessage("attachments")}-${new Date().getTime()}.zip`,
             conflictAction: "uniquify"
         };
 
+        this.#download(zipParams, packagingProgressInfo);
+    }
+
+    async #download(zipParams, packagingProgressInfo) {
+        let downloadId = null;
+
+        const packagingTracker = this.#packagingTracker;
+        const isFirst = (++packagingTracker.currentPackageIndex == 1);
+        const isFinal = (packagingTracker.currentPackageIndex == packagingTracker.extractionSubsets.length);
+
         const listen = (progress) =>
         {
             if(progress.id == downloadId && progress.state) {
                 let info = null;
+                const success = false;
 
                 if(progress.state.current == "complete") {
                     info = {
@@ -536,6 +622,8 @@ export class AttachmentManager {
                         message: messenger.i18n.getMessage("saveComplete"),
                         attachmentCount: deletionTracker.attachmentCount
                     };
+
+                    success = true;
                 }
                 else if(progress.state.current  == "interrupted") {
                     info = {
@@ -552,6 +640,10 @@ export class AttachmentManager {
                     browser.downloads.onChanged.removeListener(listen);
         
                     URL.revokeObjectURL(zipParams.url);
+
+                    if(success && !isFinal) {
+                        this.#package(packagingProgressInfo);       // Package the next set of attachments
+                    }
                 }
             }
         };
@@ -563,25 +655,21 @@ export class AttachmentManager {
             .then(
                 (id) => {
                     downloadId = id;
-                    if(isFinal) {
+                    if(isFirst) {
                         this.#reportSaveResult({ status: "started" });
                     }
                 },
                 (error) => {
-                    if(isFinal) {
-                        this.#reportSaveResult({
-                            status: "error",
-                            message: error.message
-                        });
-                    }
+                    this.#reportSaveResult({
+                        status: "error",
+                        message: error.message
+                    });
 
                     browser.downloads.onChanged.removeListener(listen);
 
                     URL.revokeObjectURL(zipParams.url);
                 }
             );
-
-        return true;
     }
 
 
@@ -593,16 +681,14 @@ export class AttachmentManager {
 
         let success = true;
 
-        for(const item of this.#deletionTracker.items) {
-            const messageId = item[0];
-            const attachments = item[1];
+        const deletionSets = [this.#packagingTracker.items, this.#duplicateFileTracker];
 
-            for(const attachmentInfo of attachments) {
-
-                console.log(`${messageId} : ${attachmentInfo.partName} - ${attachmentInfo.fileName}`);
+        for(const set of deletionSets) {
+            for(const item of set) {
+                console.log(`${item.messageId} : ${item.partName} - ${item.name}`);
 
                 try {
-                    messenger.messages.deleteAttachments(messageId, attachmentInfo);
+//                        messenger.messages.deleteAttachments(messageId, partName);
                     info.processedCount++;
                 }
                 catch(e) {
@@ -612,7 +698,7 @@ export class AttachmentManager {
 
             this.#reportDetachProgress(info);
         }
-
+ 
         this.#reportDetachResult({ success: success });
     }
 

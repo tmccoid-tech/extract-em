@@ -250,6 +250,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
+    const updatePreparationProgress = (info) =>
+    {
+
+    };
+
     const updatePackagingProgress = (info) =>
     {
         if(info.hasDuplicate) {
@@ -370,6 +375,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportAttachmentStats: updateAttachmentStats,
                 reportFolderProcessed: updateProcessedFolder,
                 reportProcessingComplete: updateProcessingComplete,
+
+                reportPreparationProgress: updatePreparationProgress,
                 
                 reportPackagingProgress: updatePackagingProgress,
                 reportSaveResult: updateSaveResult,

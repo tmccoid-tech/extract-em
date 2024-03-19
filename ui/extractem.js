@@ -49,10 +49,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const summaryProcessedMessageCountSpan = document.getElementById("summary-processed-message-count-td");
     const summaryAttachmentMessageCountSpan = document.getElementById("summary-attachment-message-count-td");
     const summarySelectedAttachmentCountSpan = document.getElementById("summary-selected-attachment-count-span");
+    const summarySelectedAttachmentSizeSpan = document.getElementById("selected-attachment-size-span");
     const summaryAttachmentCountSpan = document.getElementById("summary-attachment-count-span");
+    const summaryAttachmentSizeSpan = document.getElementById("summary-attachment-size-span");
 
     const selectedAttachmentCountSpan = document.getElementById("selected-attachment-count-span");
-    
 
     const flexContainer = document.getElementById("flex-container");
     const quickMenuSection = document.getElementById("quickmenu-section");
@@ -132,6 +133,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         ["lg", 400]
     ]);
 
+    const kb = 1000;
+    const mb = kb * kb;
+    const gb = mb * kb;
+
     const storageUnitMap = new Map([
         ["by", messenger.i18n.getMessage("bytesLabel")],
         ["kb", messenger.i18n.getMessage("kbLabel")],
@@ -181,17 +186,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         else {
             const rowItem = folderRowSet.get(folderStats.folderPath);
-            rowItem.attachmentCount = folderStats.attachmentCount;
             rowItem.attachmentMessageCount = folderStats.attachmentMessageCount;
+            rowItem.attachmentCount = folderStats.attachmentCount;
+            rowItem.attachmentSize = folderStats.attachmentSize;
 
             const row = rowItem.row;
 
             row.querySelector(".attachment-message-count-td").innerText = folderStats.attachmentMessageCount.toString();
             row.querySelector(".attachment-count-td").innerText = folderStats.attachmentCount.toString();
+            row.querySelector(".attachment-size-td").innerText = abbreviateFileSize(folderStats.attachmentSize);
 
             summaryAttachmentMessageCountSpan.innerText = folderStats.summaryAttachmentMessageCount.toString();
 
             summaryAttachmentCountSpan.innerText = folderStats.summaryAttachmentCount.toString();
+            summaryAttachmentSizeSpan.innerText = abbreviateFileSize(folderStats.summaryAttachmentSize);
         }
     };
 
@@ -585,6 +593,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
 
+            templateNode.querySelector(".attachment-size-td").innerText = abbreviateFileSize(0);
+
             statsSummaryTBody.appendChild(row);
 
             folderRowSet.set(folder.path, {
@@ -592,6 +602,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 messageCount: folder.messageCount,
                 attachmentMessageCount: 0,
                 attachmentCount: 0,
+                attachmentSize: 0,
                 row: row,
                 checkbox: folderCheckbox,
                 button: folderSelectorButton,
@@ -695,6 +706,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         attachmentCheckbox.setAttribute("message-id", attachment.messageId);
         attachmentCheckbox.setAttribute("part-name", attachment.partName);
         attachmentCheckbox.setAttribute("timestamp", attachment.date.toISOString());
+        attachmentCheckbox.setAttribute("file-size", attachment.size);
         attachmentCheckbox.setAttribute("extension", attachment.extension);
 
         attachmentPanel.querySelector(".file-name-label").textContent = attachment.name;
@@ -829,16 +841,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
     }
 
+    function extractBySet(list) {
+        extract(list, (attachment) => {
+            return {
+                messageId: attachment.messageId,
+                partName: attachment.partName
+            };
+        });
+    }
+
     function extractImmediate() {
-        extract(attachmentManager.attachmentList,
-            (attachment) => {
-                return {
-                    messageId: attachment.messageId,
-                    partName: attachment.partName,
-                    timestamp: attachment.date
-                };
-            }
-        );
+        extractBySet(attachmentManager.attachmentList);
     }
 
     function extractFolders() {
@@ -852,27 +865,36 @@ document.addEventListener("DOMContentLoaded", async () => {
             (attachment) => filteredMessageSet.has(attachment.messageId)
         );
 
-        extract(filteredAttachmentList,
-            (attachment) => {
+        const selectionCounts = determineSelectionCounts();
+
+        updateZipDiscoveryInfo(selectionCounts.selectedAttachmentCount, selectionCounts.selectedAttachmentSize);
+
+        extractBySet(filteredAttachmentList);
+    }
+
+    function extractSelected() {
+        const selectedCheckboxes = [...document.querySelectorAll(".attachment-checkbox:checked")];
+
+        const selectionSize = selectedCheckboxes.reduce((t, c) =>
+            t + parseInt(c.getAttribute("file-size"))
+        , 0);
+
+        updateZipDiscoveryInfo(selectedCheckboxes.length, selectionSize);
+
+        extract(selectedCheckboxes,
+            (checkbox) => {
                 return {
-                    messageId: attachment.messageId,
-                    partName: attachment.partName,
-                    timestamp: attachment.date
+                    messageId: parseInt(checkbox.getAttribute("message-id")),
+                    partName: checkbox.getAttribute("part-name")
                 };
             }
         );
     }
 
-    function extractSelected() {
-        extract(document.querySelectorAll(".attachment-checkbox:checked"),
-            (checkbox) => {
-                return {
-                    messageId: parseInt(checkbox.getAttribute("message-id")),
-                    partName: checkbox.getAttribute("part-name"),
-                    timestamp: new Date(checkbox.getAttribute("timestamp"))
-                };
-            }
-        );
+    function updateZipDiscoveryInfo(selectedCount, size) {
+        immediateDiscoveryProgress.value = 1;
+        discoveryProgressMessage.innerHTML =  messenger.i18n.getMessage("discoverySelectionMessages", [selectedCount.toString(), attachmentManager.attachmentList.length.toString()]);
+        discoverySizeLabel.innerHTML = abbreviateFileSize(size);
     }
 
     function displayPermanentDetachPanel() {
@@ -973,6 +995,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         selectedFolderCountSpan.innerText = result.selectedFolderCount.toString();
         summarySelectedMessageCountSpan.innerText = result.selectedMessageCount.toString();
         summarySelectedAttachmentCountSpan.innerText = result.selectedAttachmentCount.toString();
+        summarySelectedAttachmentSizeSpan.innerText = abbreviateFileSize(result.selectedAttachmentSize);
         
         discoverAttachmentsButton.disabled = (discoveryComplete || result.selectedMessageCount == 0);
 
@@ -985,7 +1008,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const result = {
             selectedFolderCount: 0,
             selectedMessageCount: 0,
-            selectedAttachmentCount: 0
+            selectedAttachmentCount: 0,
+            selectedAttachmentSize: 0
         }
 
         folderRowSet.forEach((v, k, m) => {
@@ -995,6 +1019,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ? v.attachmentMessageCount
                     : v.messageCount;
                 result.selectedAttachmentCount += v.attachmentCount;
+                result.selectedAttachmentSize += v.attachmentSize;
             }
         });
 
@@ -1063,10 +1088,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function abbreviateFileSize(size) {
-        const kb = 1000;
-        const mb = kb * kb;
-        const gb = mb * kb;
-
         let result = "";
 
         let divisor = 1;

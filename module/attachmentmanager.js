@@ -168,6 +168,7 @@ export class AttachmentManager {
             processedMessageCount: 0,
             attachmentMessageCount: 0,
             attachmentCount: 0,
+            attachmentSize: 0,
             lastFileName: ""
         };
 
@@ -261,6 +262,7 @@ export class AttachmentManager {
                     folderStats.attachmentCount++;
 
                     this.#cumulativeAttachmentSize += attachmentInfo.size;
+                    folderStats.attachmentSize += attachmentInfo.size;
                 }
             }
 
@@ -276,6 +278,7 @@ export class AttachmentManager {
                     folderPath: folderStats.folderPath,
                     attachmentMessageCount: folderStats.attachmentMessageCount,
                     attachmentCount: folderStats.attachmentCount,
+                    attachmentSize: folderStats.attachmentSize,
                     lastFileName: folderStats.lastFileName
                 });
             }
@@ -290,12 +293,13 @@ export class AttachmentManager {
         this.#processedMessageCount = 0;
         this.#attachmentMessageCount = 0;
         this.#attachmentCount = 0;
+        this.#cumulativeAttachmentSize = 0;
 
         this.#selectedFolderPaths = undefined;
 
         this.#packagingTracker = null;
         this.#duplicateFileTracker = null;
-        this.#duplicateFileTracker = null;
+        this.#duplicateFileNameTracker = null;
 
         this.attachmentList.length = 0;
         this.messageList.clear();

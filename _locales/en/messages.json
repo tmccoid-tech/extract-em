@@ -54,7 +54,8 @@
     "selected": { "message": "selected" },
     "count": { "message": "Count" },
     "processed": { "message": "Processed" },
-    "withAttachments": { "message": "w/Attachments" },
+    "withAbbrev": { "message": "w/" },
+    "size": { "message": "Size" },
 
     "discoverAttachments": {
         "message": "Discover Attachments",
@@ -71,6 +72,10 @@
     "discoveryProgressMessage": {
         "message": "$1 attachment(s) in $2 of $3 message(s)",
         "description": "{# of discovered} attachment(s) in {# of messages including attachments)} of {total # of discovered messages}"
+    },
+    "discoverySelectionMessages": {
+        "message": "$1 of $2 attachment(s) selected",
+        "description": "{# of selected} of {# of discovered} attachment(s) "
     },
 
     "preparing": { "message": "Preparing" },

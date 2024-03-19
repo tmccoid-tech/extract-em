@@ -216,6 +216,16 @@ td.summary-header {
     background: rgba(128,128,128,.2);
 }
 
+#with-attachments-label {
+    display: flex;
+    justify-content: center;
+}
+
+#paperlcip_char {
+    height: 20px;
+    width: 20px;
+}
+
 #stats-table tbody .folder-td {
     text-align: left;
 }

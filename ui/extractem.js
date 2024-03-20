@@ -49,11 +49,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const summaryProcessedMessageCountSpan = document.getElementById("summary-processed-message-count-td");
     const summaryAttachmentMessageCountSpan = document.getElementById("summary-attachment-message-count-td");
     const summarySelectedAttachmentCountSpan = document.getElementById("summary-selected-attachment-count-span");
-    const summarySelectedAttachmentSizeSpan = document.getElementById("selected-attachment-size-span");
+    const summarySelectedAttachmentSizeSpan = document.getElementById("summary-selected-attachment-size-span");
     const summaryAttachmentCountSpan = document.getElementById("summary-attachment-count-span");
     const summaryAttachmentSizeSpan = document.getElementById("summary-attachment-size-span");
 
     const selectedAttachmentCountSpan = document.getElementById("selected-attachment-count-span");
+    const selectedAttachmentSizeSpan = document.getElementById("selected-attachment-size-span");
 
     const flexContainer = document.getElementById("flex-container");
     const quickMenuSection = document.getElementById("quickmenu-section");
@@ -254,6 +255,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if(countInfo.selectedAttachmentCount > 0) {
                 selectedAttachmentCountSpan.innerText = countInfo.selectedAttachmentCount.toString();
+                selectedAttachmentSizeSpan.innerText = abbreviateFileSize(countInfo.selectedAttachmentSize);
                 attachmentListNavButton.disabled = false;
                 attachmentListNavButton.classList.remove("invisible");
             }
@@ -873,15 +875,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function extractSelected() {
-        const selectedCheckboxes = [...document.querySelectorAll(".attachment-checkbox:checked")];
+        const selections = getSelectedAttachmentCheckboxes();
 
-        const selectionSize = selectedCheckboxes.reduce((t, c) =>
-            t + parseInt(c.getAttribute("file-size"))
-        , 0);
+        updateZipDiscoveryInfo(selections.count, selections.selectedAttachmentSize);
 
-        updateZipDiscoveryInfo(selectedCheckboxes.length, selectionSize);
-
-        extract(selectedCheckboxes,
+        extract(selections.checkboxes,
             (checkbox) => {
                 return {
                     messageId: parseInt(checkbox.getAttribute("message-id")),
@@ -984,9 +982,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function onAttachmentCheckboxChanged(event) {
-        const selectedAttachmentCount = document.querySelectorAll(".attachment-checkbox:checked").length;
-        extractSelectedButton.disabled = (selectedAttachmentCount == 0);
-        selectedAttachmentCountSpan.innerText = selectedAttachmentCount.toString();
+        const selections = getSelectedAttachmentCheckboxes(true);
+
+        extractSelectedButton.disabled = (selections.count == 0);
+        selectedAttachmentCountSpan.innerText = selections.count.toString();
+        selectedAttachmentSizeSpan.innerText = abbreviateFileSize(selections.selectedAttachmentSize);
     }
 
     function updateSelectionCounts() {
@@ -1010,7 +1010,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             selectedMessageCount: 0,
             selectedAttachmentCount: 0,
             selectedAttachmentSize: 0
-        }
+        };
 
         folderRowSet.forEach((v, k, m) => {
             if(v.checkbox.checked) {
@@ -1025,6 +1025,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         return result;
     };
+
+    function getSelectedAttachmentCheckboxes(statsOnly = false) {
+        const result = {
+            count: 0,
+            selectedAttachmentSize: 0
+        };
+
+        const selectedCheckboxes = [...document.querySelectorAll(".attachment-checkbox:checked")];
+
+        result.count = selectedCheckboxes.length;
+
+        result.selectedAttachmentSize = selectedCheckboxes.reduce((t, c) =>
+            t + parseInt(c.getAttribute("file-size"))
+        , 0);
+
+        if(!statsOnly) {
+            result.checkboxes = selectedCheckboxes;
+        }
+
+        return result;
+    }
 
     async function displayZoom(event) {
         const image = event.srcElement;

@@ -471,7 +471,8 @@ export class AttachmentManager {
     }
 
     async #package(packagingProgressInfo) {
-        const jsZip = JSZip();
+//        const jsZip = JSZip();
+        const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"), { bufferedWrite: true, useCompressionStream: false });
 
         const packagingTracker = this.#packagingTracker;
         const currentPackageIndex = packagingTracker.currentPackageIndex;
@@ -523,7 +524,10 @@ export class AttachmentManager {
             }
 
             const fileData = await attachmentFile.arrayBuffer();
-            jsZip.file(fileName, fileData, { date: item.date });
+
+//            jsZip.file(fileName, fileData, { date: item.date });
+
+            await zipWriter.add(fileName, new zip.BlobReader(fileData), { })
 
             this.#reportPackagingProgress(packagingProgressInfo);
         }
@@ -534,12 +538,14 @@ export class AttachmentManager {
         let zipFile;
 
         try {
-            zipFile = await jsZip.generateAsync({ type: "blob" });
+//            zipFile = await jsZip.generateAsync({ type: "blob" });
+
+            zipFile = await zipWriter.close();
         }
         catch(e) {
             console.log(e);
 
-            return false;
+            return;
         }
 
         const zipParams = {

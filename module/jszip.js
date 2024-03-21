@@ -3086,6 +3086,10 @@ exports.newBlob = function(part, type) {
     }
     catch (e) {
 
+        if(e.result == 2147942414) {        // NS_ERROR_OUT_OF_MEMORY
+          throw e;
+        }
+
         try {
             // deprecated, browser only, old way
             var Builder = self.BlobBuilder || self.WebKitBlobBuilder || self.MozBlobBuilder || self.MSBlobBuilder;

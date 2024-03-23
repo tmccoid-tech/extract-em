@@ -1,3 +1,5 @@
+import { ZipEm } from "/module/zipem.js";
+
 export class AttachmentManager {
     #platformOs;
 
@@ -22,6 +24,8 @@ export class AttachmentManager {
     #reportSaveResult;
 
     #packagingTracker;
+    #packagingErrorList;
+
     #duplicateFileTracker;
     #duplicateFileNameTracker;
 
@@ -298,6 +302,7 @@ export class AttachmentManager {
         this.#selectedFolderPaths = undefined;
 
         this.#packagingTracker = null;
+        this.#packagingErrorList = null;
         this.#duplicateFileTracker = null;
         this.#duplicateFileNameTracker = null;
 
@@ -463,7 +468,7 @@ export class AttachmentManager {
 
         this.#reportPackagingProgress(packagingProgressInfo);
 
-        packagingProgressInfo.status = "executing";
+        this.#packagingErrorList = [];
 
         this.#duplicateFileNameTracker = new Map();
 
@@ -472,13 +477,19 @@ export class AttachmentManager {
 
     async #package(packagingProgressInfo) {
 //        const jsZip = JSZip();
-        const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"), { bufferedWrite: true, useCompressionStream: false });
+//        const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"), { bufferedWrite: true, useCompressionStream: false });
+        const zipEm = new ZipEm();
 
         const packagingTracker = this.#packagingTracker;
+        const errorList = this.#packagingErrorList
         const currentPackageIndex = packagingTracker.currentPackageIndex;
 
         let start = (currentPackageIndex == 0) ? 0 : packagingTracker.extractionSubsets[currentPackageIndex - 1];
         let nextStart = packagingTracker.extractionSubsets[currentPackageIndex];
+
+        packagingProgressInfo.status = "executing";
+
+        this.#reportPackagingProgress(packagingProgressInfo);
 
         for (let i = start; i < nextStart; i++) {
             const item = packagingTracker.items[i];
@@ -489,17 +500,25 @@ export class AttachmentManager {
                 attachmentFile = await this.#getAttachmentFile(item.messageId, item.partName);
             }
             catch(e) {
-                packagingProgressInfo.errorCount++;
-                this.#reportPackagingProgress;
+                errorList.push({
+                    messageId: item.messageId,
+                    partName: partName,
+                    scope: "getFileData",
+                    error: e.toString()
+                });
+
+                packagingProgressInfo.errorCount = errorList.length;
+
                 console.log(e);
+
+                this.#reportPackagingProgress(packagingProgressInfo);
+
                 continue;
             }
 
             let fileName = item.name;
             packagingProgressInfo.lastFileName = fileName;
             
-//            const attachmentInfo = { partName: info.partName, fileName: attachmentFile.name };
-
             const duplicateFileNameTracker = this.#duplicateFileNameTracker;
 
             const duplicateKey = fileName.toLowerCase();
@@ -515,32 +534,49 @@ export class AttachmentManager {
                 duplicateFileNameTracker.set(duplicateKey, 1);
             }
 
-            packagingProgressInfo.includedCount++;
-            packagingProgressInfo.totalBytes += item.size;
-
             if(packagingTracker.preserveFolderStructure) {
                 const message = this.messageList.get(item.messageId);
                 fileName = `${message.folderPath.slice(1)}/${fileName}`;
             }
 
-            const fileData = await attachmentFile.arrayBuffer();
+//            jsZip.file(fileName, attachmentFile, { date: item.date });
 
-//            jsZip.file(fileName, fileData, { date: item.date });
+//            await zipWriter.add(fileName, new zip.BlobReader(attachmentFile), { creationDate: item.date, useWebWorkers: true });
 
-            await zipWriter.add(fileName, new zip.BlobReader(fileData), { })
+
+
+            try {
+                await zipEm.add(fileName, attachmentFile, item.date);
+
+                packagingProgressInfo.includedCount++;
+                packagingProgressInfo.totalBytes += item.size;
+            }
+            catch(e) {
+                errorList.push({
+                    messageId: item.messageId,
+                    partName: partName,
+                    scope: "addToZip",
+                    error: e.toString()
+                });
+
+                packagingProgressInfo.errorCount = errorList.length;
+
+                console.log(e);
+            }
 
             this.#reportPackagingProgress(packagingProgressInfo);
         }
 
         packagingProgressInfo.lastFileName = "...";
-        this.#reportPackagingProgress(packagingProgressInfo);
 
         let zipFile;
 
         try {
 //            zipFile = await jsZip.generateAsync({ type: "blob" });
 
-            zipFile = await zipWriter.close();
+//      zipFile = await zipWriter.close();
+
+            zipFile = await zipEm.complete();
         }
         catch(e) {
             console.log(e);
@@ -563,6 +599,9 @@ export class AttachmentManager {
         const packagingTracker = this.#packagingTracker;
         const isFirst = (++packagingTracker.currentPackageIndex == 1);
         const isFinal = (packagingTracker.currentPackageIndex == packagingTracker.extractionSubsets.length);
+
+        packagingProgressInfo.status = "donwloading";
+        this.#reportPackagingProgress(packagingProgressInfo);
 
         const listen = (progress) =>
         {

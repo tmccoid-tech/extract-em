@@ -507,6 +507,8 @@ folder-selector-button:disabled:active {
 }
 
 .last-filename-div {
+    overflow-x: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
 }
 

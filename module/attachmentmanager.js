@@ -543,8 +543,6 @@ export class AttachmentManager {
 
 //            await zipWriter.add(fileName, new zip.BlobReader(attachmentFile), { creationDate: item.date, useWebWorkers: true });
 
-
-
             try {
                 await zipEm.add(fileName, attachmentFile, item.date);
 
@@ -572,9 +570,9 @@ export class AttachmentManager {
         let zipFile;
 
         try {
-//            zipFile = await jsZip.generateAsync({ type: "blob" });
+//          zipFile = await jsZip.generateAsync({ type: "blob" });
 
-//      zipFile = await zipWriter.close();
+//          zipFile = await zipWriter.close();
 
             zipFile = await zipEm.complete();
         }

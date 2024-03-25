@@ -478,7 +478,7 @@ export class AttachmentManager {
     async #package(packagingProgressInfo) {
 //        const jsZip = JSZip();
 //        const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"), { bufferedWrite: true, useCompressionStream: false });
-        const zipEm = new ZipEm();
+        const zipEm = new ZipEm(true);
 
         const packagingTracker = this.#packagingTracker;
         const errorList = this.#packagingErrorList
@@ -502,7 +502,7 @@ export class AttachmentManager {
             catch(e) {
                 errorList.push({
                     messageId: item.messageId,
-                    partName: partName,
+                    partName: item.partName,
                     scope: "getFileData",
                     error: e.toString()
                 });

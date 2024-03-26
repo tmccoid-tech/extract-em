@@ -552,7 +552,7 @@ export class AttachmentManager {
             catch(e) {
                 errorList.push({
                     messageId: item.messageId,
-                    partName: partName,
+                    partName: item.partName,
                     scope: "addToZip",
                     error: e.toString()
                 });

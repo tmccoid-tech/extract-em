@@ -23,14 +23,18 @@ export class AttachmentManager {
     #reportPackagingProgress = (info) => {};
     #reportSaveResult;
 
-    #packagingTracker;
-    #packagingErrorList;
-
-    #duplicateFileTracker;
-    #duplicateFileNameTracker;
-
     #reportDetachProgress = (info) => {};
     #reportDetachResult = (info) => {};
+
+    #duplicateFileNameTracker;
+
+    #packagingTracker;
+
+    // Exception tracking
+
+    #duplicateFileTracker;
+    #alterationTracker;
+    #packagingErrorList;
 
 
     #selectedFolderPaths;
@@ -148,6 +152,7 @@ export class AttachmentManager {
 
     async discoverAttachments(selectedFolderPaths) {
         this.#selectedFolderPaths = selectedFolderPaths;
+        this.#alterationTracker = new Map();
 
         for (const folder of this.#folders) {
             this.#processFolder(folder);
@@ -191,6 +196,7 @@ export class AttachmentManager {
 
     async #processPage(page, folderStats) {
         for (const message of page.messages) {
+
             await this.#processMessage(message, folderStats);
 
             this.#processedMessageCount++;
@@ -207,12 +213,14 @@ export class AttachmentManager {
         }
     }
 
-    async #processMessage(message, folderStats, isNested = false) {
+    async #processMessage(message, folderStats, alterationMap = null) {
         const messageAttachmentList = await messenger.messages.listAttachments(message.id);
 
         const hasAttachments = (messageAttachmentList.length > 0);
 
-        if (messageAttachmentList.length > 0) {
+        const isNested = (alterationMap !== null);
+
+        if (hasAttachments) {
             if (!this.messageList.has(message.id)) {
                 this.messageList.set(message.id, {
                     author: message.author,
@@ -221,13 +229,23 @@ export class AttachmentManager {
                 });
             }
 
+            const fullMessage = await messenger.messages.getFull(message.id);
+
+            if(!isNested) {
+                alterationMap = this.#generateAlterationMap(fullMessage.parts);
+            }
+
             for (const attachment of messageAttachmentList) {
+                if(alterationMap.has(attachment.partName)) {
+                    continue;
+                }
+
                 let hasNestedAttachments = false;
 
                 if(attachment.message) {
                     const nestedMessage = await messenger.messages.get(attachment.message.id);
 
-                    hasNestedAttachments = await this.#processMessage(nestedMessage, folderStats, true);
+                    hasNestedAttachments = await this.#processMessage(nestedMessage, folderStats, alterationMap);
                 }
 
                 if(!hasNestedAttachments) {
@@ -253,9 +271,23 @@ export class AttachmentManager {
                     };
 
                     if(attachmentInfo.size < 1) {
-                        const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
+                        try {
+                            const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
 
-                        attachmentInfo.size = attachmentFile.size;
+                            attachmentInfo.size = attachmentFile.size;
+                        }
+                        catch(e) {
+                            alterationMap.set(attachmentInfo.partName, {
+                                name: attachment.name,
+                                alteration: "missing",
+                                timestamp: null,
+                                fileUrl: null
+                            });
+
+                            console.log(e);
+
+                            continue;
+                        }
                     }
 
                     this.attachmentList.push(attachmentInfo);
@@ -271,6 +303,10 @@ export class AttachmentManager {
             }
 
             if(!isNested) {
+                if(alterationMap.size > 0) {
+                    this.#alterationTracker.set(message.id, alterationMap);
+                }
+
                 this.#attachmentMessageCount++;
                 folderStats.attachmentMessageCount++;
 
@@ -291,6 +327,52 @@ export class AttachmentManager {
         return hasAttachments;
     }
 
+
+    #generateAlterationMap(parts, alterationMap = new Map()) {
+        for(const part of parts) {
+            if(part.headers && part.headers["x-mozilla-altered"]) {
+                const alterationTokens = part.headers["x-mozilla-altered"][0].split(";");
+                
+                let alteration = "unknown";
+                let timestamp = null;
+                let fileUrl = null;
+
+                try {
+                    // Example: 'AttachmentDetached; date="Sun Oct 10 11:34:37 2010"'
+                    alteration = (alterationTokens[0] == "AttachmentDetached") ? "detached" : "deleted";
+                    timestamp = alterationTokens[1].split('"')[1];
+                    if(alteration == "detached") {
+                        fileUrl = part.headers["x-mozilla-external-attachment-url"][0];
+                    }
+                }
+                catch(e) {
+                    console.log(e);
+                }
+
+                alterationMap.set(part.partName, {
+                    name: part.name,
+                    alteration: alteration,
+                    timestamp: timestamp,
+                    fileUrl: fileUrl
+                });
+            }
+            else if(part.contentType == "text/x-moz-deleted") {
+                alterationMap.set(part.partName, {
+                    name: part.name,
+                    alteration: "deleted",
+                    timestamp: null,
+                    fileUrl: null
+                });
+            }
+
+            if(part.parts) {
+                this.#generateAlterationMap(part.parts, alterationMap);
+            }
+        }
+
+        return alterationMap;
+    }
+
     reset() {
         this.#folderCount = 0;
         this.#processedFolderCount = 0;
@@ -302,9 +384,11 @@ export class AttachmentManager {
         this.#selectedFolderPaths = undefined;
 
         this.#packagingTracker = null;
-        this.#packagingErrorList = null;
-        this.#duplicateFileTracker = null;
         this.#duplicateFileNameTracker = null;
+
+        this.#alterationTracker = null;
+        this.#duplicateFileTracker = null;
+        this.#packagingErrorList = null;
 
         this.attachmentList.length = 0;
         this.messageList.clear();
@@ -478,7 +562,7 @@ export class AttachmentManager {
     async #package(packagingProgressInfo) {
 //        const jsZip = JSZip();
 //        const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"), { bufferedWrite: true, useCompressionStream: false });
-        const zipEm = new ZipEm(true);
+        const zipEm = new ZipEm();
 
         const packagingTracker = this.#packagingTracker;
         const errorList = this.#packagingErrorList
@@ -611,7 +695,7 @@ export class AttachmentManager {
                     info = {
                         status: "success",
                         message: messenger.i18n.getMessage("saveComplete"),
-                        attachmentCount: "NOT IMPLEMENTED"                    //deletionTracker.attachmentCount
+                        attachmentCount: packagingTracker.items.length
                     };
 
                     packagingProgressInfo.filesCreated++;
@@ -667,7 +751,7 @@ export class AttachmentManager {
     }
 
 
-    deleteAttachments() {
+    async deleteAttachments() {
         const info = {
             processedCount: 0,
             lastFileName: "..."
@@ -682,7 +766,7 @@ export class AttachmentManager {
                 console.log(`${item.messageId} : ${item.partName} - ${item.name}`);
 
                 try {
-//                        messenger.messages.deleteAttachments(messageId, partName);
+                    await messenger.messages.deleteAttachments(item.messageId, [item.partName]);
                     info.processedCount++;
                 }
                 catch(e) {

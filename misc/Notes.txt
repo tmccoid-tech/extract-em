@@ -71,6 +71,17 @@ XXX Attachment List: Disable Extract button if nothing selected
 
 XXX Issue with Account label in zip panel not displaying on second package attempt
 
+Present omissions (detached/deleted)
+
+Rearrange result panel
+
+Deletion tracking
+
+Extraction report
+
+
+
+
 
 
 LQ
@@ -96,5 +107,7 @@ agg
 toMap
 toSet
 exec or ()
+
+
 
 

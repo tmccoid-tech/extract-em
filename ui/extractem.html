@@ -137,7 +137,8 @@
                         <progress id="preparation-progress" value="0" max="1"></progress>
                     </td>
                     <td>
-                        <span id="packaging-skipped-span">0</span> __MSG_duplicatesIdentified__
+                        <div><span id="preparation-alterations-span">0</span> __MSG_alterationsIdentified__</div>
+                        <div><span id="packaging-skipped-span">0</span> __MSG_duplicatesIdentified__</div>
                     </td>
                 </tr>
                 <tr>
@@ -148,72 +149,76 @@
                     <td>
                         <div><span id="packaging-current-span">0</span> __MSG_of__ <span id="packaging-total-span">0</span> (<span id="packaging-size-span">0 __MSG_bytesLabel__</span>)</div>
                         <div><span id="packaging-file-current-span">0</span> __MSG_of__ <span id="packaging-file-total-span">0</span> __MSG_packageFilesSaved__</div>
-                        <div><span id="packaging-error-count-span">0</span> __MSG_errorsEncountered__</div>
+                    </td>
+                </tr>
+                <tr id="detach-operation-row" class="hidden">
+                    <td>
+                        <div class="zip-operation-label">__MSG_permanentlyDetach__</div>
+                        <progress id="detachment-progress"></progress>
+                    </td>
+                    <td>
+                        <span id="permanent-detach-current-span">0</span> __MSG_of__ <span id="permanent-detach-total-span">0</span> __MSG_detached__
                     </td>
                 </tr>
             </table>
 
+            <div id="last-filename-div" class="last-filename-div">...</div>
 
+<!--
             <div id="zip-extract-panel-body">
                 <div id="zip-operation-div">
                     <div id="immediate-discovery-div" class="hidden">
-<!--                        
+                        
                         <div class="zip-operation-label">__MSG_discovering__</div>
                         <div id="discovery-progress-message"></div>
                         <progress id="immediate-discovery-progress"></progress>
--->                        
+                        
                     </div>
                     
                     <div id="packaging-div">
-<!--
+
                         <div class="zip-operation-label">__MSG_packaging__</div>
                         <div><span id="packaging-current-span">0</span> __MSG_of__ <span id="packaging-total-span">0</span> (<span id="packaging-size-span">0 __MSG_bytesLabel__</span>)</div>
                         <progress id="packaging-progress"></progress>
                         <div><span id="packaging-skipped-span">0</span> __MSG_duplicatesSkipped__</div>
--->                                                
+                                                
                     </div>
                 </div>    
+-->
 
-
-                <div id="last-filename-div" class="last-filename-div">...</div>
             
                 <div id="save-result-div">
                     <div id="save-result-border-div"></div>
                     <div class="save-result-content-div">
                         <div class="zip-operation-label">__MSG_result__</div>
                         <span id="save-result-label"></span>
+                        <div><span id="packaging-error-count-span">0</span> __MSG_errorsEncountered__</div>
                     </div>
-                    <div class="save-result-content-div">
+                    <div class="result-button-container save-result-content-div">
+                        <button id="permanently-detach-button" class="permanently-detach-container close-button" disabled="disabled"><img class="hazard-image" src="hazard-sign.png" /> __MSG_permanentlyDetach__</button>
+                        <button id="view-report-button" class="close-button hidden">__MSG_viewReport__</button>                       
                         <button id="close-zip-panel-button" class="close-button" disabled="disabled">__MSG_close__</button>
                         <button id="exit-extension-button" class="close-button" disabled="disabled">__MSG_closeAndExit__</button>
                     </div>
-                    <div class="save-result-content-div">
-                        <button id="permanently-detach-button" class="permanently-detach-container close-button" disabled="disabled"><img class="hazard-image" src="hazard-sign.png" /> __MSG_permanentlyDetach__</button>
+                </div>
+
+                <div id="zip-detach-panel-body" class="hidden">
+                    <div class="zip-operation-label permanently-detach-container"><img class="hazard-image" src="hazard-sign.png" /> __MSG_permanentlyDetach__</div>
+                    <div id="detach-warning-message">__MSG_permanentDetachWarning__</div>
+                    <div id="detach-action-buttons-div">
+                        <button id="proceed-detach-button" class="close-button">__MSG_proceed__</button>
+                        <button id="cancel-detach-button" class="close-button">__MSG_cancel__</button>
                     </div>
                 </div>
-            </div>
 
-            <div id="zip-detach-panel-body" class="hidden">
-                <div class="zip-operation-label permanently-detach-container"><img class="hazard-image" src="hazard-sign.png" /> __MSG_permanentlyDetach__</div>
-                <div id="detach-warning-message">__MSG_permanentDetachWarning__</div>
-                <div id="detach-action-buttons-div">
-                    <button id="proceed-detach-button" class="close-button">__MSG_proceed__</button>
-                    <button id="cancel-detach-button" class="close-button">__MSG_cancel__</button>
-                </div>
-                <div id="detach-progress-div">
-                    <div><span id="permanent-detach-current-span">0</span> __MSG_of__ <span id="permanent-detach-total-span">0</span> __MSG_detached__</div>
-                    <progress id="detachment-progress"></progress>
-                </div>                    
-
-                <div id="detach-last-filename-div" class="last-filename-div">...</div>
-
-                <div id="detach-result-div">
+                <div id="detach-result-div" class="hidden">
                     <div id="detach-result-border-div"></div>
                     <div class="save-result-content-div">
                         <div class="zip-operation-label">__MSG_result__</div>
                         <span id="detach-result-label"></span>
                     </div>
-                    <div class="save-result-content-div">
+                    <div class="result-button-container save-result-content-div">
+                        <button id="view-report-button" class="close-button hidden">__MSG_viewReport__</button>                       
                         <button id="detach-exit-extension-button" class="close-button" disabled="disabled">__MSG_closeAndExit__</button>
                     </div>
                 </div>

@@ -460,7 +460,7 @@ folder-selector-button:disabled:active {
     height: 100%;
     background: white url("tiled_paperclip.png") center/124px repeat;
     display: grid;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto 1fr auto auto;
     text-align: center;
 }
 
@@ -512,19 +512,19 @@ folder-selector-button:disabled:active {
     text-overflow: ellipsis;
 }
 
-#packaging-div, #save-result-div, #detach-progress-div, #detach-result-div {
+#packaging-div, #save-result-div, #detach-operation-row, #detach-result-div {
     opacity: 0.0;
 }
 
 #packaging-div.materialize, #save-result-div.materialize,
-#detach-progress-div.materialize, #detach-result-div.materialize {
+#detach-operation-row.materialize, #detach-result-div.materialize {
     opacity: 1.0;
     -moz-transition: opacity 500ms ease-in;
 }
 
 #save-result-div, #detach-result-div {
     position: relative;
-    margin-bottom: 24px;
+    margin: 8px;
     padding: 8px;
 }
 
@@ -558,13 +558,18 @@ folder-selector-button:disabled:active {
     position: relative;
 }
 
+.result-button-container {
+    display: flex;
+    justify-content: center;
+}
+
 .zip-operation-label {
     font-weight: bold;
 }
 
 .close-button {
     height: 40px;
-    width: 120px;
+    width: 100px;
     margin: 8px;
 }
 
@@ -581,7 +586,7 @@ folder-selector-button:disabled:active {
 }
 
 #permanently-detach-button {
-    width: 259px;
+    width: 200px;
 }
 
 .hazard-image {

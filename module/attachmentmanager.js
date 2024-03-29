@@ -766,7 +766,7 @@ export class AttachmentManager {
                 console.log(`${item.messageId} : ${item.partName} - ${item.name}`);
 
                 try {
-                    await messenger.messages.deleteAttachments(item.messageId, [item.partName]);
+//                    await messenger.messages.deleteAttachments(item.messageId, [item.partName]);
                     info.processedCount++;
                 }
                 catch(e) {

@@ -75,10 +75,15 @@
     },
     "discoverySelectionMessages": {
         "message": "$1 of $2 attachment(s) selected",
-        "description": "{# of selected} of {# of discovered} attachment(s) "
+        "description": "{# of selected} of {# of discovered} attachment(s)"
     },
 
     "preparing": { "message": "Preparing" },
+    "alterationsIdentified": {
+        "message": "detached/deleted attachment(s) identified",
+        "description": "Regards attachments which were detached or deleted from the (altered) source message."
+    },
+
     "duplicatesIdentified": { "message": "duplicate(s) identified" },
 
     "packaging": { "message": "Packaging" },
@@ -95,6 +100,7 @@
 
     "close":{ "message": "Close" },
     "closeAndExit": { "message": "Close & Exit" },
+    "viewReport": { "message": "View Report" },
 
     "permanentDetachWarning": {
         "message": "WARNING: This action will permanently remove the extracted attachments from their source email messages."

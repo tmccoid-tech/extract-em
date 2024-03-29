@@ -84,9 +84,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const zipSubfoldersSpan = document.getElementById("zip-subfolders-span");
     const zipLogoImage = document.getElementById("zip-logo-img");
 
-    const zipExtractPanelBody = document.getElementById("zip-extract-panel-body");
+//    const zipExtractPanelBody = document.getElementById("zip-extract-panel-body");
 
-    const immediateDiscoveryDiv = document.getElementById("immediate-discovery-div");
+//    const immediateDiscoveryDiv = document.getElementById("immediate-discovery-div");
     const discoveryProgressMessage = document.getElementById("discovery-progress-message");
     const discoverySizeLabel = document.getElementById("discovery-size-label");
     const immediateDiscoveryProgress = document.getElementById("immediate-discovery-progress");
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const packagingSkippedSpan = document.getElementById("packaging-skipped-span");
     const preparationProgress = document.getElementById("preparation-progress");
 
-    const packagingDiv = document.getElementById("packaging-div");
+//    const packagingDiv = document.getElementById("packaging-div");
     const packagingCurrentSpan = document.getElementById("packaging-current-span");
     const packagingTotalSpan = document.getElementById("packaging-total-span");
     const packagingSizeSpan = document.getElementById("packaging-size-span");
@@ -111,6 +111,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const permanentlyDetachButton = document.getElementById("permanently-detach-button");
     const closeZipPanelButton = document.getElementById("close-zip-panel-button");
     const exitExtensionButton = document.getElementById("exit-extension-button");
+
+    const detachOperationRow = document.getElementById("detach-operation-row");
 
     const zipDetachPanelBody = document.getElementById("zip-detach-panel-body");
     const detachActionButtonsDiv = document.getElementById("detach-action-buttons-div");
@@ -153,6 +155,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     var folderSummary;
     var selectedFolders;
     var hasAttachments = false;
+
+    const permitDetachment = !! messenger.messages.deleteAttachments;
 
     const updateProcessingFolder = (folderPath) => {
         if(!useImmediateMode) {
@@ -312,7 +316,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.querySelectorAll(".close-button").forEach((button) => { button.disabled = false; });            
 
-            if(success && messenger.messages.deleteAttachments && info.attachmentCount > 0) {
+            if(success && permitDetachment && info.attachmentCount > 0) {
                 permanentDetachTotalSpan.innerText = info.attachmentCount.toString();
                 detachmentProgress.setAttribute("max", info.attachmentCount);
             }
@@ -393,6 +397,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 OptionsManager.setOption("isInitialized", true);
 
                 displayQuickMenu = true;
+            }
+
+            if(permitDetachment) {
+                detachOperationRow.classList.remove("hidden");
             }
 
             attachmentManager = new AttachmentManager({
@@ -514,7 +522,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         zipAttachmentContextSpan.classList.remove("hidden");
 
-        immediateDiscoveryDiv.classList.remove("hidden");
+//        immediateDiscoveryDiv.classList.remove("hidden");
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");
     }
@@ -829,7 +837,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     async function extract(list, getInfo) {
-        packagingDiv.classList.add("materialize");
+//        packagingDiv.classList.add("materialize");
 
         if(!useImmediateMode) {
             zipLogoImage.classList.add("rotating");
@@ -896,18 +904,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function displayPermanentDetachPanel() {
-        zipExtractPanelBody.classList.add("hidden");
+        saveResultDiv.classList.add("hidden");
         zipDetachPanelBody.classList.remove("hidden");
     }
 
     function cancelDetach() {
         zipDetachPanelBody.classList.add("hidden");
-        zipExtractPanelBody.classList.remove("hidden");
+        saveResultDiv.classList.remove("hidden");
     }
 
     function proceedDetach() {
-        detachActionButtonsDiv.classList.add("hidden");
-        detachProgressDiv.classList.add("materialize");
+        zipDetachPanelBody.classList.add("hidden");
+        detachResultDiv.classList.remove("hidden");
+        detachOperationRow.classList.add("materialize");
 
         attachmentManager.deleteAttachments();
     }
@@ -1077,14 +1086,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         zipFolderNameSpan.innerText = "";
         zipSubfoldersSpan.classList.add("hidden");
 
-        immediateDiscoveryDiv.classList.add("hidden");
+//        immediateDiscoveryDiv.classList.add("hidden");
 
         updateDiscoveryProgressMessage();
 
         immediateDiscoveryProgress.removeAttribute("value");
         immediateDiscoveryProgress.removeAttribute("max");
 
-        packagingDiv.classList.remove("hidden", "materialize");
+//        packagingDiv.classList.remove("hidden", "materialize");
         packagingCurrentSpan.innerText = "0";
         packagingTotalSpan.innerText = "0";
         packagingSizeSpan.innerText = `0 ${messenger.i18n.getMessage("bytesLabel")}}`;

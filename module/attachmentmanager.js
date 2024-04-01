@@ -213,25 +213,51 @@ export class AttachmentManager {
         }
     }
 
-    async #processMessage(message, folderStats, alterationMap = null) {
-        const messageAttachmentList = await messenger.messages.listAttachments(message.id);
+    async #processMessage(message, folderStats, rootMessage = null, alterationMap = null) {
+        const isNested = (rootMessage !== null);
+
+        if(!isNested) {
+            rootMessage = message;
+        }
+
+        let messageAttachmentList;
+        
+        try {
+            messageAttachmentList = await messenger.messages.listAttachments(message.id);
+        }
+        catch(e) {
+            const errorInfo = { 
+                source: "#processMessage / messenger.messages.listAttachments",
+                rootMessageId: rootMessage.id,
+                folder: folderStats.folderPath,
+                author: rootMessage.author,
+                date: rootMessage.date,
+                subject: rootMessage.subject,
+                isNested: isNested,
+                error: `${e}`
+            };
+
+            console.log(errorInfo);
+
+            return false;
+        }
 
         const hasAttachments = (messageAttachmentList.length > 0);
-
-        const isNested = (alterationMap !== null);
 
         if (hasAttachments) {
             if (!this.messageList.has(message.id)) {
                 this.messageList.set(message.id, {
+                    folderPath: folderStats.folderPath,
                     author: message.author,
-                    subject: message.subject,
-                    folderPath: folderStats.folderPath
+                    date: message.date,
+                    subject: message.subject
                 });
             }
 
             const fullMessage = await messenger.messages.getFull(message.id);
 
             if(!isNested) {
+                rootMessage = message;
                 alterationMap = this.#generateAlterationMap(fullMessage.parts);
             }
 
@@ -244,8 +270,13 @@ export class AttachmentManager {
 
                 if(attachment.message) {
                     const nestedMessage = await messenger.messages.get(attachment.message.id);
+                    
+                    if(!nestedMessage) {
+                        // Consider reporting this
+                        continue;
+                    }
 
-                    hasNestedAttachments = await this.#processMessage(nestedMessage, folderStats, alterationMap);
+                    hasNestedAttachments = await this.#processMessage(nestedMessage, folderStats, rootMessage, alterationMap);
                 }
 
                 if(!hasNestedAttachments) {
@@ -267,6 +298,7 @@ export class AttachmentManager {
                         contentType: attachment.contentType,
                         size: attachment.size,
                         extension: extension,
+                        isNested: isNested,
                         isPreviewable: this.#previewSet.has(extension)
                     };
 
@@ -284,7 +316,18 @@ export class AttachmentManager {
                                 fileUrl: null
                             });
 
-                            console.log(e);
+                            const errorInfo = { 
+                                source: "#processMessage / browser.messages.getAttachmentFile",
+                                rootMessageId: rootMessage.id,
+                                folder: folderStats.folderPath,
+                                author: rootMessage.author,
+                                date: rootMessage.date,
+                                subject: rootMessage.subject,
+                                isNested: isNested,
+                                error: `${e}`
+                            };
+
+                            console.log(errorInfo);
 
                             continue;
                         }
@@ -326,7 +369,6 @@ export class AttachmentManager {
 
         return hasAttachments;
     }
-
 
     #generateAlterationMap(parts, alterationMap = new Map()) {
         for(const part of parts) {
@@ -593,9 +635,31 @@ export class AttachmentManager {
 
                 packagingProgressInfo.errorCount = errorList.length;
 
-                console.log(e);
-
                 this.#reportPackagingProgress(packagingProgressInfo);
+
+                const rootMessage = this.messageList.get(item.messageId);
+
+                const errorInfo = { 
+                    source: "#processMessage / browser.messages.getAttachmentFile",
+                    rootMessageId: item.messageId,
+                    folder: rootMessage.folderPath,
+                    author: rootMessage.author,
+                    date: rootMessage.date,
+                    subject: rootMessage.subject,
+                    isNested: item.isNested,
+                    error: `${e}`
+                };
+
+
+/*
+                const errorInfo = { 
+                    method: "#package",
+                    action: "browser.messages.getAttachmentFile",
+                    error: `${e}`
+                }
+*/
+
+                console.log(errorInfo);
 
                 continue;
             }

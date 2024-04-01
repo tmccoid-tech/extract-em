@@ -299,7 +299,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         lastFileNameDiv.innerText = info.lastFileName;
 
-        packagingProgress.value = info.includedCount;
+        packagingProgress.value = info.includedCount + info.errorCount;
         packagingSizeSpan.innerText = abbreviateFileSize(info.totalBytes.toString());
     };
 

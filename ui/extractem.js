@@ -25,6 +25,20 @@ NodeList.prototype.filterSelect = _filterSelect;
 NodeList.prototype.toSet = _toSet;
 
 
+class VersionInfo {
+    constructor() {
+        this.versionNumbers = browser.runtime.getManifest().version.split(".").map((n) => parseInt(n));
+        this.capablities = new Map();
+
+        this.capablities.set("deleteAttachment", this.versionNumbers[0] >= 1 && this.versionNumbers[1] >= 2);    //  >= 1.2
+    }
+
+    hasCapability(key) {
+        return this.capablities.has(key) && this.capablities.get(key);
+    }
+}
+
+
 document.addEventListener("DOMContentLoaded", async () => {
     i18n.updateDocument();
     const errorText = messenger.i18n.getMessage("error");
@@ -155,6 +169,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     var folderSummary;
     var selectedFolders;
     var hasAttachments = false;
+
+    var versionInfo = new VersionInfo();
+    
 
     const permitDetachment = !! messenger.messages.deleteAttachments;
 
@@ -316,6 +333,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.querySelectorAll(".close-button").forEach((button) => { button.disabled = false; });            
 
+            if(success && info.attachmentCount > 0 && versionInfo.hasCapability("deleteAttachment") && messenger.messages.deleteAttachments) {
             if(success && permitDetachment && info.attachmentCount > 0) {
                 permanentDetachTotalSpan.innerText = info.attachmentCount.toString();
                 detachmentProgress.setAttribute("max", info.attachmentCount);

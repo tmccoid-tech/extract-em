@@ -545,7 +545,6 @@ export class AttachmentManager {
         items.sort((a, b) => a.size - b.size);
 
         const maxSize = 750000000;
-//        const maxSize = 250000000;
         let currentSize = 0;
         let currentStart = 0;
 
@@ -602,8 +601,6 @@ export class AttachmentManager {
     }
 
     async #package(packagingProgressInfo) {
-//        const jsZip = JSZip();
-//        const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"), { bufferedWrite: true, useCompressionStream: false });
         const zipEm = new ZipEm();
 
         const packagingTracker = this.#packagingTracker;
@@ -650,15 +647,6 @@ export class AttachmentManager {
                     error: `${e}`
                 };
 
-
-/*
-                const errorInfo = { 
-                    method: "#package",
-                    action: "browser.messages.getAttachmentFile",
-                    error: `${e}`
-                }
-*/
-
                 console.log(errorInfo);
 
                 continue;
@@ -687,10 +675,6 @@ export class AttachmentManager {
                 fileName = `${message.folderPath.slice(1)}/${fileName}`;
             }
 
-//            jsZip.file(fileName, attachmentFile, { date: item.date });
-
-//            await zipWriter.add(fileName, new zip.BlobReader(attachmentFile), { creationDate: item.date, useWebWorkers: true });
-
             try {
                 await zipEm.add(fileName, attachmentFile, item.date);
 
@@ -718,10 +702,6 @@ export class AttachmentManager {
         let zipFile;
 
         try {
-//          zipFile = await jsZip.generateAsync({ type: "blob" });
-
-//          zipFile = await zipWriter.close();
-
             zipFile = await zipEm.complete();
         }
         catch(e) {

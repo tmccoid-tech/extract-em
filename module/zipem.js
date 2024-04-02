@@ -3,11 +3,13 @@ export class ZipEm {
     #zipWriter;
 
     constructor(useWebWorkers = false) {
+/*
         zip.configure({
             workerScripts: {
                 deflate: ["/module/z-worker.js"]
             }
         });
+*/
 
         this.#useWebWorkers = useWebWorkers;
 

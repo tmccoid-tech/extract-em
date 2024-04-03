@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         constructor() {
             const versionNumbers = browser.runtime.getManifest().version.split(".").map((n) => parseInt(n));
             
-            this.permitDetachment = (versionNumbers[0] >= 1 && versionNumbers[1] >= 2 && messenger.messages.deleteAttachments);    //  >= 1.2
+            this.permitDetachment = (versionNumbers[0] >= 1 && versionNumbers[1] >= 2 && !!messenger.messages.deleteAttachments);    //  >= 1.2
         }
     }
     

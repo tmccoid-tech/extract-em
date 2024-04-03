@@ -84,14 +84,14 @@
         "description": "Regards attachments which were detached or deleted from the (altered) source message."
     },
 
-    "duplicatesIdentified": { "message": "duplicate(s) identified" },
+    "duplicatesOmitted": { "message": "duplicate(s) omitted" },
 
     "packaging": { "message": "Packaging" },
     "of": {
         "message": "of",
         "description": "Used in the sense of 'x items out of y total items'"
     },
-    "packaged": { "message": "packaged"},
+    "attachmentsPackaged": { "message": "attachment(s) packaged"},
     "packageFilesSaved": { "message": "package file(s) saved" },
     "errorsEncountered": { "message": "errors encountered" },
     "result": { "message": "Result" },

@@ -58,11 +58,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const summaryMessageCountSpan = document.getElementById("summary-message-count-span");
     const summaryProcessedMessageCountSpan = document.getElementById("summary-processed-message-count-td");
     const summaryAttachmentMessageCountSpan = document.getElementById("summary-attachment-message-count-td");
+    
+   // Displayed in Attachment Summary
     const summarySelectedAttachmentCountSpan = document.getElementById("summary-selected-attachment-count-span");
     const summarySelectedAttachmentSizeSpan = document.getElementById("summary-selected-attachment-size-span");
+       
     const summaryAttachmentCountSpan = document.getElementById("summary-attachment-count-span");
     const summaryAttachmentSizeSpan = document.getElementById("summary-attachment-size-span");
 
+    // Displayed in Attachment List
     const selectedAttachmentCountSpan = document.getElementById("selected-attachment-count-span");
     const selectedAttachmentSizeSpan = document.getElementById("selected-attachment-size-span");
 
@@ -227,14 +231,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             const row = rowItem.row;
             row.classList.add("processed");
 
-            const hasAttachments = (rowItem.attachmentCount > 0);
+            const folderHasAttachments = (rowItem.attachmentCount > 0);
 
-            if (!hasAttachments) {
+            if (!folderHasAttachments) {
                 row.classList.add("ghost");
             }
 
             const checkbox = rowItem.checkbox;
-            checkbox.checked = (checkbox.checked && hasAttachments);
+            checkbox.checked = (checkbox.checked && folderHasAttachments);
 
             rowItem.processed = true;
         }
@@ -246,6 +250,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 extractImmediate();
             }
             else {
+                const alterationCount = attachmentManager.getAlterationCount();
+
+                preparationAlterationsSpan.innerText = alterationCount.toString();
+
                 const info = {
                     status: "error",
                     message: messenger.i18n.getMessage("noAttachmentsMessage")
@@ -328,7 +336,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             saveResultLabel.innerHTML = info.message;
 
-            document.querySelectorAll(".close-button").forEach((button) => { button.disabled = false; });            
+            document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });            
 
             if(capabilities.permitDetachment && success && info.attachmentCount > 0) {
                 permanentDetachTotalSpan.innerText = info.attachmentCount.toString();
@@ -851,8 +859,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     async function extract(list, getInfo) {
-//        packagingDiv.classList.add("materialize");
-
         if(!useImmediateMode) {
             zipLogoImage.classList.add("rotating");
         }
@@ -935,6 +941,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         attachmentManager.deleteAttachments();
     }
 
+    function resetProgressElement(element) {
+        element.value = 0;
+        element.setAttribute("max", 1);
+    }
+
     function resetSummary() {
         attachmentManager.reset();
 
@@ -945,13 +956,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             attachmentListNavButton.disabled = true;
             attachmentListDiv.innerHTML = "";
             selectedAttachmentCountSpan.innerText = "0";
+            selectedAttachmentSizeSpan.innerText = abbreviateFileSize(0);
         }
 
-        discoverAttachmentsProgress.value = 0;
-        discoverAttachmentsProgress.setAttribute("max", 1);
+        resetProgressElement(discoverAttachmentsProgress);
         summaryProcessedMessageCountSpan.innerText = "0";
         summaryAttachmentMessageCountSpan.innerText = "0";
         summaryAttachmentCountSpan.innerText = "0";
+        summaryAttachmentSizeSpan.innerText = abbreviateFileSize(0);
 
         statsSummaryTBody.innerHTML = "";
 
@@ -1100,26 +1112,53 @@ document.addEventListener("DOMContentLoaded", async () => {
         zipFolderNameSpan.innerText = "";
         zipSubfoldersSpan.classList.add("hidden");
 
-        updateDiscoveryProgressMessage();
+        // Discovering
+        resetProgressElement(immediateDiscoveryProgress);
 
-        immediateDiscoveryProgress.removeAttribute("value");
-        immediateDiscoveryProgress.removeAttribute("max");
+        updateDiscoveryProgressMessage();
+        preparationAlterationsSpan.innerText = "0";
+        discoverySizeLabel.innerText = abbreviateFileSize(0);
+
+        // Prepararing
+        resetProgressElement(preparationProgress);
+
+        packagingSkippedSpan.innerText = "0";
+        duplicatesSizeLabel.innerText = abbreviateFileSize(0);
+
+        // Packaging
+        resetProgressElement(packagingProgress);
 
         packagingCurrentSpan.innerText = "0";
         packagingTotalSpan.innerText = "0";
+        packagingFileCurrentSpan.innerText = "0";
+        packagingFileTotalSpan.innerText = "0";
         packagingSizeSpan.innerText = abbreviateFileSize(0);
-        packagingSkippedSpan.innerText = "0";
-        duplicatesSizeLabel.innerText = abbreviateFileSize(0);
-        lastFileNameDiv.innerText = "...";
+
+        //Detaching
+
+        detachOperationRow.classList.add("hidden");
+
+        resetProgressElement(detachmentProgress);
+
+        permanentDetachCurrentSpan.innerText = "0";
+        permanentDetachTotalSpan.innerText = "0";
         
-        packagingProgress.removeAttribute("value");
-        packagingProgress.removeAttribute("max");
+        lastFileNameDiv.innerText = "...";
 
         saveResultBorderDiv.classList.remove("success", "error");
-        saveResultDiv.classList.remove("materialize");
+        saveResultDiv.classList.remove("materialize", "hidden");
         saveResultLabel.innerText = "";
+        packagingErrorCountSpan.innerText = "0";
+        permanentlyDetachButton.classList.remove("hidden");
 
-        document.querySelectorAll(".close-button").forEach((button) => { button.disabled = true; });            
+        zipDetachPanelBody.classList.add("hidden");
+
+        detachResultBorderDiv.classList.remove("success", "error");
+        detachResultDiv.classList.remove("materialize");
+        detachResultDiv.classList.add("hidden");
+        detachResultLabel.innerText = "";
+
+        document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = true; });            
     }
 
     function alwaysShowQuickMenuOptionChanged(event) {

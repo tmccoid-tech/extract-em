@@ -12,6 +12,13 @@ export class AttachmentManager {
     #attachmentCount = 0;
     #cumulativeAttachmentSize = 0;
 
+    #selectedFolderPaths;
+
+    messageList = new Map();
+    attachmentList = [];
+
+    #groupingSet = new Map();
+
     #reportFolderProcessing = (folderPath) => {};
     #reportMessageStats = (folderStats) => {};
     #reportAttachmentStats = (folderStats) => {};
@@ -21,28 +28,16 @@ export class AttachmentManager {
     #reportPreparationProgress = (info) => {};
 
     #reportPackagingProgress = (info) => {};
-    #reportSaveResult;
+    #reportSaveResult = (info) => {};
 
     #reportDetachProgress = (info) => {};
     #reportDetachResult = (info) => {};
 
-    #duplicateFileNameTracker;
-
-    #packagingTracker;
-
-    // Exception tracking
-
-    #duplicateFileTracker;
     #alterationTracker;
+    #packagingTracker;
+    #duplicateFileTracker;
+    #duplicateFileNameTracker;
     #packagingErrorList;
-
-
-    #selectedFolderPaths;
-
-    attachmentList = [];
-    messageList = new Map();
-
-    #groupingSet = new Map();
 
     #previewSet = new Set([
         "apng",
@@ -302,9 +297,22 @@ export class AttachmentManager {
                         isPreviewable: this.#previewSet.has(extension)
                     };
 
-                    if(attachmentInfo.size < 1) {
+                    const isPotentialAttachment = (attachmentInfo.size == 248);
+
+                    if(attachmentInfo.size < 1 || isPotentialAttachment) {
                         try {
                             const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
+
+                            if(isPotentialAttachment && attachmentFile.size !== 248) {
+                                alterationMap.set(attachmentInfo.partName, {
+                                    name: attachment.name,
+                                    alteration: "detached",
+                                    timestamp: null,
+                                    fileUrl: null
+                                });
+                
+                                continue;
+                            }
 
                             attachmentInfo.size = attachmentFile.size;
                         }
@@ -425,17 +433,16 @@ export class AttachmentManager {
 
         this.#selectedFolderPaths = undefined;
 
-        this.#packagingTracker = null;
-        this.#duplicateFileNameTracker = null;
+        this.messageList.clear();
+        this.attachmentList.length = 0;
+
+        this.#groupingSet.clear();
 
         this.#alterationTracker = null;
+        this.#packagingTracker = null;
         this.#duplicateFileTracker = null;
+        this.#duplicateFileNameTracker = null;
         this.#packagingErrorList = null;
-
-        this.attachmentList.length = 0;
-        this.messageList.clear();
-    
-        this.#groupingSet.clear();
     }
 
     getGrouping(groupingKey) {
@@ -486,15 +493,21 @@ export class AttachmentManager {
         }
     }
 
+    getAlterationCount() {
+        const result = [...this.#alterationTracker.values()].reduce(
+            (x, v) => x + v.size,
+            0
+        );
+
+        return result;
+    }
+
     async extract(list, getInfo, extractOptions) {
         // Preparation phase
 
         const preparationProgressInfo = {
             status: "started",
-            alterationCount: [...this.#alterationTracker.values()].reduce(
-                (x, v) => x + v.size,
-                0
-            ),
+            alterationCount: this.getAlterationCount(),
             duplicateCount: 0,
             duplicateTotalBytes: 0
         }

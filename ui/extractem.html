@@ -128,7 +128,11 @@
                     </td>
                     <td>
                         <div id="discovery-progress-message"></div>
+                        <span id="preparation-alterations-span">0</span> __MSG_alterationsIdentified__
+                    </td>
+                    <td>
                         <div id="discovery-size-label">0 __MSG_bytesLabel__</div>
+                        <div id="discovery-alterations-size">0 __MSG_bytesLabel__</div>
                     </td>
                 </tr>
                 <tr>
@@ -137,8 +141,10 @@
                         <progress id="preparation-progress" value="0" max="1"></progress>
                     </td>
                     <td>
-                        <div><span id="preparation-alterations-span">0</span> __MSG_alterationsIdentified__</div>
-                        <div><span id="packaging-skipped-span">0</span> __MSG_duplicatesIdentified__</div>
+                        <span id="packaging-skipped-span">0</span> __MSG_duplicatesIdentified__
+                    </td>
+                    <td>
+                        <div id="duplicates-size-label">0 __MSG_bytesLabel__</div>
                     </td>
                 </tr>
                 <tr>
@@ -147,8 +153,12 @@
                         <progress id="packaging-progress" value="0" max="1"></progress>
                     </td>
                     <td>
-                        <div><span id="packaging-current-span">0</span> __MSG_of__ <span id="packaging-total-span">0</span> (<span id="packaging-size-span">0 __MSG_bytesLabel__</span>)</div>
+                        <span id="packaging-current-span">0</span> __MSG_of__ <span id="packaging-total-span">0</span> __MSG_packaged__
                         <div><span id="packaging-file-current-span">0</span> __MSG_of__ <span id="packaging-file-total-span">0</span> __MSG_packageFilesSaved__</div>
+                    </td>
+                    <td>
+                        <span id="packaging-size-span">0 __MSG_bytesLabel__</span>
+                        <div>&nbsp;</div>
                     </td>
                 </tr>
                 <tr id="detach-operation-row" class="hidden">
@@ -159,6 +169,7 @@
                     <td>
                         <span id="permanent-detach-current-span">0</span> __MSG_of__ <span id="permanent-detach-total-span">0</span> __MSG_detached__
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
             </table>
 

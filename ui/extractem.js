@@ -25,21 +25,17 @@ NodeList.prototype.filterSelect = _filterSelect;
 NodeList.prototype.toSet = _toSet;
 
 
-class VersionInfo {
-    constructor() {
-        this.versionNumbers = browser.runtime.getManifest().version.split(".").map((n) => parseInt(n));
-        this.capablities = new Map();
-
-        this.capablities.set("deleteAttachment", this.versionNumbers[0] >= 1 && this.versionNumbers[1] >= 2);    //  >= 1.2
-    }
-
-    hasCapability(key) {
-        return this.capablities.has(key) && this.capablities.get(key);
-    }
-}
-
-
 document.addEventListener("DOMContentLoaded", async () => {
+    class Capabilities {
+        constructor() {
+            const versionNumbers = browser.runtime.getManifest().version.split(".").map((n) => parseInt(n));
+            
+            this.permitDetachment = (versionNumbers[0] >= 1 && versionNumbers[1] >= 2 && messenger.messages.deleteAttachments);    //  >= 1.2
+        }
+    }
+    
+
+
     i18n.updateDocument();
     const errorText = messenger.i18n.getMessage("error");
 
@@ -105,7 +101,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const discoverySizeLabel = document.getElementById("discovery-size-label");
     const immediateDiscoveryProgress = document.getElementById("immediate-discovery-progress");
 
+    const preparationAlterationsSpan = document.getElementById("preparation-alterations-span");
     const packagingSkippedSpan = document.getElementById("packaging-skipped-span");
+    const duplicatesSizeLabel = document.getElementById("duplicates-size-label");
     const preparationProgress = document.getElementById("preparation-progress");
 
 //    const packagingDiv = document.getElementById("packaging-div");
@@ -170,11 +168,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     var selectedFolders;
     var hasAttachments = false;
 
-    var versionInfo = new VersionInfo();
+    var capabilities = new Capabilities();
     
-
-    const permitDetachment = !! messenger.messages.deleteAttachments;
-
     const updateProcessingFolder = (folderPath) => {
         if(!useImmediateMode) {
             const row = folderRowSet.get(folderPath).row;
@@ -290,6 +285,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const updatePreparationProgress = (info) =>
     {
         if(info.status == "started") {
+            preparationAlterationsSpan.innerText = info.alterationCount.toString();
             preparationProgress.value = null;
         }
         else if(info.status == "complete") {
@@ -297,6 +293,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         else {
             packagingSkippedSpan.innerText = info.duplicateCount.toString();
+            duplicatesSizeLabel.innerText = abbreviateFileSize(info.duplicateTotalBytes);
         }
     };
 
@@ -333,8 +330,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.querySelectorAll(".close-button").forEach((button) => { button.disabled = false; });            
 
-            if(success && info.attachmentCount > 0 && versionInfo.hasCapability("deleteAttachment") && messenger.messages.deleteAttachments) {
-            if(success && permitDetachment && info.attachmentCount > 0) {
+            if(capabilities.permitDetachment && success && info.attachmentCount > 0) {
                 permanentDetachTotalSpan.innerText = info.attachmentCount.toString();
                 detachmentProgress.setAttribute("max", info.attachmentCount);
             }
@@ -417,7 +413,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 displayQuickMenu = true;
             }
 
-            if(permitDetachment) {
+            if(capabilities.permitDetachment) {
                 detachOperationRow.classList.remove("hidden");
             }
 
@@ -1104,27 +1100,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         zipFolderNameSpan.innerText = "";
         zipSubfoldersSpan.classList.add("hidden");
 
-//        immediateDiscoveryDiv.classList.add("hidden");
-
         updateDiscoveryProgressMessage();
 
         immediateDiscoveryProgress.removeAttribute("value");
         immediateDiscoveryProgress.removeAttribute("max");
 
-//        packagingDiv.classList.remove("hidden", "materialize");
         packagingCurrentSpan.innerText = "0";
         packagingTotalSpan.innerText = "0";
-        packagingSizeSpan.innerText = `0 ${messenger.i18n.getMessage("bytesLabel")}}`;
+        packagingSizeSpan.innerText = abbreviateFileSize(0);
         packagingSkippedSpan.innerText = "0";
+        duplicatesSizeLabel.innerText = abbreviateFileSize(0);
         lastFileNameDiv.innerText = "...";
+        
         packagingProgress.removeAttribute("value");
         packagingProgress.removeAttribute("max");
 
         saveResultBorderDiv.classList.remove("success", "error");
         saveResultDiv.classList.remove("materialize");
         saveResultLabel.innerText = "";
-
-//        deletionMap = null;
 
         document.querySelectorAll(".close-button").forEach((button) => { button.disabled = true; });            
     }

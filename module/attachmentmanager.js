@@ -491,7 +491,12 @@ export class AttachmentManager {
 
         const preparationProgressInfo = {
             status: "started",
-            duplicateCount: 0
+            alterationCount: [...this.#alterationTracker.values()].reduce(
+                (x, v) => x + v.size,
+                0
+            ),
+            duplicateCount: 0,
+            duplicateTotalBytes: 0
         }
 
         this.#reportPreparationProgress(preparationProgressInfo);
@@ -534,6 +539,7 @@ export class AttachmentManager {
                     this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName});
 
                     preparationProgressInfo.duplicateCount++;
+                    preparationProgressInfo.duplicateTotalBytes += item.size;
 
                     this.#reportPreparationProgress(preparationProgressInfo);
                 }
@@ -585,7 +591,6 @@ export class AttachmentManager {
             includedCount: 0,
             errorCount: 0,
             totalBytes: 0,
-//            hasDuplicate: false,
             filesCreated: 0,
             fileCount: this.#packagingTracker.extractionSubsets.length,
             lastFileName: ""

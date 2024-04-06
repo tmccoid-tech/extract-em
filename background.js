@@ -57,6 +57,7 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
     {
         if(info.status != "started") {
             console.log(info.message);
+            messenger.menus.update(menuId, { enabled: true });
         }
     }
 
@@ -115,6 +116,8 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
                             (selectedFolders[0].subFolders.length == 0 || options.includeSubfolders)
                     };
 
+                    messenger.menus.update(menuId, { enabled: false });
+
                     if(options.useSilentMode && params.allowExtractImmediate) {
                         extractSilently(params);
                     }
@@ -137,5 +140,7 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
         if (windowId == popupId) {
             params = null;
             popupId = null;
+
+            messenger.menus.update(menuId, { enabled: true });
         }
     });

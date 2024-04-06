@@ -131,16 +131,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     const detachOperationRow = document.getElementById("detach-operation-row");
 
     const zipDetachPanelBody = document.getElementById("zip-detach-panel-body");
-    const detachActionButtonsDiv = document.getElementById("detach-action-buttons-div");
+//    const detachActionButtonsDiv = document.getElementById("detach-action-buttons-div");
     const proceedDetachButton = document.getElementById("proceed-detach-button");
     const cancelDetachButton = document.getElementById("cancel-detach-button");
-    const detachProgressDiv = document.getElementById("detach-progress-div");
+//    const detachProgressDiv = document.getElementById("detach-progress-div");
     const permanentDetachCurrentSpan = document.getElementById("permanent-detach-current-span");
     const permanentDetachTotalSpan = document.getElementById("permanent-detach-total-span");
+    const permanentDetachNestedCountSpan = document.getElementById("permanent-detach-nested-count-span");
     const detachmentProgress = document.getElementById("detachment-progress");
     const detachResultDiv = document.getElementById("detach-result-div");
     const detachResultBorderDiv = document.getElementById("detach-result-border-div");
     const detachResultLabel = document.getElementById("detach-result-label");
+    const detachErrorCountSpan = document.getElementById("detach-error-count-span");
     const detachExitExtensionButton = document.getElementById("detach-exit-extension-button");
 
 
@@ -355,19 +357,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     const updateDetachProgress = (info) => {
-        permanentDetachCurrentSpan.innerText = info.processedCount.toString();
-        detachmentProgress.value = info.processedCount;
-        lastFileNameDiv.innerText = info.lastFileName;
+        if(info.status == "started") {
+            detachmentProgress.setAttribute("max", info.totalItems);
+        }
+        else {
+            permanentDetachCurrentSpan.innerText = info.processedCount.toString();
+            permanentDetachNestedCountSpan.innerText = info.nestedCount;
+            detachmentProgress.value = info.processedCount + info.nestedCount + info.errorCount;
+            lastFileNameDiv.innerText = info.lastFileName;
+        }
     };
 
     const updateDetachResult = (info) => {
+        const success = (info.errorCount == 0);
+
         detachResultDiv.classList.add("materialize");
 
-        if(!info.success) {
+        if(success) {
+            detachResultLabel.innerHTML = messenger.i18n.getMessage("detachComplete");
+        }
+        else {
             detachResultLabel.innerHTML = messenger.i18n.getMessage("detachErrorMessage");
+            detachErrorCountSpan.innerText = info.errorCount.toString();
         }
 
-        const detachResult = (info.success) ? "success" : "error";
+        const detachResult = (success) ? "success" : "error";
 
         detachResultBorderDiv.classList.add(detachResult);
     };
@@ -1142,6 +1156,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         permanentDetachCurrentSpan.innerText = "0";
         permanentDetachTotalSpan.innerText = "0";
+        permanentDetachNestedCountSpan.innerText = "0";
         
         lastFileNameDiv.innerText = "...";
 
@@ -1157,6 +1172,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         detachResultDiv.classList.remove("materialize");
         detachResultDiv.classList.add("hidden");
         detachResultLabel.innerText = "";
+        detachErrorCountSpan.innerText = "0";
 
         document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = true; });            
     }

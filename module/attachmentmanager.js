@@ -39,6 +39,8 @@ export class AttachmentManager {
     #duplicateFileNameTracker;
     #packagingErrorList;
 
+    #detachmentErrorList;
+
     #previewSet = new Set([
         "apng",
         "avif",
@@ -208,11 +210,11 @@ export class AttachmentManager {
         }
     }
 
-    async #processMessage(message, folderStats, rootMessage = null, alterationMap = null) {
-        const isNested = (rootMessage !== null);
+    async #processMessage(message, folderStats, rootMessageId = null, alterationMap = null) {
+        const isNested = (rootMessageId !== null);
 
         if(!isNested) {
-            rootMessage = message;
+            rootMessageId = message.id;
         }
 
         let messageAttachmentList;
@@ -223,7 +225,7 @@ export class AttachmentManager {
         catch(e) {
             const errorInfo = { 
                 source: "#processMessage / messenger.messages.listAttachments",
-                rootMessageId: rootMessage.id,
+                rootMessageId: rootMessageId,
                 folder: folderStats.folderPath,
                 author: rootMessage.author,
                 date: rootMessage.date,
@@ -252,7 +254,6 @@ export class AttachmentManager {
             const fullMessage = await messenger.messages.getFull(message.id);
 
             if(!isNested) {
-                rootMessage = message;
                 alterationMap = this.#generateAlterationMap(fullMessage.parts);
             }
 
@@ -271,7 +272,7 @@ export class AttachmentManager {
                         continue;
                     }
 
-                    hasNestedAttachments = await this.#processMessage(nestedMessage, folderStats, rootMessage, alterationMap);
+                    hasNestedAttachments = await this.#processMessage(nestedMessage, folderStats, rootMessageId, alterationMap);
                 }
 
                 if(!hasNestedAttachments) {
@@ -297,13 +298,13 @@ export class AttachmentManager {
                         isPreviewable: this.#previewSet.has(extension)
                     };
 
-                    const isPotentialAttachment = (attachmentInfo.size == 248);
+                    const isPotentialDetachment = (attachmentInfo.size > 0 && attachmentInfo.size < 512);
 
-                    if(attachmentInfo.size < 1 || isPotentialAttachment) {
+                    if(attachmentInfo.size < 1 || isPotentialDetachment) {
                         try {
                             const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
 
-                            if(isPotentialAttachment && attachmentFile.size !== 248) {
+                            if(isPotentialDetachment && attachmentFile.size !== attachmentInfo.size) {
                                 alterationMap.set(attachmentInfo.partName, {
                                     name: attachment.name,
                                     alteration: "detached",
@@ -326,7 +327,7 @@ export class AttachmentManager {
 
                             const errorInfo = { 
                                 source: "#processMessage / browser.messages.getAttachmentFile",
-                                rootMessageId: rootMessage.id,
+                                rootMessageId: rootMessageId,
                                 folder: folderStats.folderPath,
                                 author: rootMessage.author,
                                 date: rootMessage.date,
@@ -443,6 +444,8 @@ export class AttachmentManager {
         this.#duplicateFileTracker = null;
         this.#duplicateFileNameTracker = null;
         this.#packagingErrorList = null;
+
+        this.#detachmentErrorList = null;
     }
 
     getGrouping(groupingKey) {
@@ -541,7 +544,7 @@ export class AttachmentManager {
 
         for(const item of this.attachmentList) {
             if(selectedItemKeys.has(`${item.messageId}:${item.partName}`)) {
-                const duplicateKey = `${item.name}${item.size}`;
+                const duplicateKey = `${item.name}:${item.size}`;
 
                 if(!duplicateKeys.has(duplicateKey)) {
                     items.push(item);
@@ -549,7 +552,7 @@ export class AttachmentManager {
                     cumulativeSize += item.size;
                 }
                 else {
-                    this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName});
+                    this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, isNested: item.isNested });
 
                     preparationProgressInfo.duplicateCount++;
                     preparationProgressInfo.duplicateTotalBytes += item.size;
@@ -622,7 +625,7 @@ export class AttachmentManager {
         const zipEm = new ZipEm();
 
         const packagingTracker = this.#packagingTracker;
-        const errorList = this.#packagingErrorList
+        const errorList = this.#packagingErrorList;
         const currentPackageIndex = packagingTracker.currentPackageIndex;
 
         let start = (currentPackageIndex == 0) ? 0 : packagingTracker.extractionSubsets[currentPackageIndex - 1];
@@ -815,31 +818,59 @@ export class AttachmentManager {
 
     async deleteAttachments() {
         const info = {
+            status: "started",
+            totalItems: this.#packagingTracker.items.length + this.#duplicateFileTracker.length,
             processedCount: 0,
+            nestedCount: 0,
+            errorCount: 0,
             lastFileName: "..."
         };
 
-        let success = true;
+        this.#reportDetachProgress(info);
+
+        info.status = "executing";
 
         const deletionSets = [this.#packagingTracker.items, this.#duplicateFileTracker];
 
+        const nestedAttachmentSet = new Set();
+
+        this.#detachmentErrorList = [];
+
         for(const set of deletionSets) {
             for(const item of set) {
-                console.log(`${item.messageId} : ${item.partName} - ${item.name}`);
+                const { messageId, partName, name } = item;
 
-                try {
-//                    await messenger.messages.deleteAttachments(item.messageId, [item.partName]);
-                    info.processedCount++;
+                info.lastFileName = name;
+
+                if(item.isNested) {
+                    info.nestedCount++;
                 }
-                catch(e) {
-                    success = false;
+                else {
+                    console.log(`${messageId} : ${partName} - ${name}`);
+
+                    try {
+                        await messenger.messages.deleteAttachments(messageId, [partName]);
+                        info.processedCount++;
+                    }
+                    catch(e) {
+                        this.#detachmentErrorList.push({
+                            messageId: messageId,
+                            partName: partName,
+                            scope: "detach",
+                            error: e.toString()
+                        });
+                        
+                        info.errorCount++;
+
+                        console.log(e);
+                    }
+
+                    this.#reportDetachProgress(info);
                 }
             }
-
-            this.#reportDetachProgress(info);
         }
  
-        this.#reportDetachResult({ success: success });
+        this.#reportDetachResult(info);
     }
 
     async getAttachmentFileData(messageId, partName) {

@@ -20,6 +20,7 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
     async function extractSilently(params) {
         const attachmentManager = new AttachmentManager({
             folders: params.selectedFolders,
+            includeEmbeds: params.includeEmbeds,
             silentModeInvoked: true,
             reportProcessingComplete: () =>
             {
@@ -31,7 +32,9 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
                           timestamp: attachment.date
                       };
                     },
-                    { preserveFolderStructure: params.preserveFolderStructure }
+                    {
+                        preserveFolderStructure: params.preserveFolderStructure
+                    }
                   );
             },
             reportSaveResult: updateSaveResult

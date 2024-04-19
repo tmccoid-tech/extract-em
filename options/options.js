@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const preserveFolderStructureCheckbox = document.getElementById("preserve-folder-structure-checkbox");
     const defaultGroupingSelect = document.getElementById("default-grouping-select");
     const imagePreviewSelect = document.getElementById("image-preview-select");
+    const includeEmbedsCheckbox = document.getElementById("include-embeds-checkbox");
     
     async function main() {
         standardUiModeCheckbox.addEventListener("change", onUserInteractionOptionChanged);
@@ -22,6 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         preserveFolderStructureCheckbox.addEventListener("change", onPreserveFolderStructureOptionChanged);
         defaultGroupingSelect.addEventListener("change", onDefaultGroupingOptionChanged);
         imagePreviewSelect.addEventListener("change", onImagePreviewOptionChanged);
+        includeEmbedsCheckbox.addEventListener("change", onIncludeEmbedsOptionChanged);
 
         const options = await OptionsManager.retrieve();
 
@@ -34,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         preserveFolderStructureCheckbox.checked = options.preserveFolderStructure;
         defaultGroupingSelect.value = options.defaultGrouping;
         imagePreviewSelect.value = options.defaultImagePreview;
+        includeEmbedsCheckbox.checked = options.includeEmbeds;
 
         extractImmediateSubfoldersCheckbox.disabled = !options.extractImmediate;
         useSilentModeCheckbox.disabled = !options.extractImmediate;
@@ -72,6 +75,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         OptionsManager.setOption("defaultImagePreview", imagePreviewSelect.value);
     }
 
+    function onIncludeEmbedsOptionChanged(event) {
+        OptionsManager.setOption("includeEmbeds", includeEmbedsCheckbox.checked);
+    }
 
     await main();
 });

@@ -161,6 +161,16 @@
         "description": ""
     },
 
+    "includeEmbeddedImages": {
+        "message": "Include embedded images",
+        "description": ""
+    },
+    "includeEmbeddedImagesDescription": {
+        "message": "Identifies and includes images embedded in the message body (inline images)",
+        "description": ""
+    },
+
+
     "preserveFolderStructure": {
         "message": "Preserve folder structure",
         "description": ""

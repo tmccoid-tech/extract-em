@@ -441,7 +441,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             attachmentManager = new AttachmentManager({
                 folders: selectedFolders,
-                
+                includeEmbeds: options.includeEmbeds,
                 silentModeInvoked: false,
 
                 reportFolderProcessing : updateProcessingFolder,
@@ -757,7 +757,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         attachmentPanel.querySelector(".file-name-label").textContent = attachment.name;
         attachmentPanel.querySelector(".extension-label").textContent = attachment.extension;
-        attachmentPanel.querySelector(".file-size-label").textContent = abbreviateFileSize(attachment.size);
+        attachmentPanel.querySelector(".file-size-label").textContent = (attachment.size === null) ? "???" : abbreviateFileSize(attachment.size);
         attachmentPanel.querySelector(".author-label").textContent = message.author;
         attachmentPanel.querySelector(".message-date-label").textContent = attachment.date.toDateString();
         attachmentPanel.querySelector(".subject-label").textContent = message.subject;
@@ -790,6 +790,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
 
                 getImagePreviewData(image, attachment.messageId, attachment.partName);
+            }
+            else if(attachment.isEmbed) {
+                previewWrapper.classList.add(defaultImagePreview);
+                previewWrapper.innerHTML = "embed";                     // TODO: add to messages.json when verbiage decided
             }
             else {
                 previewWrapper.classList.add("none");

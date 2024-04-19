@@ -19,7 +19,7 @@ export class ZipEm {
         );
     }
 
-    async add(fileName, fileData, creationDate) {
+    async addFile(fileName, fileData, creationDate) {
         await this.#zipWriter.add(
             fileName,
             new zip.BlobReader(fileData),

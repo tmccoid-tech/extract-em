@@ -7,7 +7,8 @@ export class OptionsManager {
         useSilentMode: false,
         preserveFolderStructure: false,
         defaultGrouping: "None",
-        defaultImagePreview: "sm"
+        defaultImagePreview: "sm",
+        includeEmbeds: false
     };
 
     static #options = null;

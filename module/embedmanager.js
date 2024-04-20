@@ -39,7 +39,7 @@ export class EmbedManager {
         const checksum = decode(source, buffer);
 
         return {
-            data: buffer.subarray(96, bufferLength - padLength),
+            data: buffer.subarray(0, bufferLength - padLength),
             checksum: checksum
         };
     }
@@ -181,9 +181,6 @@ export class EmbedManager {
 
                 if(endIndex > -1) {
                     let lines = text.substring(startIndex, endIndex).split("\r\n");
-
-                    lines = lines.slice(3, 10);
-                    lines.push("");
 
                     const extractResult = this.extractBase64(lines);
 

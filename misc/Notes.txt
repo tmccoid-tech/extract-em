@@ -79,6 +79,10 @@ Deletion tracking
 
 Extraction report
 
+Embedded image extraction
+
+Add option for using JSZip (archive file corruption issue reported by cczzc33@gmail.com)
+
 
 
 

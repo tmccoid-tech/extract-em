@@ -186,27 +186,9 @@ export class EmbedManager {
 
                     if(extractResult.success) {
 
-/*                        
-                        const map = new Map();
+                        embed.decodeData = this.decodeBase64(extractResult.value, this.decodeChecksum);
 
-                        for(let i = 0; i < 256; i++) {
-                            for(let j = 0; j < 256; j++) {
-                                const result = this.decodeBase64Swap2(extractResult.value, i, j);
-
-                                if(map.has(result.checksum)) {
-                                    map.get(result.checksum).push(`${i}:${j}`);
-                                }
-                                else {
-                                    map.set(result.checksum, [`${i}:${j}`]);
-                                }
-                            }
-                        }
-
-                        console.log(map.size);
-*/
-                        const result = this.decodeBase64(extractResult.value, this.decodeChecksum);
-
-
+/*
                         const file = {
                             url: URL.createObjectURL(new Blob([result.data], { type: embed.contentType })),
                             filename: embed.name,
@@ -215,8 +197,8 @@ export class EmbedManager {
 
                         browser.downloads
                             .download(file);
-//                            .then(URL.revokeObjectURL(file.url));
-
+                            .then(URL.revokeObjectURL(file.url));
+*/
                     }
 
                     lastStartIndex = (lastFileName == embed.name) ? endIndex : 0;

@@ -36,7 +36,7 @@ export class EmbedManager {
 
         const buffer = new Uint8Array(bufferLength);
 
-        const checksum = decode(source, buffer);
+        const checksum = decode(source, buffer, padLength);
 
         return {
             data: buffer.subarray(0, bufferLength - padLength),
@@ -44,7 +44,7 @@ export class EmbedManager {
         };
     }
 
-    static decodeChecksum(source, buffer) {
+    static decodeChecksum(source, buffer, padLength) {
         const checksumMask9 = 0b111111111;
 
         let
@@ -53,7 +53,7 @@ export class EmbedManager {
             e2,
             e3,
             
-            checksum = (0b1010000 | (buffer.length & 0x0F)) << 24;
+            checksum = (0b10100000 | ((buffer.length - padLength) & 0x0F)) << 24;
 
         const primeTable = EmbedManager.primeTable;
 
@@ -85,10 +85,12 @@ export class EmbedManager {
                 if(contentType && contentType.length > 0) {
                     const tokens = contentType[0].split(";");
                     if(tokens.length > 1) {
-                        const boundaryTokens = tokens[1].split("=");
 
-                        if(boundaryTokens.length > 1 && boundaryTokens[0].trim() == "boundary") {
-                            const boundary = boundaryTokens[1].replace(quoteReplace, "");
+                        const boundaryToken = tokens[1].trim();
+
+                        if(boundaryToken.startsWith("boundary=")) {
+
+                            const boundary = boundaryToken.substring(9).replace(quoteReplace, "");
 
                             if(part.parts) {
                                 for(const candidatePart of part.parts) {
@@ -102,7 +104,6 @@ export class EmbedManager {
                                                 if(imageNameTokens.length > 1 && imageNameTokens[0].trim() == "name") {
                                                     const imageName = imageNameTokens[1].replace(quoteReplace, "");
 
-                                                    // TODO: Consolidate with same code in AttachmentManager.#identifyAttachments
                                                     let extension = "--";
 
                                                     const segments = imageName.split(".");
@@ -112,7 +113,6 @@ export class EmbedManager {
                                                             extension = segments.pop().toLowerCase();
                                                         }
                                                     }
-                                    
 
                                                     const embed = {
                                                         messageId: messageId,
@@ -150,10 +150,6 @@ export class EmbedManager {
             }
         }
 
-        if(embeds.length > 2) {
-            embeds = embeds.sort((a, b) => (a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
-        }
-
         return embeds;
     }
 
@@ -168,13 +164,20 @@ export class EmbedManager {
         const text = await this.getFileText(messageId);
 
         let startIndex = 0;
-        let lastStartIndex = 0;
+        let lastEndIndex = 0;
         let lastFileName = "";
 
-        for(const embed of embeds) {
-            const startDelimiter = `Content-Type: ${embed.contentTypeBoundary}`;
+        if(embeds.length > 1) {
+            embeds = embeds.sort((a, b) => (a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
+        }
 
-            startIndex = text.indexOf(startDelimiter, lastStartIndex);
+        for(const embed of embeds) {
+            const contentTypeHeaderRegexString = `Content-Type: ${embed.contentTypeBoundary}`
+                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+                .replace(/;.s*/, ";\\s*")
+            ;
+
+            startIndex = text.substring(lastEndIndex).search(new RegExp(contentTypeHeaderRegexString));
 
             if(startIndex > -1) {
                 const endIndex = text.indexOf(embed.boundary, startIndex);
@@ -185,23 +188,11 @@ export class EmbedManager {
                     const extractResult = this.extractBase64(lines);
 
                     if(extractResult.success) {
-
                         embed.decodeData = this.decodeBase64(extractResult.value, this.decodeChecksum);
-
-/*
-                        const file = {
-                            url: URL.createObjectURL(new Blob([result.data], { type: embed.contentType })),
-                            filename: embed.name,
-                            conflictAction: "uniquify"
-                        };
-
-                        browser.downloads
-                            .download(file);
-                            .then(URL.revokeObjectURL(file.url));
-*/
+                        embed.size = embed.decodeData.data.length;
                     }
 
-                    lastStartIndex = (lastFileName == embed.name) ? endIndex : 0;
+                    lastEndIndex = (lastFileName == embed.name) ? endIndex : 0;
                     lastFileName = embed.name;
                 }
                 else {
@@ -209,9 +200,9 @@ export class EmbedManager {
                 }
             }
             else {
-                // Log error; exit
+                // Log no match; exit
             }
-        }
+        }       
     }
 
     static extractBase64(lines) {

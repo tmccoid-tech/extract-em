@@ -42,6 +42,7 @@ export class AttachmentManager {
     #packagingTracker;
     #duplicateFileTracker;
     #duplicateFileNameTracker;
+    #duplicateEmbedFileTracker;
     #packagingErrorList;
 
     #detachmentErrorList;
@@ -498,6 +499,7 @@ export class AttachmentManager {
         this.#packagingTracker = null;
         this.#duplicateFileTracker = null;
         this.#duplicateFileNameTracker = null;
+        this.#duplicateEmbedFileTracker = null;
         this.#packagingErrorList = null;
 
         this.#detachmentErrorList = null;
@@ -586,6 +588,7 @@ export class AttachmentManager {
             currentPackageIndex: 0,
             embedItems: [],
             currentEmbedMessageIndex: 0,
+            totalEmbedMessageCount: 0,
             preserveFolderStructure: extractOptions.preserveFolderStructure
         };
 
@@ -680,6 +683,10 @@ export class AttachmentManager {
         this.#packagingErrorList = [];
 
         this.#duplicateFileNameTracker = new Map();
+
+        if(embedItems.length > 0) {
+            this.#duplicateEmbedFileTracker = new Map();
+        }
 
         this.#package(packagingProgressInfo);        
     }
@@ -783,10 +790,12 @@ export class AttachmentManager {
 
         packagingProgressInfo.lastFileName = "...";
 
+        packagingTracker.currentPackageIndex++;
+
         await this.#prepareDownload(zipEm, packagingProgressInfo);
     }
 
-    async #prepareDownload(zipEm, packagingProgressInfo) {
+    async #prepareDownload(zipEm, packagingProgressInfo, disposition = "attachments") {
         let zipFile;
 
         try {
@@ -800,7 +809,7 @@ export class AttachmentManager {
 
         const zipParams = {
             url: URL.createObjectURL(zipFile),
-            filename: `${messenger.i18n.getMessage("attachments")}-${new Date().getTime()}.zip`,
+            filename: `${messenger.i18n.getMessage(disposition)}-${new Date().getTime()}.zip`,
             conflictAction: "uniquify"
         };
 
@@ -812,10 +821,10 @@ export class AttachmentManager {
         let downloadId = null;
 
         const packagingTracker = this.#packagingTracker;
-        const isFirst = (++packagingTracker.currentPackageIndex == 1);
+        const isFirst = (packagingTracker.currentPackageIndex == 1);
         const isFinal = (packagingTracker.currentPackageIndex == packagingTracker.extractionSubsets.length);
         const hasEmbeds = (this.#packagingTracker.embedItems.length > 0);
-        const isEmbedFinal = (packagingTracker.currentEmbedMessageIndex == packagingTracker.embedItems.length);
+        const isEmbedFinal = (packagingTracker.totalEmbedMessageCount > 0 && packagingTracker.currentEmbedMessageIndex == packagingTracker.totalEmbedMessageCount);
 
         packagingProgressInfo.status = "donwloading";
         this.#reportPackagingProgress(packagingProgressInfo);
@@ -893,6 +902,7 @@ export class AttachmentManager {
     async #packageEmbeds(packagingProgressInfo) {
         const zipEm = new ZipEm();
         const packagingTracker = this.#packagingTracker;
+        const duplicateEmbedFileTracker = this.#duplicateEmbedFileTracker;
 
         const embedItems = packagingTracker.embedItems;
 
@@ -912,15 +922,22 @@ export class AttachmentManager {
 
         groupedEmbedItems = [...groupedEmbedItems.entries()];
 
+        if(packagingTracker.totalEmbedMessageCount == 0) {
+            packagingTracker.totalEmbedMessageCount = groupedEmbedItems.length;
+        }
+
         const maxSize = 750000000;
         let currentSize = 0;
 
         for(let i = packagingTracker.currentEmbedMessageIndex; i < groupedEmbedItems.length; i++) {
             const messageItems = groupedEmbedItems[i];
 
-            await EmbedManager.extractEmbeds(messageItems[0], messageItems[1]);
+            const messageId = messageItems[0];
+            const messageEmbedItems = messageItems[1];
 
-            currentSize += messageItems[1].reduce((sum, item) => sum + item.decodeData.data.length, 0);
+            await EmbedManager.extractEmbeds(messageId, messageEmbedItems);
+
+            currentSize += messageEmbedItems.reduce((sum, item) => sum + item.size, 0);
 
             if(currentSize > maxSize) {
                 packagingTracker.currentEmbedMessageIndex = i;
@@ -930,6 +947,40 @@ export class AttachmentManager {
 
             for(const item of messageItems[1]) {
                 let fileName = item.name;
+                const decodeData = item.decodeData;
+
+//                console.log(`Duplicate: ${fileName}; size: ${item.size}; ck: ${decodeData.checksum}`);
+
+                if(duplicateEmbedFileTracker.has(fileName)) {
+                    let sequenceNumber = 0;
+                    const nameDuplicate = duplicateEmbedFileTracker.get(fileName);
+
+                    if(nameDuplicate.sizes.has(item.size)) {
+                        const sizeDuplicate = nameDuplicate.sizes.get(item.size);
+
+                        if(sizeDuplicate.has(decodeData.checksum)) {
+                            // TODO: Report duplicate increment
+//                            console.log(`Omitted: ${fileName}; size: ${item.size}; ck: ${decodeData.checksum}`);
+                            continue;
+                        }
+                        else {
+                            sequenceNumber = nameDuplicate.count++;
+                            sizeDuplicate.add(decodeData.checksum);
+                        }
+                    }
+                    else {
+                        sequenceNumber = nameDuplicate.count++;
+                        nameDuplicate.sizes.set(item.size, new Set([decodeData.checksum]));
+                    }
+
+                    if(sequenceNumber > 0) {
+                        fileName = this.#sequentializeFileName(fileName, sequenceNumber);
+                    }
+                }
+                else {
+                    duplicateEmbedFileTracker.set(fileName, { count: 1, sizes: new Map([[item.size, new Set([decodeData.checksum])]]) });
+                }
+
                 packagingProgressInfo.lastFileName = fileName;
     
                 if(packagingTracker.preserveFolderStructure) {
@@ -938,7 +989,7 @@ export class AttachmentManager {
                 }
 
                 try {
-                    await zipEm.addFile(fileName, new Blob([item.decodeData.data]), item.date);
+                    await zipEm.addFile(fileName, new Blob([decodeData.data]), item.date);
                 }
                 catch(e) {
                     console.log(e);
@@ -951,7 +1002,7 @@ export class AttachmentManager {
             packagingTracker.currentEmbedMessageIndex = i + 1;
         }
 
-        this.#prepareDownload(zipEm, packagingProgressInfo);
+        this.#prepareDownload(zipEm, packagingProgressInfo, "embeds");
     }
 
 

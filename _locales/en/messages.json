@@ -51,6 +51,7 @@
     "folders": { "message": "Folders" },
     "messages": { "message": "Messages" },
     "attachments": { "message": "Attachments" },
+    "embeds": { "message": "Embeds" },
     "selected": { "message": "selected" },
     "count": { "message": "Count" },
     "processed": { "message": "Processed" },

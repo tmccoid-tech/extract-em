@@ -903,6 +903,7 @@ export class AttachmentManager {
         const zipEm = new ZipEm();
         const packagingTracker = this.#packagingTracker;
         const duplicateEmbedFileTracker = this.#duplicateEmbedFileTracker;
+        const errorList = this.#packagingErrorList;
 
         const embedItems = packagingTracker.embedItems;
 
@@ -945,7 +946,23 @@ export class AttachmentManager {
                 break;
             }
 
-            for(const item of messageItems[1]) {
+            for(const item of messageEmbedItems) {
+                if(item.error) {
+                    errorList.push({
+                        messageId: item.messageId,
+                        partName: item.partName,
+                        scope: "extractEmbeds",
+                        error: item.error
+                    });
+
+                    const message = this.messageList.get(item.messageId);
+
+                    console.log(`Embed error: ${message.author} ${message.folderPath} - ${item.date} :${item.error}`);
+
+                    packagingProgressInfo.errorCount = errorList.length;
+                    continue;
+                }
+
                 let fileName = item.name;
                 const decodeData = item.decodeData;
 
@@ -998,6 +1015,8 @@ export class AttachmentManager {
                     item.decodeData = null;
                 }
             }
+
+            this.#reportPackagingProgress(packagingProgressInfo);
 
             packagingTracker.currentEmbedMessageIndex = i + 1;
         }

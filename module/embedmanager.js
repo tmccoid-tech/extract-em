@@ -167,7 +167,7 @@ export class EmbedManager {
         let lastEndIndex = 0;
         let lastFileName = "";
 
-        if(embeds.length > 1) {
+        if(embeds.length > 2) {
             embeds = embeds.sort((a, b) => (a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
         }
 
@@ -180,6 +180,8 @@ export class EmbedManager {
             startIndex = text.substring(lastEndIndex).search(new RegExp(contentTypeHeaderRegexString));
 
             if(startIndex > -1) {
+                startIndex += lastEndIndex;
+
                 const endIndex = text.indexOf(embed.boundary, startIndex);
 
                 if(endIndex > -1) {
@@ -191,16 +193,19 @@ export class EmbedManager {
                         embed.decodeData = this.decodeBase64(extractResult.value, this.decodeChecksum);
                         embed.size = embed.decodeData.data.length;
                     }
+                    else {
+                        embed.error = `Invalid Base64 data in embed ${embed.name}.`;
+                    }
 
                     lastEndIndex = (lastFileName == embed.name) ? endIndex : 0;
                     lastFileName = embed.name;
                 }
                 else {
-                    // Log error; exit
+                    embed.error = `Embed lower boundary not found (${embed.name}).`;
                 }
             }
             else {
-                // Log no match; exit
+                embed.error = `Embed Content-Type header not found (${embed.name}).`;
             }
         }       
     }
@@ -258,14 +263,9 @@ export class EmbedManager {
                         if(currentIndex > cumulativeLength - 3 && currentChar === "=") {
                             value[currentIndex] = 64;
                             
-                            console.log("EQUALS!");
-
                             continue;
                         }
                         else {
-                            // Invalid character
-                            console.log("ILLEGAL!");
-
                             return result;
                         }
                     }

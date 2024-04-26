@@ -1,5 +1,5 @@
 export class EmbedManager {
-    static base64Map = new Map([..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"].map((c, i) => [c, i] ));
+    static base64Map = new Map([..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="].map((c, i) => [c, i] ));
 
     static primeTable = new Uint8Array([
         0x03,	0x05,	0x07,	0x0B,	0x0D,	0x11,	0x13,	0x17,	0x1D,	0x1F,	0x25,	0x29,	0x2B,	0x2F,	0x35,	0x3B,
@@ -21,30 +21,22 @@ export class EmbedManager {
     ]);
 
 
-    static decodeBase64(source, decode) {
+    static decodeBase64(source, padCount, decode) {
         let
             sourceLength = source.length,
-            bufferLength = sourceLength * 0.75,
-            padLength = 0;
-
-        if (source[sourceLength - 1] === 64) {
-            padLength++;
-            if (source[sourceLength - 2] === 64) {
-                padLength++;
-            }
-        }
+            bufferLength = sourceLength * 0.75;
 
         const buffer = new Uint8Array(bufferLength);
 
-        const checksum = decode(source, buffer, padLength);
+        const checksum = decode(source, buffer, padCount);
 
         return {
-            data: buffer.subarray(0, bufferLength - padLength),
+            data: buffer.subarray(0, bufferLength - padCount),
             checksum: checksum
         };
     }
 
-    static decodeChecksum(source, buffer, padLength) {
+    static decodeChecksum(source, buffer, padCount) {
         const checksumMask9 = 0b111111111;
 
         let
@@ -52,22 +44,34 @@ export class EmbedManager {
             j = 0,                      // Result index
             e2,
             e3,
-            
-            checksum = (0b10100000 | ((buffer.length - padLength) & 0x0F)) << 24;
+            e4,
+
+            checksum = (0b10100000 | ((buffer.length - padCount) & 0x0F)) << 24;
 
         const primeTable = EmbedManager.primeTable;
 
         for (i = 0; i < source.length; i += 4) {
             e2 = source[i + 1];
             e3 = source[i + 2];
+            e4 = source[i + 3];
 
             buffer[j] = (source[i] << 2) | (e2 >> 4);
             checksum += (buffer[j] << 14) * primeTable[++j & 0xFF];
 
+            if(e3 == 64) {
+                checksum = (checksum << 9) | ((checksum >>> 23) & checksumMask9);
+                continue;
+            }
+
             buffer[j] = ((e2 & 0b00001111) << 4) | (e3 >> 2);
             checksum += (buffer[j] << 7) * primeTable[++j & 0xFF];
 
-            buffer[j] = ((e3 & 0b00000011) << 6) | (source[i + 3] & 0b00111111);
+            if(e4 == 64) {
+                checksum = (checksum << 9) | ((checksum >>> 23) & checksumMask9);
+                continue;
+            }
+
+            buffer[j] = ((e3 & 0b00000011) << 6) | (e4 & 0b00111111);
             checksum += buffer[j] * primeTable[++j & 0xFF];
 
             checksum = (checksum << 9) | ((checksum >>> 23) & checksumMask9);
@@ -172,6 +176,10 @@ export class EmbedManager {
         }
 
         for(const embed of embeds) {
+            if(embed.name !== lastFileName) {
+                lastEndIndex = 0;
+            }
+
             const contentTypeHeaderRegexString = `Content-Type: ${embed.contentTypeBoundary}`
                 .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
                 .replace(/;.s*/, ";\\s*")
@@ -190,15 +198,14 @@ export class EmbedManager {
                     const extractResult = this.extractBase64(lines);
 
                     if(extractResult.success) {
-                        embed.decodeData = this.decodeBase64(extractResult.value, this.decodeChecksum);
+                        embed.decodeData = this.decodeBase64(extractResult.value, extractResult.padCount, this.decodeChecksum);
                         embed.size = embed.decodeData.data.length;
                     }
                     else {
                         embed.error = `Invalid Base64 data in embed ${embed.name}.`;
                     }
 
-                    lastEndIndex = (lastFileName == embed.name) ? endIndex : 0;
-                    lastFileName = embed.name;
+                    lastEndIndex = endIndex;
                 }
                 else {
                     embed.error = `Embed lower boundary not found (${embed.name}).`;
@@ -207,13 +214,16 @@ export class EmbedManager {
             else {
                 embed.error = `Embed Content-Type header not found (${embed.name}).`;
             }
+
+            lastFileName = embed.name;
         }       
     }
 
     static extractBase64(lines) {
         const result = {
             success: false,
-            value: null
+            value: null,
+            padCount: 0
         };
 
         let
@@ -240,7 +250,7 @@ export class EmbedManager {
             }
         }
 
-        if(cumulativeLength > 0)
+        if(cumulativeLength > 0 && cumulativeLength % 4 == 0)
         {
             result.value = new Uint8Array(cumulativeLength);
 
@@ -260,14 +270,20 @@ export class EmbedManager {
                     currentValue = this.base64Map.get(currentChar);
 
                     if(currentValue === undefined) {
-                        if(currentIndex > cumulativeLength - 3 && currentChar === "=") {
-                            value[currentIndex] = 64;
-                            
-                            continue;
-                        }
-                        else {
+                        return result;
+                    }
+                    else if(currentValue == 64) {                       // Pad character
+                        const absolutePosition = currentIndex % 4;
+
+                        if(absolutePosition < 2) {
                             return result;
                         }
+
+                        if(absolutePosition == 2 && !(j + 1 < line.length && line[j + 1] === "=")) {
+                            return result;
+                        }
+
+                        result.padCount++;
                     }
 
                     value[currentIndex] = currentValue;

@@ -20,7 +20,6 @@ export class AttachmentManager {
 
     messageList = new Map();
     attachmentList = [];
-//    embedMap = new Map();
 
     #groupingSet = new Map();
 
@@ -158,12 +157,6 @@ export class AttachmentManager {
         this.#selectedFolderPaths = selectedFolderPaths;
         this.#alterationTracker = new Map();
 
-        // REMOVE!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//        EmbedManager.testChecksum2();
-
-//        return;
-        // REMOVE!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
         for (const folder of this.#folders) {
             this.#processFolder(folder);
         }
@@ -236,55 +229,11 @@ export class AttachmentManager {
 
         const identifyAttachmentsResult = await this.#identifyAttachments(message, folderStats);
 
-        let hasEmbeds = await this.#identifyEmbeds(message, folderStats, identifyAttachmentsResult);
+        const hasEmbeds = await this.#identifyEmbeds(message, folderStats, identifyAttachmentsResult);
 
         if(identifyAttachmentsResult.hasAttachments || hasEmbeds) {
             this.messageList.set(message.id, messageInfo);
         }
-    }
-
-    async #identifyEmbeds(message, folderStats, identifyAttachmentsResult) {
-        let result = false;
-
-        let {
-            hasAttachments,
-            fullMessage
-        } = identifyAttachmentsResult;
-
-        if(this.#includeEmbeds) {
-            if(!fullMessage) {
-                fullMessage = await messenger.messages.getFull(message.id);
-            }
-
-            const embeds = EmbedManager.identifyEmbeds(message.id, message.date, fullMessage.parts);
-
-            if(embeds.length > 0) {
-
-                // REMOVE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//                await EmbedManager.extractEmbeds(message.id, embeds);
-                // REMOVE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-//                this.embedMap.set(message.id, embeds);
-                this.attachmentList.push(...embeds);
-
-                folderStats.lastFileName = embeds[0].name;
-
-                this.#embedCount++;
-                folderStats.embedCount++;
-
-                if(!hasAttachments) {
-                    this.#attachmentMessageCount++;
-                    folderStats.attachmentMessageCount++;
-                }
-
-                this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
-
-                result = true;
-            }
-        }
-
-        return result;
     }
 
     async #identifyAttachments(message, folderStats) {
@@ -394,7 +343,7 @@ export class AttachmentManager {
 
                 this.attachmentList.push(attachmentInfo);
 
-                console.log(attachmentInfo);
+//                console.log(attachmentInfo);
 
                 folderStats.lastFileName = attachment.name;
 
@@ -414,6 +363,43 @@ export class AttachmentManager {
         }
 
         this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
+
+        return result;
+    }
+
+    async #identifyEmbeds(message, folderStats, identifyAttachmentsResult) {
+        let result = false;
+
+        if(this.#includeEmbeds) {
+            let {
+                hasAttachments,
+                fullMessage
+            } = identifyAttachmentsResult;
+
+            if(!fullMessage) {
+                fullMessage = await messenger.messages.getFull(message.id);
+            }
+
+            const embeds = EmbedManager.identifyEmbeds(message.id, message.date, fullMessage.parts);
+
+            if(embeds.length > 0) {
+                this.attachmentList.push(...embeds);
+
+                folderStats.lastFileName = embeds[0].name;
+
+                this.#embedCount+= embeds.length;
+                folderStats.embedCount += embeds.length;
+
+                if(!hasAttachments) {
+                    this.#attachmentMessageCount++;
+                    folderStats.attachmentMessageCount++;
+                }
+
+                this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
+
+                result = true;
+            }
+        }
 
         return result;
     }
@@ -487,6 +473,7 @@ export class AttachmentManager {
         this.#attachmentMessageCount = 0;
         this.#attachmentCount = 0;
         this.#cumulativeAttachmentSize = 0;
+        this.#embedCount = 0;
 
         this.#selectedFolderPaths = undefined;
 
@@ -592,8 +579,10 @@ export class AttachmentManager {
             preserveFolderStructure: extractOptions.preserveFolderStructure
         };
 
-        const items = this.#packagingTracker.items;
-        const embedItems = this.#packagingTracker.embedItems;
+        const packagingTracker = this.#packagingTracker;
+
+        const items = packagingTracker.items;
+        const embedItems = packagingTracker.embedItems;
 
         this.#duplicateFileTracker = [];
 
@@ -636,7 +625,7 @@ export class AttachmentManager {
         let currentSize = 0;
         let currentStart = 0;
 
-        const extractionSubsets = this.#packagingTracker.extractionSubsets;
+        const extractionSubsets = packagingTracker.extractionSubsets;
 
         if(cumulativeSize > maxSize) {
             for(const item of items) {
@@ -669,14 +658,30 @@ export class AttachmentManager {
 
         const packagingProgressInfo = {
             status: "started",
+
             totalItems: items.length,
             includedCount: 0,
-            errorCount: 0,
             totalBytes: 0,
+
+            totalEmbedItems: this.#embedCount,
+            includedEmbedCount: 0,
+            duplicateEmbedCount: 0,
+            totalEmbedBytes: 0,
+
+            duplicateCount: preparationProgressInfo.duplicateCount,
+            duplicateTotalBytes: preparationProgressInfo.duplicateTotalBytes,
+
+            errorCount: 0,
+
             filesCreated: 0,
-            fileCount: this.#packagingTracker.extractionSubsets.length,
+            fileCount: packagingTracker.extractionSubsets.length,
+
             lastFileName: ""
         };
+
+        if(embedItems.length > 0) {
+            packagingProgressInfo.fileCount++;
+        }
 
         this.#reportPackagingProgress(packagingProgressInfo);
 
@@ -795,6 +800,151 @@ export class AttachmentManager {
         await this.#prepareDownload(zipEm, packagingProgressInfo);
     }
 
+    async #packageEmbeds(packagingProgressInfo) {
+        const zipEm = new ZipEm();
+        const packagingTracker = this.#packagingTracker;
+        const duplicateEmbedFileTracker = this.#duplicateEmbedFileTracker;
+        const errorList = this.#packagingErrorList;
+
+        const embedItems = packagingTracker.embedItems;
+
+        let groupedEmbedItems = new Map();
+
+        for(const item of embedItems) {
+            const messageId = item.messageId;
+
+            if(groupedEmbedItems.has(messageId)) {
+                groupedEmbedItems.get(messageId).push(item);
+            }
+            else
+            {
+                groupedEmbedItems.set(messageId, [item]);
+            }
+        }
+
+        groupedEmbedItems = [...groupedEmbedItems.entries()];
+
+        if(packagingTracker.totalEmbedMessageCount == 0) {
+            packagingTracker.totalEmbedMessageCount = groupedEmbedItems.length;
+        }
+        else {
+            packagingProgressInfo.fileCount++;
+        }
+
+        const maxSize = 750000000;
+        let currentSize = 0;
+
+        for(let i = packagingTracker.currentEmbedMessageIndex; i < groupedEmbedItems.length; i++) {
+            const messageItems = groupedEmbedItems[i];
+
+            const messageId = messageItems[0];
+            const messageEmbedItems = messageItems[1];
+
+            await EmbedManager.extractEmbeds(messageId, messageEmbedItems);
+
+            currentSize += messageEmbedItems.reduce((sum, item) => sum + item.size, 0);
+
+            if(currentSize > maxSize) {
+                packagingTracker.currentEmbedMessageIndex = i;
+
+                break;
+            }
+
+            for(const item of messageEmbedItems) {
+                if(item.error) {
+                    errorList.push({
+                        messageId: item.messageId,
+                        partName: item.partName,
+                        scope: "extractEmbeds",
+                        error: item.error
+                    });
+
+                    const message = this.messageList.get(item.messageId);
+
+                    console.log(`Embed error: ${message.author} ${message.folderPath} - ${item.date} :${item.error}`);
+
+                    packagingProgressInfo.errorCount = errorList.length;
+
+                    this.#reportPackagingProgress(packagingProgressInfo);
+                    continue;
+                }
+
+                let fileName = item.name;
+                const decodeData = item.decodeData;
+
+//                console.log(`Duplicate: ${fileName}; size: ${item.size}; ck: ${decodeData.checksum}`);
+
+                if(duplicateEmbedFileTracker.has(fileName)) {
+                    let sequenceNumber = 0;
+                    const nameDuplicate = duplicateEmbedFileTracker.get(fileName);
+
+                    if(nameDuplicate.sizes.has(item.size)) {
+                        const sizeDuplicate = nameDuplicate.sizes.get(item.size);
+
+                        if(sizeDuplicate.has(decodeData.checksum)) {
+                            packagingProgressInfo.duplicateEmbedCount++;
+                            packagingProgressInfo.duplicateCount++;
+                            packagingProgressInfo.duplicateTotalBytes += item.size;
+
+                            this.#reportPackagingProgress(packagingProgressInfo);
+                            continue;
+                        }
+                        else {
+                            sequenceNumber = nameDuplicate.count++;
+                            sizeDuplicate.add(decodeData.checksum);
+                        }
+                    }
+                    else {
+                        sequenceNumber = nameDuplicate.count++;
+                        nameDuplicate.sizes.set(item.size, new Set([decodeData.checksum]));
+                    }
+
+                    if(sequenceNumber > 0) {
+                        fileName = this.#sequentializeFileName(fileName, sequenceNumber);
+                    }
+                }
+                else {
+                    duplicateEmbedFileTracker.set(fileName, { count: 1, sizes: new Map([[item.size, new Set([decodeData.checksum])]]) });
+                }
+
+                packagingProgressInfo.lastFileName = fileName;
+    
+                if(packagingTracker.preserveFolderStructure) {
+                    const message = this.messageList.get(item.messageId);
+                    fileName = `${message.folderPath.slice(1)}/${fileName}`;
+                }
+
+                try {
+                    await zipEm.addFile(fileName, new Blob([decodeData.data]), item.date);
+
+                    packagingProgressInfo.totalEmbedBytes += decodeData.data.length;
+                    packagingProgressInfo.includedEmbedCount++;
+                }
+                catch(e) {
+                    errorList.push({
+                        messageId: item.messageId,
+                        partName: item.partName,
+                        scope: "packageEmbeds",
+                        error: `${e}`
+                    });
+
+                    packagingProgressInfo.errorCount = errorList.length;
+                }
+                finally {
+                    item.decodeData = null;
+                }
+            }
+
+            this.#reportPackagingProgress(packagingProgressInfo);
+
+            packagingTracker.currentEmbedMessageIndex = i + 1;
+        }
+
+        packagingProgressInfo.lastFileName = "...";
+
+        this.#prepareDownload(zipEm, packagingProgressInfo, "embeds");
+    }
+
     async #prepareDownload(zipEm, packagingProgressInfo, disposition = "attachments") {
         let zipFile;
 
@@ -898,132 +1048,6 @@ export class AttachmentManager {
                 }
             );
     }
-
-    async #packageEmbeds(packagingProgressInfo) {
-        const zipEm = new ZipEm();
-        const packagingTracker = this.#packagingTracker;
-        const duplicateEmbedFileTracker = this.#duplicateEmbedFileTracker;
-        const errorList = this.#packagingErrorList;
-
-        const embedItems = packagingTracker.embedItems;
-
-        let groupedEmbedItems = new Map();
-
-        for(const item of embedItems) {
-            const messageId = item.messageId;
-
-            if(groupedEmbedItems.has(messageId)) {
-                groupedEmbedItems.get(messageId).push(item);
-            }
-            else
-            {
-                groupedEmbedItems.set(messageId, [item]);
-            }
-        }
-
-        groupedEmbedItems = [...groupedEmbedItems.entries()];
-
-        if(packagingTracker.totalEmbedMessageCount == 0) {
-            packagingTracker.totalEmbedMessageCount = groupedEmbedItems.length;
-        }
-
-        const maxSize = 750000000;
-        let currentSize = 0;
-
-        for(let i = packagingTracker.currentEmbedMessageIndex; i < groupedEmbedItems.length; i++) {
-            const messageItems = groupedEmbedItems[i];
-
-            const messageId = messageItems[0];
-            const messageEmbedItems = messageItems[1];
-
-            await EmbedManager.extractEmbeds(messageId, messageEmbedItems);
-
-            currentSize += messageEmbedItems.reduce((sum, item) => sum + item.size, 0);
-
-            if(currentSize > maxSize) {
-                packagingTracker.currentEmbedMessageIndex = i;
-
-                break;
-            }
-
-            for(const item of messageEmbedItems) {
-                if(item.error) {
-                    errorList.push({
-                        messageId: item.messageId,
-                        partName: item.partName,
-                        scope: "extractEmbeds",
-                        error: item.error
-                    });
-
-                    const message = this.messageList.get(item.messageId);
-
-                    console.log(`Embed error: ${message.author} ${message.folderPath} - ${item.date} :${item.error}`);
-
-                    packagingProgressInfo.errorCount = errorList.length;
-                    continue;
-                }
-
-                let fileName = item.name;
-                const decodeData = item.decodeData;
-
-//                console.log(`Duplicate: ${fileName}; size: ${item.size}; ck: ${decodeData.checksum}`);
-
-                if(duplicateEmbedFileTracker.has(fileName)) {
-                    let sequenceNumber = 0;
-                    const nameDuplicate = duplicateEmbedFileTracker.get(fileName);
-
-                    if(nameDuplicate.sizes.has(item.size)) {
-                        const sizeDuplicate = nameDuplicate.sizes.get(item.size);
-
-                        if(sizeDuplicate.has(decodeData.checksum)) {
-                            // TODO: Report duplicate increment
-//                            console.log(`Omitted: ${fileName}; size: ${item.size}; ck: ${decodeData.checksum}`);
-                            continue;
-                        }
-                        else {
-                            sequenceNumber = nameDuplicate.count++;
-                            sizeDuplicate.add(decodeData.checksum);
-                        }
-                    }
-                    else {
-                        sequenceNumber = nameDuplicate.count++;
-                        nameDuplicate.sizes.set(item.size, new Set([decodeData.checksum]));
-                    }
-
-                    if(sequenceNumber > 0) {
-                        fileName = this.#sequentializeFileName(fileName, sequenceNumber);
-                    }
-                }
-                else {
-                    duplicateEmbedFileTracker.set(fileName, { count: 1, sizes: new Map([[item.size, new Set([decodeData.checksum])]]) });
-                }
-
-                packagingProgressInfo.lastFileName = fileName;
-    
-                if(packagingTracker.preserveFolderStructure) {
-                    const message = this.messageList.get(item.messageId);
-                    fileName = `${message.folderPath.slice(1)}/${fileName}`;
-                }
-
-                try {
-                    await zipEm.addFile(fileName, new Blob([decodeData.data]), item.date);
-                }
-                catch(e) {
-                    console.log(e);
-                }
-                finally {
-                    item.decodeData = null;
-                }
-            }
-
-            this.#reportPackagingProgress(packagingProgressInfo);
-
-            packagingTracker.currentEmbedMessageIndex = i + 1;
-        }
-
-        this.#prepareDownload(zipEm, packagingProgressInfo, "embeds");
-    }
-
 
     async deleteAttachments() {
         const info = {

@@ -200,6 +200,10 @@ section {
     background-color: rgba(255, 228, 196, 0.369);
 }
 
+.embeds-column {
+    background-color: rgba(255, 254, 196, 0.369);
+}
+
 td {
     text-align: center;
 }
@@ -239,6 +243,11 @@ td.summary-header {
 
 #stats-table tfoot {
     height: 12px;
+}
+
+#stats-table.omit-embeds td:last-child,
+#stats-table.omit-embeds th:last-child {
+    opacity: .15;
 }
 
 @keyframes processingSlider {

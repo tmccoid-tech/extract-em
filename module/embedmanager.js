@@ -55,24 +55,22 @@ export class EmbedManager {
             e3 = source[i + 2];
             e4 = source[i + 3];
 
-            buffer[j] = (source[i] << 2) | (e2 >> 4);
-            checksum += (buffer[j] << 14) * primeTable[++j & 0xFF];
+            assign: {
+                buffer[j] = (source[i] << 2) | (e2 >> 4);
+                checksum += (buffer[j] << 14) * primeTable[++j & 0xFF];
 
-            if(e3 == 64) {
-                checksum = (checksum << 9) | ((checksum >>> 23) & checksumMask9);
-                continue;
+                if(e3 == 64)
+                    break assign;
+
+                buffer[j] = ((e2 & 0b00001111) << 4) | (e3 >> 2);
+                checksum += (buffer[j] << 7) * primeTable[++j & 0xFF];
+
+                if(e4 == 64)
+                    break assign;
+
+                buffer[j] = ((e3 & 0b00000011) << 6) | (e4 & 0b00111111);
+                checksum += buffer[j] * primeTable[++j & 0xFF];
             }
-
-            buffer[j] = ((e2 & 0b00001111) << 4) | (e3 >> 2);
-            checksum += (buffer[j] << 7) * primeTable[++j & 0xFF];
-
-            if(e4 == 64) {
-                checksum = (checksum << 9) | ((checksum >>> 23) & checksumMask9);
-                continue;
-            }
-
-            buffer[j] = ((e3 & 0b00000011) << 6) | (e4 & 0b00111111);
-            checksum += buffer[j] * primeTable[++j & 0xFF];
 
             checksum = (checksum << 9) | ((checksum >>> 23) & checksumMask9);
         }
@@ -86,22 +84,24 @@ export class EmbedManager {
         for (const part of parts) {
             if(part.contentType == "multipart/related") {
                 const contentType = part.headers["content-type"];
+
                 if(contentType && contentType.length > 0) {
                     const tokens = contentType[0].split(";");
-                    if(tokens.length > 1) {
 
+                    if(tokens.length > 1) {
                         const boundaryToken = tokens[1].trim();
 
                         if(boundaryToken.startsWith("boundary=")) {
-
                             const boundary = boundaryToken.substring(9).replace(quoteReplace, "");
 
                             if(part.parts) {
                                 for(const candidatePart of part.parts) {
                                     if(candidatePart.contentType.startsWith("image")) {
                                         const imageContentType = candidatePart.headers["content-type"];
+
                                         if(imageContentType && imageContentType.length > 0) {
                                             const imageTokens = imageContentType[0].split(";");
+
                                             if(imageTokens.length > 1) {
                                                 const imageNameTokens = imageTokens[1].split("=");
                         
@@ -135,7 +135,7 @@ export class EmbedManager {
 
                                                     embeds.push(embed);
         
-                                                    console.log(embed);
+//                                                    console.log(embed);
                                                 }
                                             }
                                         }
@@ -167,9 +167,10 @@ export class EmbedManager {
     static async extractEmbeds(messageId, embeds) {
         const text = await this.getFileText(messageId);
 
-        let startIndex = 0;
-        let lastEndIndex = 0;
-        let lastFileName = "";
+        let
+            startIndex = 0,
+            lastEndIndex = 0,
+            lastFileName = "";
 
         if(embeds.length > 2) {
             embeds = embeds.sort((a, b) => (a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));

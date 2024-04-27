@@ -72,14 +72,25 @@
     "discovering": { "message": "Discovering" },
     "discoveryProgressMessage": {
         "message": "$1 attachment(s) in $2 of $3 message(s)",
-        "description": "{# of discovered} attachment(s) in {# of messages including attachments)} of {total # of discovered messages}"
+        "description": "{# of discovered} attachment(s) in {# of messages including attachments/embeds)} of {total # of discovered messages}"
     },
-    "discoverySelectionMessages": {
-        "message": "$1 of $2 attachment(s) selected",
-        "description": "{# of selected} of {# of discovered} attachment(s)"
+    "embedDiscoveryProgressMessage": {
+        "message": "$1 embed(s) in $2 of $3 message(s)",
+        "description": "{# of discovered} embed(s) in {# of messages including attachments/embeds)} of {total # of discovered messages}"
     },
 
-    "preparing": { "message": "Preparing" },
+    "discoverySelectionMessages": {
+        "message": "$1 of $2 attachment(s) selected",
+        "description": "{# of selected} of {# of discovered} attachment(s) selected"
+    },
+    "embedDiscoverySelectionMessages": {
+        "message": "$1 of $2 embed(s) selected",
+        "description": "{# of selected} of {# of discovered} embed(s) selected"
+    },
+
+    "preparing": { "message": "Preparing", "description": "OBSOLETE" },
+    "exclusions": { "message": "Exclusions" },
+
     "alterationsIdentified": {
         "message": "detached/deleted attachment(s) identified",
         "description": "Regards attachments which were detached or deleted from the (altered) source message."
@@ -93,6 +104,7 @@
         "description": "Used in the sense of 'x items out of y total items'"
     },
     "attachmentsPackaged": { "message": "attachment(s) packaged"},
+    "embedsPackaged": { "message": "embed(s) packaged"},
     "packageFilesSaved": { "message": "package file(s) saved" },
     "errorsEncountered": { "message": "errors encountered" },
     "result": { "message": "Result" },

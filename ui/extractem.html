@@ -35,17 +35,19 @@
             </nav>
             <div class="tab-content-div" context="summary">
                 <div>
-                    <table id="stats-table">
+                    <table id="stats-table" class="omit-embeds">
                         <colgroup>
                             <col span="2" class="folders-column">
                             <col span="3" class="messages-column">
                             <col span="2" class="attachments-column">
+                            <col span="1" class="embeds-column">
                         </colgroup>
                         <thead>
                             <tr>
                                 <th colspan="2" class="summary-header">__MSG_folders__</th>
                                 <th colspan="3" class="summary-header">__MSG_messages__</th>
                                 <th colspan="2"  class="summary-header">__MSG_attachments__</th>
+                                <th class="summary-header">__MSG_embeds__</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,6 +55,7 @@
                                 <td colspan="2"><span id="selected-folder-count-span">0</span> / <span id="folder-count-span"></span> __MSG_selected__</td>
                                 <td colspan="3"><span id="summary-selected-message-count-span">0</span> __MSG_selected__</td>
                                 <td colspan="2"><span id="summary-selected-attachment-count-span">0</span> __MSG_selected__<br/><span id="summary-selected-attachment-size-span">0 __MSG_bytesLabel__</span></td>
+                                <td><span id="summary-selected-embed-count-span">0</span> __MSG_selected__</td>
                             </tr>
                             <tr>
                                 <td colspan="2"><br/></td>
@@ -63,6 +66,7 @@
 
                                 <td class="summary-header">__MSG_count__</td>
                                 <td class="summary-header">__MSG_size__</td>
+                                <td class="summary-header">__MSG_count__</td>
                             </tr>
                             <tr id="stats-summary-tr" class="hidden">
                                 <td colspan="2"><br/></td>
@@ -73,15 +77,18 @@
                                 
                                 <td id="summary-attachment-count-span">0</td>
                                 <td id="summary-attachment-size-span">0 __MSG_bytesLabel__</td>
+
+                                <td id="summary-embed-count-span" >0</td>
                             </tr>
                         </tbody>
                         <tbody id="stats-summary-tbody">
 
                         </tbody>
                         <tfoot>
-                            <th colspan="2"></th>
+                            <th colspan="2">&nbsp;</th>
                             <th colspan="3"></th>
                             <th colspan="2"></th>
+                            <th colspan="1"></th>
                         </tfoot>
                     </table>
                 </div>
@@ -128,7 +135,7 @@
                     </td>
                     <td>
                         <div id="discovery-progress-message"></div>
-                        <span id="preparation-alterations-span">0</span> __MSG_alterationsIdentified__
+                        <div id="embed-discovery-progress-message"></div>
                     </td>
                     <td>
                         <div id="discovery-size-label">0 __MSG_bytesLabel__</div>
@@ -137,27 +144,32 @@
                 </tr>
                 <tr>
                     <td>
-                        <div class="zip-operation-label">__MSG_preparing__</div>
-                        <progress id="preparation-progress" value="0" max="1"></progress>
-                    </td>
-                    <td>
-                        <span id="packaging-skipped-span">0</span> __MSG_duplicatesOmitted__
-                    </td>
-                    <td>
-                        <div id="duplicates-size-label">0 __MSG_bytesLabel__</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <div class="zip-operation-label">__MSG_packaging__</div>
                         <progress id="packaging-progress" value="0" max="1"></progress>
-                    </td>
-                    <td>
-                        <span id="packaging-current-span">0</span> __MSG_of__ <span id="packaging-total-span">0</span> __MSG_attachmentsPackaged__
                         <div><span id="packaging-file-current-span">0</span> __MSG_of__ <span id="packaging-file-total-span">0</span> __MSG_packageFilesSaved__</div>
                     </td>
                     <td>
+                        <span id="packaging-current-span">0</span> __MSG_of__ <span id="packaging-total-span">0</span> __MSG_attachmentsPackaged__
+                        <div><span id="embed-packaging-current-span">0</span> __MSG_of__ <span id="embed-packaging-total-span">0</span> __MSG_embedsPackaged__</div>
+                    </td>
+                    <td>
                         <span id="packaging-size-span">0 __MSG_bytesLabel__</span>
+                        <div><span id="embed-packaging-size-span">0 __MSG_bytesLabel__</span></div>
+                    </td>
+                </tr>
+                <tr id="exclusions-row">
+                    <td>
+                        <div class="zip-operation-label">__MSG_exclusions__</div>
+                        <progress id="preparation-progress" value="0" max="1" style="opacity: 0;"></progress>
+                    </td>
+                    <td>
+                        <div><span id="packaging-skipped-span">0</span> __MSG_duplicatesOmitted__</div>
+                        <div><span id="preparation-alterations-span">0</span> __MSG_alterationsIdentified__</div>
+                        <div><span id="packaging-error-count-span">0</span> __MSG_errorsEncountered__</div>
+                    </td>
+                    <td>
+                        <div id="duplicates-size-label">0 __MSG_bytesLabel__</div>
+                        <div>&nbsp;</div>
                         <div>&nbsp;</div>
                     </td>
                 </tr>
@@ -181,7 +193,6 @@
                 <div class="save-result-content-div">
                     <div class="zip-operation-label">__MSG_result__</div>
                     <span id="save-result-label"></span>
-                    <div><span id="packaging-error-count-span">0</span> __MSG_errorsEncountered__</div>
                 </div>
                 <div class="result-button-container save-result-content-div">
                     <button id="permanently-detach-button" class="permanently-detach-container close-button disablable" disabled="disabled"><img class="hazard-image" src="hazard-sign.png" /> __MSG_permanentlyDetach__</button>
@@ -227,6 +238,8 @@
 
             <td class="attachment-count-td">0</td>
             <td class="attachment-size-td"></td>
+
+            <td class="embed-count-td">0</td>
         </tr>
     </template>
 

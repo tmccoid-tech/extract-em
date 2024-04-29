@@ -289,7 +289,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const countInfo = updateSelectionCounts();
 
             if(countInfo.selectedAttachmentCount > 0) {
-                selectedAttachmentCountSpan.innerText = countInfo.selectedAttachmentCount.toString();
+                selectedAttachmentCountSpan.innerText = (countInfo.selectedAttachmentCount + countInfo.selectedEmbedCount).toString();
                 selectedAttachmentSizeSpan.innerText = abbreviateFileSize(countInfo.selectedAttachmentSize);
                 attachmentListNavButton.disabled = false;
                 attachmentListNavButton.classList.remove("invisible");
@@ -771,6 +771,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         attachmentCheckbox.setAttribute("timestamp", attachment.date.toISOString());
         attachmentCheckbox.setAttribute("file-size", attachment.size);
         attachmentCheckbox.setAttribute("extension", attachment.extension);
+        attachmentCheckbox.setAttribute("isEmbed", `${attachment.isEmbed}`);
 
         attachmentPanel.querySelector(".file-name-label").textContent = attachment.name;
         attachmentPanel.querySelector(".extension-label").textContent = attachment.extension;
@@ -932,7 +933,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const selectionCounts = determineSelectionCounts();
 
-        updateZipDiscoveryInfo(selectionCounts.selectedAttachmentCount, selectionCounts.selectedAttachmentSize);
+        updateZipDiscoveryInfo(selectionCounts.selectedAttachmentCount, selectionCounts.selectedAttachmentSize, selectionCounts.selectedEmbedCount);
 
         extractBySet(filteredAttachmentList);
     }
@@ -940,7 +941,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function extractSelected() {
         const selections = getSelectedAttachmentCheckboxes();
 
-        updateZipDiscoveryInfo(selections.count, selections.selectedAttachmentSize);
+        updateZipDiscoveryInfo(selections.selectedAttachmentCount, selections.selectedAttachmentSize, selections.selectedEmbedCount);
 
         extract(selections.checkboxes,
             (checkbox) => {
@@ -952,10 +953,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
     }
 
-    function updateZipDiscoveryInfo(selectedCount, size) {
+    function updateZipDiscoveryInfo(selectedAttachmentCount, selectedAttachmentSize, selectedEmbedCount) {
         immediateDiscoveryProgress.value = 1;
-        discoveryProgressMessage.innerHTML =  messenger.i18n.getMessage("discoverySelectionMessages", [selectedCount.toString(), attachmentManager.attachmentList.length.toString()]);
-        discoverySizeLabel.innerHTML = abbreviateFileSize(size);
+        const attachmentCounts = attachmentManager.getAttachmentCounts();
+        discoveryProgressMessage.innerHTML =  messenger.i18n.getMessage("discoverySelectionMessages", [selectedAttachmentCount.toString(), attachmentCounts.attachmentCount.toString()]);
+        discoverySizeLabel.innerHTML = abbreviateFileSize(selectedAttachmentSize);
+        embedDiscoveryProgressMessage.innerHTML =  messenger.i18n.getMessage("embedDiscoverySelectionMessages", [selectedEmbedCount.toString(), attachmentCounts.embedCount.toString()]);
     }
 
     function displayPermanentDetachPanel() {
@@ -1055,8 +1058,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     function onAttachmentCheckboxChanged(event) {
         const selections = getSelectedAttachmentCheckboxes(true);
 
-        extractSelectedButton.disabled = (selections.count == 0);
-        selectedAttachmentCountSpan.innerText = selections.count.toString();
+        const selectedItemCount = selections.selectedAttachmentCount + selections.selectedEmbedCount;
+
+        extractSelectedButton.disabled = (selectedItemCount == 0);
+        selectedAttachmentCountSpan.innerText = selectedItemCount.toString();
         selectedAttachmentSizeSpan.innerText = abbreviateFileSize(selections.selectedAttachmentSize);
     }
 
@@ -1102,20 +1107,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function getSelectedAttachmentCheckboxes(statsOnly = false) {
         const result = {
-            count: 0,
-            selectedAttachmentSize: 0
+            selectedAttachmentCount: 0,
+            selectedAttachmentSize: 0,
+            selectedEmbedCount: 0
         };
 
-        const selectedCheckboxes = [...document.querySelectorAll(".attachment-checkbox:checked")];
+        const selectedAttachmentCheckboxes = [...document.querySelectorAll(".attachment-checkbox[isEmbed='false']:checked")];
 
-        result.count = selectedCheckboxes.length;
+        result.selectedAttachmentCount = selectedAttachmentCheckboxes.length;
 
-        result.selectedAttachmentSize = selectedCheckboxes.reduce((t, c) =>
+        result.selectedAttachmentSize = selectedAttachmentCheckboxes.reduce((t, c) =>
             t + parseInt(c.getAttribute("file-size"))
         , 0);
 
+        const selectedEmbedCheckboxes = [...document.querySelectorAll(".attachment-checkbox[isEmbed='true']:checked")];
+
+        result.selectedEmbedCount = selectedEmbedCheckboxes.length;
+
         if(!statsOnly) {
-            result.checkboxes = selectedCheckboxes;
+            result.checkboxes = [...selectedAttachmentCheckboxes, ...selectedEmbedCheckboxes];
         }
 
         return result;

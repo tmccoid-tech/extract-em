@@ -465,7 +465,13 @@ export class AttachmentManager {
         return alterationMap;
     }
 
- 
+    getAttachmentCounts() {
+        return {
+            attachmentCount: this.#attachmentCount,
+            embedCount: this.#embedCount
+        }
+    }
+
     reset() {
         this.#folderCount = 0;
         this.#processedFolderCount = 0;

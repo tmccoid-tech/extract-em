@@ -1,12 +1,10 @@
 ﻿html {
-    /* background-color: red; */
     height: 100vh;
     width: 100vw;
     padding: 0px;
 }
 
 body {
-    /* background-color: lightgoldenrodyellow; */
     height: 100vh;
     width: 100vw;
     margin: 0px;
@@ -17,6 +15,10 @@ body {
 }
 
 .invisible {
+    visibility: hidden;
+}
+
+.transparent {
     opacity: 0.0;
 }
 
@@ -88,12 +90,11 @@ body {
     justify-content: space-evenly;
 }
 
-#quickmenu-section div {
+#quickmenu-section div:not(:last-child) {
     display: flex;
     flex-direction: column;
     align-self: center;
     align-items: center;
-    max-width: 500px;
     text-align: center;
 }
 
@@ -103,8 +104,14 @@ body {
     margin-bottom: 4px;
 }
 
-#quickmenu-option-label {
-    margin-left: 12px;
+#quickmenu-footer-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#quickmenu-footer-div label {
+    margin: 0px 12px;
 }
 
 nav {
@@ -245,8 +252,7 @@ td.summary-header {
     height: 12px;
 }
 
-#stats-table.omit-embeds td:last-child,
-#stats-table.omit-embeds th:last-child {
+#stats-table.omit-embeds td:last-child {
     opacity: .15;
 }
 
@@ -482,6 +488,14 @@ folder-selector-button:disabled:active {
 #zip-extract-panel-body {
     display: grid;
     place-items: center;
+}
+
+#zip-table {
+    border-collapse: collapse;
+}
+
+#exclusions-row {
+    background-color: rgba(255, 207, 207, 0.37);
 }
 
 #zip-operation-div {

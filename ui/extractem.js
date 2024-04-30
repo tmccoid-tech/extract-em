@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const selectedFolderCountSpan = document.getElementById("selected-folder-count-span");
     const folderCountSpan = document.getElementById("folder-count-span");
+    const processedFolderCountSpan = document.getElementById("processed-folder-count-span");
     const summarySelectedMessageCountSpan = document.getElementById("summary-selected-message-count-span");
     const summaryMessageCountSpan = document.getElementById("summary-message-count-span");
     const summaryProcessedMessageCountSpan = document.getElementById("summary-processed-message-count-td");
@@ -100,9 +101,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const zipSubfoldersSpan = document.getElementById("zip-subfolders-span");
     const zipLogoImage = document.getElementById("zip-logo-img");
 
-//    const zipExtractPanelBody = document.getElementById("zip-extract-panel-body");
-
-//    const immediateDiscoveryDiv = document.getElementById("immediate-discovery-div");
     const discoveryProgressMessage = document.getElementById("discovery-progress-message");
     const discoverySizeLabel = document.getElementById("discovery-size-label");
     const embedDiscoveryProgressMessage = document.getElementById("embed-discovery-progress-message");
@@ -111,9 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const preparationAlterationsSpan = document.getElementById("preparation-alterations-span");
     const packagingSkippedSpan = document.getElementById("packaging-skipped-span");
     const duplicatesSizeLabel = document.getElementById("duplicates-size-label");
-    const preparationProgress = document.getElementById("preparation-progress");
 
-//    const packagingDiv = document.getElementById("packaging-div");
     const packagingCurrentSpan = document.getElementById("packaging-current-span");
     const packagingTotalSpan = document.getElementById("packaging-total-span");
     const embedPackagingCurrentSpan = document.getElementById("embed-packaging-current-span");
@@ -137,10 +133,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const detachOperationRow = document.getElementById("detach-operation-row");
 
     const zipDetachPanelBody = document.getElementById("zip-detach-panel-body");
-//    const detachActionButtonsDiv = document.getElementById("detach-action-buttons-div");
     const proceedDetachButton = document.getElementById("proceed-detach-button");
     const cancelDetachButton = document.getElementById("cancel-detach-button");
-//    const detachProgressDiv = document.getElementById("detach-progress-div");
     const permanentDetachCurrentSpan = document.getElementById("permanent-detach-current-span");
     const permanentDetachTotalSpan = document.getElementById("permanent-detach-total-span");
     const permanentDetachNestedCountSpan = document.getElementById("permanent-detach-nested-count-span");
@@ -182,7 +176,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     var capabilities = new Capabilities();
     
-    const updateProcessingFolder = (folderPath) => {
+    const updateProcessingFolder = async (folderPath) => {
         if(!useImmediateMode) {
             const row = folderRowSet.get(folderPath).row;
 
@@ -190,7 +184,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    const updateMessageStats = (folderStats) => {
+    const updateMessageStats = async (folderStats) => {
         if(useImmediateMode) {
             updateDiscoveryProgressMessage(folderStats.summaryAttachmentCount, folderStats.summaryAttachmentMessageCount, folderStats.summaryProcessedMessageCount, folderStats.summaryAttachmentSize, folderStats.summaryEmbedCount);
 
@@ -206,7 +200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    const updateAttachmentStats = (folderStats) => {
+    const updateAttachmentStats = async (folderStats) => {
         if(useImmediateMode) {
             updateDiscoveryProgressMessage(folderStats.summaryAttachmentCount, folderStats.summaryAttachmentMessageCount, folderStats.summaryProcessedMessageCount, folderStats.summaryAttachmentSize, folderStats.summaryEmbedCount);
             lastFileNameDiv.innerText = folderStats.lastFileName;
@@ -214,6 +208,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             hasAttachments = folderStats.summaryAttachmentCount > 0;
         }
         else {
+            if(!discoverAttachmentsProgress.hasAttribute("value")) {
+                discoverAttachmentsProgress.vallue = 0;
+            }
+
             const rowItem = folderRowSet.get(folderStats.folderPath);
             rowItem.attachmentMessageCount = folderStats.attachmentMessageCount;
             rowItem.attachmentCount = folderStats.attachmentCount;
@@ -235,8 +233,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    const updateProcessedFolder = (folderPath) => {
+    const updateProcessedFolder = async (info) => {
         if(!useImmediateMode) {
+            const {
+                folderPath,
+                processedFolderCount
+            } = info;
+
             const rowItem = folderRowSet.get(folderPath);
 
             const row = rowItem.row;
@@ -252,10 +255,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             checkbox.checked = (checkbox.checked && folderHasAttachments);
 
             rowItem.processed = true;
+
+            processedFolderCountSpan.innerText = processedFolderCount.toString();
         }
     };
 
-    const updateProcessingComplete = () => {
+    const updateProcessingComplete = async () => {
         if(useImmediateMode) {
             if(hasAttachments) {
                 extractImmediate();
@@ -292,7 +297,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 selectedAttachmentCountSpan.innerText = (countInfo.selectedAttachmentCount + countInfo.selectedEmbedCount).toString();
                 selectedAttachmentSizeSpan.innerText = abbreviateFileSize(countInfo.selectedAttachmentSize);
                 attachmentListNavButton.disabled = false;
-                attachmentListNavButton.classList.remove("invisible");
+                attachmentListNavButton.classList.remove("transparent");
             }
 
             resetSummaryButton.disabled = false;
@@ -301,48 +306,51 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    const updatePreparationProgress = (info) =>
+    const updatePackagingProgress = async (info) =>
     {
-        if(info.status == "started") {
-            preparationAlterationsSpan.innerText = info.alterationCount.toString();
-            preparationProgress.value = null;
-        }
-        else if(info.status == "complete") {
-            preparationProgress.value = 1;
-        }
-        else {
-            packagingSkippedSpan.innerText = info.duplicateCount.toString();
-            duplicatesSizeLabel.innerText = abbreviateFileSize(info.duplicateTotalBytes);
+        switch(info.status) {
+            case "started":
+                preparationAlterationsSpan.innerText = info.alterationCount.toString();
+                break;
+
+            case "preparing":
+                packagingSkippedSpan.innerText = info.duplicateCount.toString();
+                duplicatesSizeLabel.innerText = abbreviateFileSize(info.duplicateTotalBytes);
+                packagingProgress.setAttribute("max", info.totalItems + info.totalEmbedItems);
+
+                break;
+
+            case "prepackaging":
+                packagingTotalSpan.innerText = info.totalItems.toString();
+                embedPackagingTotalSpan.innerText = info.totalEmbedItems.toString();
+                packagingProgress.setAttribute("max", info.totalItems + info.totalEmbedItems);
+                packagingProgress.value = 0;
+    
+                break;
+
+            default: // "packaging"
+                packagingFileTotalSpan.innerText = info.fileCount.toString();
+
+                packagingCurrentSpan.innerText = info.includedCount.toString();
+                embedPackagingCurrentSpan.innerText = info.includedEmbedCount.toString();
+                
+                packagingFileCurrentSpan.innerText = info.filesCreated.toString();
+                packagingErrorCountSpan.innerText = info.errorCount.toString();        
+                
+                lastFileNameDiv.innerText = info.lastFileName;
+        
+                packagingProgress.value = info.includedCount + info.includedEmbedCount + info.duplicateEmbedCount + info.errorCount;
+                packagingSizeSpan.innerText = abbreviateFileSize(info.totalBytes);
+                embedPackagingSizeSpan.innerText = abbreviateFileSize(info.totalEmbedBytes);
+        
+                packagingSkippedSpan.innerText = info.duplicateCount.toString();
+                duplicatesSizeLabel.innerText = abbreviateFileSize(info.duplicateTotalBytes);
+
+                break;
         }
     };
 
-    const updatePackagingProgress = (info) =>
-    {
-        if(info.status == "started") {
-            packagingTotalSpan.innerText = info.totalItems.toString();
-            embedPackagingTotalSpan.innerText = info.totalEmbedItems.toString();
-            packagingProgress.setAttribute("max", info.totalItems + info.totalEmbedItems);
-        }
-
-        packagingFileTotalSpan.innerText = info.fileCount.toString();
-
-        packagingCurrentSpan.innerText = info.includedCount.toString();
-        embedPackagingCurrentSpan.innerText = info.includedEmbedCount.toString();
-        
-        packagingFileCurrentSpan.innerText = info.filesCreated.toString();
-        packagingErrorCountSpan.innerText = info.errorCount.toString();        
-        
-        lastFileNameDiv.innerText = info.lastFileName;
-
-        packagingProgress.value = info.includedCount + info.includedEmbedCount + info.duplicateEmbedCount + info.errorCount;
-        packagingSizeSpan.innerText = abbreviateFileSize(info.totalBytes);
-        embedPackagingSizeSpan.innerText = abbreviateFileSize(info.totalEmbedBytes);
-
-        packagingSkippedSpan.innerText = info.duplicateCount.toString();
-        duplicatesSizeLabel.innerText = abbreviateFileSize(info.duplicateTotalBytes);
-    };
-
-    const updateSaveResult = (info) =>
+    const updateSaveResult = async (info) =>
     {
         if(info.status == "started") {
         }
@@ -371,7 +379,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    const updateDetachProgress = (info) => {
+    const updateDetachProgress = async (info) => {
         if(info.status == "started") {
             detachmentProgress.setAttribute("max", info.totalItems);
         }
@@ -383,7 +391,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    const updateDetachResult = (info) => {
+    const updateDetachResult = async (info) => {
         const success = (info.errorCount == 0);
 
         detachResultDiv.classList.add("materialize");
@@ -406,6 +414,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         discoverySizeLabel.innerHTML = abbreviateFileSize(cumulativeAttachmentSize);
         embedDiscoveryProgressMessage.innerHTML = messenger.i18n.getMessage("embedDiscoveryProgressMessage", [embedCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
     }
+
+    
+    // MAIN ENTRY POINT
 
     async function main() {
         closeZipPanelButton.addEventListener("click", closeZipPanel);
@@ -441,7 +452,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const selectionContext = params.selectionContext;
 
             if(selectionContext != "account" && !options.isInitialized) {
-                quickMenuOptionLabel.classList.remove("hidden");
+                quickMenuOptionLabel.classList.remove("invisible");
                 alwaysShowQuickMenuCheckbox.checked = options.displayQuickMenu;
 
                 alwaysShowQuickMenuCheckbox.addEventListener("change", alwaysShowQuickMenuOptionChanged);
@@ -466,8 +477,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportFolderProcessed: updateProcessedFolder,
                 reportProcessingComplete: updateProcessingComplete,
 
-                reportPreparationProgress: updatePreparationProgress,
-                
                 reportPackagingProgress: updatePackagingProgress,
                 reportSaveResult: updateSaveResult,
 
@@ -574,7 +583,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         zipAttachmentContextSpan.classList.remove("hidden");
 
-//        immediateDiscoveryDiv.classList.remove("hidden");
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");
     }
@@ -655,7 +663,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
 
-            templateNode.querySelector(".attachment-size-td").innerText = abbreviateFileSize(0);
+            templateNode.querySelector(".attachment-size-td").innerText = abbreviateFileSize();
 
             statsSummaryTBody.appendChild(row);
 
@@ -687,6 +695,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const selectionCounts = determineSelectionCounts();
         discoverAttachmentsProgress.setAttribute("max", selectionCounts.selectedMessageCount);
+        discoverAttachmentsProgress.removeAttribute("value");
 
         const selectedFolderPaths = new Set();
 
@@ -990,18 +999,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(discoveryComplete) {
             discoveryComplete = false;
             selectionInvoked = false;
-            attachmentListNavButton.classList.add("invisible");
+            attachmentListNavButton.classList.add("transparent");
             attachmentListNavButton.disabled = true;
             attachmentListDiv.innerHTML = "";
             selectedAttachmentCountSpan.innerText = "0";
-            selectedAttachmentSizeSpan.innerText = abbreviateFileSize(0);
+            selectedAttachmentSizeSpan.innerText = abbreviateFileSize();
         }
 
         resetProgressElement(discoverAttachmentsProgress);
+        processedFolderCountSpan.innerText = "0";
         summaryProcessedMessageCountSpan.innerText = "0";
         summaryAttachmentMessageCountSpan.innerText = "0";
         summaryAttachmentCountSpan.innerText = "0";
-        summaryAttachmentSizeSpan.innerText = abbreviateFileSize(0);
+        summaryAttachmentSizeSpan.innerText = abbreviateFileSize();
         summaryEmbedCountSpan.innerText = "0";
 
         statsSummaryTBody.innerHTML = "";
@@ -1169,8 +1179,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         discoverySizeLabel.innerText = abbreviateFileSize();
 
         // Prepararing
-        resetProgressElement(preparationProgress);
-
         packagingSkippedSpan.innerText = "0";
         duplicatesSizeLabel.innerText = abbreviateFileSize();
 

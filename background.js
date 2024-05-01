@@ -106,22 +106,22 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
                 }
 
                 if (selectedFolders.length > 0) {
-                    const options = await OptionsManager.retrieve();
+                    const extensionOptions = await OptionsManager.retrieve();
 
                     params = {
                         accountId: accountId,
                         selectedFolders: selectedFolders,
                         selectionContext: selectionContext,
-                        preserveFolderStructure: options.preserveFolderStructure,
+                        preserveFolderStructure: extensionOptions.preserveFolderStructure,
                         allowExtractImmediate: 
-                            options.extractImmediate &&
+                        extensionOptions.extractImmediate &&
                             selectedFolders.length == 1 &&
-                            (selectedFolders[0].subFolders.length == 0 || options.includeSubfolders)
+                            (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders)
                     };
 
                     messenger.menus.update(menuId, { enabled: false });
 
-                    if(options.useSilentMode && params.allowExtractImmediate) {
+                    if(extensionOptions.useSilentMode && params.allowExtractImmediate) {
                         extractSilently(params);
                     }
                     else {

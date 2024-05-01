@@ -241,6 +241,14 @@ td.summary-header {
     text-align: left;
 }
 
+.processed-message-count-td.queued {
+    background-color: rgba(147, 112, 219, 0.18);
+}
+
+.processed-message-count-td.complete {
+    background-color: rgb(152, 251, 152, 0.46);
+}
+
 #stats-summary-tbody .processing {
     background: linear-gradient(90deg, rgba(152, 251, 152, .8) 0%, transparent 50%, rgba(152, 251, 152, .8) 100%);
     background-size: 200% 100%;

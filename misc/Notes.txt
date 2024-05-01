@@ -73,19 +73,21 @@ XXX Issue with Account label in zip panel not displaying on second package attem
 
 Present omissions (detached/deleted)
 
-Rearrange result panel
+XXX Rearrange result panel
 
 Deletion tracking
 
 Extraction report
 
-Embedded image extraction
+XXX Embedded image extraction
 
-Add option for using JSZip (archive file corruption issue reported by cczzc33@gmail.com)
+Issue with "potential detachments"
 
+Extract (+subfolders) on tmccoid@Inbox:
+	XXX 1) Discovering progress does not complete
+	2) Filename label jumps around
 
-
-
+Change immediate discovery message (don't repeat "in x messages")
 
 
 LQ

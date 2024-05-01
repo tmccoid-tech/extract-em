@@ -153,8 +153,10 @@ export class AttachmentManager {
         return result;
     }
 
-    async discoverAttachments(selectedFolderPaths) {
+    async discoverAttachments(selectedFolderPaths, includeEmbeds = false) {
         this.#selectedFolderPaths = selectedFolderPaths;
+        this.#includeEmbeds = includeEmbeds;
+
         this.#alterationTracker = new Map();
 
         const selectedFolders = [];
@@ -163,12 +165,12 @@ export class AttachmentManager {
             this.#processFolder(folder, selectedFolders);
         }
 
-        const cursor = selectedFolders
+        const queue = selectedFolders
             .sort((a,b) => this.#folderCounts.get(a.path) - this.#folderCounts.get(b.path))
-        .entries();
+        .values();
 
         Array(10).fill().forEach(async () => {
-            for(let [i, item] of cursor) {
+            for(let item of queue) {
                 await this.#processPages(item);
             }
         });
@@ -277,6 +279,7 @@ export class AttachmentManager {
             return result;
         }
 
+        // TODO: hasAttachments should be false if exceptions occur (improper detachments, can't load attachment file?)
         result.hasAttachments = (messageAttachmentList.length > 0);
 
         if (result.hasAttachments) {
@@ -311,6 +314,8 @@ export class AttachmentManager {
                     isEmbed: false,
                     isPreviewable: this.#previewSet.has(extension)
                 };
+
+                // TODO: Review potential detachment logic
 
                 const isPotentialDetachment = (attachmentInfo.size > 0 && attachmentInfo.size < 512);
 
@@ -573,6 +578,11 @@ export class AttachmentManager {
     async extract(list, getInfo, extractOptions) {
         // Preparation phase
 
+        const {
+            preserveFolderStructure,
+            includeEmbeds
+        } = extractOptions;
+
         const packagingProgressInfo = {
             status: "started",
 
@@ -600,7 +610,6 @@ export class AttachmentManager {
 
         this.#reportPackagingProgress(packagingProgressInfo);
 
-
         packagingProgressInfo.status = "preparing";
 
         const selectedItemKeys = new Set(list.map((item) => {
@@ -616,7 +625,7 @@ export class AttachmentManager {
             embedItems: [],
             currentEmbedMessageIndex: 0,
             totalEmbedMessageCount: 0,
-            preserveFolderStructure: extractOptions.preserveFolderStructure
+            preserveFolderStructure: preserveFolderStructure
         };
 
         const packagingTracker = this.#packagingTracker;
@@ -635,7 +644,9 @@ export class AttachmentManager {
         for(const item of this.attachmentList) {
             if(selectedItemKeys.has(`${item.messageId}:${item.partName}`)) {
                 if(item.isEmbed) {
-                    embedItems.push(item);
+                    if(includeEmbeds) {
+                        embedItems.push(item);
+                    }
                 }
                 else {
                     const duplicateKey = `${item.name}:${item.size}`;

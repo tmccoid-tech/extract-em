@@ -25,21 +25,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         imagePreviewSelect.addEventListener("change", onImagePreviewOptionChanged);
         includeEmbedsCheckbox.addEventListener("change", onIncludeEmbedsOptionChanged);
 
-        const options = await OptionsManager.retrieve();
+        const extensionOptions = await OptionsManager.retrieve();
 
-        standardUiModeCheckbox.checked = !(options.displayQuickMenu || options.extractImmediate);
-        displayQuickMenuCheckbox.checked = options.displayQuickMenu;
-        extractImmediateCheckbox.checked = options.extractImmediate;
+        standardUiModeCheckbox.checked = !(extensionOptions.displayQuickMenu || extensionOptions.extractImmediate);
+        displayQuickMenuCheckbox.checked = extensionOptions.displayQuickMenu;
+        extractImmediateCheckbox.checked = extensionOptions.extractImmediate;
 
-        extractImmediateSubfoldersCheckbox.checked = options.includeSubfolders;
-        useSilentModeCheckbox.checked = options.useSilentMode;
-        preserveFolderStructureCheckbox.checked = options.preserveFolderStructure;
-        defaultGroupingSelect.value = options.defaultGrouping;
-        imagePreviewSelect.value = options.defaultImagePreview;
-        includeEmbedsCheckbox.checked = options.includeEmbeds;
+        extractImmediateSubfoldersCheckbox.checked = extensionOptions.includeSubfolders;
+        useSilentModeCheckbox.checked = extensionOptions.useSilentMode;
+        preserveFolderStructureCheckbox.checked = extensionOptions.preserveFolderStructure;
+        defaultGroupingSelect.value = extensionOptions.defaultGrouping;
+        imagePreviewSelect.value = extensionOptions.defaultImagePreview;
+        includeEmbedsCheckbox.checked = extensionOptions.includeEmbeds;
 
-        extractImmediateSubfoldersCheckbox.disabled = !options.extractImmediate;
-        useSilentModeCheckbox.disabled = !options.extractImmediate;
+        extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
+        useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;
     }
 
     function onUserInteractionOptionChanged(event) {

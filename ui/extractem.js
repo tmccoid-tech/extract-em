@@ -47,9 +47,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const quickMenuOptionLabel = document.getElementById("quickmenu-option-label");
     const alwaysShowQuickMenuCheckbox = document.getElementById("always-show-quickmenu-checkbox");
+    const quickmenuIncludeEmbedsCheckbox = document.getElementById("quickmenu-include-embeds-checkbox");
 
+    const statsTable = document.getElementById("stats-table");
     const statsSummaryTBody = document.getElementById("stats-summary-tbody");
-
     const statsSummaryRow = document.getElementById("stats-summary-tr");
 
     const selectedFolderCountSpan = document.getElementById("selected-folder-count-span");
@@ -68,6 +69,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const summaryAttachmentCountSpan = document.getElementById("summary-attachment-count-span");
     const summaryAttachmentSizeSpan = document.getElementById("summary-attachment-size-span");
     const summaryEmbedCountSpan = document.getElementById("summary-embed-count-span");
+
+    const includeEmbedsCheckbox = document.getElementById("include-embeds-checkbox");
 
     // Displayed in Attachment List
     const selectedAttachmentCountSpan = document.getElementById("selected-attachment-count-span");
@@ -165,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ["gb", messenger.i18n.getMessage("gbLabel")]
     ]);
 
-    var options;
+    var extensionOptions;
     var attachmentManager;
     var useImmediateMode = false;
     var discoveryComplete = false;
@@ -179,6 +182,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const updateProcessingFolder = async (folderPath) => {
         if(!useImmediateMode) {
             const row = folderRowSet.get(folderPath).row;
+
+            row.querySelector(".processed-message-count-td").classList.remove("queued");
 
             row.classList.add("processing");
         }
@@ -243,6 +248,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const rowItem = folderRowSet.get(folderPath);
 
             const row = rowItem.row;
+
+            row.querySelector(".processed-message-count-td").classList.add("complete");
+            
             row.classList.add("processed");
 
             const folderHasAttachments = (rowItem.attachmentCount > 0);
@@ -298,6 +306,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 selectedAttachmentSizeSpan.innerText = abbreviateFileSize(countInfo.selectedAttachmentSize);
                 attachmentListNavButton.disabled = false;
                 attachmentListNavButton.classList.remove("transparent");
+            }
+
+            if(includeEmbedsCheckbox.checked) {
+                includeEmbedsCheckbox.disabled = false;
             }
 
             resetSummaryButton.disabled = false;
@@ -427,6 +439,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         cancelDetachButton.addEventListener("click", cancelDetach);
         detachExitExtensionButton.addEventListener("click", (event) => { window.close(); });
 
+        includeEmbedsCheckbox.addEventListener("change", includeEmbedsCheckboxChanged);
+        quickmenuIncludeEmbedsCheckbox.addEventListener("change", quickMenuIncludeEmbedsCheckboxChanged);
+
         updateDiscoveryProgressMessage();
 
         const params = await messenger.runtime.sendMessage({ action: "getParams" });
@@ -444,16 +459,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 document.title += `: ${selectedFolders[0].path}`;
             }
 
-            options = await OptionsManager.retrieve();
+            extensionOptions = await OptionsManager.retrieve();
 
-            let displayQuickMenu = options.displayQuickMenu && selectedFolders.length == 1;
+            let displayQuickMenu = extensionOptions.displayQuickMenu && selectedFolders.length == 1;
             const extractImmediate = params.allowExtractImmediate;
 
             const selectionContext = params.selectionContext;
 
-            if(selectionContext != "account" && !options.isInitialized) {
+            if(selectionContext != "account" && !extensionOptions.isInitialized) {
                 quickMenuOptionLabel.classList.remove("invisible");
-                alwaysShowQuickMenuCheckbox.checked = options.displayQuickMenu;
+                alwaysShowQuickMenuCheckbox.checked = extensionOptions.displayQuickMenu;
 
                 alwaysShowQuickMenuCheckbox.addEventListener("change", alwaysShowQuickMenuOptionChanged);
 
@@ -466,9 +481,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 detachOperationRow.classList.remove("hidden");
             }
 
+            if(extensionOptions.includeEmbeds) {
+                quickmenuIncludeEmbedsCheckbox.checked = true;
+                includeEmbedsCheckbox.checked = true;
+                statsTable.classList.remove("omit-embeds");
+            }
+
             attachmentManager = new AttachmentManager({
                 folders: selectedFolders,
-                includeEmbeds: options.includeEmbeds,
                 silentModeInvoked: false,
 
                 reportFolderProcessing : updateProcessingFolder,
@@ -489,7 +509,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 invokeQuickMenu();
             }
             else if(extractImmediate) {
-                const includeSubfolders = options.includeSubfolders && selectedFolders[0].subFolders.length > 0;
+                const includeSubfolders = extensionOptions.includeSubfolders && selectedFolders[0].subFolders.length > 0;
                 invokeExtractImmediate({ includeSubfolders: includeSubfolders, hideCloseButton: true });
             }
             else {
@@ -543,10 +563,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         quickMenuSection.classList.remove("hidden");
     }
 
-    async function invokeExtractImmediate(options) {
+    async function invokeExtractImmediate(extractOptions) {
         useImmediateMode = true;
 
-        const summary = await attachmentManager.getFolderSummary(options.includeSubfolders);
+        const summary = await attachmentManager.getFolderSummary(extractOptions.includeSubfolders);
 
         if(summary.messageCount == 0) {
             immediateDiscoveryProgress.setAttribute("max", 1);
@@ -564,20 +584,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         else {
             immediateDiscoveryProgress.setAttribute("max", summary.messageCount);
 
-            const selectedFolderPaths = assembleFolderPaths(selectedFolders[0], options.includeSubfolders);
+            const selectedFolderPaths = assembleFolderPaths(selectedFolders[0], extractOptions.includeSubfolders);
     
-            attachmentManager.discoverAttachments(new Set(selectedFolderPaths));
+            attachmentManager.discoverAttachments(new Set(selectedFolderPaths), extensionOptions.includeEmbeds);
 
             zipLogoImage.classList.add("rotating");
         }
 
         zipFolderNameSpan.innerText = selectedFolders[0].path;
 
-        if(options.includeSubfolders) {
+        if(extractOptions.includeSubfolders) {
             zipSubfoldersSpan.classList.remove("hidden");
         }
 
-        if(options.hideCloseButton) {
+        if(extractOptions.hideCloseButton) {
             closeZipPanelButton.classList.add("hidden");
         }
 
@@ -593,7 +613,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(includeSubfolders) {
             folder.subFolders.forEach((item, i) =>
             {
-                result.push(...assembleFolderPaths(item));
+                result.push(...assembleFolderPaths(item, true));
             });
         }
 
@@ -686,12 +706,39 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    function includeEmbedsCheckboxChanged(event) {
+        const includeEmbeds = includeEmbedsCheckbox.checked;
+
+        statsTable.classList.toggle("omit-embeds", !includeEmbeds);
+
+        if(discoveryComplete) {
+            updateSelectionCounts();
+        }
+        else {
+            quickmenuIncludeEmbedsCheckbox.checked = includeEmbeds;
+
+            OptionsManager.setOption("includeEmbeds", includeEmbeds);
+            extensionOptions.includeEmbeds = includeEmbeds;
+        }
+    }
+
+    function quickMenuIncludeEmbedsCheckboxChanged(event) {
+        const includeEmbeds = quickmenuIncludeEmbedsCheckbox.checked;
+        includeEmbedsCheckbox.checked = includeEmbeds;
+
+        OptionsManager.setOption("includeEmbeds", includeEmbeds);
+        extensionOptions.includeEmbeds = includeEmbeds;
+    }
+
+
     function discoverAttachments() {
         logoImage.classList.remove("initializing");
         logoImage.classList.add("rotating");
 
         discoverAttachmentsButton.disabled = true;
         resetSummaryButton.disabled = true;
+
+        includeEmbedsCheckbox.disabled = true;
 
         const selectionCounts = determineSelectionCounts();
         discoverAttachmentsProgress.setAttribute("max", selectionCounts.selectedMessageCount);
@@ -706,6 +753,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             v.button.disabled = true;
 
             if (checkbox.checked && v.messageCount > 0) {
+                v.row.querySelector(".processed-message-count-td").classList.add("queued");
                 selectedFolderPaths.add(k);
             }
             else {
@@ -716,7 +764,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             v.virtualChecked = true;
         });
 
-        attachmentManager.discoverAttachments(selectedFolderPaths);
+        attachmentManager.discoverAttachments(selectedFolderPaths, extensionOptions.includeEmbeds);
     }
 
     async function generateAttachmentPanels() {
@@ -725,14 +773,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             attachmentManager.attachmentList.sort((a1, a2) => a2.date - a1.date);
 
-            if(options.defaultGrouping == "None") {
+            if(extensionOptions.defaultGrouping == "None") {
                 for (const attachment of attachmentManager.attachmentList) {
                     const message = attachmentManager.messageList.get(attachment.messageId);
                     await generateAttachmentPanel(attachment, message);
                 }
             }
             else {
-                const grouping = attachmentManager.getGrouping(options.defaultGrouping);
+                const grouping = attachmentManager.getGrouping(extensionOptions.defaultGrouping);
 
                 const sortedKeys = [...grouping.keys()].sort();
 
@@ -789,7 +837,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         attachmentPanel.querySelector(".message-date-label").textContent = attachment.date.toDateString();
         attachmentPanel.querySelector(".subject-label").textContent = message.subject;
 
-        const defaultImagePreview = options.defaultImagePreview;
+        const defaultImagePreview = extensionOptions.defaultImagePreview;
 
         attachmentPanel.firstElementChild.classList.add(defaultImagePreview);
 
@@ -840,7 +888,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function scaleImage(image, src) {
-        const maxDimension = imagePreviewSizeMap.get(options.defaultImagePreview);
+        const maxDimension = imagePreviewSizeMap.get(extensionOptions.defaultImagePreview);
 
         const buffer = new Image();
 
@@ -903,7 +951,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    async function extract(list, getInfo) {
+    async function extract(list, getInfo, includeEmbeds) {
         if(!useImmediateMode) {
             zipLogoImage.classList.add("rotating");
         }
@@ -911,18 +959,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");
 
-        attachmentManager.extract(list, getInfo,
-            { preserveFolderStructure: options.preserveFolderStructure }
-        );
+        attachmentManager.extract(list, getInfo, {
+            preserveFolderStructure: extensionOptions.preserveFolderStructure,
+            includeEmbeds: includeEmbeds
+        });
     }
 
-    function extractBySet(list) {
-        extract(list, (attachment) => {
-            return {
-                messageId: attachment.messageId,
-                partName: attachment.partName
-            };
-        });
+    function extractBySet(list, includeEmbeds = extensionOptions.includeEmbeds) {
+        extract(list,
+            (attachment) => {
+                return {
+                    messageId: attachment.messageId,
+                    partName: attachment.partName
+                };
+            },
+            includeEmbeds
+        );
     }
 
     function extractImmediate() {
@@ -944,7 +996,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         updateZipDiscoveryInfo(selectionCounts.selectedAttachmentCount, selectionCounts.selectedAttachmentSize, selectionCounts.selectedEmbedCount);
 
-        extractBySet(filteredAttachmentList);
+        extractBySet(filteredAttachmentList, includeEmbedsCheckbox.checked);
     }
 
     function extractSelected() {
@@ -958,7 +1010,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     messageId: parseInt(checkbox.getAttribute("message-id")),
                     partName: checkbox.getAttribute("part-name")
                 };
-            }
+            },
+            true
         );
     }
 
@@ -1004,6 +1057,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             attachmentListDiv.innerHTML = "";
             selectedAttachmentCountSpan.innerText = "0";
             selectedAttachmentSizeSpan.innerText = abbreviateFileSize();
+            includeEmbedsCheckbox.disabled = false;
         }
 
         resetProgressElement(discoverAttachmentsProgress);
@@ -1100,6 +1154,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             selectedEmbedCount: 0
         };
 
+        const includeEmbeds = includeEmbedsCheckbox.checked;
+
         folderRowSet.forEach((v, k, m) => {
             if(v.checkbox.checked) {
                 result.selectedFolderCount++;
@@ -1108,7 +1164,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     : v.messageCount;
                 result.selectedAttachmentCount += v.attachmentCount;
                 result.selectedAttachmentSize += v.attachmentSize;
-                result.selectedEmbedCount += v.embedCount;
+
+                if(includeEmbeds)
+                    result.selectedEmbedCount += v.embedCount;
             }
         });
 

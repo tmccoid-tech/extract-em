@@ -1,6 +1,6 @@
 {
     "extensionName": {
-        "message": "Extract 'Em!"
+        "message": "Extract ’Em!"
     },
     
     "extensionDescription": {
@@ -84,7 +84,7 @@
     "packaging": { "message": "Packaging" },
     "of": {
         "message": "of",
-        "description": "Used in the sense of 'x items out of y total items'"
+        "description": "Used in the sense of ‘x items out of y total items’"
     },
     "packageFilesSaved": { "message": "package file(s) saved" },
     "errorsEncountered": { "message": "errors encountered" },
@@ -145,7 +145,7 @@
     },
 
     "useSilentMode": {
-        "message": "Use \"silent\" mode",
+        "message": "Use \“silent\” mode",
         "description": ""
     },
     "useSilentModeDescription": {

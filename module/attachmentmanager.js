@@ -196,7 +196,7 @@ export class AttachmentManager {
             attachmentCount: 0,
             attachmentSize: 0,
             embedCount: 0,
-            lastFileName: ""
+            lastFileName: null
         };
 
         this.#reportFolderProcessing(folder.path);
@@ -317,12 +317,15 @@ export class AttachmentManager {
 
                 // TODO: Review potential detachment logic
 
-                const isPotentialDetachment = (attachmentInfo.size > 0 && attachmentInfo.size < 512);
+//                const isPotentialDetachment = (attachmentInfo.size > 0 && attachmentInfo.size < 512);
 
-                if(attachmentInfo.size < 1 || isPotentialDetachment) {
+//                if(attachmentInfo.size < 1 || isPotentialDetachment) {
+    
+                if(attachmentInfo.size < 1) {
                     try {
                         const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
 
+/*                        
                         if(isPotentialDetachment && attachmentFile.size !== attachmentInfo.size) {
                             alterationMap.set(attachmentInfo.partName, {
                                 name: attachment.name,
@@ -332,7 +335,9 @@ export class AttachmentManager {
                             });
             
                             continue;
+
                         }
+*/
 
                         attachmentInfo.size = attachmentFile.size;
                     }
@@ -383,6 +388,8 @@ export class AttachmentManager {
 
         this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
 
+        folderStats.lastFileName = null;
+
         return result;
     }
 
@@ -418,6 +425,8 @@ export class AttachmentManager {
 
                 result = true;
             }
+
+            folderStats.lastFileName = null;
         }
 
         return result;

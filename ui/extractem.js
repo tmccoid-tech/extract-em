@@ -208,7 +208,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const updateAttachmentStats = async (folderStats) => {
         if(useImmediateMode) {
             updateDiscoveryProgressMessage(folderStats.summaryAttachmentCount, folderStats.summaryAttachmentMessageCount, folderStats.summaryProcessedMessageCount, folderStats.summaryAttachmentSize, folderStats.summaryEmbedCount);
-            lastFileNameDiv.innerText = folderStats.lastFileName;
+
+            if(folderStats.lastFileName !== null) {
+                lastFileNameDiv.innerText = folderStats.lastFileName;
+            }
 
             hasAttachments = folderStats.summaryAttachmentCount > 0;
         }
@@ -253,7 +256,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             
             row.classList.add("processed");
 
-            const folderHasAttachments = (rowItem.attachmentCount > 0);
+            const folderHasAttachments = (rowItem.attachmentCount > 0 || rowItem.embedCount > 0);
 
             if (!folderHasAttachments) {
                 row.classList.add("ghost");
@@ -288,7 +291,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         else {
             folderRowSet.forEach((v, k, m) => {
-                if (v.attachmentCount > 0) {
+                if (v.attachmentCount > 0 || v.embedCount > 0) {
                     v.checkbox.disabled = false;
                     v.button.disabled = false;
                 }
@@ -301,7 +304,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const countInfo = updateSelectionCounts();
 
-            if(countInfo.selectedAttachmentCount > 0) {
+            if(countInfo.selectedAttachmentCount > 0 || countInfo.selectedEmbedCount > 0) {
                 selectedAttachmentCountSpan.innerText = (countInfo.selectedAttachmentCount + countInfo.selectedEmbedCount).toString();
                 selectedAttachmentSizeSpan.innerText = abbreviateFileSize(countInfo.selectedAttachmentSize);
                 attachmentListNavButton.disabled = false;
@@ -1140,7 +1143,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         discoverAttachmentsButton.disabled = (discoveryComplete || result.selectedMessageCount == 0);
 
-        extractAllButton.disabled = (!discoveryComplete || result.selectedAttachmentCount == 0);
+        extractAllButton.disabled = (!discoveryComplete || (result.selectedAttachmentCount == 0 && result.selectedEmbedCount == 0));
 
         return result;
     }

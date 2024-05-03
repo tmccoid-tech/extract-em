@@ -89,6 +89,8 @@ Extract (+subfolders) on tmccoid@Inbox:
 
 Change immediate discovery message (don't repeat "in x messages")
 
+Let Me Choose reset error: this.#folderCounts is null (attachmentmanager.discoverAttachments, sort routine)
+
 
 LQ
 

@@ -510,7 +510,7 @@ export class AttachmentManager {
         this.#embedCount = 0;
 
         this.#selectedFolderPaths = null;
-        this.#folderCounts = null;
+//        this.#folderCounts = null;
 
         this.messageList.clear();
         this.attachmentList.length = 0;

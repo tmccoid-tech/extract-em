@@ -71,7 +71,7 @@ XXX Attachment List: Disable Extract button if nothing selected
 
 XXX Issue with Account label in zip panel not displaying on second package attempt
 
-Present omissions (detached/deleted)
+XXX Present omissions (detached/deleted)
 
 XXX Rearrange result panel
 
@@ -83,9 +83,9 @@ XXX Embedded image extraction
 
 Issue with "potential detachments"
 
-Extract (+subfolders) on tmccoid@Inbox:
+XXX Extract (+subfolders) on tmccoid@Inbox:
 	XXX 1) Discovering progress does not complete
-	2) Filename label jumps around
+	XXX 2) Filename label jumps around
 
 Change immediate discovery message (don't repeat "in x messages")
 

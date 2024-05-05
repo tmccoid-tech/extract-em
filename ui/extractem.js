@@ -104,13 +104,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const zipSubfoldersSpan = document.getElementById("zip-subfolders-span");
     const zipLogoImage = document.getElementById("zip-logo-img");
 
-    const discoveryProgressMessage = document.getElementById("discovery-progress-message");
-    const discoverySizeLabel = document.getElementById("discovery-size-label");
-    const embedDiscoveryProgressMessage = document.getElementById("embed-discovery-progress-message");
     const immediateDiscoveryProgress = document.getElementById("immediate-discovery-progress");
+    
+    const immediateDiscoveryMessageDiv = document.getElementById("immediate-discovery-message-div");
+    const immediateDiscoveryProgressMessageDiv = document.getElementById("immediate-discovery-progress-message-div");
+    const immediateDiscoveredEmbedsSpan = document.getElementById("immediate-discovered-embeds-span");
+
+    const prediscoveryMessageDiv = document.getElementById("prediscovery-message-div");
+    const discoverySelectionMessageDiv = document.getElementById("discovery-selection-message-div");
+    const embedDiscoverySelectionMessageDiv = document.getElementById("embed-discovery-selection-message-div");
+
+    const discoverySizeLabel = document.getElementById("discovery-size-label");
 
     const preparationAlterationsSpan = document.getElementById("preparation-alterations-span");
     const packagingSkippedSpan = document.getElementById("packaging-skipped-span");
+    const embedDuplicateSpan = document.getElementById("embed-duplicate-span");
     const duplicatesSizeLabel = document.getElementById("duplicates-size-label");
 
     const packagingCurrentSpan = document.getElementById("packaging-current-span");
@@ -359,6 +367,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 embedPackagingSizeSpan.innerText = abbreviateFileSize(info.totalEmbedBytes);
         
                 packagingSkippedSpan.innerText = info.duplicateCount.toString();
+                embedDuplicateSpan.innerText = info.duplicateEmbedCount.toString();
                 duplicatesSizeLabel.innerText = abbreviateFileSize(info.duplicateTotalBytes);
 
                 break;
@@ -425,9 +434,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     function updateDiscoveryProgressMessage(attachmentCount = 0, attachmentMessageCount = 0 , messageCount = 0, cumulativeAttachmentSize = 0, embedCount = 0) {
-        discoveryProgressMessage.innerHTML = messenger.i18n.getMessage("discoveryProgressMessage", [attachmentCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
+        immediateDiscoveryProgressMessageDiv.innerHTML = messenger.i18n.getMessage("discoveryProgressMessage", [attachmentCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
+        immediateDiscoveredEmbedsSpan.innerText = embedCount.toString();
         discoverySizeLabel.innerHTML = abbreviateFileSize(cumulativeAttachmentSize);
-        embedDiscoveryProgressMessage.innerHTML = messenger.i18n.getMessage("embedDiscoveryProgressMessage", [embedCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
     }
 
     
@@ -956,6 +965,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function extract(list, getInfo, includeEmbeds) {
         if(!useImmediateMode) {
+            immediateDiscoveryMessageDiv.classList.add("hidden");
+            prediscoveryMessageDiv.classList.remove("hidden");
+
             zipLogoImage.classList.add("rotating");
         }
 
@@ -1021,9 +1033,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     function updateZipDiscoveryInfo(selectedAttachmentCount, selectedAttachmentSize, selectedEmbedCount) {
         immediateDiscoveryProgress.value = 1;
         const attachmentCounts = attachmentManager.getAttachmentCounts();
-        discoveryProgressMessage.innerHTML =  messenger.i18n.getMessage("discoverySelectionMessages", [selectedAttachmentCount.toString(), attachmentCounts.attachmentCount.toString()]);
+        discoverySelectionMessageDiv.innerHTML = messenger.i18n.getMessage("discoverySelectionMessage", [selectedAttachmentCount.toString(), attachmentCounts.attachmentCount.toString()]);
+        embedDiscoverySelectionMessageDiv.innerHTML =  messenger.i18n.getMessage("embedDiscoverySelectionMessage", [selectedEmbedCount.toString(), attachmentCounts.embedCount.toString()]);
         discoverySizeLabel.innerHTML = abbreviateFileSize(selectedAttachmentSize);
-        embedDiscoveryProgressMessage.innerHTML =  messenger.i18n.getMessage("embedDiscoverySelectionMessages", [selectedEmbedCount.toString(), attachmentCounts.embedCount.toString()]);
     }
 
     function displayPermanentDetachPanel() {
@@ -1241,6 +1253,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Prepararing
         packagingSkippedSpan.innerText = "0";
+        embedDuplicateSpan.innerText = "0";
         duplicatesSizeLabel.innerText = abbreviateFileSize();
 
         // Packaging

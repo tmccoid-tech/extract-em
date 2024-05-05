@@ -50,8 +50,15 @@
     "attachmentList": { "message": "Attachment List" },
     "folders": { "message": "Folders" },
     "messages": { "message": "Messages" },
+    
+    "attachment": { "message" : "attachment" },
     "attachments": { "message": "Attachments" },
+    "attachmentsPP": { "message": "attachment(s)", "description": "PP = parenthetical plural" },
+    
+    "embed": { "message": "embed" },
     "embeds": { "message": "Embeds" },
+    "embedsPP": { "message": "embed(s)" },
+    
     "selected": { "message": "selected" },
     "count": { "message": "Count" },
     "processed": { "message": "Processed" },
@@ -74,16 +81,12 @@
         "message": "$1 attachment(s) in $2 of $3 message(s)",
         "description": "{# of discovered} attachment(s) in {# of messages including attachments/embeds)} of {total # of discovered messages}"
     },
-    "embedDiscoveryProgressMessage": {
-        "message": "$1 embed(s) in $2 of $3 message(s)",
-        "description": "{# of discovered} embed(s) in {# of messages including attachments/embeds)} of {total # of discovered messages}"
-    },
 
-    "discoverySelectionMessages": {
+    "discoverySelectionMessage": {
         "message": "$1 of $2 attachment(s) selected",
         "description": "{# of selected} of {# of discovered} attachment(s) selected"
     },
-    "embedDiscoverySelectionMessages": {
+    "embedDiscoverySelectionMessage": {
         "message": "$1 of $2 embed(s) selected",
         "description": "{# of selected} of {# of discovered} embed(s) selected"
     },

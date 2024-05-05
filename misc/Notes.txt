@@ -87,9 +87,9 @@ XXX Extract (+subfolders) on tmccoid@Inbox:
 	XXX 1) Discovering progress does not complete
 	XXX 2) Filename label jumps around
 
-Change immediate discovery message (don't repeat "in x messages")
+XXX Change immediate discovery message (don't repeat "in x messages")
 
-Let Me Choose reset error: this.#folderCounts is null (attachmentmanager.discoverAttachments, sort routine)
+XXX Let Me Choose reset error: this.#folderCounts is null (attachmentmanager.discoverAttachments, sort routine)
 
 
 LQ

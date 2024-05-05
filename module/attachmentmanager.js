@@ -921,7 +921,6 @@ export class AttachmentManager {
 
                         if(sizeDuplicate.has(decodeData.checksum)) {
                             packagingProgressInfo.duplicateEmbedCount++;
-                            packagingProgressInfo.duplicateCount++;
                             packagingProgressInfo.duplicateTotalBytes += item.size;
 
                             this.#reportPackagingProgress(packagingProgressInfo);

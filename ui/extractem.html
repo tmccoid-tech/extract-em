@@ -137,8 +137,14 @@
                         <progress id="immediate-discovery-progress" value="0" max="1"></progress>
                     </td>
                     <td>
-                        <div id="discovery-progress-message"></div>
-                        <div id="embed-discovery-progress-message"></div>
+                        <div id="immediate-discovery-message-div">
+                            <div id="immediate-discovery-progress-message-div"></div>
+                            <span id="immediate-discovered-embeds-span">0</span> __MSG_embedsPP__                            
+                        </div>
+                        <div id="prediscovery-message-div" class="hidden">
+                            <div id="discovery-selection-message-div"></div>
+                            <div id="embed-discovery-selection-message-div"></div>
+                        </div>
                     </td>
                     <td>
                         <div id="discovery-size-label">0 __MSG_bytesLabel__</div>
@@ -167,12 +173,12 @@
                         <div>&nbsp;</div>
                     </td>
                     <td>
-                        <div><span id="packaging-skipped-span">0</span> __MSG_duplicatesOmitted__</div>
+                        <div><span id="packaging-skipped-span">0</span> __MSG_attachment__ / <span id="embed-duplicate-span">0</span> __MSG_embed__ __MSG_duplicatesOmitted__</div>
                         <div><span id="preparation-alterations-span">0</span> __MSG_alterationsIdentified__</div>
                         <div><span id="packaging-error-count-span">0</span> __MSG_errorsEncountered__</div>
                     </td>
                     <td>
-                        <div id="duplicates-size-label">0 __MSG_bytesLabel__</div>
+                        <div id="duplicates-size-label" class="hidden">0 __MSG_bytesLabel__</div>
                         <div>&nbsp;</div>
                         <div>&nbsp;</div>
                     </td>

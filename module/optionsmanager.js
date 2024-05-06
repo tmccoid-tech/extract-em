@@ -8,7 +8,8 @@ export class OptionsManager {
         preserveFolderStructure: false,
         defaultGrouping: "None",
         defaultImagePreview: "sm",
-        includeEmbeds: false
+        includeEmbeds: false,
+        lastLoadedVersion: ""
     };
 
     static #options = null;

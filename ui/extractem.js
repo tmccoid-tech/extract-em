@@ -28,7 +28,9 @@ NodeList.prototype.toSet = _toSet;
 document.addEventListener("DOMContentLoaded", async () => {
     class Capabilities {
         constructor() {
-            const versionNumbers = browser.runtime.getManifest().version.split(".").map((n) => parseInt(n));
+            this.extensionVersion = browser.runtime.getManifest().version;
+
+            const versionNumbers = this.extensionVersion.split(".").map((n) => parseInt(n));
             
             this.permitDetachment = (versionNumbers[0] >= 1 && versionNumbers[1] >= 2 && !!messenger.messages.deleteAttachments);    //  >= 1.2
         }
@@ -39,123 +41,127 @@ document.addEventListener("DOMContentLoaded", async () => {
     i18n.updateDocument();
     const errorText = messenger.i18n.getMessage("error");
 
-    const folderStatsTemplate = document.getElementById("folder-stats-template");
-    const attachmentGroupingHeaderTemplate = document.getElementById("attachment-grouping-header-template");
-    const attachmentPanelTemplate = document.getElementById("attachment-panel-template");
+    const elem = (id) => document.getElementById(id);
 
-    const logoImage  = document.getElementById("logo-img");
+    const folderStatsTemplate = elem("folder-stats-template");
+    const attachmentGroupingHeaderTemplate = elem("attachment-grouping-header-template");
+    const attachmentPanelTemplate = elem("attachment-panel-template");
 
-    const quickMenuOptionLabel = document.getElementById("quickmenu-option-label");
-    const alwaysShowQuickMenuCheckbox = document.getElementById("always-show-quickmenu-checkbox");
-    const quickmenuIncludeEmbedsCheckbox = document.getElementById("quickmenu-include-embeds-checkbox");
+    const logoImage  = elem("logo-img");
 
-    const statsTable = document.getElementById("stats-table");
-    const statsSummaryTBody = document.getElementById("stats-summary-tbody");
-    const statsSummaryRow = document.getElementById("stats-summary-tr");
+    const quickMenuOptionLabel = elem("quickmenu-option-label");
+    const alwaysShowQuickMenuCheckbox = elem("always-show-quickmenu-checkbox");
+    const quickmenuIncludeEmbedsCheckbox = elem("quickmenu-include-embeds-checkbox");
 
-    const selectedFolderCountSpan = document.getElementById("selected-folder-count-span");
-    const folderCountSpan = document.getElementById("folder-count-span");
-    const processedFolderCountSpan = document.getElementById("processed-folder-count-span");
-    const summarySelectedMessageCountSpan = document.getElementById("summary-selected-message-count-span");
-    const summaryMessageCountSpan = document.getElementById("summary-message-count-span");
-    const summaryProcessedMessageCountSpan = document.getElementById("summary-processed-message-count-td");
-    const summaryAttachmentMessageCountSpan = document.getElementById("summary-attachment-message-count-td");
+    const statsTable = elem("stats-table");
+    const statsSummaryTBody = elem("stats-summary-tbody");
+    const statsSummaryRow = elem("stats-summary-tr");
+
+    const selectedFolderCountSpan = elem("selected-folder-count-span");
+    const folderCountSpan = elem("folder-count-span");
+    const processedFolderCountSpan = elem("processed-folder-count-span");
+    const summarySelectedMessageCountSpan = elem("summary-selected-message-count-span");
+    const summaryMessageCountSpan = elem("summary-message-count-span");
+    const summaryProcessedMessageCountSpan = elem("summary-processed-message-count-td");
+    const summaryAttachmentMessageCountSpan = elem("summary-attachment-message-count-td");
     
    // Displayed in Attachment Summary
-    const summarySelectedAttachmentCountSpan = document.getElementById("summary-selected-attachment-count-span");
-    const summarySelectedAttachmentSizeSpan = document.getElementById("summary-selected-attachment-size-span");
-    const summarySelectedEmbedCountSpan = document.getElementById("summary-selected-embed-count-span");
+    const summarySelectedAttachmentCountSpan = elem("summary-selected-attachment-count-span");
+    const summarySelectedAttachmentSizeSpan = elem("summary-selected-attachment-size-span");
+    const summarySelectedEmbedCountSpan = elem("summary-selected-embed-count-span");
        
-    const summaryAttachmentCountSpan = document.getElementById("summary-attachment-count-span");
-    const summaryAttachmentSizeSpan = document.getElementById("summary-attachment-size-span");
-    const summaryEmbedCountSpan = document.getElementById("summary-embed-count-span");
+    const summaryAttachmentCountSpan = elem("summary-attachment-count-span");
+    const summaryAttachmentSizeSpan = elem("summary-attachment-size-span");
+    const summaryEmbedCountSpan = elem("summary-embed-count-span");
 
-    const includeEmbedsCheckbox = document.getElementById("include-embeds-checkbox");
+    const includeEmbedsCheckbox = elem("include-embeds-checkbox");
 
     // Displayed in Attachment List
-    const selectedAttachmentCountSpan = document.getElementById("selected-attachment-count-span");
-    const selectedAttachmentSizeSpan = document.getElementById("selected-attachment-size-span");
+    const selectedAttachmentCountSpan = elem("selected-attachment-count-span");
+    const selectedAttachmentSizeSpan = elem("selected-attachment-size-span");
 
-    const flexContainer = document.getElementById("flex-container");
-    const quickMenuSection = document.getElementById("quickmenu-section");
-    const mainSection = document.getElementById("main-section");
+    const flexContainer = elem("flex-container");
+    const quickMenuSection = elem("quickmenu-section");
+    const mainSection = elem("main-section");
 
-    const quickmenuExtractRecursiveDiv = document.getElementById("quickmenu-extract-recursive-div");
+    const quickmenuExtractRecursiveDiv = elem("quickmenu-extract-recursive-div");
 
     const attachmentSummaryDiv = document.querySelector(".tab-content-div[context='summary']");
-    const attachmentListDiv = document.getElementById("attachment-list-div");
+    const attachmentListDiv = elem("attachment-list-div");
 
 
-    const zoomOverlay = document.getElementById("zoom-overlay");
-    const zoomImage = document.getElementById("zoom-image");
+    const zoomOverlay = elem("zoom-overlay");
+    const zoomImage = elem("zoom-image");
 
     const attachmentListNavButton = document.querySelector(".nav-button[context='list']");
 
-    const discoverAttachmentsButton = document.getElementById("discover-attachments-button");
-    const discoverAttachmentsProgress = document.getElementById("discover-attachments-progress");
-    const extractAllButton = document.getElementById("extract-all-button");
-    const resetSummaryButton = document.getElementById("reset-summary-button");
-    const extractSelectedButton = document.getElementById("extract-selected-button");
+    const discoverAttachmentsButton = elem("discover-attachments-button");
+    const discoverAttachmentsProgress = elem("discover-attachments-progress");
+    const extractAllButton = elem("extract-all-button");
+    const resetSummaryButton = elem("reset-summary-button");
+    const extractSelectedButton = elem("extract-selected-button");
 
-    const zipOverlay = document.getElementById("zip-overlay");
-    const zipAccountNameLabel = document.getElementById("zip-account-name-label");
-    const zipAttachmentContextSpan = document.getElementById("zip-attachment-context-span");
-    const zipFolderNameSpan = document.getElementById("zip-folder-name-span");
-    const zipSubfoldersSpan = document.getElementById("zip-subfolders-span");
-    const zipLogoImage = document.getElementById("zip-logo-img");
+    const zipOverlay = elem("zip-overlay");
+    const zipAccountNameLabel = elem("zip-account-name-label");
+    const zipAttachmentContextSpan = elem("zip-attachment-context-span");
+    const zipFolderNameSpan = elem("zip-folder-name-span");
+    const zipSubfoldersSpan = elem("zip-subfolders-span");
+    const zipLogoImage = elem("zip-logo-img");
 
-    const immediateDiscoveryProgress = document.getElementById("immediate-discovery-progress");
+    const immediateDiscoveryProgress = elem("immediate-discovery-progress");
     
-    const immediateDiscoveryMessageDiv = document.getElementById("immediate-discovery-message-div");
-    const immediateDiscoveryProgressMessageDiv = document.getElementById("immediate-discovery-progress-message-div");
-    const immediateDiscoveredEmbedsSpan = document.getElementById("immediate-discovered-embeds-span");
+    const immediateDiscoveryMessageDiv = elem("immediate-discovery-message-div");
+    const immediateDiscoveryProgressMessageDiv = elem("immediate-discovery-progress-message-div");
+    const immediateDiscoveredEmbedsSpan = elem("immediate-discovered-embeds-span");
 
-    const prediscoveryMessageDiv = document.getElementById("prediscovery-message-div");
-    const discoverySelectionMessageDiv = document.getElementById("discovery-selection-message-div");
-    const embedDiscoverySelectionMessageDiv = document.getElementById("embed-discovery-selection-message-div");
+    const prediscoveryMessageDiv = elem("prediscovery-message-div");
+    const discoverySelectionMessageDiv = elem("discovery-selection-message-div");
+    const embedDiscoverySelectionMessageDiv = elem("embed-discovery-selection-message-div");
 
-    const discoverySizeLabel = document.getElementById("discovery-size-label");
+    const discoverySizeLabel = elem("discovery-size-label");
 
-    const preparationAlterationsSpan = document.getElementById("preparation-alterations-span");
-    const packagingSkippedSpan = document.getElementById("packaging-skipped-span");
-    const embedDuplicateSpan = document.getElementById("embed-duplicate-span");
-    const duplicatesSizeLabel = document.getElementById("duplicates-size-label");
+    const preparationAlterationsSpan = elem("preparation-alterations-span");
+    const packagingSkippedSpan = elem("packaging-skipped-span");
+    const embedDuplicateSpan = elem("embed-duplicate-span");
+    const duplicatesSizeLabel = elem("duplicates-size-label");
 
-    const packagingCurrentSpan = document.getElementById("packaging-current-span");
-    const packagingTotalSpan = document.getElementById("packaging-total-span");
-    const embedPackagingCurrentSpan = document.getElementById("embed-packaging-current-span");
-    const embedPackagingTotalSpan = document.getElementById("embed-packaging-total-span");
-    const packagingSizeSpan = document.getElementById("packaging-size-span");
-    const embedPackagingSizeSpan = document.getElementById("embed-packaging-size-span");
-    const packagingFileCurrentSpan = document.getElementById("packaging-file-current-span");
-    const packagingFileTotalSpan = document.getElementById("packaging-file-total-span");
-    const packagingErrorCountSpan = document.getElementById("packaging-error-count-span");
-    const packagingProgress = document.getElementById("packaging-progress");
+    const packagingCurrentSpan = elem("packaging-current-span");
+    const packagingTotalSpan = elem("packaging-total-span");
+    const embedPackagingCurrentSpan = elem("embed-packaging-current-span");
+    const embedPackagingTotalSpan = elem("embed-packaging-total-span");
+    const packagingSizeSpan = elem("packaging-size-span");
+    const embedPackagingSizeSpan = elem("embed-packaging-size-span");
+    const packagingFileCurrentSpan = elem("packaging-file-current-span");
+    const packagingFileTotalSpan = elem("packaging-file-total-span");
+    const packagingErrorCountSpan = elem("packaging-error-count-span");
+    const packagingProgress = elem("packaging-progress");
 
-    const lastFileNameDiv = document.getElementById("last-filename-div");
+    const lastFileNameDiv = elem("last-filename-div");
 
-    const saveResultDiv = document.getElementById("save-result-div");
-    const saveResultBorderDiv = document.getElementById("save-result-border-div");
-    const saveResultLabel = document.getElementById("save-result-label");
-    const permanentlyDetachButton = document.getElementById("permanently-detach-button");
-    const closeZipPanelButton = document.getElementById("close-zip-panel-button");
-    const exitExtensionButton = document.getElementById("exit-extension-button");
+    const saveResultDiv = elem("save-result-div");
+    const saveResultBorderDiv = elem("save-result-border-div");
+    const saveResultLabel = elem("save-result-label");
+    const permanentlyDetachButton = elem("permanently-detach-button");
+    const closeZipPanelButton = elem("close-zip-panel-button");
+    const exitExtensionButton = elem("exit-extension-button");
 
-    const detachOperationRow = document.getElementById("detach-operation-row");
+    const detachOperationRow = elem("detach-operation-row");
 
-    const zipDetachPanelBody = document.getElementById("zip-detach-panel-body");
-    const proceedDetachButton = document.getElementById("proceed-detach-button");
-    const cancelDetachButton = document.getElementById("cancel-detach-button");
-    const permanentDetachCurrentSpan = document.getElementById("permanent-detach-current-span");
-    const permanentDetachTotalSpan = document.getElementById("permanent-detach-total-span");
-    const permanentDetachNestedCountSpan = document.getElementById("permanent-detach-nested-count-span");
-    const detachmentProgress = document.getElementById("detachment-progress");
-    const detachResultDiv = document.getElementById("detach-result-div");
-    const detachResultBorderDiv = document.getElementById("detach-result-border-div");
-    const detachResultLabel = document.getElementById("detach-result-label");
-    const detachErrorCountSpan = document.getElementById("detach-error-count-span");
-    const detachExitExtensionButton = document.getElementById("detach-exit-extension-button");
+    const zipDetachPanelBody = elem("zip-detach-panel-body");
+    const proceedDetachButton = elem("proceed-detach-button");
+    const cancelDetachButton = elem("cancel-detach-button");
+    const permanentDetachCurrentSpan = elem("permanent-detach-current-span");
+    const permanentDetachTotalSpan = elem("permanent-detach-total-span");
+    const permanentDetachNestedCountSpan = elem("permanent-detach-nested-count-span");
+    const detachmentProgress = elem("detachment-progress");
+    const detachResultDiv = elem("detach-result-div");
+    const detachResultBorderDiv = elem("detach-result-border-div");
+    const detachResultLabel = elem("detach-result-label");
+    const detachErrorCountSpan = elem("detach-error-count-span");
+    const detachExitExtensionButton = elem("detach-exit-extension-button");
 
+    const releaseNotesOverlay = elem("release-notes-overlay");
+    const closeReleaseNotesButton = elem("close-release-notes-button");
 
     const folderRowSet = new Map();
 
@@ -225,7 +231,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         else {
             if(!discoverAttachmentsProgress.hasAttribute("value")) {
-                discoverAttachmentsProgress.vallue = 0;
+                discoverAttachmentsProgress.value = 0;
             }
 
             const rowItem = folderRowSet.get(folderStats.folderPath);
@@ -516,6 +522,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportDetachResult: updateDetachResult
             });
 
+            if(capabilities.extensionVersion !== extensionOptions.lastLoadedVersion) {
+                closeReleaseNotesButton.addEventListener("click", closeReleaseNotes);
+                const releaseNotesPanel = document.querySelector(`.release-notes-panel[version='${capabilities.extensionVersion}']`);
+
+                if(releaseNotesPanel) {
+                    releaseNotesPanel.classList.remove("hidden");
+                    releaseNotesOverlay.classList.remove("hidden");
+                }
+
+                OptionsManager.setOption("lastLoadedVersion", capabilities.extensionVersion);
+            }
 
             if(displayQuickMenu) {
                 invokeQuickMenu();
@@ -1296,6 +1313,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = true; });            
     }
+
+    function closeReleaseNotes(event) {
+        releaseNotesOverlay.classList.add("hidden");
+    }
+
 
     function alwaysShowQuickMenuOptionChanged(event) {
         const displayQuickMenu = alwaysShowQuickMenuCheckbox.checked;

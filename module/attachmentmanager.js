@@ -78,7 +78,7 @@ export class AttachmentManager {
 
 
     #windowsForbiddenCharacterRegex = /[<>:"|?*\/\\]/g;
-    #charsetRegex = /charset=[\"']?(?<charset>[^\"']*)[\"']?$/g;
+    #charsetRegex = /charset=[\"']?(?<charset>[A-Za-z0-9\-_:]+)/g;
 
 
     constructor(options) {
@@ -410,36 +410,38 @@ export class AttachmentManager {
                 fullMessage = await messenger.messages.getFull(message.id);
             }
 
-            const embeds = EmbedManager.identifyEmbeds(message.id, message.date, fullMessage.parts);
+            if(fullMessage.parts) {
+                const embeds = EmbedManager.identifyEmbeds(message.id, message.date, fullMessage.parts);
 
-            if(embeds.length > 0) {
-                let messageCharset = null;
+                if(embeds.length > 0) {
+                    let messageCharset = null;
 
-                if(!this.#useAdvancedGetRaw) {
-                    const identifyMessageCharsetResult = this.#identifyMessageCharset(fullMessage.parts);
+                    if(!this.#useAdvancedGetRaw) {
+                        const identifyMessageCharsetResult = this.#identifyMessageCharset(fullMessage.parts);
 
-                    messageCharset = identifyMessageCharsetResult.charset;
+                        messageCharset = identifyMessageCharsetResult.charset;
+                    }
+
+                    for(const embed of embeds) {
+                        embed.charset = messageCharset;
+                    }
+
+                    this.attachmentList.push(...embeds);
+
+                    folderStats.lastFileName = embeds[0].name;
+
+                    this.#embedCount+= embeds.length;
+                    folderStats.embedCount += embeds.length;
+
+                    if(!hasAttachments) {
+                        this.#attachmentMessageCount++;
+                        folderStats.attachmentMessageCount++;
+                    }
+
+                    this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
+
+                    result = true;
                 }
-
-                for(const embed of embeds) {
-                    embed.charset = messageCharset;
-                }
-
-                this.attachmentList.push(...embeds);
-
-                folderStats.lastFileName = embeds[0].name;
-
-                this.#embedCount+= embeds.length;
-                folderStats.embedCount += embeds.length;
-
-                if(!hasAttachments) {
-                    this.#attachmentMessageCount++;
-                    folderStats.attachmentMessageCount++;
-                }
-
-                this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
-
-                result = true;
             }
 
             folderStats.lastFileName = null;
@@ -762,7 +764,7 @@ export class AttachmentManager {
 
         packagingProgressInfo.fileCount = packagingTracker.extractionSubsets.length;
         
-        if(embedItems.length > 0) {
+        if(embedItems.length > 0 && items.length > 0) {
             packagingProgressInfo.fileCount++;
         }
 
@@ -780,6 +782,12 @@ export class AttachmentManager {
 
         if(embedItems.length > 0) {
             this.#duplicateEmbedFileTracker = new Map();
+
+            if(items.length == 0) {                                 // The rare case where there are only embeds...
+                packagingTracker.currentPackageIndex = 1;           // Bit of a hack; should reconsider how this is handled
+                this.#packageEmbeds(packagingProgressInfo);
+                return;
+            }
         }
 
         this.#package(packagingProgressInfo);        

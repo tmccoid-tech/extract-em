@@ -234,7 +234,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 lastFileNameDiv.innerText = folderStats.lastFileName;
             }
 
-            hasAttachments = folderStats.summaryAttachmentCount > 0;
+            hasAttachments = (folderStats.summaryAttachmentCount > 0 || folderStats.summaryEmbedCount > 0);
         }
         else {
             if(!discoverAttachmentsProgress.hasAttribute("value")) {

@@ -164,8 +164,55 @@ export class EmbedManager {
         return result;
     }
 
-    static async extractEmbeds(messageId, embeds) {
-        const text = await this.getFileText(messageId);
+    static async getDecodedFileText(messageId, messageCharset) {
+        const result = {
+            success: false,
+            text: null
+        };
+
+        const rawFile = await messenger.messages.getRaw(messageId);
+
+        const buffer = new Uint8Array(rawFile.length);
+
+        for(let i = 0; i < rawFile.length; i++) {
+            buffer[i] = rawFile.charCodeAt(i) & 0xFF;
+        }
+
+        try {
+            const decoder = new TextDecoder(messageCharset);
+
+            result.text = decoder.decode(buffer);
+
+            result.success = true;
+
+        }
+        catch(e) {
+            // Error logged in extractEmbeds
+        }
+
+        return result;
+    }
+
+    static async extractEmbeds(messageId, embeds, messageCharset) {
+        let text;
+
+        if(messageCharset == null) {
+            text = await this.getFileText(messageId, messageCharset);
+        }
+        else {
+            const getDecodedFileTextResult = await this.getDecodedFileText(messageId, messageCharset);
+
+            if(getDecodedFileTextResult.success) {
+                text = getDecodedFileTextResult.text;
+            }
+            else {
+                for(const embed of embeds) {
+                    embed.error = `Unable to read embed message (${embed.name}).`;
+                }
+
+                return;
+            }
+        }
 
         let
             startIndex = 0,
@@ -203,7 +250,7 @@ export class EmbedManager {
                         embed.size = embed.decodeData.data.length;
                     }
                     else {
-                        embed.error = `Invalid Base64 data in embed ${embed.name}.`;
+                        embed.error = `Invalid Base64 data in embed ${embed.name}.`;    // TODO: Add to messages.json
                     }
 
                     lastEndIndex = endIndex;

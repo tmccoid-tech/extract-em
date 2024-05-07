@@ -263,7 +263,7 @@
         "message": "This was due to an improper configuration of the 3rd-party code library (zip.js) used to generate the archive."
     },
     "rn1_2_0_Notice03": {
-        "message": "The author of this extension wished to extend his sincerest apologies to any user who may have been inconvenienced by this issue."
+        "message": "The author of this extension wished to express his sincerest apologies to any users who may have been inconvenienced by this issue."
     },
     "rn1_2_0_New01": {
         "message": "Added option for extracting embedded (inline-attached) images"

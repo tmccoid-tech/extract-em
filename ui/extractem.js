@@ -26,13 +26,20 @@ NodeList.prototype.toSet = _toSet;
 
 
 document.addEventListener("DOMContentLoaded", async () => {
+    const browserInfo = await browser.runtime.getBrowserInfo();
+
     class Capabilities {
         constructor() {
+            this.appVersion = browserInfo.version;
+
             this.extensionVersion = browser.runtime.getManifest().version;
 
+            const appVersionNumbers = this.appVersion.split(".").map((n) => parseInt(n));
+
             const versionNumbers = this.extensionVersion.split(".").map((n) => parseInt(n));
-            
+
             this.permitDetachment = (versionNumbers[0] >= 1 && versionNumbers[1] >= 2 && !!messenger.messages.deleteAttachments);    //  >= 1.2
+            this.useAdvancedGetRaw = appVersionNumbers[0] >= 115 && appVersionNumbers[1] >= 3 && appVersionNumbers[2] >= 2;          //  >= 115.3.2
         }
     }
     
@@ -519,7 +526,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportSaveResult: updateSaveResult,
 
                 reportDetachProgress: updateDetachProgress,
-                reportDetachResult: updateDetachResult
+                reportDetachResult: updateDetachResult,
+
+                useAdvancedGetRaw: capabilities.useAdvancedGetRaw
             });
 
             if(capabilities.extensionVersion !== extensionOptions.lastLoadedVersion) {

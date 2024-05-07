@@ -17,7 +17,8 @@ export class AttachmentManager {
     #selectedFolderPaths;
     #folderCounts;
 
-    #includeEmbeds= false;
+    #includeEmbeds = false;
+    #useAdvancedGetRaw = true;
 
     messageList = new Map();
     attachmentList = [];
@@ -77,10 +78,11 @@ export class AttachmentManager {
 
 
     #windowsForbiddenCharacterRegex = /[<>:"|?*\/\\]/g;
+    #charsetRegex = /charset=[\"']?(?<charset>[^\"']*)[\"']?$/g;
+
 
     constructor(options) {
         this.#folders = options.folders;
-        this.#includeEmbeds = options.includeEmbeds;
 
         if(!options.silentModeInvoked) {
             this.#reportFolderProcessing = options.reportFolderProcessing;
@@ -96,6 +98,8 @@ export class AttachmentManager {
 
         this.#reportProcessingComplete = options.reportProcessingComplete;
         this.#reportSaveResult = options.reportSaveResult;
+
+        this.#useAdvancedGetRaw = options.useAdvancedGetRaw;
     }
 
     #onFolderProcessed(folderPath) {
@@ -409,6 +413,18 @@ export class AttachmentManager {
             const embeds = EmbedManager.identifyEmbeds(message.id, message.date, fullMessage.parts);
 
             if(embeds.length > 0) {
+                let messageCharset = null;
+
+                if(!this.#useAdvancedGetRaw) {
+                    const identifyMessageCharsetResult = this.#identifyMessageCharset(fullMessage.parts);
+
+                    messageCharset = identifyMessageCharsetResult.charset;
+                }
+
+                for(const embed of embeds) {
+                    embed.charset = messageCharset;
+                }
+
                 this.attachmentList.push(...embeds);
 
                 folderStats.lastFileName = embeds[0].name;
@@ -427,6 +443,41 @@ export class AttachmentManager {
             }
 
             folderStats.lastFileName = null;
+        }
+
+        return result;
+    }
+
+    #identifyMessageCharset(parts, result = { success: false, charset: "utf-8" } ) {
+        for(const part of parts) {
+            if(part.headers) {
+                const contentTypeHeader = part.headers["content-type"];
+
+                if(contentTypeHeader.length > 0) {
+                    const contentType = contentTypeHeader[0];
+                    
+//                    console.log(contentType);
+                    
+                    const matches = this.#charsetRegex.exec(contentType);
+
+                    if(matches && matches.groups && matches.groups.charset) {
+                        result.charset = matches.groups.charset.toLowerCase();
+                        result.success = true;
+
+                        console.log(result.charset);
+
+                        break;
+                    }
+
+                    if(part.parts) {
+                        this.#identifyMessageCharset(part.parts, result);
+
+                        if(result.success) {
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         return result;
@@ -877,8 +928,9 @@ export class AttachmentManager {
 
             const messageId = messageItems[0];
             const messageEmbedItems = messageItems[1];
+            const messageCharset = messageEmbedItems[0].charset;
 
-            await EmbedManager.extractEmbeds(messageId, messageEmbedItems);
+            await EmbedManager.extractEmbeds(messageId, messageEmbedItems, messageCharset);
 
             currentSize += messageEmbedItems.reduce((sum, item) => sum + item.size, 0);
 

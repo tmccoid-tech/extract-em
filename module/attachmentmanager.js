@@ -15,7 +15,7 @@ export class AttachmentManager {
     #embedCount = 0;
 
     #selectedFolderPaths;
-    #folderCounts;
+    #folderCounts;              // Do not reset
 
     #includeEmbeds = false;
     #useAdvancedGetRaw = true;
@@ -318,30 +318,10 @@ export class AttachmentManager {
                     isEmbed: false,
                     isPreviewable: this.#previewSet.has(extension)
                 };
-
-                // TODO: Review potential detachment logic
-
-//                const isPotentialDetachment = (attachmentInfo.size > 0 && attachmentInfo.size < 512);
-
-//                if(attachmentInfo.size < 1 || isPotentialDetachment) {
     
                 if(attachmentInfo.size < 1) {
                     try {
                         const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
-
-/*                        
-                        if(isPotentialDetachment && attachmentFile.size !== attachmentInfo.size) {
-                            alterationMap.set(attachmentInfo.partName, {
-                                name: attachment.name,
-                                alteration: "detached",
-                                timestamp: null,
-                                fileUrl: null
-                            });
-            
-                            continue;
-
-                        }
-*/
 
                         attachmentInfo.size = attachmentFile.size;
                     }
@@ -563,7 +543,6 @@ export class AttachmentManager {
         this.#embedCount = 0;
 
         this.#selectedFolderPaths = null;
-//        this.#folderCounts = null;
 
         this.messageList.clear();
         this.attachmentList.length = 0;
@@ -653,11 +632,11 @@ export class AttachmentManager {
             duplicateCount: 0,
             duplicateTotalBytes: 0,
 
-            totalItems: 0,              // items.length,
+            totalItems: 0,                  // items.length,
             includedCount: 0,
             totalBytes: 0,
 
-            totalEmbedItems: 0,         // this.#embedCount,
+            totalEmbedItems: 0,             // this.#embedCount,
             includedEmbedCount: 0,
             duplicateEmbedCount: 0,
             totalEmbedBytes: 0,
@@ -719,7 +698,7 @@ export class AttachmentManager {
                         cumulativeSize += item.size;
                     }
                     else {
-                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, isNested: item.isNested });
+                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName });
 
                         packagingProgressInfo.duplicateCount++;
                         packagingProgressInfo.duplicateTotalBytes += item.size;
@@ -836,7 +815,6 @@ export class AttachmentManager {
                     author: rootMessage.author,
                     date: rootMessage.date,
                     subject: rootMessage.subject,
-                    isNested: item.isNested,
                     error: `${e}`
                 };
 
@@ -1151,7 +1129,6 @@ export class AttachmentManager {
             status: "started",
             totalItems: this.#packagingTracker.items.length + this.#duplicateFileTracker.length,
             processedCount: 0,
-            nestedCount: 0,
             errorCount: 0,
             lastFileName: "..."
         };
@@ -1162,8 +1139,6 @@ export class AttachmentManager {
 
         const deletionSets = [this.#packagingTracker.items, this.#duplicateFileTracker];
 
-        const nestedAttachmentSet = new Set();
-
         this.#detachmentErrorList = [];
 
         for(const set of deletionSets) {
@@ -1172,31 +1147,26 @@ export class AttachmentManager {
 
                 info.lastFileName = name;
 
-                if(item.isNested) {
-                    info.nestedCount++;
+                console.log(`${messageId} : ${partName} - ${name}`);
+
+                try {
+                    await messenger.messages.deleteAttachments(messageId, [partName]);
+                    info.processedCount++;
                 }
-                else {
-                    console.log(`${messageId} : ${partName} - ${name}`);
+                catch(e) {
+                    this.#detachmentErrorList.push({
+                        messageId: messageId,
+                        partName: partName,
+                        scope: "detach",
+                        error: e.toString()
+                    });
+                    
+                    info.errorCount++;
 
-                    try {
-                        await messenger.messages.deleteAttachments(messageId, [partName]);
-                        info.processedCount++;
-                    }
-                    catch(e) {
-                        this.#detachmentErrorList.push({
-                            messageId: messageId,
-                            partName: partName,
-                            scope: "detach",
-                            error: e.toString()
-                        });
-                        
-                        info.errorCount++;
-
-                        console.log(e);
-                    }
-
-                    this.#reportDetachProgress(info);
+                    console.log(e);
                 }
+
+                this.#reportDetachProgress(info);
             }
         }
  

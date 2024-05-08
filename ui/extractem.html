@@ -183,6 +183,21 @@
                         <div>&nbsp;</div>
                     </td>
                 </tr>
+            </table>
+
+            <table id="detach-table" class="hidden">
+                <tr>
+                    <td colspan="3">
+                        <div id="zip-detach-panel-body">
+                            <div class="zip-operation-label permanently-detach-container"><img class="hazard-image" src="hazard-sign.png" /> __MSG_permanentlyDetach__</div>
+                            <div id="detach-warning-message">__MSG_permanentDetachWarning__</div>
+                            <div id="detach-action-buttons-div">
+                                <button id="proceed-detach-button" class="close-button">__MSG_proceed__</button>
+                                <button id="cancel-detach-button" class="close-button">__MSG_cancel__</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
                 <tr id="detach-operation-row" class="hidden">
                     <td>
                         <div class="zip-operation-label">__MSG_permanentlyDetach__</div>
@@ -190,7 +205,6 @@
                     </td>
                     <td>
                         <div><span id="permanent-detach-current-span">0</span> __MSG_of__ <span id="permanent-detach-total-span">0</span> __MSG_detached__</div>
-                        <span id="permanent-detach-nested-count-span">0</span> __MSG_nestedAttachmentsOmitted__
                     </td>
                     <td>&nbsp;</td>
                 </tr>
@@ -209,15 +223,6 @@
                     <button id="view-report-button" class="close-button hidden">__MSG_viewReport__</button>                       
                     <button id="close-zip-panel-button" class="close-button disablable" disabled="disabled">__MSG_close__</button>
                     <button id="exit-extension-button" class="close-button disablable" disabled="disabled">__MSG_closeAndExit__</button>
-                </div>
-            </div>
-
-            <div id="zip-detach-panel-body" class="hidden">
-                <div class="zip-operation-label permanently-detach-container"><img class="hazard-image" src="hazard-sign.png" /> __MSG_permanentlyDetach__</div>
-                <div id="detach-warning-message">__MSG_permanentDetachWarning__</div>
-                <div id="detach-action-buttons-div">
-                    <button id="proceed-detach-button" class="close-button">__MSG_proceed__</button>
-                    <button id="cancel-detach-button" class="close-button">__MSG_cancel__</button>
                 </div>
             </div>
 

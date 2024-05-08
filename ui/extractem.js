@@ -31,15 +31,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     class Capabilities {
         constructor() {
             this.appVersion = browserInfo.version;
-
-            this.extensionVersion = browser.runtime.getManifest().version;
-
             const appVersionNumbers = this.appVersion.split(".").map((n) => parseInt(n));
 
-            const versionNumbers = this.extensionVersion.split(".").map((n) => parseInt(n));
+            this.extensionVersion = browser.runtime.getManifest().version;
+            const extensionVersionNumbers = this.extensionVersion.split(".").map((n) => parseInt(n));
 
-            this.permitDetachment = (versionNumbers[0] >= 1 && versionNumbers[1] >= 2 && !!messenger.messages.deleteAttachments);    //  >= 1.2
-            this.useAdvancedGetRaw = appVersionNumbers[0] >= 115 && appVersionNumbers[1] >= 3 && appVersionNumbers[2] >= 2;          //  >= 115.3.2
+            this.permitDetachment = (this.#isSufficientVersion(extensionVersionNumbers, [1, 2]) && !!messenger.messages.deleteAttachments);       //  >= EE 1.2
+            this.useAdvancedGetRaw = this.#isSufficientVersion(appVersionNumbers, [115, 3, 2]);                                                   //  >= TB 115.3.2
+        }
+
+        #isSufficientVersion(actualVersionNumbers, minimumVersionNumbers) {
+            for(let i = 0; i < actualVersionNumbers.length; i++) {
+                if(actualVersionNumbers[i] > minimumVersionNumbers[i]) {
+                    return true;
+                }
+
+                if(actualVersionNumbers[i] < minimumVersionNumbers[i]) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
     
@@ -115,6 +127,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const zipSubfoldersSpan = elem("zip-subfolders-span");
     const zipLogoImage = elem("zip-logo-img");
 
+    const zipTable = elem("zip-table");
+
     const immediateDiscoveryProgress = elem("immediate-discovery-progress");
     
     const immediateDiscoveryMessageDiv = elem("immediate-discovery-message-div");
@@ -154,12 +168,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const detachOperationRow = elem("detach-operation-row");
 
-    const zipDetachPanelBody = elem("zip-detach-panel-body");
+    const detachTable = elem("detach-table");
+    const detachActionButtonsDiv = elem("detach-action-buttons-div");
     const proceedDetachButton = elem("proceed-detach-button");
     const cancelDetachButton = elem("cancel-detach-button");
     const permanentDetachCurrentSpan = elem("permanent-detach-current-span");
     const permanentDetachTotalSpan = elem("permanent-detach-total-span");
-    const permanentDetachNestedCountSpan = elem("permanent-detach-nested-count-span");
     const detachmentProgress = elem("detachment-progress");
     const detachResultDiv = elem("detach-result-div");
     const detachResultBorderDiv = elem("detach-result-border-div");
@@ -371,6 +385,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 embedPackagingCurrentSpan.innerText = info.includedEmbedCount.toString();
                 
                 packagingFileCurrentSpan.innerText = info.filesCreated.toString();
+                preparationAlterationsSpan.innerText = info.alterationCount.toString();
                 packagingErrorCountSpan.innerText = info.errorCount.toString();        
                 
                 lastFileNameDiv.innerText = info.lastFileName;
@@ -422,14 +437,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         else {
             permanentDetachCurrentSpan.innerText = info.processedCount.toString();
-            permanentDetachNestedCountSpan.innerText = info.nestedCount;
-            detachmentProgress.value = info.processedCount + info.nestedCount + info.errorCount;
+            detachmentProgress.value = info.processedCount + info.errorCount;
             lastFileNameDiv.innerText = info.lastFileName;
         }
     };
 
     const updateDetachResult = async (info) => {
         const success = (info.errorCount == 0);
+
+        lastFileNameDiv.innerText = "...";
 
         detachResultDiv.classList.add("materialize");
 
@@ -1066,17 +1082,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function displayPermanentDetachPanel() {
         saveResultDiv.classList.add("hidden");
-        zipDetachPanelBody.classList.remove("hidden");
+        detachResultDiv.classList.remove("hidden");
+        zipTable.classList.add("hidden");
+        detachTable.classList.remove("hidden");
     }
 
     function cancelDetach() {
-        zipDetachPanelBody.classList.add("hidden");
+        detachTable.classList.add("hidden");
+        zipTable.classList.remove("hidden");
+        detachResultDiv.classList.add("hidden");
         saveResultDiv.classList.remove("hidden");
     }
 
     function proceedDetach() {
-        zipDetachPanelBody.classList.add("hidden");
-        detachResultDiv.classList.remove("hidden");
+        detachActionButtonsDiv.classList.add("hidden");
         detachOperationRow.classList.add("materialize");
 
         attachmentManager.deleteAttachments();
@@ -1302,7 +1321,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         permanentDetachCurrentSpan.innerText = "0";
         permanentDetachTotalSpan.innerText = "0";
-        permanentDetachNestedCountSpan.innerText = "0";
         
         lastFileNameDiv.innerText = "...";
 
@@ -1312,7 +1330,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         packagingErrorCountSpan.innerText = "0";
         permanentlyDetachButton.classList.remove("hidden");
 
-        zipDetachPanelBody.classList.add("hidden");
+        detachTable.classList.add("hidden");
+        zipTable.classList.remove("hidden");
 
         detachResultBorderDiv.classList.remove("success", "error");
         detachResultDiv.classList.remove("materialize");

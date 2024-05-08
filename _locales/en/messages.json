@@ -113,20 +113,17 @@
     "result": { "message": "Result" },
 
     "permanentlyDetach": { "message": "Permanently Detach" },
-    "confirmDetachMessage": { "message": "This action will PERMANENTLY delete the extracted attachments from their source messages; click OK to confirm." },
 
     "close":{ "message": "Close" },
     "closeAndExit": { "message": "Close & Exit" },
     "viewReport": { "message": "View Report" },
 
     "permanentDetachWarning": {
-        "message": "WARNING: This action will permanently remove the extracted attachments from their source email messages."
+        "message": "WARNING: This action will permanently remove the extracted attachments from their source email messages; embeds are not included."
     },
     "proceed": { "message": "Proceed" },
     "cancel": { "message": "Cancel" },
     "detached": { "message": "detached" },
-    "nestedAttachmentsOmitted": { "message": "nested attachment(s) omitted" },
-
 
     "options": { "message": "Options" },
 
@@ -251,6 +248,19 @@
 
     "detachComplete": { "message": "Detachment complete!" },
     "detachErrorMessage": { "message": "One or more attachments failed to detach." },
+
+    "embedErrorUnableToReadFile": {
+        "message": "Unable to read embed message ($1)."
+    },
+    "embedErrorInvalidBase64": {
+        "message": "Invalid Base64 data in embed $1."
+    },
+    "embedErrorLowerBoundaryMissing": {
+        "message": "Embed lower boundary not found ($1)."
+    },
+    "embedContentTypeMissing": {
+        "message": "Embed Content-Type header not found ($1)."
+    },
 
     "releaseNotesTitle" : { "message": "Release Notes for Extract 'Em!" },
     "whatsNew": { "message": "What's New" },

@@ -128,7 +128,6 @@ export class EmbedManager {
                                                         contentType: imageTokens[0],
                                                         size: null,
                                                         extension: extension,
-                                                        isNested: false,
                                                         isEmbed: true,
                                                         isPreviewable: false
                                                     };
@@ -207,7 +206,7 @@ export class EmbedManager {
             }
             else {
                 for(const embed of embeds) {
-                    embed.error = `Unable to read embed message (${embed.name}).`;
+                    embed.error = messenger.i18n.getMessage("embedErrorUnableToReadFile", [embed.name]);
                 }
 
                 return;
@@ -250,17 +249,17 @@ export class EmbedManager {
                         embed.size = embed.decodeData.data.length;
                     }
                     else {
-                        embed.error = `Invalid Base64 data in embed ${embed.name}.`;    // TODO: Add to messages.json
+                        embed.error = messeneger.i18n.getMessage("embedErrorInvalidBase64", [embed.name]);
                     }
 
                     lastEndIndex = endIndex;
                 }
                 else {
-                    embed.error = `Embed lower boundary not found (${embed.name}).`;
+                    embed.error = messeneger.i18n.getMessage("embedErrorLowerBoundaryMissing", [embed.name]);
                 }
             }
             else {
-                embed.error = `Embed Content-Type header not found (${embed.name}).`;
+                embed.error = messeneger.i18n.getMessage("embedContentTypeMissing", [embed.name]);
             }
 
             lastFileName = embed.name;

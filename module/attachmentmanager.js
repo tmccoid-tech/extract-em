@@ -698,7 +698,7 @@ export class AttachmentManager {
                         cumulativeSize += item.size;
                     }
                     else {
-                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName });
+                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: item.name });
 
                         packagingProgressInfo.duplicateCount++;
                         packagingProgressInfo.duplicateTotalBytes += item.size;

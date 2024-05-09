@@ -415,11 +415,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });            
 
-            if(capabilities.permitDetachment && success && info.attachmentCount > 0) {
-                permanentDetachTotalSpan.innerText = info.attachmentCount.toString();
-                detachmentProgress.setAttribute("max", info.attachmentCount);
-            }
-            else {
+            if(!(capabilities.permitDetachment && success && info.attachmentCount > 0)) {
                 permanentlyDetachButton.classList.add("hidden");
             }
 
@@ -434,6 +430,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const updateDetachProgress = async (info) => {
         if(info.status == "started") {
             detachmentProgress.setAttribute("max", info.totalItems);
+            permanentDetachTotalSpan.innerText = info.totalItems.toString();            
         }
         else {
             permanentDetachCurrentSpan.innerText = info.processedCount.toString();

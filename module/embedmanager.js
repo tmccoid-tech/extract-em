@@ -249,17 +249,17 @@ export class EmbedManager {
                         embed.size = embed.decodeData.data.length;
                     }
                     else {
-                        embed.error = messeneger.i18n.getMessage("embedErrorInvalidBase64", [embed.name]);
+                        embed.error = messenger.i18n.getMessage("embedErrorInvalidBase64", [embed.name]);
                     }
 
                     lastEndIndex = endIndex;
                 }
                 else {
-                    embed.error = messeneger.i18n.getMessage("embedErrorLowerBoundaryMissing", [embed.name]);
+                    embed.error = messenger.i18n.getMessage("embedErrorLowerBoundaryMissing", [embed.name]);
                 }
             }
             else {
-                embed.error = messeneger.i18n.getMessage("embedContentTypeMissing", [embed.name]);
+                embed.error = messenger.i18n.getMessage("embedContentTypeMissing", [embed.name]);
             }
 
             lastFileName = embed.name;

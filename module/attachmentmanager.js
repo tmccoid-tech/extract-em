@@ -283,10 +283,7 @@ export class AttachmentManager {
             return result;
         }
 
-        // TODO: hasAttachments should be false if exceptions occur (improper detachments, can't load attachment file?)
-        result.hasAttachments = (messageAttachmentList.length > 0);
-
-        if (result.hasAttachments) {
+        if (messageAttachmentList.length > 0) {
             result.fullMessage = await messenger.messages.getFull(message.id);
             const fullMessage = result.fullMessage;
 
@@ -319,9 +316,13 @@ export class AttachmentManager {
                     isPreviewable: this.#previewSet.has(extension)
                 };
     
-                if(attachmentInfo.size < 1) {
+                if(attachmentInfo.size < 1 || attachment.size == 238) {
                     try {
                         const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
+
+                        if(attachmentFile.size == 0) {
+                            throw new Error(messenger.i18n.getMessage("missingAttachment"));
+                        }
 
                         attachmentInfo.size = attachmentFile.size;
                     }
@@ -350,6 +351,8 @@ export class AttachmentManager {
                 }
 
                 this.attachmentList.push(attachmentInfo);
+
+                result.hasAttachments = true;
 
 //                console.log(attachmentInfo);
 
@@ -793,6 +796,10 @@ export class AttachmentManager {
 
             try {
                 attachmentFile = await this.#getAttachmentFile(item.messageId, item.partName);
+
+                if(attachmentFile.size == 0) {
+                    throw new Error(messenger.i18n.getMessage("missingAttachment"));
+                }
             }
             catch(e) {
                 errorList.push({

@@ -237,9 +237,13 @@ export class EmbedManager {
             if(startIndex > -1) {
                 startIndex += lastEndIndex;
 
-                const endIndex = text.indexOf(embed.boundary, startIndex);
+                let endIndex = text.indexOf(embed.boundary, startIndex);
 
-                if(endIndex > -1) {
+                if(endIndex == -1) {
+                    endIndex = text.length;
+                }
+
+//                if(endIndex > -1) {
                     let lines = text.substring(startIndex, endIndex).split("\r\n");
 
                     const extractResult = this.extractBase64(lines);
@@ -253,10 +257,10 @@ export class EmbedManager {
                     }
 
                     lastEndIndex = endIndex;
-                }
-                else {
-                    embed.error = messenger.i18n.getMessage("embedErrorLowerBoundaryMissing", [embed.name]);
-                }
+//                }
+//                else {
+//                    embed.error = messenger.i18n.getMessage("embedErrorLowerBoundaryMissing", [embed.name]);
+//                }
             }
             else {
                 embed.error = messenger.i18n.getMessage("embedContentTypeMissing", [embed.name]);

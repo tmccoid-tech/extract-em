@@ -246,6 +246,8 @@
 
     "error": { "message": "error" },
 
+    "missingAttachment": { "message": "Attachment has no data; presumed deleted/detached." },
+
     "detachComplete": { "message": "Detachment complete!" },
     "detachErrorMessage": { "message": "One or more attachments failed to detach." },
 
@@ -254,9 +256,6 @@
     },
     "embedErrorInvalidBase64": {
         "message": "Invalid Base64 data in embed $1."
-    },
-    "embedErrorLowerBoundaryMissing": {
-        "message": "Embed lower boundary not found ($1)."
     },
     "embedContentTypeMissing": {
         "message": "Embed Content-Type header not found ($1)."

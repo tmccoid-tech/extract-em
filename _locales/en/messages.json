@@ -265,31 +265,31 @@
     "whatsNew": { "message": "What's New" },
     "whatsFixed": { "message": "What's Fixed" },
 
-    "rn1_2_0_Notice01": {
+    "rn1_2_1_Notice01": {
          "message": "NOTICE: If you used version 1.1.4 of this extension (available between approximately April 10 and April 23, 2024) any archive files you produced are likely to be corrupt."
     },
-    "rn1_2_0_Notice02": {
+    "rn1_2_1_Notice02": {
         "message": "This was due to an improper configuration of the 3rd-party code library (zip.js) used to generate the archive."
     },
-    "rn1_2_0_Notice03": {
+    "rn1_2_1_Notice03": {
         "message": "The author of this extension wished to express his sincerest apologies to any users who may have been inconvenienced by this issue."
     },
-    "rn1_2_0_New01": {
+    "rn1_2_1_New01": {
         "message": "Added option for extracting embedded (inline-attached) images"
     },
-    "rn1_2_0_New02": {
+    "rn1_2_1_New02": {
         "message": "Added new version notification (automatic display of Release Notes) upon new version release"
     },
-    "rn1_2_0_New03": {
+    "rn1_2_1_New03": {
         "message": "Added permanent detach option (Thunderbird version 123 or later required)"
     },
-    "rn1_2_0_New04": {
+    "rn1_2_1_New04": {
         "message": "Added identification of detached and deleted attachments"
     },
-    "rn1_2_0_Fix01": {
+    "rn1_2_1_Fix01": {
         "message": "Removed recursive extraction (extracting attachments within email [.eml] files which themselves are attachments)"
     },
-    "rn1_2_0_Fix02": {
+    "rn1_2_1_Fix02": {
         "message": "Switched to zip.js library (from jszip) to mitigate an intermittent memory issue"
     }
 }

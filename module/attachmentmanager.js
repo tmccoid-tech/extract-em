@@ -513,12 +513,16 @@ export class AttachmentManager {
                 });
             }
             else if(part.contentType == "text/x-moz-deleted") {
-                alterationMap.set(part.partName, {
+                const deletionEntry = {
                     name: part.name,
                     alteration: "deleted",
                     timestamp: null,
                     fileUrl: null
-                });
+                };
+
+                alterationMap.set(part.partName, deletionEntry);
+
+                console.log(deletionEntry);
             }
 
             if(part.parts) {

@@ -23,7 +23,7 @@ export class ZipEm {
         await this.#zipWriter.add(
             fileName,
             new zip.BlobReader(fileData),
-            { level: 0, creationDate: creationDate, useWebWorkers: this.#useWebWorkers }
+            { level: 0, lastModDate: creationDate, useWebWorkers: this.#useWebWorkers }
         );
     }
 

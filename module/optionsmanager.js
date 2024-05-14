@@ -6,6 +6,7 @@ export class OptionsManager {
         includeSubfolders: false,
         useSilentMode: false,
         preserveFolderStructure: false,
+        useEnhancedLogging: false,
         defaultGrouping: "None",
         defaultImagePreview: "sm",
         includeEmbeds: false,

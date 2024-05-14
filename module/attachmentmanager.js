@@ -19,6 +19,7 @@ export class AttachmentManager {
 
     #includeEmbeds = false;
     #useAdvancedGetRaw = true;
+    #useEnhancedLogging = false;
 
     messageList = new Map();
     attachmentList = [];
@@ -100,6 +101,7 @@ export class AttachmentManager {
         this.#reportSaveResult = options.reportSaveResult;
 
         this.#useAdvancedGetRaw = options.useAdvancedGetRaw;
+        this.#useEnhancedLogging = options.useEnhancedLogging;
     }
 
     #onFolderProcessed(folderPath) {
@@ -263,6 +265,9 @@ export class AttachmentManager {
         let messageAttachmentList = [];
         
         try {
+
+            this.#log(`List message attachments: ${message.date} - ${message.subject}`);
+
             messageAttachmentList = await messenger.messages.listAttachments(message.id);
         }
         catch(e) {
@@ -276,7 +281,7 @@ export class AttachmentManager {
                 error: `${e}`
             };
 
-            console.log(errorInfo);
+            this.#log(errorInfo, true);
 
             this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
 
@@ -284,9 +289,12 @@ export class AttachmentManager {
         }
 
         if (messageAttachmentList.length > 0) {
+            this.#log(`Get full message: ${message.date} - ${message.subject}`);
+
             result.fullMessage = await messenger.messages.getFull(message.id);
             const fullMessage = result.fullMessage;
 
+            this.#log(`Generate alteration map: ${message.date} - ${message.subject}`);
             const alterationMap = this.#generateAlterationMap(fullMessage.parts);
 
             for (const attachment of messageAttachmentList) {
@@ -316,8 +324,10 @@ export class AttachmentManager {
                     isPreviewable: this.#previewSet.has(extension)
                 };
     
-                if(attachmentInfo.size < 1 || attachment.size == 238) {
+                if(attachmentInfo.size < 1 || attachmentInfo.size == 238) {
                     try {
+                        this.#log(`Get attachment file message: ${message.date} - ${message.subject}: name = ${attachmentInfo.name} size = ${attachmentInfo.size}`);
+
                         const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
 
                         if(attachmentFile.size == 0) {
@@ -344,7 +354,7 @@ export class AttachmentManager {
                             error: `${e}`
                         };
 
-                        console.log(errorInfo);
+                        this.#log(errorInfo, true);
 
                         continue;
                     }
@@ -353,8 +363,6 @@ export class AttachmentManager {
                 this.attachmentList.push(attachmentInfo);
 
                 result.hasAttachments = true;
-
-//                console.log(attachmentInfo);
 
                 folderStats.lastFileName = attachment.name;
 
@@ -441,15 +449,13 @@ export class AttachmentManager {
                 if(contentTypeHeader.length > 0) {
                     const contentType = contentTypeHeader[0];
                     
-//                    console.log(contentType);
-                    
                     const matches = this.#charsetRegex.exec(contentType);
 
                     if(matches && matches.groups && matches.groups.charset) {
                         result.charset = matches.groups.charset.toLowerCase();
                         result.success = true;
 
-                        console.log(result.charset);
+                        this.#log(result.charset);
 
                         break;
                     }
@@ -486,6 +492,8 @@ export class AttachmentManager {
 
     #generateAlterationMap(parts, alterationMap = new Map()) {
         for(const part of parts) {
+            this.#log(`Alteration map gen: ${part.partName}`);
+
             if(part.headers && part.headers["x-mozilla-altered"]) {
                 const alterationTokens = part.headers["x-mozilla-altered"][0].split(";");
                 
@@ -502,11 +510,11 @@ export class AttachmentManager {
                     }
                 }
                 catch(e) {
-                    console.log(e);
+                    this.#log(e, true);
                 }
 
                 alterationMap.set(part.partName, {
-                    name: part.name,
+                    name: part.partName,
                     alteration: alteration,
                     timestamp: timestamp,
                     fileUrl: fileUrl
@@ -514,7 +522,7 @@ export class AttachmentManager {
             }
             else if(part.contentType == "text/x-moz-deleted") {
                 const deletionEntry = {
-                    name: part.name,
+                    name: part.partName,
                     alteration: "deleted",
                     timestamp: null,
                     fileUrl: null
@@ -522,7 +530,7 @@ export class AttachmentManager {
 
                 alterationMap.set(part.partName, deletionEntry);
 
-                console.log(deletionEntry);
+                this.#log(deletionEntry);
             }
 
             if(part.parts) {
@@ -799,6 +807,8 @@ export class AttachmentManager {
             let attachmentFile;
 
             try {
+                this.#log(`Packaging - get attachment file: ${item.name}`);
+
                 attachmentFile = await this.#getAttachmentFile(item.messageId, item.partName);
 
                 if(attachmentFile.size == 0) {
@@ -829,7 +839,7 @@ export class AttachmentManager {
                     error: `${e}`
                 };
 
-                console.log(errorInfo);
+                this.#log(errorInfo, true);
 
                 continue;
             }
@@ -858,6 +868,8 @@ export class AttachmentManager {
             }
 
             try {
+                this.#log(`Packaging - add file to zip buffer: ${item.name}`);
+
                 await zipEm.addFile(fileName, attachmentFile, item.date);
 
                 packagingProgressInfo.includedCount++;
@@ -873,7 +885,7 @@ export class AttachmentManager {
 
                 packagingProgressInfo.errorCount = errorList.length;
 
-                console.log(e);
+                this.#log(e, true);
             }
 
             this.#reportPackagingProgress(packagingProgressInfo);
@@ -948,7 +960,7 @@ export class AttachmentManager {
 
                     const message = this.messageList.get(item.messageId);
 
-                    console.log(`Embed error: ${message.author} ${message.folderPath} - ${item.date} :${item.error}`);
+                    this.#log(`Embed error: ${message.author} ${message.folderPath} - ${item.date} :${item.error}`, true);
 
                     packagingProgressInfo.errorCount = errorList.length;
 
@@ -958,8 +970,6 @@ export class AttachmentManager {
 
                 let fileName = item.name;
                 const decodeData = item.decodeData;
-
-//                console.log(`Duplicate: ${fileName}; size: ${item.size}; ck: ${decodeData.checksum}`);
 
                 if(duplicateEmbedFileTracker.has(fileName)) {
                     let sequenceNumber = 0;
@@ -1038,7 +1048,7 @@ export class AttachmentManager {
             zipFile = await zipEm.complete();
         }
         catch(e) {
-            console.log(e);
+            this.#log(e, true);
 
             return;
         }
@@ -1097,6 +1107,8 @@ export class AttachmentManager {
 
                     browser.downloads.onChanged.removeListener(listen);
         
+                    this.#log(`Removing download data (${info.status})`);
+
                     URL.revokeObjectURL(zipParams.url);
 
                     if(success) {
@@ -1130,6 +1142,8 @@ export class AttachmentManager {
 
                     browser.downloads.onChanged.removeListener(listen);
 
+                    this.#log("Removing download data (error)");
+
                     URL.revokeObjectURL(zipParams.url);
                 }
             );
@@ -1158,7 +1172,7 @@ export class AttachmentManager {
 
                 info.lastFileName = name;
 
-                console.log(`${messageId} : ${partName} - ${name}`);
+                this.#log(`${messageId} : ${partName} - ${name}`);
 
                 try {
                     await messenger.messages.deleteAttachments(messageId, [partName]);
@@ -1174,7 +1188,7 @@ export class AttachmentManager {
                     
                     info.errorCount++;
 
-                    console.log(e);
+                    this.#log(e, true);
                 }
 
                 this.#reportDetachProgress(info);
@@ -1253,5 +1267,11 @@ export class AttachmentManager {
         const result = tokens.join(".");
 
         return result;
+    }
+
+    #log(message, condition = this.#useEnhancedLogging) {
+        if(condition) {
+            console.log(message);
+        }
     }
 }

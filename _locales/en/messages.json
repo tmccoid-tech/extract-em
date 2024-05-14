@@ -193,6 +193,13 @@
         "description": ""
     },
 
+    "useEnhancedLogging" : {
+        "message": "Use enhanced logging"
+    },
+    "useEnhancedLoggingDescription": {
+        "message": "Outputs additional troubleshooting information to the debugger console"
+    },
+
     "defaultGrouping": {
         "message": "Default grouping",
         "description": ""

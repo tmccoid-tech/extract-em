@@ -36,10 +36,10 @@
         <dd>
             __MSG_extractImmediateDescription__
             <dl>
-                <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" disabled="disabled"/> __MSG_includeSubFolders__</label></dt>
+                <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" option-name="includeSubfolders" disabled="disabled"/> __MSG_includeSubFolders__</label></dt>
                 <dd>__MSG_includeSubFoldersDescription__</dd>
 
-                <dt><label><input type="checkbox" id="use-silent-mode-checkbox" disabled="disabled"/> __MSG_useSilentMode__</label></dt>
+                <dt><label><input type="checkbox" id="use-silent-mode-checkbox" option-name="useSilentMode" disabled="disabled"/> __MSG_useSilentMode__</label></dt>
                 <dd>__MSG_useSilentModeDescription__</dd>
             </dl>
         </dd>
@@ -47,21 +47,28 @@
         <dd></dd>
 
         <dt>
-            <label><input type="checkbox" id="include-embeds-checkbox" /> __MSG_includeEmbeddedImages__</label>
+            <label><input type="checkbox" id="include-embeds-checkbox" option-name="includeEmbeds" /> __MSG_includeEmbeddedImages__</label>
         </dt>
         <dd>
             __MSG_includeEmbeddedImagesDescription__
         </dd>
 
         <dt>
-            <label><input type="checkbox" id="preserve-folder-structure-checkbox" /> __MSG_preserveFolderStructure__</label>
+            <label><input type="checkbox" id="preserve-folder-structure-checkbox" option-name="preserveFolderStructure" /> __MSG_preserveFolderStructure__</label>
         </dt>
         <dd>
             __MSG_preserveFolderStructureDescription__
         </dd>
 
         <dt>
-            <label>__MSG_defaultGrouping__: <select id="default-grouping-select">
+            <label><input type="checkbox" id="use-enhanced-logging-checkbox" option-name="useEnhancedLogging" /> __MSG_useEnhancedLogging__</label>
+        </dt>
+        <dd>
+            __MSG_useEnhancedLoggingDescription__
+        </dd>
+
+        <dt>
+            <label>__MSG_defaultGrouping__: <select id="default-grouping-select" option-name="defaultGrouping">
                 <option value="None" selected>__MSG_none__</option>
                 <option value="Author">__MSG_defaultGroupingByAuthor__</option>
                 <option value="Folder">__MSG_defaultGroupingByFolder__</option>
@@ -73,7 +80,7 @@
         </dd>
 
         <dt>
-            <label>__MSG_imagePreview__: <select id="image-preview-select">
+            <label>__MSG_imagePreview__: <select id="image-preview-select" option-name="defaultImagePreview">
                 <option value="none">__MSG_none__</option>
                 <option value="sm" selected>__MSG_imagePreviewSmall__</option>
                 <option value="md">__MSG_imagePreviewMedium__</option>

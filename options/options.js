@@ -3,27 +3,31 @@ import { OptionsManager } from "/module/optionsmanager.js";
 document.addEventListener("DOMContentLoaded", async () => {
     i18n.updateDocument();
 
-    const standardUiModeCheckbox = document.getElementById("standard-ui-mode-checkbox");
-    const displayQuickMenuCheckbox = document.getElementById("display-quickmenu-checkbox");
-    const extractImmediateCheckbox = document.getElementById("extract-immediate-checkbox");
-    const extractImmediateSubfoldersCheckbox = document.getElementById("extract-immediate-subfolders-checkbox");
-    const useSilentModeCheckbox = document.getElementById("use-silent-mode-checkbox");
-    const preserveFolderStructureCheckbox = document.getElementById("preserve-folder-structure-checkbox");
-    const defaultGroupingSelect = document.getElementById("default-grouping-select");
-    const imagePreviewSelect = document.getElementById("image-preview-select");
-    const includeEmbedsCheckbox = document.getElementById("include-embeds-checkbox");
+    const elem = (id) => document.getElementById(id);
+
+    const standardUiModeCheckbox = elem("standard-ui-mode-checkbox");
+    const displayQuickMenuCheckbox = elem("display-quickmenu-checkbox");
+    const extractImmediateCheckbox = elem("extract-immediate-checkbox");
+    const extractImmediateSubfoldersCheckbox = elem("extract-immediate-subfolders-checkbox");
+    const useSilentModeCheckbox = elem("use-silent-mode-checkbox");
+    const preserveFolderStructureCheckbox = elem("preserve-folder-structure-checkbox");
+    const useEnhancedLoggingCheckbox = elem("use-enhanced-logging-checkbox");
+    const defaultGroupingSelect = elem("default-grouping-select");
+    const imagePreviewSelect = elem("image-preview-select");
+    const includeEmbedsCheckbox = elem("include-embeds-checkbox");
     
     async function main() {
-        standardUiModeCheckbox.addEventListener("change", onUserInteractionOptionChanged);
-        displayQuickMenuCheckbox.addEventListener("change", onUserInteractionOptionChanged);
-        extractImmediateCheckbox.addEventListener("change", onUserInteractionOptionChanged);
-        
-        extractImmediateSubfoldersCheckbox.addEventListener("change", onExtractImmediateSubfoldersOptionChanged);
-        useSilentModeCheckbox.addEventListener("change", onUseSilentModeOptionChanged);
-        preserveFolderStructureCheckbox.addEventListener("change", onPreserveFolderStructureOptionChanged);
-        defaultGroupingSelect.addEventListener("change", onDefaultGroupingOptionChanged);
-        imagePreviewSelect.addEventListener("change", onImagePreviewOptionChanged);
-        includeEmbedsCheckbox.addEventListener("change", onIncludeEmbedsOptionChanged);
+        listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
+        listen(displayQuickMenuCheckbox, onUserInteractionOptionChanged);
+        listen(extractImmediateCheckbox, onUserInteractionOptionChanged);
+
+        listen(extractImmediateSubfoldersCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(useSilentModeCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(preserveFolderStructureCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(useEnhancedLoggingCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(defaultGroupingSelect, (e) => setOption(e));
+        listen(imagePreviewSelect, (e) => setOption(e));
+        listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
 
         const extensionOptions = await OptionsManager.retrieve();
 
@@ -34,12 +38,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         extractImmediateSubfoldersCheckbox.checked = extensionOptions.includeSubfolders;
         useSilentModeCheckbox.checked = extensionOptions.useSilentMode;
         preserveFolderStructureCheckbox.checked = extensionOptions.preserveFolderStructure;
+        useEnhancedLoggingCheckbox.checked = extensionOptions.useEnhancedLogging;
         defaultGroupingSelect.value = extensionOptions.defaultGrouping;
         imagePreviewSelect.value = extensionOptions.defaultImagePreview;
         includeEmbedsCheckbox.checked = extensionOptions.includeEmbeds;
 
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;
+    }
+
+    function listen(element, handler) {
+        element.addEventListener("change", handler);
+    }
+
+    function setOption(event, getValue = (c) => c.value) {
+        const element = event.srcElement;
+        const optionName = element.getAttribute("option-name");
+        OptionsManager.setOption(optionName, getValue(element));
     }
 
     function onUserInteractionOptionChanged(event) {
@@ -53,30 +68,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         extractImmediateSubfoldersCheckbox.disabled = !extractImmediate;
         useSilentModeCheckbox.disabled= !extractImmediate;
-    }
-
-    function onExtractImmediateSubfoldersOptionChanged(event) {
-        OptionsManager.setOption("includeSubfolders", extractImmediateSubfoldersCheckbox.checked);
-    }
-
-    function onUseSilentModeOptionChanged(event) {
-        OptionsManager.setOption("useSilentMode", useSilentModeCheckbox.checked);
-    }
-
-    function onPreserveFolderStructureOptionChanged(event) {
-        OptionsManager.setOption("preserveFolderStructure", preserveFolderStructureCheckbox.checked);
-    }
-
-    function onDefaultGroupingOptionChanged(event) {
-        OptionsManager.setOption("defaultGrouping", defaultGroupingSelect.value);
-    }
-
-    function onImagePreviewOptionChanged(event) {
-        OptionsManager.setOption("defaultImagePreview", imagePreviewSelect.value);
-    }
-
-    function onIncludeEmbedsOptionChanged(event) {
-        OptionsManager.setOption("includeEmbeds", includeEmbedsCheckbox.checked);
     }
 
     await main();

@@ -541,7 +541,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportDetachProgress: updateDetachProgress,
                 reportDetachResult: updateDetachResult,
 
-                useAdvancedGetRaw: capabilities.useAdvancedGetRaw
+                useAdvancedGetRaw: capabilities.useAdvancedGetRaw,
+                useEnhancedLogging: extensionOptions.useEnhancedLogging
             });
 
             if(capabilities.extensionVersion !== extensionOptions.lastLoadedVersion) {

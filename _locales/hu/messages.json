@@ -1,0 +1,302 @@
+{
+    "extensionName": {
+        "message": "Extract 'Em!"
+    },
+    
+    "extensionDescription": {
+        "message": "Extracts attachments from messages under the selected folder or account."
+    },
+
+    "extractSingleDescription": {
+        "message": "Extracts attachments from the selected folder, omitting sub-folders",
+        "description": "Action description for extract-single QuickMenu button"
+    },
+
+    "subfolders": {
+        "message": "subfolders"
+    },
+
+    "extractRecursiveDescription": {
+        "message": "Extracts attachments from the selected folders and sub-folders (recursive)",
+        "description": "Action description for extract-recursive QuickMenu button"
+    },
+
+    "letMeChoose": {
+        "message": "Let Me Choose",
+        "description": "Label for standard-selection QuickMenu button"
+    },
+
+    "standardSelectionDescription": {
+        "message": "Allows you to choose specific folders, or even specific attachments for discovery and extraction",
+        "description": "Action description for standard-selection QuickMenu button"
+    },
+
+    "alwaysShowQuickMenu": {
+        "message": "Always show this QuickMenu",
+        "description": "Label for QuickMenu persistence checkbox"
+    },
+
+    "noAttachmentsMessage": {
+        "message": "There are no attachments in the selected folder.",
+        "description": ""
+    },
+
+    "noMessagesMessage": {
+        "message": "There are no messages in the selected folder.",
+        "description": ""
+    },
+
+    "attachmentSummary": { "message": "Attachment Summary" },
+    "attachmentList": { "message": "Attachment List" },
+    "folders": { "message": "Folders" },
+    "messages": { "message": "Messages" },
+    
+    "attachment": { "message" : "attachment" },
+    "attachments": { "message": "Attachments" },
+    "attachmentsPP": { "message": "attachment(s)", "description": "PP = parenthetical plural" },
+    
+    "embed": { "message": "embed" },
+    "embeds": { "message": "Embeds" },
+    "embedsPP": { "message": "embed(s)" },
+    
+    "selected": { "message": "selected" },
+    "count": { "message": "Count" },
+    "processed": { "message": "Processed" },
+    "withAbbrev": { "message": "w/" },
+    "size": { "message": "Size" },
+
+    "discoverAttachments": {
+        "message": "Discover Attachments",
+        "description": "Label for discover-attachments-button"
+    },
+
+    "reset": { "message": "Reset" },
+
+    "closeZoomMessage": {
+        "message": "Click on image to close."
+    },
+
+    "discovering": { "message": "Discovering" },
+    "discoveryProgressMessage": {
+        "message": "$1 attachment(s) in $2 of $3 message(s)",
+        "description": "{# of discovered} attachment(s) in {# of messages including attachments/embeds)} of {total # of discovered messages}"
+    },
+
+    "discoverySelectionMessage": {
+        "message": "$1 of $2 attachment(s) selected",
+        "description": "{# of selected} of {# of discovered} attachment(s) selected"
+    },
+    "embedDiscoverySelectionMessage": {
+        "message": "$1 of $2 embed(s) selected",
+        "description": "{# of selected} of {# of discovered} embed(s) selected"
+    },
+
+    "preparing": { "message": "Preparing", "description": "OBSOLETE" },
+    "exclusions": { "message": "Exclusions" },
+
+    "alterationsIdentified": {
+        "message": "detached/deleted attachment(s) identified",
+        "description": "Regards attachments which were detached or deleted from the (altered) source message."
+    },
+
+    "duplicatesOmitted": { "message": "duplicate(s) omitted" },
+
+    "packaging": { "message": "Packaging" },
+    "of": {
+        "message": "of",
+        "description": "Used in the sense of 'x items out of y total items'"
+    },
+    "attachmentsPackaged": { "message": "attachment(s) packaged"},
+    "embedsPackaged": { "message": "embed(s) packaged"},
+    "packageFilesSaved": { "message": "package file(s) saved" },
+    "errorsEncountered": { "message": "errors encountered" },
+    "result": { "message": "Result" },
+
+    "permanentlyDetach": { "message": "Permanently Detach" },
+
+    "close":{ "message": "Close" },
+    "closeAndExit": { "message": "Close & Exit" },
+    "viewReport": { "message": "View Report" },
+
+    "permanentDetachWarning": {
+        "message": "WARNING: This action will permanently remove the extracted attachments (and duplicates) from their source email messages. Embeds are excluded."
+    },
+    "proceed": { "message": "Proceed" },
+    "cancel": { "message": "Cancel" },
+    "detached": { "message": "detached" },
+
+    "options": { "message": "Options" },
+
+    "none": { "message": "None" },
+
+    "useInteractiveUi": {
+        "message": "Use interactive UI",
+        "description": ""
+    },
+    "useInteractiveUiDescription": {
+        "message": "Fully interactive UI; allows for selection of specific attachments to extract",
+        "description": ""
+    },
+
+    "displayQuickMenu": {
+        "message": "Display QuickMenu",
+        "description": ""
+    },
+    "displayQuickMenuDescription": {
+        "message": "Displays a shortcut menu when Extract 'Em! is opened",
+        "description": ""
+    },
+
+    "extractImmediate": {
+        "message": "Extract immediate",
+        "description": ""
+    },
+    "extractImmediateDescription": {
+        "message": "Saves all attachments from messages in the selected folder with limited user intervention; excludes sub-folders",
+        "description": ""
+    },
+
+    "includeSubFolders": {
+        "message": "Include subfolders",
+        "description": ""
+    },
+    "includeSubFoldersDescription": {
+        "message": "Includes attachments in subfolders during immediate extraction",
+        "description": ""
+    },
+
+    "useSilentMode": {
+        "message": "Use \"silent\" mode",
+        "description": ""
+    },
+    "useSilentModeDescription": {
+        "message": "Omits UI presentation, with the exception of the save prompt",
+        "description": ""
+    },
+
+    "includeEmbeddedImages": {
+        "message": "Include embedded images",
+        "description": ""
+    },
+    "includeEmbeddedImagesDescription": {
+        "message": "Identifies and includes images embedded in the message body (inline images)",
+        "description": ""
+    },
+
+
+    "preserveFolderStructure": {
+        "message": "Preserve folder structure",
+        "description": ""
+    },
+    "preserveFolderStructureDescription": {
+        "message": "Stores the attachments in the .zip archive in the same folders they reside under in Thunderbird",
+        "description": ""
+    },
+
+    "useEnhancedLogging" : {
+        "message": "Use enhanced logging"
+    },
+    "useEnhancedLoggingDescription": {
+        "message": "Outputs additional troubleshooting information to the debugger console"
+    },
+
+    "defaultGrouping": {
+        "message": "Default grouping",
+        "description": ""
+    },
+    "defaultGroupingByAuthor": {
+        "message": "By author",
+        "description": ""
+    },
+    "defaultGroupingByFolder": {
+        "message": "By folder",
+        "description": ""
+    },
+    "defaultGroupingByExtension": {
+        "message": "By file extension",
+        "description": ""
+    },
+    "defaultGroupingDescription": {
+        "message": "Groups items in the Attachment List according to the specified attribute",
+        "description": ""
+    },
+
+    "imagePreview": {
+        "message": "Image preview",
+        "description": ""
+    },
+    "imagePreviewSmall": {
+        "message": "Small",
+        "description": ""
+    },
+    "imagePreviewMedium": {
+        "message": "Medium",
+        "description": ""
+    },
+    "imagePreviewLarge": {
+        "message": "Large",
+        "description": ""
+    },
+    "imagePreviewDescription": {
+        "message": "Specifies the size of the Preview Image for items in the Attachment List",
+        "description": ""
+    },
+
+
+    "saveComplete": { "message": "Save complete!" },
+    "saveFailed": { "message": "Save failed; unknown error." },
+
+    "bytesLabel": { "message": "bytes" },
+    "kbLabel": { "message": "kB" },
+    "mbLabel": { "message": "MB" },
+    "gbLabel": { "message": "GB" },
+
+    "error": { "message": "error" },
+
+    "missingAttachment": { "message": "Attachment has no data; presumed deleted/detached." },
+
+    "detachComplete": { "message": "Detachment complete!" },
+    "detachErrorMessage": { "message": "One or more attachments failed to detach." },
+
+    "embedErrorUnableToReadFile": {
+        "message": "Unable to read embed message ($1)."
+    },
+    "embedErrorInvalidBase64": {
+        "message": "Invalid Base64 data in embed $1."
+    },
+    "embedContentTypeMissing": {
+        "message": "Embed Content-Type header not found ($1)."
+    },
+
+    "releaseNotesTitle" : { "message": "Release Notes for Extract 'Em!" },
+    "whatsNew": { "message": "What's New" },
+    "whatsFixed": { "message": "What's Fixed" },
+
+    "rn1_2_1_Notice01": {
+         "message": "NOTICE: If you used version 1.1.4 of this extension (available between approximately April 10 and April 23, 2024) any archive files you produced are likely to be corrupt."
+    },
+    "rn1_2_1_Notice02": {
+        "message": "This was due to an improper configuration of the 3rd-party code library (zip.js) used to generate the archive."
+    },
+    "rn1_2_1_Notice03": {
+        "message": "The author of this extension wished to express his sincerest apologies to any users who may have been inconvenienced by this issue."
+    },
+    "rn1_2_1_New01": {
+        "message": "Added option for extracting embedded (inline-attached) images"
+    },
+    "rn1_2_1_New02": {
+        "message": "Added new version notification (automatic display of Release Notes) upon new version release"
+    },
+    "rn1_2_1_New03": {
+        "message": "Added permanent detach option (Thunderbird version 123 or later required)"
+    },
+    "rn1_2_1_New04": {
+        "message": "Added identification of detached and deleted attachments"
+    },
+    "rn1_2_1_Fix01": {
+        "message": "Removed recursive extraction (extracting attachments within email [.eml] files which themselves are attachments)"
+    },
+    "rn1_2_1_Fix02": {
+        "message": "Switched to zip.js library (from jszip) to mitigate an intermittent memory issue"
+    }
+}

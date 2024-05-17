@@ -1,5 +1,6 @@
 import { ZipEm } from "/module/zipem.js";
 import { EmbedManager } from "/module/embedmanager.js";
+import { HttpUtility } from "/module/httputility.js";
 
 export class AttachmentManager {
     #platformOs;

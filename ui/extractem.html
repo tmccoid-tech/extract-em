@@ -301,12 +301,46 @@
         </div>
     </template>
 
+    <template id="report-style-template">
+        <style>
+        </style>
+    </template>
+
+    <template id="report-template">
+        <div>
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Source Message</th>
+                        <th>Attachment</th>
+                    </tr>
+                </thead>
+                <tbody class="report-tbody">
+                </tbody>
+            </table>
+        </div>                
+    </template>
+
+    <template id="report-item-template">
+        <tr>
+            <td>
+                <span></span><br/>
+                <span></span><br/>
+                <span></span>
+            </td>
+            <td>
+                <span></span><br/>
+                <span></span>
+            </td>
+        </tr>
+    </template>
+
     <script src="/module/i18n.js"></script>
     <script type="module" src="/module/optionsmanager.js"></script>
-<!--    <script src="/module/z-worker.js"></script>     -->
     <script src="/module/zip-full.js"></script>
     <script type="module" src="/module/zipem.js"></script>
     <script type="module" src="/module/embedmanager.js"></script>
+    <script type="module" src="/module/httputility.js"></script>
     <script type="module" src="/module/attachmentmanager.js"></script>
     <script type="module" src="extractem.js"></script>
 </body>

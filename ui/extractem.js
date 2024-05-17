@@ -181,6 +181,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const detachErrorCountSpan = elem("detach-error-count-span");
     const detachExitExtensionButton = elem("detach-exit-extension-button");
 
+    const reportStyleTemplate = elem("report-style-template");
+    const reportTemplate = elem("report-template");
+    const reportItemTemplate = elem("report-item-template");
+
     const releaseNotesOverlay = elem("release-notes-overlay");
     const closeReleaseNotesButton = elem("close-release-notes-button");
 
@@ -353,6 +357,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetSummaryButton.disabled = false;
 
             logoImage.classList.remove("rotating");
+
+            generateReport();
         }
     };
 
@@ -1273,6 +1279,70 @@ document.addEventListener("DOMContentLoaded", async () => {
         flexContainer.classList.remove("modal");
 
         zoomImage.src = "";
+    }
+
+    function generateReport() {
+        const namespace = "http://www.w3.org/1999/xhtml";
+        const reportDocument = document.implementation.createDocument(namespace, "html", null);
+
+        const reportHead = document.createElementNS(namespace, "head");
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("get", "/icons/extractem-32px.png");
+        xhr.responseType = "blob";
+        
+        xhr.onload = () =>
+        {
+            const fileReader = new FileReader();
+
+            fileReader.onload = () => {
+                const dataURL = fileReader.result;
+
+                const reportIcon = document.createElement("link");
+                reportIcon.setAttribute("rel", "icon");
+                reportIcon.setAttribute("type", "image/png");
+                reportIcon.setAttribute("href", dataURL);
+                reportHead.append(reportIcon);
+                
+                const reportStyle = reportStyleTemplate.content.cloneNode(true);
+                reportHead.append(reportStyle.firstElementChild);
+        
+                const reportBody = document.createElementNS(namespace, "body");
+                const reportBodyContent = reportTemplate.content.cloneNode(true);
+                reportBody.append(reportBodyContent.firstElementChild);
+        
+                const reportTbody = reportBody.querySelector(".report-tbody");
+        
+                const reportItemContent = reportItemTemplate.content;
+        
+                for(const item of attachmentManager.messageList) {
+                    const reportItem = reportItemContent.cloneNode(true);
+        
+                    reportTbody.append(reportItem.firstElementChild);
+                }
+        
+                const element = reportDocument.documentElement;
+        
+                element.appendChild(reportHead);
+                element.appendChild(reportBody);
+        
+                const fileText = `<!DOCTYPE html>${element.outerHTML}`;
+        
+                const reportFile = new Blob([fileText], { type: "text/html" });
+        
+                const fileParameters = {
+                    url: URL.createObjectURL(reportFile),
+                    filename: "report.html",
+                    conflictAction: "uniquify"
+                };
+        
+                browser.downloads.download(fileParameters);
+            };
+
+            fileReader.readAsDataURL(xhr.response);
+        };
+
+        xhr.send();
     }
 
     function closeZipPanel() {

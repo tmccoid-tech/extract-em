@@ -1290,56 +1290,56 @@ document.addEventListener("DOMContentLoaded", async () => {
         const xhr = new XMLHttpRequest();
         xhr.open("get", "/icons/extractem-32px.png");
         xhr.responseType = "blob";
-        
+
+        const fileReader = new FileReader();
+
         xhr.onload = () =>
         {
-            const fileReader = new FileReader();
-
-            fileReader.onload = () => {
-                const dataURL = fileReader.result;
-
-                const reportIcon = document.createElement("link");
-                reportIcon.setAttribute("rel", "icon");
-                reportIcon.setAttribute("type", "image/png");
-                reportIcon.setAttribute("href", dataURL);
-                reportHead.append(reportIcon);
-                
-                const reportStyle = reportStyleTemplate.content.cloneNode(true);
-                reportHead.append(reportStyle.firstElementChild);
-        
-                const reportBody = document.createElementNS(namespace, "body");
-                const reportBodyContent = reportTemplate.content.cloneNode(true);
-                reportBody.append(reportBodyContent.firstElementChild);
-        
-                const reportTbody = reportBody.querySelector(".report-tbody");
-        
-                const reportItemContent = reportItemTemplate.content;
-        
-                for(const item of attachmentManager.messageList) {
-                    const reportItem = reportItemContent.cloneNode(true);
-        
-                    reportTbody.append(reportItem.firstElementChild);
-                }
-        
-                const element = reportDocument.documentElement;
-        
-                element.appendChild(reportHead);
-                element.appendChild(reportBody);
-        
-                const fileText = `<!DOCTYPE html>${element.outerHTML}`;
-        
-                const reportFile = new Blob([fileText], { type: "text/html" });
-        
-                const fileParameters = {
-                    url: URL.createObjectURL(reportFile),
-                    filename: "report.html",
-                    conflictAction: "uniquify"
-                };
-        
-                browser.downloads.download(fileParameters);
-            };
-
             fileReader.readAsDataURL(xhr.response);
+        };
+
+        fileReader.onload = () => {
+            const dataURL = fileReader.result;
+
+            const reportIcon = document.createElement("link");
+            reportIcon.setAttribute("rel", "icon");
+            reportIcon.setAttribute("type", "image/png");
+            reportIcon.setAttribute("href", dataURL);
+            reportHead.append(reportIcon);
+            
+            const reportStyle = reportStyleTemplate.content.cloneNode(true);
+            reportHead.append(reportStyle.firstElementChild);
+    
+            const reportBody = document.createElementNS(namespace, "body");
+            const reportBodyContent = reportTemplate.content.cloneNode(true);
+            reportBody.append(reportBodyContent.firstElementChild);
+    
+            const reportTbody = reportBody.querySelector(".report-tbody");
+    
+            const reportItemContent = reportItemTemplate.content;
+    
+            for(const item of attachmentManager.messageList) {
+                const reportItem = reportItemContent.cloneNode(true);
+    
+                reportTbody.append(reportItem.firstElementChild);
+            }
+    
+            const element = reportDocument.documentElement;
+    
+            element.appendChild(reportHead);
+            element.appendChild(reportBody);
+    
+            const fileText = `<!DOCTYPE html>${element.outerHTML}`;
+    
+            const reportFile = new Blob([fileText], { type: "text/html" });
+    
+            const fileParameters = {
+                url: URL.createObjectURL(reportFile),
+                filename: "report.html",
+                conflictAction: "uniquify"
+            };
+    
+            browser.downloads.download(fileParameters);
         };
 
         xhr.send();

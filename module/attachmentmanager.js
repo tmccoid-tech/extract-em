@@ -266,7 +266,6 @@ export class AttachmentManager {
         let messageAttachmentList = [];
         
         try {
-
             this.#log(`List message attachments: ${message.date} - ${message.subject}`);
 
             messageAttachmentList = await messenger.messages.listAttachments(message.id);
@@ -300,6 +299,10 @@ export class AttachmentManager {
 
             for (const attachment of messageAttachmentList) {
                 if(alterationMap.has(attachment.partName)) {
+                    const alterationEntry = alterationMap.get(attachment.partName);
+
+                    alterationEntry.name = attachment.name;
+
                     continue;
                 }
 
@@ -709,12 +712,13 @@ export class AttachmentManager {
                     const duplicateKey = `${item.name}:${item.size}`;
 
                     if(!duplicateKeys.has(duplicateKey)) {
+                        item.isDeleted = false;
                         items.push(item);
                         duplicateKeys.add(duplicateKey);
                         cumulativeSize += item.size;
                     }
                     else {
-                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: item.name });
+                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: item.name, isDeleted: false });
 
                         packagingProgressInfo.duplicateCount++;
                         packagingProgressInfo.duplicateTotalBytes += item.size;
@@ -980,6 +984,10 @@ export class AttachmentManager {
                         const sizeDuplicate = nameDuplicate.sizes.get(item.size);
 
                         if(sizeDuplicate.has(decodeData.checksum)) {
+                            const checksumDuplicate = sizeDuplicate.get(decodeData.checksum);
+
+                            checksumDuplicate.push(item.messageId);
+
                             packagingProgressInfo.duplicateEmbedCount++;
                             packagingProgressInfo.duplicateTotalBytes += item.size;
 
@@ -988,12 +996,12 @@ export class AttachmentManager {
                         }
                         else {
                             sequenceNumber = nameDuplicate.count++;
-                            sizeDuplicate.add(decodeData.checksum);
+                            sizeDuplicate.set(decodeData.checksum, []);
                         }
                     }
                     else {
                         sequenceNumber = nameDuplicate.count++;
-                        nameDuplicate.sizes.set(item.size, new Set([decodeData.checksum]));
+                        nameDuplicate.sizes.set(item.size, new Map([[decodeData.checksum, []]]));
                     }
 
                     if(sequenceNumber > 0) {
@@ -1001,7 +1009,8 @@ export class AttachmentManager {
                     }
                 }
                 else {
-                    duplicateEmbedFileTracker.set(fileName, { count: 1, sizes: new Map([[item.size, new Set([decodeData.checksum])]]) });
+                    const checksumEntry = new Map([[decodeData.checksum, []]]);
+                    duplicateEmbedFileTracker.set(fileName, { count: 1, sizes: new Map([[item.size, checksumEntry]]) });
                 }
 
                 packagingProgressInfo.lastFileName = fileName;
@@ -1177,6 +1186,7 @@ export class AttachmentManager {
 
                 try {
                     await messenger.messages.deleteAttachments(messageId, [partName]);
+                    item.isDeleted = true;
                     info.processedCount++;
                 }
                 catch(e) {
@@ -1197,6 +1207,19 @@ export class AttachmentManager {
         }
  
         this.#reportDetachResult(info);
+    }
+
+    getReportData() {
+        const result = {
+            packagingTracker: this.#packagingTracker,
+            duplicateFileTracker: this.#duplicateFileTracker,
+            duplicateEmbedFileTracker: this.#duplicateEmbedFileTracker,
+            alterationTracker: this.#alterationTracker,
+            errorList: this.#packagingErrorList,
+            detachmentErrorList: this.#detachmentErrorList
+        };
+
+        return result;
     }
 
     async getAttachmentFileData(messageId, partName) {

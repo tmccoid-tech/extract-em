@@ -357,8 +357,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetSummaryButton.disabled = false;
 
             logoImage.classList.remove("rotating");
-
-            generateReport();
         }
     };
 
@@ -430,6 +428,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const saveResult = (success) ? "success" : "error";
 
             saveResultBorderDiv.classList.add(saveResult);
+
+            generateReport();
         }
     };
 
@@ -926,7 +926,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             else if(attachment.isEmbed) {
                 previewWrapper.classList.add(defaultImagePreview);
-                previewWrapper.innerHTML = "embed";                     // TODO: add to messages.json when verbiage decided
+                previewWrapper.innerHTML = "embed";
             }
             else {
                 previewWrapper.classList.add("none");
@@ -1318,12 +1318,71 @@ document.addEventListener("DOMContentLoaded", async () => {
     
             const reportItemContent = reportItemTemplate.content;
     
-            for(const item of attachmentManager.messageList) {
-                const reportItem = reportItemContent.cloneNode(true);
-    
-                reportTbody.append(reportItem.firstElementChild);
+            const reportData = attachmentManager.getReportData();
+            const messageList = attachmentManager.messageList;
+
+            // Standard attachments
+            for(const item of reportData.packagingTracker.items) {
+                const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
+
+                reportTbody.append(lineItem);
             }
     
+            // Duplicate attachments
+
+            for(const item of reportData.duplicateFileTracker) {
+                const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
+
+                reportTbody.append(lineItem);
+            }
+
+            // Alterations
+            for(const messageEntry of reportData.alterationTracker.entries()) {
+                for(const alterationEntry of messageEntry[1]) {
+                    const lineItem = generateReportLineItem(reportItemContent, { name: alterationEntry[1].name, size: null }, messageList.get(messageEntry[0]));
+
+                    reportTbody.append(lineItem);
+                }
+            }
+
+            // Embeds
+            for(const item of reportData.packagingTracker.embedItems) {
+                const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
+
+                reportTbody.append(lineItem);
+            }
+
+            // Duplicate embeds
+            if(reportData.duplicateEmbedFileTracker) {
+                for(const filenameEntry of reportData.duplicateEmbedFileTracker.entries()) {
+                    for(const sizeEntry of filenameEntry[1].sizes.entries()) {
+                        for(const checksumEntry of sizeEntry[1].entries()) {
+                            for(const messageId of checksumEntry[1]) {
+                                const lineItem = generateReportLineItem(reportItemContent, { name: filenameEntry[0], size: sizeEntry[0] }, messageList.get(messageId));
+
+                                reportTbody.append(lineItem);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Errors
+            for(const item of reportData.errorList) {
+                const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
+
+                reportTbody.append(lineItem);
+            }
+
+            // Detachment errors
+            if(reportData.detachmentErrorList) {
+                for(const item of reportData.detachmentErrorList) {
+                    const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
+
+                    reportTbody.append(lineItem);
+                }
+            }
+
             const element = reportDocument.documentElement;
     
             element.appendChild(reportHead);
@@ -1343,6 +1402,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         xhr.send();
+    }
+
+    function generateReportLineItem(reportItemContent, item, messageInfo) {
+        const reportItem = reportItemContent.cloneNode(true);
+
+        reportItem.querySelector(".subject-label").textContent = messageInfo.subject;
+        reportItem.querySelector(".author-label").textContent = messageInfo.author;
+        reportItem.querySelector(".message-date-label").textContent = messageInfo.date;
+        reportItem.querySelector(".filename-label").textContent = item.name;
+        reportItem.querySelector(".file-size-label").textContent = abbreviateFileSize(item.size);
+
+        return reportItem.firstElementChild;
     }
 
     function closeZipPanel() {

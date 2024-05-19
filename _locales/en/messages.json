@@ -1,6 +1,6 @@
 {
     "extensionName": {
-        "message": "Extract ’Em!"
+        "message": "Extract 'Em!"
     },
     
     "extensionDescription": {
@@ -104,7 +104,7 @@
     "packaging": { "message": "Packaging" },
     "of": {
         "message": "of",
-        "description": "Used in the sense of “x items out of y total items”"
+        "description": "Used in the sense of 'x items out of y total items'"
     },
     "attachmentsPackaged": { "message": "attachment(s) packaged"},
     "embedsPackaged": { "message": "embed(s) packaged"},
@@ -143,7 +143,7 @@
         "description": ""
     },
     "displayQuickMenuDescription": {
-        "message": "Displays a shortcut menu when Extract ’Em! is opened",
+        "message": "Displays a shortcut menu when Extract 'Em! is opened",
         "description": ""
     },
 
@@ -166,7 +166,7 @@
     },
 
     "useSilentMode": {
-        "message": "Use “silent” mode",
+        "message": "Use \"silent\" mode",
         "description": ""
     },
     "useSilentModeDescription": {
@@ -268,9 +268,9 @@
         "message": "Embed Content-Type header not found ($1)."
     },
 
-    "releaseNotesTitle" : { "message": "Release Notes for Extract ’Em!" },
-    "whatsNew": { "message": "What’s New" },
-    "whatsFixed": { "message": "What’s Fixed" },
+    "releaseNotesTitle" : { "message": "Release Notes for Extract 'Em!" },
+    "whatsNew": { "message": "What's New" },
+    "whatsFixed": { "message": "What's Fixed" },
 
     "rn1_2_1_Notice01": {
          "message": "NOTICE: If you used version 1.1.4 of this extension (available between approximately April 10 and April 23, 2024) any archive files you produced are likely to be corrupt."

@@ -164,7 +164,7 @@ export class AttachmentManager {
         this.#selectedFolderPaths = selectedFolderPaths;
         this.#includeEmbeds = includeEmbeds;
 
-        this.#alterationTracker = new Map();
+        this.#alterationTracker = [];
 
         const selectedFolders = [];
 
@@ -344,6 +344,9 @@ export class AttachmentManager {
                         alterationMap.set(attachmentInfo.partName, {
                             name: attachment.name,
                             alteration: "missing",
+                            author: message.author,
+                            subject: message.subject,
+                            date: message.date,
                             timestamp: null,
                             fileUrl: null
                         });
@@ -378,7 +381,7 @@ export class AttachmentManager {
             }
 
             if(alterationMap.size > 0) {
-                this.#alterationTracker.set(message.id, alterationMap);
+                this.#alterationTracker.push(...alterationMap.values());
             }
 
             this.#attachmentMessageCount++;
@@ -494,7 +497,7 @@ export class AttachmentManager {
         };
     }
 
-    #generateAlterationMap(parts, alterationMap = new Map()) {
+    #generateAlterationMap(parts, message, alterationMap = new Map()) {
         for(const part of parts) {
             this.#log(`Alteration map gen: ${part.partName}`);
 
@@ -520,6 +523,9 @@ export class AttachmentManager {
                 alterationMap.set(part.partName, {
                     name: part.partName,
                     alteration: alteration,
+                    author: message.author,
+                    subject: message.subject,
+                    date: message.date,
                     timestamp: timestamp,
                     fileUrl: fileUrl
                 });
@@ -528,6 +534,9 @@ export class AttachmentManager {
                 const deletionEntry = {
                     name: part.partName,
                     alteration: "deleted",
+                    author: message.author,
+                    subject: message.subject,
+                    date: message.date,
                     timestamp: null,
                     fileUrl: null
                 };
@@ -627,12 +636,7 @@ export class AttachmentManager {
     }
 
     getAlterationCount() {
-        const result = [...this.#alterationTracker.values()].reduce(
-            (x, v) => x + v.size,
-            0
-        );
-
-        return result;
+        return this.#alterationTracker.length;
     }
 
     async extract(list, getInfo, extractOptions) {

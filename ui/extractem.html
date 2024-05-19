@@ -303,36 +303,58 @@
 
     <template id="report-style-template">
         <style>
+            .hidden {
+                display: none;
+            }
         </style>
     </template>
 
     <template id="report-template">
         <div>
-            <table class="report-table">
-                <thead>
-                    <tr>
-                        <th>Source Message</th>
-                        <th>Attachment</th>
-                    </tr>
-                </thead>
-                <tbody class="report-tbody">
-                </tbody>
+            <h3>Extract 'Em! Summary</h3>
+            <p>
+                Saved attachments: <span></span><br/>
+                Saved embeds: <span></span><br/>
+                Package file count: <span></span>
+            </p>
+
+            <table class="attachment-table hidden">
+            </table>
+
+            <table class="duplicate-table hidden">
+            </table>
+
+            <table class="alteraton-table hidden">
+            </table>
+
+            <table class="embed-table hidden">
+            </table>
+
+            <table class="duplicate-embed-table hidden">
+            </table>
+
+            <table class="error-table hidden">
+            </table>
+
+            <table class="detachment-error-table hidden">
             </table>
         </div>                
     </template>
 
     <template id="report-item-template">
-        <tr>
-            <td>
-                <span class="subject-label"></span><br/>
-                <span class="author-label"></span><br/>
-                <span class="message-date-label"></span>
-            </td>
-            <td>
-                <span class="filename-label"></span><br/>
-                <span class="file-size-label"></span>
-            </td>
-        </tr>
+        <tbody>
+            <tr>
+                <td class="filename-label"></td>
+                <td class="file-size-label"></td>
+            </tr>
+            <tr>
+                <td class="author-label"></td>
+                <td class="message-date-label"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="subject-label"></td>
+            </tr>
+        </tbody>
     </template>
 
     <script src="/module/i18n.js"></script>

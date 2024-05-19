@@ -1314,7 +1314,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const reportBodyContent = reportTemplate.content.cloneNode(true);
             reportBody.append(reportBodyContent.firstElementChild);
     
-            const reportTbody = reportBody.querySelector(".report-tbody");
     
             const reportItemContent = reportItemTemplate.content;
     
@@ -1322,66 +1321,115 @@ document.addEventListener("DOMContentLoaded", async () => {
             const messageList = attachmentManager.messageList;
 
             // Standard attachments
-            for(const item of reportData.packagingTracker.items) {
-                const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
 
-                reportTbody.append(lineItem);
+            if(reportData.packagingTracker.items.length > 0) {
+
+                const currentTable = reportBody.querySelector(".attachment-table");
+
+                for(const item of reportData.packagingTracker.items) {
+                    const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
+
+                    currentTable.append(lineItem);
+                }
+
+                currentTable.classList.remove("hidden");
             }
     
             // Duplicate attachments
 
-            for(const item of reportData.duplicateFileTracker) {
-                const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
+            if(reportData.duplicateFileTracker.length > 0) {
 
-                reportTbody.append(lineItem);
+                const currentTable = reportBody.querySelector(".duplicate-table");
+
+                for(const item of reportData.duplicateFileTracker) {
+                    const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
+
+                    currentTable.append(lineItem);
+                }
+
+                currentTable.classList.remove("hidden");
             }
 
             // Alterations
-            for(const messageEntry of reportData.alterationTracker.entries()) {
-                for(const alterationEntry of messageEntry[1]) {
-                    const lineItem = generateReportLineItem(reportItemContent, { name: alterationEntry[1].name, size: null }, messageList.get(messageEntry[0]));
 
-                    reportTbody.append(lineItem);
+            if(reportData.alterationTracker.length > 0) {
+
+                const currentTable = reportBody.querySelector(".alteration-table");
+
+                for(const item of reportData.alterationTracker) {
+                    const lineItem = generateReportLineItem(reportItemContent, item, item);
+
+                    currentTable.append(lineItem);
                 }
+
+                currentTable.classList.remove("hidden");
             }
 
             // Embeds
-            for(const item of reportData.packagingTracker.embedItems) {
-                const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
 
-                reportTbody.append(lineItem);
+            if(reportData.packagingTracker.embedItems.length > 0) {
+
+                const currentTable = reportBody.querySelector(".embed-table");
+
+                for(const item of reportData.packagingTracker.embedItems) {
+                    const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
+
+                    currentTable.append(lineItem);
+                }
+
+                currentTable.classList.remove("hidden");
             }
 
             // Duplicate embeds
+
             if(reportData.duplicateEmbedFileTracker) {
+
+                const currentTable = reportBody.querySelector(".duplicate-embed-table");
+
                 for(const filenameEntry of reportData.duplicateEmbedFileTracker.entries()) {
                     for(const sizeEntry of filenameEntry[1].sizes.entries()) {
                         for(const checksumEntry of sizeEntry[1].entries()) {
                             for(const messageId of checksumEntry[1]) {
                                 const lineItem = generateReportLineItem(reportItemContent, { name: filenameEntry[0], size: sizeEntry[0] }, messageList.get(messageId));
 
-                                reportTbody.append(lineItem);
+                                currentTable.append(lineItem);
                             }
                         }
                     }
                 }
+
+                currentTable.classList.remove("hidden");
             }
 
             // Errors
-            for(const item of reportData.errorList) {
-                const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
 
-                reportTbody.append(lineItem);
+            if(reportData.errorList.length > 0) {
+                const currentTable = reportBody.querySelector(".error-table");
+
+                for(const item of reportData.errorList) {
+                    const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
+
+                    currentTable.append(lineItem);
+                }
+
+                currentTable.classList.remove("hidden");
             }
 
             // Detachment errors
+
             if(reportData.detachmentErrorList) {
+
+                const currentTable = reportBody.querySelector(".detachment-error-table");
+
                 for(const item of reportData.detachmentErrorList) {
                     const lineItem = generateReportLineItem(reportItemContent, item, messageList.get(item.messageId));
 
-                    reportTbody.append(lineItem);
+                    currentTable.append(lineItem);
                 }
+
+                currentTable.classList.remove("hidden");
             }
+
 
             const element = reportDocument.documentElement;
     

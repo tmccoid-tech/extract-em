@@ -1,302 +1,302 @@
 {
     "extensionName": {
-        "message": "Extract 'Em!"
+        "message": "Melléklet kibontása!"
     },
     
     "extensionDescription": {
-        "message": "Extracts attachments from messages under the selected folder or account."
+        "message": "Mellékletek kibontása a kijelölt mappában vagy fiókban található üzenetekből."
     },
 
     "extractSingleDescription": {
-        "message": "Extracts attachments from the selected folder, omitting sub-folders",
+        "message": "A mellékletek kibontása a kijelölt mappából, az almappák kihagyásával",
         "description": "Action description for extract-single QuickMenu button"
     },
 
     "subfolders": {
-        "message": "subfolders"
+        "message": "almappák"
     },
 
     "extractRecursiveDescription": {
-        "message": "Extracts attachments from the selected folders and sub-folders (recursive)",
+        "message": "Mellékletek kibontása a kijelölt mappákból és almappákból (rekurzív)",
         "description": "Action description for extract-recursive QuickMenu button"
     },
 
     "letMeChoose": {
-        "message": "Let Me Choose",
+        "message": "Hadd válasszon",
         "description": "Label for standard-selection QuickMenu button"
     },
 
     "standardSelectionDescription": {
-        "message": "Allows you to choose specific folders, or even specific attachments for discovery and extraction",
+        "message": "Lehetővé teszi bizonyos mappák vagy akár konkrét mellékletek kiválasztását a felfedezéshez és kibontáshoz",
         "description": "Action description for standard-selection QuickMenu button"
     },
 
     "alwaysShowQuickMenu": {
-        "message": "Always show this QuickMenu",
+        "message": "Mindig jelenítse meg ezt a Gyorsmenüt",
         "description": "Label for QuickMenu persistence checkbox"
     },
 
     "noAttachmentsMessage": {
-        "message": "There are no attachments in the selected folder.",
+        "message": "Nincsenek mellékletek a kijelölt mappában.",
         "description": ""
     },
 
     "noMessagesMessage": {
-        "message": "There are no messages in the selected folder.",
+        "message": "Nincsenek üzenetek a kijelölt mappában.",
         "description": ""
     },
 
-    "attachmentSummary": { "message": "Attachment Summary" },
-    "attachmentList": { "message": "Attachment List" },
-    "folders": { "message": "Folders" },
-    "messages": { "message": "Messages" },
+    "attachmentSummary": { "message": "Mellékletösszefoglaló" },
+    "attachmentList": { "message": "Mellékletlista" },
+    "folders": { "message": "Mappák" },
+    "messages": { "message": "Üzenetek" },
     
-    "attachment": { "message" : "attachment" },
-    "attachments": { "message": "Attachments" },
-    "attachmentsPP": { "message": "attachment(s)", "description": "PP = parenthetical plural" },
+    "attachment": { "message" : "melléklet" },
+    "attachments": { "message": "Mellékletek" },
+    "attachmentsPP": { "message": "melléklet(ek)", "description": "PP = parenthetical plural" },
     
-    "embed": { "message": "embed" },
-    "embeds": { "message": "Embeds" },
-    "embedsPP": { "message": "embed(s)" },
+    "embed": { "message": "beágyazás" },
+    "embeds": { "message": "Beágyazások" },
+    "embedsPP": { "message": "beágyazás(ok)" },
     
-    "selected": { "message": "selected" },
-    "count": { "message": "Count" },
-    "processed": { "message": "Processed" },
-    "withAbbrev": { "message": "w/" },
-    "size": { "message": "Size" },
+    "selected": { "message": "kijelölt" },
+    "count": { "message": "Szám" },
+    "processed": { "message": "Feldolgozott" },
+    "withAbbrev": { "message": "vö." },
+    "size": { "message": "Méret" },
 
     "discoverAttachments": {
-        "message": "Discover Attachments",
+        "message": "Mellékletek felfedezése",
         "description": "Label for discover-attachments-button"
     },
 
-    "reset": { "message": "Reset" },
+    "reset": { "message": "Visszaállítás" },
 
     "closeZoomMessage": {
-        "message": "Click on image to close."
+        "message": "Kép kattintása a bezáráshoz"
     },
 
-    "discovering": { "message": "Discovering" },
+    "discovering": { "message": "Felfedezés" },
     "discoveryProgressMessage": {
-        "message": "$1 attachment(s) in $2 of $3 message(s)",
+        "message": "$1 melléklet $2/$3 üzenetben",
         "description": "{# of discovered} attachment(s) in {# of messages including attachments/embeds)} of {total # of discovered messages}"
     },
 
     "discoverySelectionMessage": {
-        "message": "$1 of $2 attachment(s) selected",
+        "message": "$1/$2 melléklet kijelölve",
         "description": "{# of selected} of {# of discovered} attachment(s) selected"
     },
     "embedDiscoverySelectionMessage": {
-        "message": "$1 of $2 embed(s) selected",
+        "message": "$1/$2 beágyazás kijelölve",
         "description": "{# of selected} of {# of discovered} embed(s) selected"
     },
 
-    "preparing": { "message": "Preparing", "description": "OBSOLETE" },
-    "exclusions": { "message": "Exclusions" },
+    "preparing": { "message": "Felkészülés", "description": "OBSOLETE" },
+    "exclusions": { "message": "Kizárások" },
 
     "alterationsIdentified": {
-        "message": "detached/deleted attachment(s) identified",
+        "message": "leválasztott/törölt melléklet azonosítva",
         "description": "Regards attachments which were detached or deleted from the (altered) source message."
     },
 
-    "duplicatesOmitted": { "message": "duplicate(s) omitted" },
+    "duplicatesOmitted": { "message": "ismétlődő kihagyva" },
 
-    "packaging": { "message": "Packaging" },
+    "packaging": { "message": "Csomagolás" },
     "of": {
-        "message": "of",
-        "description": "Used in the sense of 'x items out of y total items'"
+        "message": "/",
+        "description": "Used in the sense of “x items out of y total items”"
     },
-    "attachmentsPackaged": { "message": "attachment(s) packaged"},
-    "embedsPackaged": { "message": "embed(s) packaged"},
-    "packageFilesSaved": { "message": "package file(s) saved" },
-    "errorsEncountered": { "message": "errors encountered" },
-    "result": { "message": "Result" },
+    "attachmentsPackaged": { "message": "melléklet csomagolva"},
+    "embedsPackaged": { "message": "beágyazás csomagolva"},
+    "packageFilesSaved": { "message": "csomagfájl mentve" },
+    "errorsEncountered": { "message": "hiba történt" },
+    "result": { "message": "Eredmény" },
 
-    "permanentlyDetach": { "message": "Permanently Detach" },
+    "permanentlyDetach": { "message": "Végleges leválás" },
 
-    "close":{ "message": "Close" },
-    "closeAndExit": { "message": "Close & Exit" },
-    "viewReport": { "message": "View Report" },
+    "close":{ "message": "Bezárás" },
+    "closeAndExit": { "message": "Bezárás és kilépés" },
+    "viewReport": { "message": "Jelentés megtekintése" },
 
     "permanentDetachWarning": {
-        "message": "WARNING: This action will permanently remove the extracted attachments (and duplicates) from their source email messages. Embeds are excluded."
+        "message": "FIGYELMEZTETÉS: Ez a művelet véglegesen eltávolítja a kicsomagolt mellékleteket (és ismétlődéseket) a forrás e-mail üzeneteiből. A beágyazások ki vannak zárva."
     },
-    "proceed": { "message": "Proceed" },
-    "cancel": { "message": "Cancel" },
-    "detached": { "message": "detached" },
+    "proceed": { "message": "Folytatás" },
+    "cancel": { "message": "Mégsem" },
+    "detached": { "message": "levált" },
 
-    "options": { "message": "Options" },
+    "options": { "message": "Beállítások" },
 
-    "none": { "message": "None" },
+    "none": { "message": "Nincs" },
 
     "useInteractiveUi": {
-        "message": "Use interactive UI",
+        "message": "Interaktív felhasználói felület használata",
         "description": ""
     },
     "useInteractiveUiDescription": {
-        "message": "Fully interactive UI; allows for selection of specific attachments to extract",
+        "message": "Teljesen interaktív felhasználói felület; lehetővé teszi a kivonandó konkrét mellékletek kijelölését",
         "description": ""
     },
 
     "displayQuickMenu": {
-        "message": "Display QuickMenu",
+        "message": "Gyorsmenü megjelenítése",
         "description": ""
     },
     "displayQuickMenuDescription": {
-        "message": "Displays a shortcut menu when Extract 'Em! is opened",
+        "message": "Melléklet kibontása! megnyitásakor egy helyi menüt jelenít meg",
         "description": ""
     },
 
     "extractImmediate": {
-        "message": "Extract immediate",
+        "message": "Azonnal kibontás",
         "description": ""
     },
     "extractImmediateDescription": {
-        "message": "Saves all attachments from messages in the selected folder with limited user intervention; excludes sub-folders",
+        "message": "Korlátozott felhasználói beavatkozással elmenti az üzenetek összes mellékletét a kijelölt mappába; nem tartalmazza az almappákat",
         "description": ""
     },
 
     "includeSubFolders": {
-        "message": "Include subfolders",
+        "message": "Almappák szerepeltetése",
         "description": ""
     },
     "includeSubFoldersDescription": {
-        "message": "Includes attachments in subfolders during immediate extraction",
+        "message": "Az azonnali kibontás során az almappákban található mellékleteket tartalmazza",
         "description": ""
     },
 
     "useSilentMode": {
-        "message": "Use \"silent\" mode",
+        "message": "„Csendes” üzemmód használatával",
         "description": ""
     },
     "useSilentModeDescription": {
-        "message": "Omits UI presentation, with the exception of the save prompt",
+        "message": "Kihagyja a felhasználói felület megjelenítését, kivéve a mentési parancsot",
         "description": ""
     },
 
     "includeEmbeddedImages": {
-        "message": "Include embedded images",
+        "message": "Beágyazott képek tartalmazása",
         "description": ""
     },
     "includeEmbeddedImagesDescription": {
-        "message": "Identifies and includes images embedded in the message body (inline images)",
+        "message": "Az üzenettörzsbe ágyazott képeket azonosít, és belefoglal (beágyazott képek)",
         "description": ""
     },
 
 
     "preserveFolderStructure": {
-        "message": "Preserve folder structure",
+        "message": "Mappaszerkezet megőrzése",
         "description": ""
     },
     "preserveFolderStructureDescription": {
-        "message": "Stores the attachments in the .zip archive in the same folders they reside under in Thunderbird",
+        "message": "A mellékleteket a .zip archívumban tárolja ugyanabban a mappában, mint a Thunderbirdben",
         "description": ""
     },
 
     "useEnhancedLogging" : {
-        "message": "Use enhanced logging"
+        "message": "Továbbfejlesztett naplózás használatával"
     },
     "useEnhancedLoggingDescription": {
-        "message": "Outputs additional troubleshooting information to the debugger console"
+        "message": "További hibaelhárítási adatokat jelenít meg a hibakereső irányítópultján"
     },
 
     "defaultGrouping": {
-        "message": "Default grouping",
+        "message": "Alapértelmezett csoportosítás",
         "description": ""
     },
     "defaultGroupingByAuthor": {
-        "message": "By author",
+        "message": "Szerző szerint",
         "description": ""
     },
     "defaultGroupingByFolder": {
-        "message": "By folder",
+        "message": "Mappa szerint",
         "description": ""
     },
     "defaultGroupingByExtension": {
-        "message": "By file extension",
+        "message": "Fájlkiterjesztés szerint",
         "description": ""
     },
     "defaultGroupingDescription": {
-        "message": "Groups items in the Attachment List according to the specified attribute",
+        "message": "Elemek csoportosítása a mellékletlistában a megadott attribútum szerint",
         "description": ""
     },
 
     "imagePreview": {
-        "message": "Image preview",
+        "message": "Kép előnézete",
         "description": ""
     },
     "imagePreviewSmall": {
-        "message": "Small",
+        "message": "Kicsi",
         "description": ""
     },
     "imagePreviewMedium": {
-        "message": "Medium",
+        "message": "Közepes",
         "description": ""
     },
     "imagePreviewLarge": {
-        "message": "Large",
+        "message": "Nagy",
         "description": ""
     },
     "imagePreviewDescription": {
-        "message": "Specifies the size of the Preview Image for items in the Attachment List",
+        "message": "Az előnézeti kép méretének megadása a mellékletlistában szereplő elemekhez",
         "description": ""
     },
 
 
-    "saveComplete": { "message": "Save complete!" },
-    "saveFailed": { "message": "Save failed; unknown error." },
+    "saveComplete": { "message": "Mentés befejeződött!" },
+    "saveFailed": { "message": "Mentés nem sikerült; ismeretlen hiba történt." },
 
-    "bytesLabel": { "message": "bytes" },
+    "bytesLabel": { "message": "bájt" },
     "kbLabel": { "message": "kB" },
     "mbLabel": { "message": "MB" },
     "gbLabel": { "message": "GB" },
 
-    "error": { "message": "error" },
+    "error": { "message": "hiba" },
 
-    "missingAttachment": { "message": "Attachment has no data; presumed deleted/detached." },
+    "missingAttachment": { "message": "A mellékletben nincsenek adatok; vélhetően törölve/leválasztva." },
 
-    "detachComplete": { "message": "Detachment complete!" },
-    "detachErrorMessage": { "message": "One or more attachments failed to detach." },
+    "detachComplete": { "message": "Leválás befejeződött!" },
+    "detachErrorMessage": { "message": "Egy vagy több melléklet leválasztása nem sikerült." },
 
     "embedErrorUnableToReadFile": {
-        "message": "Unable to read embed message ($1)."
+        "message": "Beágyazott üzenet nem olvasható ($1)."
     },
     "embedErrorInvalidBase64": {
-        "message": "Invalid Base64 data in embed $1."
+        "message": "Érvénytelen Base64 adatok a(z) $1 beágyazásban."
     },
     "embedContentTypeMissing": {
-        "message": "Embed Content-Type header not found ($1)."
+        "message": "A beágyazott Content-Type fejléc nem található ($1)."
     },
 
-    "releaseNotesTitle" : { "message": "Release Notes for Extract 'Em!" },
-    "whatsNew": { "message": "What's New" },
-    "whatsFixed": { "message": "What's Fixed" },
+    "releaseNotesTitle" : { "message": "Melléklet kibontása! kiadási megjegyzések" },
+    "whatsNew": { "message": "Újdonságok" },
+    "whatsFixed": { "message": "Javítások" },
 
     "rn1_2_1_Notice01": {
-         "message": "NOTICE: If you used version 1.1.4 of this extension (available between approximately April 10 and April 23, 2024) any archive files you produced are likely to be corrupt."
+         "message": "FIGYELMEZTETÉS: Ha a bővítmény 1.1.4-es verzióját használta (körülbelül 2024. április 10. és április 23. között érhető el), az Ön által létrehozott archív fájlok valószínűleg sérültek."
     },
     "rn1_2_1_Notice02": {
-        "message": "This was due to an improper configuration of the 3rd-party code library (zip.js) used to generate the archive."
+        "message": "Ennek oka az archívum létrehozásához használt külső kódkönyvtár (zip.js) nem megfelelő beállítása."
     },
     "rn1_2_1_Notice03": {
-        "message": "The author of this extension wished to express his sincerest apologies to any users who may have been inconvenienced by this issue."
+        "message": "A bővítmény szerzője őszinte bocsánatát kívánja kifejezni minden olyan felhasználónak, akit esetleg kellemetlenség okozott a probléma miatt."
     },
     "rn1_2_1_New01": {
-        "message": "Added option for extracting embedded (inline-attached) images"
+        "message": "Beágyazott (inline-attached) képek kinyerésének lehetősége"
     },
     "rn1_2_1_New02": {
-        "message": "Added new version notification (automatic display of Release Notes) upon new version release"
+        "message": "Új verzióértesítés hozzáadva (a kiadási megjegyzések automatikus megjelenítése) az új verzió kiadásakor"
     },
     "rn1_2_1_New03": {
-        "message": "Added permanent detach option (Thunderbird version 123 or later required)"
+        "message": "Hozzáadott végleges leválasztási lehetőség (Thunderbird 123-as vagy újabb verzió szükséges)"
     },
     "rn1_2_1_New04": {
-        "message": "Added identification of detached and deleted attachments"
+        "message": "Leválasztott és törölt mellékletek azonosítása hozzáadva"
     },
     "rn1_2_1_Fix01": {
-        "message": "Removed recursive extraction (extracting attachments within email [.eml] files which themselves are attachments)"
+        "message": "Rekurzív kibontás eltávolítva (mellékletek kibontása e-mail [.eml] fájlokból, amelyek maguk is mellékletek)"
     },
     "rn1_2_1_Fix02": {
-        "message": "Switched to zip.js library (from jszip) to mitigate an intermittent memory issue"
+        "message": "Átváltott a zip.js könyvtárra (jszip-ről), hogy enyhítse az időszakos memóriaproblémákat"
     }
 }

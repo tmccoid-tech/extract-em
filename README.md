@@ -10,8 +10,10 @@ in addition to a description of the problem.
 
 ### Languages
 Currently, the following languages are supported:
-* en-US English (USA)
-* hu magyar (Hungarian)
+Locale | Language | English name |
+--|--|--|
+en-US | English (USA) |
+hu | magyar | Hungarian |
 
 If you would like to contribute translations to broaden language support for this extension, please email [extractem-dev@tmccoid.tech](mailto:extractem-dev@tmccoid.tech) for instructions. There are approximately 60 words and short phrases which require translation.
 

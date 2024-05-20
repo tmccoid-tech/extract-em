@@ -45,6 +45,7 @@ export class AttachmentManager {
     #duplicateFileNameTracker;
     #duplicateEmbedFileTracker;
     #packagingErrorList;
+    #packagingFilenameList;
 
     #detachmentErrorList;
 
@@ -692,6 +693,8 @@ export class AttachmentManager {
             preserveFolderStructure: preserveFolderStructure
         };
 
+        this.#packagingFilenameList = [];
+
         const packagingTracker = this.#packagingTracker;
 
         const items = packagingTracker.items;
@@ -883,6 +886,8 @@ export class AttachmentManager {
 
                 packagingProgressInfo.includedCount++;
                 packagingProgressInfo.totalBytes += item.size;
+
+                item.packagingFilenameIndex = this.#packagingFilenameList.length;
             }
             catch(e) {
                 errorList.push({
@@ -1029,6 +1034,8 @@ export class AttachmentManager {
 
                     packagingProgressInfo.totalEmbedBytes += decodeData.data.length;
                     packagingProgressInfo.includedEmbedCount++;
+
+                    item.packagingFilenameIndex = this.#packagingFilenameList.length;
                 }
                 catch(e) {
                     errorList.push({
@@ -1089,7 +1096,7 @@ export class AttachmentManager {
         packagingProgressInfo.status = "donwloading";
         this.#reportPackagingProgress(packagingProgressInfo);
 
-        const listen = (progress) =>
+        const handleChanged = (progress) =>
         {
             if(progress.id == downloadId && progress.state) {
                 let info = null;
@@ -1112,6 +1119,8 @@ export class AttachmentManager {
                         status: "error",
                         message: (progress.error) ? progress.error : messenger.i18n.getMessage("saveFailed")
                     };
+
+                    browser.downloads.onCreated.removeListener(handleCreated);
                 }
 
                 if(info) {
@@ -1119,7 +1128,7 @@ export class AttachmentManager {
                         this.#reportSaveResult(info);
                     }
 
-                    browser.downloads.onChanged.removeListener(listen);
+                    browser.downloads.onChanged.removeListener(handleChanged);
         
                     this.#log(`Removing download data (${info.status})`);
 
@@ -1137,7 +1146,17 @@ export class AttachmentManager {
             }
         };
 
-        browser.downloads.onChanged.addListener(listen);
+        const handleCreated = ((downloadItem) =>
+        {
+            if(downloadItem.id == downloadId) {
+                this.#packagingFilenameList.push(downloadItem);
+
+                browser.downloads.onCreated.removeListener(handleCreated);
+            }
+        });
+
+        browser.downloads.onChanged.addListener(handleChanged);
+        browser.downloads.onCreated.addListener(handleCreated);
 
         browser.downloads
             .download(zipParams)
@@ -1154,7 +1173,8 @@ export class AttachmentManager {
                         message: error.message
                     });
 
-                    browser.downloads.onChanged.removeListener(listen);
+                    browser.downloads.onChanged.removeListener(handleChanged);
+                    browser.downloads.onCreated.removeListener(handleCreated);
 
                     this.#log("Removing download data (error)");
 

@@ -306,11 +306,24 @@
             .hidden {
                 display: none;
             }
+
+            td.filename-label {
+                font-weight: bold;
+            }
+
+            td.author-label, td.subject-label {
+                padding-left: 12px;
+            }
+
+            td.file-size-label, td.message-date-label {
+                text-align: right;
+            }
         </style>
     </template>
 
     <template id="report-template">
         <div>
+            <img class="report-logo">
             <h3>Extract 'Em! Summary</h3>
             <p>
                 Saved attachments: <span></span><br/>
@@ -319,24 +332,31 @@
             </p>
 
             <table class="attachment-table hidden">
+                <caption>Saved Attachments</caption>
             </table>
 
             <table class="duplicate-table hidden">
+                <caption>Duplicate Attachments (Omitted)</caption>
             </table>
 
-            <table class="alteraton-table hidden">
+            <table class="alteration-table hidden">
+                <caption>Previously Detached/Deleted Attachments (Omitted)</caption>
             </table>
 
             <table class="embed-table hidden">
+                <caption>Saved Embeds</caption>
             </table>
 
             <table class="duplicate-embed-table hidden">
+                <caption>Duplicate Embeds (Omitted)</caption>
             </table>
 
             <table class="error-table hidden">
+                <caption>Errors</caption>
             </table>
 
             <table class="detachment-error-table hidden">
+                <caption>Permanent Detachment Errors</caption>
             </table>
         </div>                
     </template>
@@ -359,10 +379,10 @@
 
     <script src="/module/i18n.js"></script>
     <script type="module" src="/module/optionsmanager.js"></script>
+    <script type="module" src="/module/reprotmanager.js"></script>
     <script src="/module/zip-full.js"></script>
     <script type="module" src="/module/zipem.js"></script>
     <script type="module" src="/module/embedmanager.js"></script>
-    <script type="module" src="/module/httputility.js"></script>
     <script type="module" src="/module/attachmentmanager.js"></script>
     <script type="module" src="extractem.js"></script>
 </body>

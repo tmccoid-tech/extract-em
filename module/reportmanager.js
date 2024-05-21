@@ -4,7 +4,7 @@ export class ReportManager {
             reportStyleTemplate,
             reportTemplate,
             reportItemTemplate,
-            abbreviateFileSize
+            abbreviateFileSize,
         } = parameters;
 
         const namespace = "http://www.w3.org/1999/xhtml";
@@ -27,10 +27,13 @@ export class ReportManager {
 
         const reportBodyContent = reportTemplate.content.cloneNode(true);
         reportBody.append(reportBodyContent.firstElementChild);
-    
+
         const reportItemContent = reportItemTemplate.content;
 
         const reportData = attachmentManager.getReportData();
+        reportBody.querySelector(".current-datetime-label").textContent = new Date().toLocaleDateString();
+        reportBody.querySelector(".package-file-count-label").textContent = reportData.packagingFilenameList.length.toString();
+
         const messageList = attachmentManager.messageList;
 
         const generateSection = (tableClass, iterate) =>
@@ -62,6 +65,8 @@ export class ReportManager {
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId)));
                 }
             });
+
+            reportBody.querySelector(".saved-attachment-count-label").textContent = reportData.packagingTracker.items.length.toString();
         }
 
         // Duplicate attachments
@@ -92,6 +97,8 @@ export class ReportManager {
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId)));
                 }
             });
+
+            reportBody.querySelector(".saved-embed-count-label").textContent = reportData.packagingTracker.embedItems.length.toString();
         }
 
         // Duplicate embeds
@@ -151,6 +158,8 @@ export class ReportManager {
         element.appendChild(reportHead);
         element.appendChild(reportBody);
 
+        i18n.updateAnyDocument(reportDocument);
+
         const fileText = `<!DOCTYPE html>${element.outerHTML}`;
 
         const reportFileData = new Blob([fileText], { type: "text/html" });
@@ -180,7 +189,7 @@ export class ReportManager {
     static #downloadReport(reportFileData) {
         const fileParameters = {
             url: URL.createObjectURL(reportFileData),
-            filename: "report.html",
+            filename: `${messenger.i18n.getMessage("extractionReport")}-${new Date().getTime()}.html`,
             conflictAction: "uniquify"
         };
 
@@ -188,7 +197,7 @@ export class ReportManager {
 
         return new Promise((resolve) =>
         {
-            const changeHandler = (progress) => {
+            const handleChanged = (progress) => {
                 if(progress.id == downloadId && progress.state) {
                     let resolved = false;
                     let success = false;
@@ -202,17 +211,23 @@ export class ReportManager {
                     }
 
                     if(resolved) {
-                        browser.downloads.onChanged.removeListener(changeHandler);
+                        browser.downloads.onChanged.removeListener(handleChanged);
                         URL.revokeObjectURL(fileParameters.url);
                         resolve(success);
                     }
                 }
             };
 
-            browser.downloads.onChanged.addListener(changeHandler);
+            browser.downloads.onChanged.addListener(handleChanged);
 
             browser.downloads.download(fileParameters)
-                .then((id) => { downloadId = id; });
+                .then(
+                    (id) => { downloadId = id; },
+                    (error) => {
+                        browser.downloads.onChanged.removeListener(handleChanged);
+                        URL.revokeObjectURL(fileParameters.url);
+                    }
+                );
         });
     }
 }

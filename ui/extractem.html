@@ -220,7 +220,7 @@
                 </div>
                 <div class="result-button-container save-result-content-div">
                     <button id="permanently-detach-button" class="permanently-detach-container close-button disablable" disabled="disabled"><img class="hazard-image" src="hazard-sign.png" /> __MSG_permanentlyDetach__</button>
-                    <button id="view-report-button" class="close-button hidden">__MSG_viewReport__</button>                       
+                    <button id="view-report-button" class="close-button">__MSG_viewReport__</button>                       
                     <button id="close-zip-panel-button" class="close-button disablable" disabled="disabled">__MSG_close__</button>
                     <button id="exit-extension-button" class="close-button disablable" disabled="disabled">__MSG_closeAndExit__</button>
                 </div>
@@ -234,7 +234,7 @@
                     <div><span id="detach-error-count-span">0</span> __MSG_errorsEncountered__</div>
                 </div>
                 <div class="result-button-container save-result-content-div">
-                    <button id="view-report-button" class="close-button hidden">__MSG_viewReport__</button>                       
+                    <button id="detach-view-report-button" class="close-button hidden">__MSG_viewReport__</button>                       
                     <button id="detach-exit-extension-button" class="close-button disablable" disabled="disabled">__MSG_closeAndExit__</button>
                 </div>
             </div>
@@ -307,12 +307,31 @@
                 display: none;
             }
 
+            body {
+                padding: 12px;
+                font-family: Calibri;
+            }
+
+            .report-logo {
+                float: left;
+            }
+
+            table {
+                margin-top: 16px;
+                min-width: 50%;
+            }
+
+            caption {
+                text-decoration: underline;
+                background-color: rgba(192, 192, 192, .25);                
+            }
+
             td.filename-label {
                 font-weight: bold;
             }
 
             td.author-label, td.subject-label {
-                padding-left: 12px;
+                padding-left: 16px;
             }
 
             td.file-size-label, td.message-date-label {
@@ -324,39 +343,39 @@
     <template id="report-template">
         <div>
             <img class="report-logo">
-            <h3>Extract 'Em! Summary</h3>
+            <h2>__MSG_extensionName__ __MSG_summaryForDate__ <span class="current-datetime-label"></span></h2>
             <p>
-                Saved attachments: <span></span><br/>
-                Saved embeds: <span></span><br/>
-                Package file count: <span></span>
+                __MSG_savedAttachments__: <span class="saved-attachment-count-label">0</span><br/>
+                __MSG_savedEmbeds__: <span class="saved-embed-count-label">0</span><br/>
+                __MSG_packageFileCount__: <span class="package-file-count-label">0</span>
             </p>
 
             <table class="attachment-table hidden">
-                <caption>Saved Attachments</caption>
+                <caption>__MSG_savedAttachments__</caption>
             </table>
 
             <table class="duplicate-table hidden">
-                <caption>Duplicate Attachments (Omitted)</caption>
+                <caption>__MSG_duplicateAttachmentsOmitted__</caption>
             </table>
 
             <table class="alteration-table hidden">
-                <caption>Previously Detached/Deleted Attachments (Omitted)</caption>
+                <caption>__MSG_previouslyDetachedDeleted__</caption>
             </table>
 
             <table class="embed-table hidden">
-                <caption>Saved Embeds</caption>
+                <caption>__MSG_savedEmbeds__</caption>
             </table>
 
             <table class="duplicate-embed-table hidden">
-                <caption>Duplicate Embeds (Omitted)</caption>
+                <caption>__MSG_duplicateEmbedsOmitted__</caption>
             </table>
 
             <table class="error-table hidden">
-                <caption>Errors</caption>
+                <caption>__MSG_errors__</caption>
             </table>
 
             <table class="detachment-error-table hidden">
-                <caption>Permanent Detachment Errors</caption>
+                <caption>__MSG_permanentDetachmentErrors__</caption>
             </table>
         </div>                
     </template>

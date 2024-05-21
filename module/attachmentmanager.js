@@ -1,6 +1,5 @@
 import { ZipEm } from "/module/zipem.js";
 import { EmbedManager } from "/module/embedmanager.js";
-import { HttpUtility } from "/module/httputility.js";
 
 export class AttachmentManager {
     #platformOs;
@@ -584,6 +583,7 @@ export class AttachmentManager {
         this.#duplicateFileNameTracker = null;
         this.#duplicateEmbedFileTracker = null;
         this.#packagingErrorList = null;
+        this.#packagingFilenameList = null;
 
         this.#detachmentErrorList = null;
     }
@@ -1096,6 +1096,12 @@ export class AttachmentManager {
         packagingProgressInfo.status = "donwloading";
         this.#reportPackagingProgress(packagingProgressInfo);
 
+        const removeHandlers = () =>
+        {
+            browser.downloads.onChanged.removeListener(handleChanged);
+            browser.downloads.onCreated.removeListener(handleCreated);
+        };
+
         const handleChanged = (progress) =>
         {
             if(progress.id == downloadId && progress.state) {
@@ -1119,16 +1125,14 @@ export class AttachmentManager {
                         status: "error",
                         message: (progress.error) ? progress.error : messenger.i18n.getMessage("saveFailed")
                     };
-
-                    browser.downloads.onCreated.removeListener(handleCreated);
                 }
 
                 if(info) {
                     if(isFinal && (!hasEmbeds || isEmbedFinal)) {
+                        removeHandlers();
+
                         this.#reportSaveResult(info);
                     }
-
-                    browser.downloads.onChanged.removeListener(handleChanged);
         
                     this.#log(`Removing download data (${info.status})`);
 
@@ -1148,15 +1152,15 @@ export class AttachmentManager {
 
         const handleCreated = ((downloadItem) =>
         {
-            if(downloadItem.id == downloadId) {
-                this.#packagingFilenameList.push(downloadItem);
-
-                browser.downloads.onCreated.removeListener(handleCreated);
+            if(downloadItem.url == zipParams.url) {
+                this.#packagingFilenameList.push(downloadItem.filename);
             }
         });
 
-        browser.downloads.onChanged.addListener(handleChanged);
-        browser.downloads.onCreated.addListener(handleCreated);
+        if(isFirst) {
+            browser.downloads.onChanged.addListener(handleChanged);
+            browser.downloads.onCreated.addListener(handleCreated);
+        }
 
         browser.downloads
             .download(zipParams)
@@ -1173,8 +1177,7 @@ export class AttachmentManager {
                         message: error.message
                     });
 
-                    browser.downloads.onChanged.removeListener(handleChanged);
-                    browser.downloads.onCreated.removeListener(handleCreated);
+                    removeHandlers();
 
                     this.#log("Removing download data (error)");
 
@@ -1235,6 +1238,7 @@ export class AttachmentManager {
 
     getReportData() {
         const result = {
+            packagingFilenameList: this.#packagingFilenameList,
             packagingTracker: this.#packagingTracker,
             duplicateFileTracker: this.#duplicateFileTracker,
             duplicateEmbedFileTracker: this.#duplicateEmbedFileTracker,

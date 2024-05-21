@@ -27,41 +27,45 @@ var i18n = {
     });
   },
 
-  updateSubtree(node) {
-    const texts = document.evaluate(
-      'descendant::text()[contains(self::text(), "' + this.keyPrefix + '")]',
+  updateSubtreeSet(sourceDocument, node, selector, update) {
+    const items = sourceDocument.evaluate(
+      `descendant::${selector}`,
       node,
       null,
       XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
       null
     );
-    for (let i = 0, maxi = texts.snapshotLength; i < maxi; i++) {
-      const text = texts.snapshotItem(i);
-      if (text.nodeValue.includes(this.keyPrefix))
-        text.nodeValue = this.updateString(text.nodeValue);
-    }
 
-    const attributes = document.evaluate(
-      'descendant::*/attribute::*[contains(., "' + this.keyPrefix + '")]',
-      node,
-      null,
-      XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
-      null
-    );
-    for (let i = 0, maxi = attributes.snapshotLength; i < maxi; i++) {
-      const attribute = attributes.snapshotItem(i);
-      if (attribute.value.includes(this.keyPrefix))
-        attribute.value = this.updateString(attribute.value);
+    for (let i = 0, maxi = items.snapshotLength; i < maxi; i++) {
+      update(items.snapshotItem(i));
     }
   },
 
-  updateDocument(options = {}) {
+  updateSubtree(sourceDocument, node) {
+    this.updateSubtreeSet(sourceDocument, node, `text()[contains(self::text(), "${this.keyPrefix}")]`, (text) => {
+      if (text.nodeValue.includes(this.keyPrefix))
+        text.nodeValue = this.updateString(text.nodeValue);
+    });
+
+    this.updateSubtreeSet(sourceDocument, node, `*/attribute::*[contains(., "${this.keyPrefix}")]`, (attr) => {
+      if (attr.value.includes(this.keyPrefix))
+        attr.value = this.updateString(attr.value);
+    });
+  },
+
+  updateAnyDocument(sourceDocument, options = {}) {
     this.extension = null;
     this.keyPrefix = "__MSG_";
+  
     if (options) {
       if (options.extension) this.extension = options.extension;
       if (options.keyPrefix) this.keyPrefix = options.keyPrefix;
     }
-    this.updateSubtree(document);
+    
+    this.updateSubtree(sourceDocument, sourceDocument);
+  },
+
+  updateDocument(options = {}) {
+    this.updateAnyDocument(document, options);
   },
 };

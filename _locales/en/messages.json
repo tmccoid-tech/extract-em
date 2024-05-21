@@ -116,7 +116,7 @@
 
     "close":{ "message": "Close" },
     "closeAndExit": { "message": "Close & Exit" },
-    "viewReport": { "message": "View Report" },
+    "viewReport": { "message": "Generate Report" },
 
     "permanentDetachWarning": {
         "message": "WARNING: This action will permanently remove the extracted attachments (and duplicates) from their source email messages. Embeds are excluded."
@@ -242,6 +242,21 @@
         "description": ""
     },
 
+    "extractionReport": { "message": "Extraction_Report" },
+
+    "summaryForDate": {
+         "message": "Summary for",
+         "description": "Summary for {date}"
+    },
+    "savedAttachments" : { "message" : "Saved Attachments" },
+    "savedEmbeds" : { "message" : "Saved Embeds" },
+    "packageFileCount": { "message": "Package File Count" },
+
+    "duplicateAttachmentsOmitted": { "message": "Duplicate Attachments (Omitted)" },
+    "previouslyDetachedDeleted": { "message": "Previosuly Detached/Deleted Attachments (Omitted)" },
+    "duplicateEmbedsOmitted": { "message": "Duplicate Embeds (Omitted)" },
+    "errors": { "message": "Errors"},
+    "permanentDetachmentErrors": { "message": "Permanent Detachment Errors" },
 
     "saveComplete": { "message": "Save complete!" },
     "saveFailed": { "message": "Save failed; unknown error." },

@@ -164,6 +164,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const saveResultBorderDiv = elem("save-result-border-div");
     const saveResultLabel = elem("save-result-label");
     const permanentlyDetachButton = elem("permanently-detach-button");
+    const viewReportButton = elem("view-report-button");
     const closeZipPanelButton = elem("close-zip-panel-button");
     const exitExtensionButton = elem("exit-extension-button");
 
@@ -180,6 +181,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const detachResultBorderDiv = elem("detach-result-border-div");
     const detachResultLabel = elem("detach-result-label");
     const detachErrorCountSpan = elem("detach-error-count-span");
+    const detachViewReportButton = elem("detach-view-report-button");
     const detachExitExtensionButton = elem("detach-exit-extension-button");
 
     const reportStyleTemplate = elem("report-style-template");
@@ -429,8 +431,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const saveResult = (success) ? "success" : "error";
 
             saveResultBorderDiv.classList.add(saveResult);
-
-            generateReport();
         }
     };
 
@@ -483,6 +483,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         proceedDetachButton.addEventListener("click", proceedDetach);
         cancelDetachButton.addEventListener("click", cancelDetach);
         detachExitExtensionButton.addEventListener("click", (event) => { window.close(); });
+
+        viewReportButton.addEventListener("click", generateReport);
+        detachViewReportButton.addEventListener("click", generateReport);
 
         includeEmbedsCheckbox.addEventListener("change", includeEmbedsCheckboxChanged);
         quickmenuIncludeEmbedsCheckbox.addEventListener("change", quickMenuIncludeEmbedsCheckboxChanged);
@@ -1282,7 +1285,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         zoomImage.src = "";
     }
 
-    function generateReport() {
+    function generateReport(event) {
         ReportManager.generateReport(attachmentManager, {
             reportStyleTemplate: reportStyleTemplate,
             reportTemplate: reportTemplate,

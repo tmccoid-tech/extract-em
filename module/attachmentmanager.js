@@ -830,7 +830,8 @@ export class AttachmentManager {
             catch(e) {
                 errorList.push({
                     messageId: item.messageId,
-                    partName: item.partName,
+                    name: item.name,
+                    size: item.size,
                     scope: "getFileData",
                     error: e.toString()
                 });
@@ -892,7 +893,8 @@ export class AttachmentManager {
             catch(e) {
                 errorList.push({
                     messageId: item.messageId,
-                    partName: item.partName,
+                    name: item.name,
+                    size: item.size,
                     scope: "addToZip",
                     error: e.toString()
                 });
@@ -967,7 +969,8 @@ export class AttachmentManager {
                 if(item.error) {
                     errorList.push({
                         messageId: item.messageId,
-                        partName: item.partName,
+                        name: item.name,
+                        size: item.size,
                         scope: "extractEmbeds",
                         error: item.error
                     });
@@ -1040,7 +1043,8 @@ export class AttachmentManager {
                 catch(e) {
                     errorList.push({
                         messageId: item.messageId,
-                        partName: item.partName,
+                        name: item.name,
+                        size: itemm.size,
                         scope: "packageEmbeds",
                         error: `${e}`
                     });
@@ -1093,17 +1097,22 @@ export class AttachmentManager {
         const hasEmbeds = (this.#packagingTracker.embedItems.length > 0);
         const isEmbedFinal = (packagingTracker.totalEmbedMessageCount > 0 && packagingTracker.currentEmbedMessageIndex == packagingTracker.totalEmbedMessageCount);
 
-        packagingProgressInfo.status = "donwloading";
+        packagingProgressInfo.status = "downloading";
         this.#reportPackagingProgress(packagingProgressInfo);
 
         const removeHandlers = () =>
         {
+console.log(`Removing handlers: donwloadId = ${downloadId}`);
+
             browser.downloads.onChanged.removeListener(handleChanged);
             browser.downloads.onCreated.removeListener(handleCreated);
         };
 
         const handleChanged = (progress) =>
         {
+
+console.log(`onChanged: progress.id = ${progress.id}; downloadId = ${downloadId}`);            
+
             if(progress.id == downloadId && progress.state) {
                 let info = null;
                 let success = false;
@@ -1129,11 +1138,11 @@ export class AttachmentManager {
 
                 if(info) {
                     if(isFinal && (!hasEmbeds || isEmbedFinal)) {
-                        removeHandlers();
-
                         this.#reportSaveResult(info);
                     }
-        
+
+                    removeHandlers();
+
                     this.#log(`Removing download data (${info.status})`);
 
                     URL.revokeObjectURL(zipParams.url);
@@ -1152,21 +1161,27 @@ export class AttachmentManager {
 
         const handleCreated = ((downloadItem) =>
         {
+console.log(`Created: ${downloadItem.filename}`);            
+
             if(downloadItem.url == zipParams.url) {
                 this.#packagingFilenameList.push(downloadItem.filename);
             }
         });
 
-        if(isFirst) {
-            browser.downloads.onChanged.addListener(handleChanged);
-            browser.downloads.onCreated.addListener(handleCreated);
-        }
+
+console.log("Assigning handlers");
+
+        browser.downloads.onChanged.addListener(handleChanged);
+        browser.downloads.onCreated.addListener(handleCreated);
 
         browser.downloads
             .download(zipParams)
             .then(
                 (id) => {
                     downloadId = id;
+
+console.log(`Assigning downloadId ${downloadId}`);
+
                     if(isFirst) {
                         this.#reportSaveResult({ status: "started" });
                     }
@@ -1205,7 +1220,7 @@ export class AttachmentManager {
 
         for(const set of deletionSets) {
             for(const item of set) {
-                const { messageId, partName, name } = item;
+                const { messageId, partName, name, size } = item;
 
                 info.lastFileName = name;
 
@@ -1219,7 +1234,8 @@ export class AttachmentManager {
                 catch(e) {
                     this.#detachmentErrorList.push({
                         messageId: messageId,
-                        partName: partName,
+                        name: name,
+                        size: size,
                         scope: "detach",
                         error: e.toString()
                     });

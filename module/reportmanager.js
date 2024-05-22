@@ -45,7 +45,7 @@ export class ReportManager {
             currentTable.classList.remove("hidden");
         };
 
-        const generateReportLineItem =  (reportItemContent, item, messageInfo) => {
+        const generateReportLineItem =  (reportItemContent, item, messageInfo, specialMessage) => {
             const reportItem = reportItemContent.cloneNode(true);
     
             reportItem.querySelector(".subject-label").textContent = messageInfo.subject;
@@ -53,6 +53,11 @@ export class ReportManager {
             reportItem.querySelector(".message-date-label").textContent = messageInfo.date.toDateString();
             reportItem.querySelector(".filename-label").textContent = item.name;
             reportItem.querySelector(".file-size-label").textContent = abbreviateFileSize(item.size);
+
+            if(specialMessage) {
+                reportItem.querySelector(".special-message-row").classList.remove("hidden");
+                reportItem.querySelector(".special-message-label").textContent = specialMessage;
+            }
     
             return reportItem.firstElementChild;
         };
@@ -62,7 +67,9 @@ export class ReportManager {
         if(reportData.packagingTracker.items.length > 0) {
             generateSection(".attachment-table", (currentTable) => {
                 for(const item of reportData.packagingTracker.items) {
-                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId)));
+                    const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
+
+                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), specialMessage));
                 }
             });
 
@@ -74,6 +81,8 @@ export class ReportManager {
         if(reportData.duplicateFileTracker.length > 0) {
             generateSection(".duplicate-table", (currentTable) => {
                 for(const item of reportData.duplicateFileTracker) {
+                    const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
+
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId)));
                 }
             });
@@ -84,7 +93,7 @@ export class ReportManager {
         if(reportData.alterationTracker.length > 0) {
             generateSection(".alteration-table", (currentTable) => {
                 for(const item of reportData.alterationTracker) {
-                    currentTable.append(generateReportLineItem(reportItemContent, item, item));
+                    currentTable.append(generateReportLineItem(reportItemContent, item, item, item.alteration));
                 }
             });
         }
@@ -122,7 +131,7 @@ export class ReportManager {
         if(reportData.errorList.length > 0) {
             generateSection(".error-table", (currentTable) => {
                 for(const item of reportData.errorList) {
-                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId)));
+                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), item.error));
                 }
             });
         }
@@ -132,7 +141,7 @@ export class ReportManager {
         if(reportData.detachmentErrorList) {
             generateSection(".detachment-error-table", (currentTable) => {
                 for(const item of reportData.detachmentErrorList) {
-                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId)));
+                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), item.error));
                 }
             });
         }

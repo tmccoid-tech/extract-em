@@ -869,6 +869,8 @@ export class AttachmentManager {
 
                 fileName = this.#sequentializeFileName(fileName, ++sequenceNumber);
 
+                item.serialName = fileName;
+
                 duplicateFileNameTracker.set(duplicateKey, sequenceNumber);
             }
             else {
@@ -999,6 +1001,7 @@ export class AttachmentManager {
                             const checksumDuplicate = sizeDuplicate.get(decodeData.checksum);
 
                             checksumDuplicate.push(item.messageId);
+                            item.isDuplicate = true;
 
                             packagingProgressInfo.duplicateEmbedCount++;
                             packagingProgressInfo.duplicateTotalBytes += item.size;
@@ -1018,6 +1021,8 @@ export class AttachmentManager {
 
                     if(sequenceNumber > 0) {
                         fileName = this.#sequentializeFileName(fileName, sequenceNumber);
+
+                        item.serialName = fileName;
                     }
                 }
                 else {

@@ -129,7 +129,8 @@ export class EmbedManager {
                                                         size: null,
                                                         extension: extension,
                                                         isEmbed: true,
-                                                        isPreviewable: false
+                                                        isPreviewable: false,
+                                                        isDuplicate: false
                                                     };
 
                                                     embeds.push(embed);

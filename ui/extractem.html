@@ -316,9 +316,17 @@
                 float: left;
             }
 
-            table {
+            .summary-table td:nth-child(even) {
+                width: 48px;
+                text-align: right;
+                padding-right: 32px;
+            }
+
+            .list-table {
+                table-layout: fixed;
+                width: 80%;
+                max-width: 1000px;
                 margin-top: 16px;
-                min-width: 50%;
             }
 
             caption {
@@ -326,17 +334,29 @@
                 background-color: rgba(192, 192, 192, .25);                
             }
 
-            td.filename-label {
-                font-weight: bold;
+            .filename-row {
+                background-color: lightgreen;
+                text-align: center;
             }
 
+            td.filename-label {
+                font-weight: bold;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;            }
+
             td.author-label, td.subject-label {
-                padding-left: 16px;
+                padding-left: 20px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             td.file-size-label, td.message-date-label {
+                width: 160px;
                 text-align: right;
             }
+
         </style>
     </template>
 
@@ -344,37 +364,58 @@
         <div>
             <img class="report-logo">
             <h2>__MSG_extensionName__ __MSG_summaryForDate__ <span class="current-datetime-label"></span></h2>
-            <p>
-                __MSG_savedAttachments__: <span class="saved-attachment-count-label">0</span><br/>
-                __MSG_savedEmbeds__: <span class="saved-embed-count-label">0</span><br/>
-                __MSG_packageFileCount__: <span class="package-file-count-label">0</span>
-            </p>
 
-            <table class="attachment-table hidden">
+            <table class="summary-table">
+                <tr>
+                    <td>__MSG_packageFileCount__:</td>
+                    <td class="package-file-count-label">0</td>
+                    <td>Duplicate Attachments:</td>
+                    <td class="duplicate-attachment-count-label">0</td>
+                    <td>Packaging Errors:</td>
+                    <td class="package-error-count-label">0</td>
+                </tr>
+                <tr>
+                    <td>__MSG_savedAttachments__:</td>
+                    <td class="saved-attachment-count-label">0</td>
+                    <td>Alteration Count:</td>
+                    <td class="alteration-count-label">0</td>
+                    <td>Detachment Errors:</td>
+                    <td class="deletion-error-count-label">0</td>
+                </tr>
+                <tr>
+                    <td>__MSG_savedEmbeds__:</td>
+                    <td class="saved-embed-count-label">0</td>
+                    <td>Duplicate Embeds:</td>
+                    <td class="duplicate-embed-count-label">0</td>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+            </table>
+
+            <table class="list-table attachment-table hidden">
                 <caption>__MSG_savedAttachments__</caption>
             </table>
 
-            <table class="duplicate-table hidden">
+            <table class="list-table duplicate-table hidden">
                 <caption>__MSG_duplicateAttachmentsOmitted__</caption>
             </table>
 
-            <table class="alteration-table hidden">
+            <table class="list-table alteration-table hidden">
                 <caption>__MSG_previouslyDetachedDeleted__</caption>
             </table>
 
-            <table class="embed-table hidden">
+            <table class="list-table embed-table hidden">
                 <caption>__MSG_savedEmbeds__</caption>
             </table>
 
-            <table class="duplicate-embed-table hidden">
+            <table class="list-table duplicate-embed-table hidden">
                 <caption>__MSG_duplicateEmbedsOmitted__</caption>
             </table>
 
-            <table class="error-table hidden">
+            <table class="list-table error-table hidden">
                 <caption>__MSG_errors__</caption>
             </table>
 
-            <table class="detachment-error-table hidden">
+            <table class="list-table detachment-error-table hidden">
                 <caption>__MSG_permanentDetachmentErrors__</caption>
             </table>
         </div>                

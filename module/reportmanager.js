@@ -45,13 +45,23 @@ export class ReportManager {
             currentTable.classList.remove("hidden");
         };
 
+        const generateFilenameHeaderRow = (currentTable, filename) => {
+            const tr = document.createElement("tr");
+            tr.classList.add("filename-row");
+            const td = document.createElement("td");
+            td.setAttribute("colspan", 2);
+            td.innerText = filename;
+            tr.append(td);
+            currentTable.append(tr);
+        };
+
         const generateReportLineItem =  (reportItemContent, item, messageInfo, specialMessage) => {
             const reportItem = reportItemContent.cloneNode(true);
     
             reportItem.querySelector(".subject-label").textContent = messageInfo.subject;
             reportItem.querySelector(".author-label").textContent = messageInfo.author;
             reportItem.querySelector(".message-date-label").textContent = messageInfo.date.toDateString();
-            reportItem.querySelector(".filename-label").textContent = item.name;
+            reportItem.querySelector(".filename-label").textContent =  (item.serialName) ? item.serialName : item.name;
             reportItem.querySelector(".file-size-label").textContent = abbreviateFileSize(item.size);
 
             if(specialMessage) {
@@ -62,11 +72,19 @@ export class ReportManager {
             return reportItem.firstElementChild;
         };
 
+        let currentFilenameIndex = -1;
+
         // Standard attachments
 
         if(reportData.packagingTracker.items.length > 0) {
             generateSection(".attachment-table", (currentTable) => {
                 for(const item of reportData.packagingTracker.items) {
+                    if(item.packagingFilenameIndex !== currentFilenameIndex) {
+                        currentFilenameIndex = item.packagingFilenameIndex;
+
+                        generateFilenameHeaderRow(currentTable, reportData.packagingFilenameList[currentFilenameIndex]);
+                    }
+
                     const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
 
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), specialMessage));
@@ -100,14 +118,22 @@ export class ReportManager {
 
         // Embeds
 
-        if(reportData.packagingTracker.embedItems.length > 0) {
+        const embedItems = reportData.packagingTracker.embedItems.filter((item) => !item.isDuplicate);
+
+        if(embedItems.length > 0) {
             generateSection(".embed-table", (currentTable) => {
-                for(const item of reportData.packagingTracker.embedItems) {
+                for(const item of embedItems) {
+                    if(item.packagingFilenameIndex !== currentFilenameIndex) {
+                        currentFilenameIndex = item.packagingFilenameIndex;
+
+                        generateFilenameHeaderRow(currentTable, reportData.packagingFilenameList[currentFilenameIndex]);
+                    }
+
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId)));
                 }
             });
 
-            reportBody.querySelector(".saved-embed-count-label").textContent = reportData.packagingTracker.embedItems.length.toString();
+            reportBody.querySelector(".saved-embed-count-label").textContent = embedItems.length.toString();
         }
 
         // Duplicate embeds

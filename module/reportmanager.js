@@ -76,7 +76,9 @@ export class ReportManager {
 
         // Standard attachments
 
-        if(reportData.packagingTracker.items.length > 0) {
+        const attachmentItems = reportData.packagingTracker.items.filter((item) => !item.hasError);
+
+        if(attachmentItems.length > 0) {
             generateSection(".attachment-table", (currentTable) => {
                 for(const item of reportData.packagingTracker.items) {
                     if(item.packagingFilenameIndex !== currentFilenameIndex) {
@@ -91,7 +93,7 @@ export class ReportManager {
                 }
             });
 
-            reportBody.querySelector(".saved-attachment-count-label").textContent = reportData.packagingTracker.items.length.toString();
+            reportBody.querySelector(".saved-attachment-count-label").textContent = attachmentItems.length.toString();
         }
 
         // Duplicate attachments
@@ -104,6 +106,8 @@ export class ReportManager {
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId)));
                 }
             });
+
+            reportBody.querySelector(".duplicate-attachment-count-label").textContent = reportData.duplicateFileTracker.length.toString();
         }
 
         // Alterations
@@ -114,11 +118,13 @@ export class ReportManager {
                     currentTable.append(generateReportLineItem(reportItemContent, item, item, item.alteration));
                 }
             });
+
+            reportBody.querySelector(".alteration-count-label").textContent = reportData.alterationTracker.length.toString();
         }
 
         // Embeds
 
-        const embedItems = reportData.packagingTracker.embedItems.filter((item) => !item.isDuplicate);
+        const embedItems = reportData.packagingTracker.embedItems.filter((item) => !(item.isDuplicate || item.hasError));
 
         if(embedItems.length > 0) {
             generateSection(".embed-table", (currentTable) => {
@@ -139,17 +145,21 @@ export class ReportManager {
         // Duplicate embeds
 
         if(reportData.duplicateEmbedFileTracker) {
+            let duplicateEmbedCount = 0;
             generateSection(".duplicate-embed-table", (currentTable) => {
                 for(const filenameEntry of reportData.duplicateEmbedFileTracker.entries()) {
                     for(const sizeEntry of filenameEntry[1].sizes.entries()) {
                         for(const checksumEntry of sizeEntry[1].entries()) {
                             for(const messageId of checksumEntry[1]) {
                                 currentTable.append(generateReportLineItem(reportItemContent, { name: filenameEntry[0], size: sizeEntry[0] }, messageList.get(messageId)));
+                                duplicateEmbedCount++;
                             }
                         }
                     }
                 }
             });
+
+            reportBody.querySelector(".duplicate-embed-count-label").textContent = duplicateEmbedCount.toString();
         }
 
         // Errors
@@ -160,6 +170,8 @@ export class ReportManager {
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), item.error));
                 }
             });
+
+            reportBody.querySelector(".packaging-error-count-label").textContent = reportData.errorList.length.toString();
         }
 
         // Detachment errors
@@ -170,6 +182,8 @@ export class ReportManager {
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), item.error));
                 }
             });
+
+            reportBody.querySelector(".deletion-error-count-label").textContent = reportData.detachmentErrorList.length.toString();
         }
 
         // Fetch image files and assign appropriately

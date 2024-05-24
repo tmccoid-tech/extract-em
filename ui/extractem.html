@@ -263,6 +263,14 @@
                     <li>__MSG_rn1_2_1_Fix02__</li>
                 </ul>
             </div>
+            <div class="release-notes-panel hidden" version="1.3.1">
+                <h4>__MSG_releaseNotesTitle__ 1.3.1</h4>
+                <h4>__MSG_whatsNew__</h4>
+                <ul>
+                    <li>__MSG_rn1_3_1_New01__</li>
+                    <li>__MSG_rn1_3_1_New02__</li>
+                </ul>
+            </div>
         </div>        
     </div>
 
@@ -331,11 +339,11 @@
 
             caption {
                 text-decoration: underline;
-                background-color: rgba(192, 192, 192, .25);                
+                background-color: rgba(255, 228, 196, 0.369);
             }
 
             .filename-row {
-                background-color: lightgreen;
+                background-color: rgba(192, 192, 192, .25);                
                 text-align: center;
             }
 
@@ -345,7 +353,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;            }
 
-            td.author-label, td.subject-label {
+            td.author-label, td.subject-label, td.special-message-label {
                 padding-left: 20px;
                 white-space: nowrap;
                 overflow: hidden;
@@ -369,23 +377,23 @@
                 <tr>
                     <td>__MSG_packageFileCount__:</td>
                     <td class="package-file-count-label">0</td>
-                    <td>Duplicate Attachments:</td>
-                    <td class="duplicate-attachment-count-label">0</td>
-                    <td>Packaging Errors:</td>
-                    <td class="package-error-count-label">0</td>
+                    <td>__MSG_previouslyDetachedDeleted__:</td>
+                    <td class="alteration-count-label">0</td>
+                    <td>__MSG_packaging__ __MSG_errors__:</td>
+                    <td class="packaging-error-count-label">0</td>
                 </tr>
                 <tr>
                     <td>__MSG_savedAttachments__:</td>
                     <td class="saved-attachment-count-label">0</td>
-                    <td>Alteration Count:</td>
-                    <td class="alteration-count-label">0</td>
-                    <td>Detachment Errors:</td>
+                    <td>__MSG_duplicateAttachments__:</td>
+                    <td class="duplicate-attachment-count-label">0</td>
+                    <td>__MSG_permanentDetachmentErrors__:</td>
                     <td class="deletion-error-count-label">0</td>
                 </tr>
                 <tr>
                     <td>__MSG_savedEmbeds__:</td>
                     <td class="saved-embed-count-label">0</td>
-                    <td>Duplicate Embeds:</td>
+                    <td>__MSG_duplicateEmbeds__:</td>
                     <td class="duplicate-embed-count-label">0</td>
                     <td colspan="2">&nbsp;</td>
                 </tr>
@@ -395,12 +403,12 @@
                 <caption>__MSG_savedAttachments__</caption>
             </table>
 
-            <table class="list-table duplicate-table hidden">
-                <caption>__MSG_duplicateAttachmentsOmitted__</caption>
+            <table class="list-table alteration-table hidden">
+                <caption>__MSG_previouslyDetachedDeleted__ (__MSG_omitted__)</caption>
             </table>
 
-            <table class="list-table alteration-table hidden">
-                <caption>__MSG_previouslyDetachedDeleted__</caption>
+            <table class="list-table duplicate-table hidden">
+                <caption>__MSG_duplicateAttachments__ (__MSG_omitted__)</caption>
             </table>
 
             <table class="list-table embed-table hidden">
@@ -408,7 +416,7 @@
             </table>
 
             <table class="list-table duplicate-embed-table hidden">
-                <caption>__MSG_duplicateEmbedsOmitted__</caption>
+                <caption>__MSG_duplicateEmbeds__ (__MSG_omitted__)</caption>
             </table>
 
             <table class="list-table error-table hidden">

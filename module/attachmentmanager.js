@@ -816,6 +816,8 @@ export class AttachmentManager {
         for (let i = start; i < nextStart; i++) {
             const item = packagingTracker.items[i];
 
+            item.hasError = false;
+
             let attachmentFile;
 
             try {
@@ -828,6 +830,8 @@ export class AttachmentManager {
                 }
             }
             catch(e) {
+                item.hasError = true;
+
                 errorList.push({
                     messageId: item.messageId,
                     name: item.name,
@@ -893,6 +897,8 @@ export class AttachmentManager {
                 item.packagingFilenameIndex = this.#packagingFilenameList.length;
             }
             catch(e) {
+                item.hasError = true;
+
                 errorList.push({
                     messageId: item.messageId,
                     name: item.name,
@@ -969,6 +975,8 @@ export class AttachmentManager {
 
             for(const item of messageEmbedItems) {
                 if(item.error) {
+                    item.hasError = true;
+
                     errorList.push({
                         messageId: item.messageId,
                         name: item.name,
@@ -1046,6 +1054,8 @@ export class AttachmentManager {
                     item.packagingFilenameIndex = this.#packagingFilenameList.length;
                 }
                 catch(e) {
+                    item.hasError = true;
+
                     errorList.push({
                         messageId: item.messageId,
                         name: item.name,
@@ -1107,17 +1117,12 @@ export class AttachmentManager {
 
         const removeHandlers = () =>
         {
-console.log(`Removing handlers: donwloadId = ${downloadId}`);
-
             browser.downloads.onChanged.removeListener(handleChanged);
             browser.downloads.onCreated.removeListener(handleCreated);
         };
 
         const handleChanged = (progress) =>
         {
-
-console.log(`onChanged: progress.id = ${progress.id}; downloadId = ${downloadId}`);            
-
             if(progress.id == downloadId && progress.state) {
                 let info = null;
                 let success = false;
@@ -1166,15 +1171,10 @@ console.log(`onChanged: progress.id = ${progress.id}; downloadId = ${downloadId}
 
         const handleCreated = ((downloadItem) =>
         {
-console.log(`Created: ${downloadItem.filename}`);            
-
             if(downloadItem.url == zipParams.url) {
                 this.#packagingFilenameList.push(downloadItem.filename);
             }
         });
-
-
-console.log("Assigning handlers");
 
         browser.downloads.onChanged.addListener(handleChanged);
         browser.downloads.onCreated.addListener(handleCreated);
@@ -1184,8 +1184,6 @@ console.log("Assigning handlers");
             .then(
                 (id) => {
                     downloadId = id;
-
-console.log(`Assigning downloadId ${downloadId}`);
 
                     if(isFirst) {
                         this.#reportSaveResult({ status: "started" });

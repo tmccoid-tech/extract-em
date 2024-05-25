@@ -242,7 +242,7 @@
         "description": ""
     },
 
-    "extractionReport": { "message": "Extraction_Report" },
+    "extractionReport": { "message": "Kitermelési_jelentés" },
 
     "summaryForDate": {
          "message": "Összefoglaló:",

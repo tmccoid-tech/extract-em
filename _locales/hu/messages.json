@@ -245,19 +245,19 @@
     "extractionReport": { "message": "Extraction_Report" },
 
     "summaryForDate": {
-         "message": "Summary for",
+         "message": "Összefoglaló:",
          "description": "Summary for {date}"
     },
-    "savedAttachments" : { "message" : "Saved Attachments" },
-    "savedEmbeds" : { "message" : "Saved Embeds" },
-    "packageFileCount": { "message": "Package File Count" },
+    "savedAttachments" : { "message" : "Mentett mellékletek" },
+    "savedEmbeds" : { "message" : "Mentett beágyazások" },
+    "packageFileCount": { "message": "Csomagfájlok száma" },
 
-    "previouslyDetachedDeleted": { "message": "Previously Detached/Deleted Attachments" },
-    "duplicateAttachments": { "message": "Duplicate Attachments" },
-    "duplicateEmbeds": { "message": "Duplicate Embeds" },
-    "omitted": { "message": "Omitted" },
-    "errors": { "message": "Errors"},
-    "permanentDetachmentErrors": { "message": "Permanent Detachment Errors" },
+    "previouslyDetachedDeleted": { "message": "Korábban leválasztott/törölt mellékletek" },
+    "duplicateAttachments": { "message": "Ismétlődő mellékletek" },
+    "duplicateEmbeds": { "message": "Ismétlődő beágyazások" },
+    "omitted": { "message": "Kihagyva" },
+    "errors": { "message": "Hibák"},
+    "permanentDetachmentErrors": { "message": "Maradandó leválási hibák" },
 
     "saveComplete": { "message": "Mentés befejeződött!" },
     "saveFailed": { "message": "Mentés nem sikerült; ismeretlen hiba történt." },
@@ -317,9 +317,9 @@
     },
 
     "rn1_3_1_New01": {
-        "message" : "Added the ability to generate/save an extraction report (.html) following execution"
+        "message" : "Kivonatolási jelentés (.html) létrehozásának/mentésének lehetősége hozzáadva a végrehajtást követően"
     },
     "rn1_3_1_New02": {
-        "message" : "Added localization for Hungarian (courtesy of user Óvári)"
+        "message" : "Magyar fordítás hozzáadva"
     }    
 }

@@ -242,6 +242,22 @@
         "description": ""
     },
 
+    "extractionReport": { "message": "Extraction_Report" },
+
+    "summaryForDate": {
+         "message": "Summary for",
+         "description": "Summary for {date}"
+    },
+    "savedAttachments" : { "message" : "Saved Attachments" },
+    "savedEmbeds" : { "message" : "Saved Embeds" },
+    "packageFileCount": { "message": "Package File Count" },
+
+    "previouslyDetachedDeleted": { "message": "Previously Detached/Deleted Attachments" },
+    "duplicateAttachments": { "message": "Duplicate Attachments" },
+    "duplicateEmbeds": { "message": "Duplicate Embeds" },
+    "omitted": { "message": "Omitted" },
+    "errors": { "message": "Errors"},
+    "permanentDetachmentErrors": { "message": "Permanent Detachment Errors" },
 
     "saveComplete": { "message": "Mentés befejeződött!" },
     "saveFailed": { "message": "Mentés nem sikerült; ismeretlen hiba történt." },
@@ -298,5 +314,12 @@
     },
     "rn1_2_1_Fix02": {
         "message": "Átváltott a zip.js könyvtárra (jszip-ről), hogy enyhítse az időszakos memóriaproblémákat"
-    }
+    },
+
+    "rn1_3_1_New01": {
+        "message" : "Added the ability to generate/save an extraction report (.html) following execution"
+    },
+    "rn1_3_1_New02": {
+        "message" : "Added localization for Hungarian (courtesy of user Óvári)"
+    }    
 }

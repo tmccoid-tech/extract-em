@@ -234,7 +234,7 @@
                     <div><span id="detach-error-count-span">0</span> __MSG_errorsEncountered__</div>
                 </div>
                 <div class="result-button-container save-result-content-div">
-                    <button id="detach-view-report-button" class="close-button hidden">__MSG_viewReport__</button>                       
+                    <button id="detach-view-report-button" class="close-button">__MSG_viewReport__</button>                       
                     <button id="detach-exit-extension-button" class="close-button disablable" disabled="disabled">__MSG_closeAndExit__</button>
                 </div>
             </div>
@@ -347,11 +347,16 @@
                 text-align: center;
             }
 
+            td.sequence-number {
+                width: 32px;
+            }
+
             td.filename-label {
                 font-weight: bold;
                 white-space: nowrap;
                 overflow: hidden;
-                text-overflow: ellipsis;            }
+                text-overflow: ellipsis;
+            }
 
             td.author-label, td.subject-label, td.special-message-label {
                 padding-left: 20px;
@@ -401,30 +406,37 @@
 
             <table class="list-table attachment-table hidden">
                 <caption>__MSG_savedAttachments__</caption>
+                <tbody></tbody>
             </table>
 
             <table class="list-table alteration-table hidden">
                 <caption>__MSG_previouslyDetachedDeleted__ (__MSG_omitted__)</caption>
+                <tbody></tbody>
             </table>
 
             <table class="list-table duplicate-table hidden">
                 <caption>__MSG_duplicateAttachments__ (__MSG_omitted__)</caption>
+                <tbody></tbody>
             </table>
 
             <table class="list-table embed-table hidden">
                 <caption>__MSG_savedEmbeds__</caption>
+                <tbody></tbody>
             </table>
 
             <table class="list-table duplicate-embed-table hidden">
                 <caption>__MSG_duplicateEmbeds__ (__MSG_omitted__)</caption>
+                <tbody></tbody>
             </table>
 
             <table class="list-table error-table hidden">
                 <caption>__MSG_errors__</caption>
+                <tbody></tbody>
             </table>
 
             <table class="list-table detachment-error-table hidden">
                 <caption>__MSG_permanentDetachmentErrors__</caption>
+                <tbody></tbody>
             </table>
         </div>                
     </template>
@@ -432,17 +444,21 @@
     <template id="report-item-template">
         <tbody>
             <tr>
+                <td class="sequence-number"></td>
                 <td class="filename-label"></td>
                 <td class="file-size-label"></td>
             </tr>
             <tr>
+                <td>&nbsp;</td>
                 <td class="author-label"></td>
                 <td class="message-date-label"></td>
             </tr>
             <tr>
+                <td>&nbsp;</td>
                 <td colspan="2" class="subject-label"></td>
             </tr>
             <tr class="special-message-row hidden">
+                <td>&nbsp;</td>
                 <td colspan="2" class="special-message-label"></td>
             </tr>
         </tbody>

@@ -39,8 +39,9 @@ export class ReportManager {
         const generateSection = (tableClass, iterate) =>
         {
             const currentTable = reportBody.querySelector(tableClass);
+            const currentTbody = currentTable.querySelector("tbody");
 
-            iterate(currentTable);
+            iterate(currentTbody);
 
             currentTable.classList.remove("hidden");
         };
@@ -49,15 +50,16 @@ export class ReportManager {
             const tr = document.createElement("tr");
             tr.classList.add("filename-row");
             const td = document.createElement("td");
-            td.setAttribute("colspan", 2);
+            td.setAttribute("colspan", 3);
             td.innerText = filename;
             tr.append(td);
             currentTable.append(tr);
         };
 
-        const generateReportLineItem =  (reportItemContent, item, messageInfo, specialMessage) => {
+        const generateReportLineItem =  (reportItemContent, item, messageInfo, sequenceNumber, specialMessage) => {
             const reportItem = reportItemContent.cloneNode(true);
     
+            reportItem.querySelector(".sequence-number").textContent = sequenceNumber.toString();
             reportItem.querySelector(".subject-label").textContent = messageInfo.subject;
             reportItem.querySelector(".author-label").textContent = messageInfo.author;
             reportItem.querySelector(".message-date-label").textContent = messageInfo.date.toDateString();
@@ -69,7 +71,7 @@ export class ReportManager {
                 reportItem.querySelector(".special-message-label").textContent = specialMessage;
             }
     
-            return reportItem.firstElementChild;
+            return reportItem.firstElementChild.childNodes;
         };
 
         let currentFilenameIndex = -1;
@@ -80,7 +82,8 @@ export class ReportManager {
 
         if(attachmentItems.length > 0) {
             generateSection(".attachment-table", (currentTable) => {
-                for(const item of reportData.packagingTracker.items) {
+                let sequenceNumber = 0;
+                for(const item of attachmentItems) {
                     if(item.packagingFilenameIndex !== currentFilenameIndex) {
                         currentFilenameIndex = item.packagingFilenameIndex;
 
@@ -89,7 +92,7 @@ export class ReportManager {
 
                     const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
 
-                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), specialMessage));
+                    currentTable.append(...generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, specialMessage));
                 }
             });
 
@@ -100,10 +103,11 @@ export class ReportManager {
 
         if(reportData.duplicateFileTracker.length > 0) {
             generateSection(".duplicate-table", (currentTable) => {
+                let sequenceNumber = 0;
                 for(const item of reportData.duplicateFileTracker) {
                     const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
 
-                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId)));
+                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, specialMessage));
                 }
             });
 
@@ -114,8 +118,9 @@ export class ReportManager {
 
         if(reportData.alterationTracker.length > 0) {
             generateSection(".alteration-table", (currentTable) => {
+                let sequenceNumber = 0;
                 for(const item of reportData.alterationTracker) {
-                    currentTable.append(generateReportLineItem(reportItemContent, item, item, item.alteration));
+                    currentTable.append(generateReportLineItem(reportItemContent, item, item, ++sequenceNumber, item.alteration));
                 }
             });
 
@@ -128,6 +133,7 @@ export class ReportManager {
 
         if(embedItems.length > 0) {
             generateSection(".embed-table", (currentTable) => {
+                let sequenceNumber = 0;
                 for(const item of embedItems) {
                     if(item.packagingFilenameIndex !== currentFilenameIndex) {
                         currentFilenameIndex = item.packagingFilenameIndex;
@@ -135,7 +141,7 @@ export class ReportManager {
                         generateFilenameHeaderRow(currentTable, reportData.packagingFilenameList[currentFilenameIndex]);
                     }
 
-                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId)));
+                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber));
                 }
             });
 
@@ -145,29 +151,29 @@ export class ReportManager {
         // Duplicate embeds
 
         if(reportData.duplicateEmbedFileTracker) {
-            let duplicateEmbedCount = 0;
+            let sequenceNumber = 0;
             generateSection(".duplicate-embed-table", (currentTable) => {
                 for(const filenameEntry of reportData.duplicateEmbedFileTracker.entries()) {
                     for(const sizeEntry of filenameEntry[1].sizes.entries()) {
                         for(const checksumEntry of sizeEntry[1].entries()) {
                             for(const messageId of checksumEntry[1]) {
-                                currentTable.append(generateReportLineItem(reportItemContent, { name: filenameEntry[0], size: sizeEntry[0] }, messageList.get(messageId)));
-                                duplicateEmbedCount++;
+                                currentTable.append(generateReportLineItem(reportItemContent, { name: filenameEntry[0], size: sizeEntry[0] }, messageList.get(messageId), ++sequenceNumber));
                             }
                         }
                     }
                 }
             });
 
-            reportBody.querySelector(".duplicate-embed-count-label").textContent = duplicateEmbedCount.toString();
+            reportBody.querySelector(".duplicate-embed-count-label").textContent = sequenceNumber.toString();
         }
 
         // Errors
 
         if(reportData.errorList.length > 0) {
             generateSection(".error-table", (currentTable) => {
+                let sequenceNumber = 0;
                 for(const item of reportData.errorList) {
-                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), item.error));
+                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, item.error));
                 }
             });
 
@@ -178,8 +184,9 @@ export class ReportManager {
 
         if(reportData.detachmentErrorList) {
             generateSection(".detachment-error-table", (currentTable) => {
+                let sequenceNumber = 0;
                 for(const item of reportData.detachmentErrorList) {
-                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), item.error));
+                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, item.error));
                 }
             });
 

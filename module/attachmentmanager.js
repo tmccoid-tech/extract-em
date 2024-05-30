@@ -298,6 +298,10 @@ export class AttachmentManager {
             const alterationMap = this.#generateAlterationMap(fullMessage.parts);
 
             for (const attachment of messageAttachmentList) {
+                if(attachment.name == "") {
+                    continue;
+                }
+
                 if(alterationMap.has(attachment.partName)) {
                     const alterationEntry = alterationMap.get(attachment.partName);
 
@@ -725,7 +729,7 @@ export class AttachmentManager {
                         cumulativeSize += item.size;
                     }
                     else {
-                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: item.name, isDeleted: false });
+                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: item.name, size: item.size, isDeleted: false });
 
                         packagingProgressInfo.duplicateCount++;
                         packagingProgressInfo.duplicateTotalBytes += item.size;
@@ -1059,7 +1063,7 @@ export class AttachmentManager {
                     errorList.push({
                         messageId: item.messageId,
                         name: item.name,
-                        size: itemm.size,
+                        size: item.size,
                         scope: "packageEmbeds",
                         error: `${e}`
                     });
@@ -1205,9 +1209,12 @@ export class AttachmentManager {
     }
 
     async deleteAttachments() {
+        const packagedItems = this.#packagingTracker.items.filter((item) => !item.hasError);
+        const duplicateItems = this.#duplicateFileTracker;
+
         const info = {
             status: "started",
-            totalItems: this.#packagingTracker.items.length + this.#duplicateFileTracker.length,
+            totalItems: packagedItems.length + duplicateItems.length,
             processedCount: 0,
             errorCount: 0,
             lastFileName: "..."
@@ -1217,7 +1224,7 @@ export class AttachmentManager {
 
         info.status = "executing";
 
-        const deletionSets = [this.#packagingTracker.items, this.#duplicateFileTracker];
+        const deletionSets = [packagedItems, duplicateItems];
 
         this.#detachmentErrorList = [];
 

@@ -17,6 +17,7 @@ export class AttachmentManager {
     #selectedFolderPaths;
     #folderCounts;              // Do not reset
 
+    #silentModeInvoked = false;
     #includeEmbeds = false;
     #useAdvancedGetRaw = true;
     #useEnhancedLogging = false;
@@ -85,6 +86,8 @@ export class AttachmentManager {
 
     constructor(options) {
         this.#folders = options.folders;
+
+        this.#silentModeInvoked = options.silentModeInvoked;
 
         if(!options.silentModeInvoked) {
             this.#reportFolderProcessing = options.reportFolderProcessing;
@@ -172,8 +175,10 @@ export class AttachmentManager {
             this.#processFolder(folder, selectedFolders);
         }
 
-        const queue = selectedFolders
-            .sort((a,b) => this.#folderCounts.get(a.path) - this.#folderCounts.get(b.path))
+        const queue = ((this.#silentModeInvoked)
+            ? selectedFolders
+            : selectedFolders.sort((a,b) => this.#folderCounts.get(a.path) - this.#folderCounts.get(b.path))
+        )
         .values();
 
         Array(10).fill().forEach(async () => {

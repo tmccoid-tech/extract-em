@@ -322,6 +322,7 @@
 
             .report-logo {
                 float: left;
+                margin-right: 8px;
             }
 
             .summary-table td:nth-child(even) {
@@ -331,43 +332,77 @@
             }
 
             .list-table {
-                table-layout: fixed;
                 width: 80%;
                 max-width: 1000px;
                 margin-top: 16px;
             }
 
-            caption {
-                text-decoration: underline;
+            .list-table h3 {
                 background-color: rgba(255, 228, 196, 0.369);
+                margin-bottom: 0px;
+                padding: 8px;
             }
 
-            .filename-row {
-                background-color: rgba(192, 192, 192, .25);                
-                text-align: center;
+            .list-table-item-container {
+                display: grid;
+                grid-template-columns: 48px 1fr 160px;
+                grid-template-areas:
+                    "seq filename   filesize"
+                    "seq author     date"
+                    "seq subject    subject"
+                    "seq special    special"
+                ;   
             }
 
-            td.sequence-number {
-                width: 32px;
+            .sequence-number {
+                grid-area: seq;
             }
 
-            td.filename-label {
+            .filename-label {
+                grid-area: filename;
                 font-weight: bold;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
 
-            td.author-label, td.subject-label, td.special-message-label {
-                padding-left: 20px;
+            .file-size-label {
+                grid-area: filesize;
+                justify-self: end;
+            }
+
+            .author-label {
+                grid-area: author;
+                padding-left: 16px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
 
-            td.file-size-label, td.message-date-label {
-                width: 160px;
-                text-align: right;
+            .message-date-label {
+                grid-area: date;
+                justify-self: end;
+            }
+
+            .subject-label {
+                grid-area: subject;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding-left: 16px;
+            }
+
+            .special-message-label {
+                grid-area: special;
+                padding-left: 16px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .filename-row {
+                background-color: rgba(192, 192, 192, .25);                
+                text-align: center;
             }
 
         </style>
@@ -404,73 +439,53 @@
                 </tr>
             </table>
 
-            <table class="list-table attachment-table hidden">
-                <caption>__MSG_savedAttachments__</caption>
-                <tbody></tbody>
-            </table>
+            <div class="list-table attachment-table hidden">
+                <h3>__MSG_savedAttachments__</h3>
+            </div>
 
-            <table class="list-table alteration-table hidden">
-                <caption>__MSG_previouslyDetachedDeleted__ (__MSG_omitted__)</caption>
-                <tbody></tbody>
-            </table>
+            <div class="list-table alteration-table hidden">
+                <h3>__MSG_previouslyDetachedDeleted__ (__MSG_omitted__)</h3>
+            </div>
 
-            <table class="list-table duplicate-table hidden">
-                <caption>__MSG_duplicateAttachments__ (__MSG_omitted__)</caption>
-                <tbody></tbody>
-            </table>
+            <div class="list-table duplicate-table hidden">
+                <h3>__MSG_duplicateAttachments__ (__MSG_omitted__)</h3>
+            </div>
 
-            <table class="list-table embed-table hidden">
-                <caption>__MSG_savedEmbeds__</caption>
-                <tbody></tbody>
-            </table>
+            <div class="list-table embed-table hidden">
+                <h3>__MSG_savedEmbeds__</h3>
+            </div>
 
-            <table class="list-table duplicate-embed-table hidden">
-                <caption>__MSG_duplicateEmbeds__ (__MSG_omitted__)</caption>
-                <tbody></tbody>
-            </table>
+            <div class="list-table duplicate-embed-table hidden">
+                <h3>__MSG_duplicateEmbeds__ (__MSG_omitted__)</h3>
+            </div>
 
-            <table class="list-table error-table hidden">
-                <caption>__MSG_errors__</caption>
-                <tbody></tbody>
-            </table>
+            <div class="list-table error-table hidden">
+                <h3>__MSG_errors__</h3>
+            </div>
 
-            <table class="list-table detachment-error-table hidden">
-                <caption>__MSG_permanentDetachmentErrors__</caption>
-                <tbody></tbody>
-            </table>
+            <div class="list-table detachment-error-table hidden">
+                <h3>__MSG_permanentDetachmentErrors__</h3>
+            </div>
         </div>                
     </template>
 
     <template id="report-item-template">
-        <tbody>
-            <tr>
-                <td class="sequence-number"></td>
-                <td class="filename-label"></td>
-                <td class="file-size-label"></td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td class="author-label"></td>
-                <td class="message-date-label"></td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td colspan="2" class="subject-label"></td>
-            </tr>
-            <tr class="special-message-row hidden">
-                <td>&nbsp;</td>
-                <td colspan="2" class="special-message-label"></td>
-            </tr>
-        </tbody>
+        <div class="list-table-item-container">
+            <div class="sequence-number"></div>
+            <div class="filename-label"></div>
+            <div class="file-size-label"></div>
+
+            <div class="author-label"></div>
+            <div class="message-date-label"></div>
+
+            <div class="subject-label"></div>
+
+            <div class="special-message-label hidden"></div>
+        </div>        
     </template>
 
     <script src="/module/i18n.js"></script>
-    <script type="module" src="/module/optionsmanager.js"></script>
-    <script type="module" src="/module/reprotmanager.js"></script>
     <script src="/module/zip-full.js"></script>
-    <script type="module" src="/module/zipem.js"></script>
-    <script type="module" src="/module/embedmanager.js"></script>
-    <script type="module" src="/module/attachmentmanager.js"></script>
     <script type="module" src="extractem.js"></script>
 </body>
 </html>

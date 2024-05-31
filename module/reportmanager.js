@@ -36,24 +36,22 @@ export class ReportManager {
 
         const messageList = attachmentManager.messageList;
 
-        const generateSection = (tableClass, iterate) =>
+        const generateSection = (tableClass, iterate, canDisplay = () => true) =>
         {
             const currentTable = reportBody.querySelector(tableClass);
-            const currentTbody = currentTable.querySelector("tbody");
 
-            iterate(currentTbody);
+            iterate(currentTable);
 
-            currentTable.classList.remove("hidden");
+            if(canDisplay()) {
+                currentTable.classList.remove("hidden");
+            }
         };
 
         const generateFilenameHeaderRow = (currentTable, filename) => {
-            const tr = document.createElement("tr");
-            tr.classList.add("filename-row");
-            const td = document.createElement("td");
-            td.setAttribute("colspan", 3);
-            td.innerText = filename;
-            tr.append(td);
-            currentTable.append(tr);
+            const row = document.createElement("div");
+            row.classList.add("filename-row");
+            row.textContent = filename;
+            currentTable.append(row);
         };
 
         const generateReportLineItem =  (reportItemContent, item, messageInfo, sequenceNumber, specialMessage) => {
@@ -67,11 +65,12 @@ export class ReportManager {
             reportItem.querySelector(".file-size-label").textContent = abbreviateFileSize(item.size);
 
             if(specialMessage) {
-                reportItem.querySelector(".special-message-row").classList.remove("hidden");
-                reportItem.querySelector(".special-message-label").textContent = specialMessage;
+                const specialMessageLabel = reportItem.querySelector(".special-message-label");
+                specialMessageLabel.classList.remove("hidden");
+                specialMessageLabel.textContent = specialMessage;
             }
     
-            return reportItem.firstElementChild.childNodes;
+            return reportItem.firstElementChild;
         };
 
         let currentFilenameIndex = -1;
@@ -92,7 +91,7 @@ export class ReportManager {
 
                     const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
 
-                    currentTable.append(...generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, specialMessage));
+                    currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, specialMessage));
                 }
             });
 
@@ -150,7 +149,7 @@ export class ReportManager {
 
         // Duplicate embeds
 
-        if(reportData.duplicateEmbedFileTracker) {
+        if(reportData.duplicateEmbedFileTracker && reportData.duplicateEmbedFileTracker.size > 0) {
             let sequenceNumber = 0;
             generateSection(".duplicate-embed-table", (currentTable) => {
                 for(const filenameEntry of reportData.duplicateEmbedFileTracker.entries()) {
@@ -162,7 +161,7 @@ export class ReportManager {
                         }
                     }
                 }
-            });
+            }, () => sequenceNumber > 0);
 
             reportBody.querySelector(".duplicate-embed-count-label").textContent = sequenceNumber.toString();
         }

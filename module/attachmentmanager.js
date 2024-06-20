@@ -1,5 +1,6 @@
 import { ZipEm } from "/module/zipem.js";
 import { EmbedManager } from "/module/embedmanager.js";
+import { HttpUtility } from "/module/httputility.js";
 
 export class AttachmentManager {
     #platformOs;
@@ -19,6 +20,8 @@ export class AttachmentManager {
 
     #silentModeInvoked = false;
     #includeEmbeds = false;
+    #permitRemoteAttachments = false;
+    #includeRemoteAttachments = false;
     #useAdvancedGetRaw = true;
     #useEnhancedLogging = false;
 
@@ -34,6 +37,7 @@ export class AttachmentManager {
     #reportProcessingComplete = async () => {};
 
     #reportPackagingProgress = async (info) => {};
+    #reportRemoteDownloadProgress = async (info) => {};
     #reportSaveResult = async (info) => {};
 
     #reportDetachProgress = async (info) => {};
@@ -96,6 +100,7 @@ export class AttachmentManager {
             this.#reportFolderProcessed = options.reportFolderProcessed;
 
             this.#reportPackagingProgress = options.reportPackagingProgress;
+            this.#reportRemoteDownloadProgress = options.reportRemoteDownloadProgress;
 
             this.#reportDetachProgress = options.reportDetachProgress;
             this.#reportDetachResult = options.reportDetachResult;
@@ -104,6 +109,8 @@ export class AttachmentManager {
         this.#reportProcessingComplete = options.reportProcessingComplete;
         this.#reportSaveResult = options.reportSaveResult;
 
+        this.#permitRemoteAttachments = options.permitRemoteAttachments;
+        this.#includeRemoteAttachments = options.includeRemoteAttachments;
         this.#useAdvancedGetRaw = options.useAdvancedGetRaw;
         this.#useEnhancedLogging = options.useEnhancedLogging;
     }
@@ -164,6 +171,26 @@ export class AttachmentManager {
     }
 
     async discoverAttachments(selectedFolderPaths, includeEmbeds = false) {
+/*
+
+        //const url = "https://www.podtrac.com/pts/redirect.mp3/pscrb.fm/rss/p/chrt.fm/track/G481GD/traffic.megaphone.fm/ESP8743402477.mp3?updated=1713459618";
+        //const url = "https://tmccoid.tech/public/LiS.mp3"
+        const url = "https://tmccoid.tech/public/DG-TC.mp3"
+
+        //const r = await HttpUtility.getLength(url);
+
+        const file = await HttpUtility.fetch(url, "DG-TC.mp3", this.#reportRemoteDownloadProgress);
+
+        const params = {
+            url: URL.createObjectURL(file),
+            filename: file.name
+        };
+
+        browser.downloads.download(params);
+
+        return;
+*/
+
         this.#selectedFolderPaths = selectedFolderPaths;
         this.#includeEmbeds = includeEmbeds;
 
@@ -334,10 +361,38 @@ export class AttachmentManager {
                     size: attachment.size,
                     extension: extension,
                     isEmbed: false,
+                    isRemote: false,
+                    remoteUrl: null,
                     isPreviewable: this.#previewSet.has(extension)
                 };
     
-                if(attachmentInfo.size < 1 || attachmentInfo.size == 238) {
+                let testForSize = false;
+
+                // Test for remote attachments
+
+                if(this.#permitRemoteAttachments) {
+                    if(attachment.status == "remote") {
+                        if(this.#includeRemoteAttachments) {
+                            attachmentInfo.isRemote = true;
+                            attachmentInfo.remoteUrl = attachment.url;
+                        }
+                        else {
+                            continue;
+                        }
+                    }
+                }
+                
+                if(!attachmentInfo.isRemote && attachmentInfo.size == 0) {
+                    if(!this.#permitRemoteAttachments && this.#identifyRemoteAttachment(fullMessage.parts, attachmentInfo.partName)) {
+                        continue;
+                    }
+                    else
+                    {
+                        testForSize = true;
+                    }
+                }
+
+                if(testForSize || (!attachmentInfo.isRemote && attachmentInfo.size == 238)) {
                     try {
                         this.#log(`Get attachment file message: ${message.date} - ${message.subject}: name = ${attachmentInfo.name} size = ${attachmentInfo.size}`);
 
@@ -484,6 +539,24 @@ export class AttachmentManager {
                         }
                     }
                 }
+            }
+        }
+
+        return result;
+    }
+
+    async #identifyRemoteAttachment(parts, messageId, partName) {
+        let result = false;
+
+        for(const part of parts) {
+            if(part.partName == partName) {
+                result = (part.headers && part.headers["content-type"] && part.headers["content-type"][0].search("size=0") > 0);
+                
+                break;
+            }
+
+            if(part.parts) {
+                result = this.#identifyRemoteAttachment(part.parts, messageId, partName);
             }
         }
 
@@ -832,10 +905,22 @@ export class AttachmentManager {
             try {
                 this.#log(`Packaging - get attachment file: ${item.name}`);
 
-                attachmentFile = await this.#getAttachmentFile(item.messageId, item.partName);
+                if(item.isRemote) {
+                    const downloadResult = await HttpUtility.fetch(item.remoteUrl, item.name, this.#reportRemoteDownloadProgress);
 
-                if(attachmentFile.size == 0) {
-                    throw new Error(messenger.i18n.getMessage("missingAttachment"));
+                    if(downloadResult.success) {
+                        attachmentFile = downloadResult.file;
+                    }
+                    else {
+                        throw new Error(messenger.i18n.getMessage("remoteAttachmentInaccessible"));
+                    }
+                }
+                else {
+                    attachmentFile = await this.#getAttachmentFile(item.messageId, item.partName);
+
+                    if(attachmentFile.size == 0) {
+                        throw new Error(messenger.i18n.getMessage("missingAttachment"));
+                    }
                 }
             }
             catch(e) {

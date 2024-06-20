@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             this.permitDetachment = (this.#isSufficientVersion(extensionVersionNumbers, [1, 2]) && !!messenger.messages.deleteAttachments);       //  >= EE 1.2
             this.useAdvancedGetRaw = this.#isSufficientVersion(appVersionNumbers, [115, 3, 2]);                                                   //  >= TB 115.3.2
+            this.permitRemoteAttachments = this.#isSufficientVersion(appVersionNumbers, [128]);                                                   //  >= TD 128
         }
 
         #isSufficientVersion(actualVersionNumbers, minimumVersionNumbers) {
@@ -55,7 +56,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             return true;
         }
     }
-    
 
 
     i18n.updateDocument();
@@ -159,6 +159,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const packagingProgress = elem("packaging-progress");
 
     const lastFileNameDiv = elem("last-filename-div");
+
+    const remoteAttachmentPanel = elem("remote-attachment-panel");
+    const remoteAttachmentHostLabel = elem("remote-attachment-host-label");
+    const remoteAttachmentFilenameLabel = elem("remote-attachment-filename-label");
+    const remoteAttachmentDownloadProgress = elem("remote-attachment-download-progress");
 
     const saveResultDiv = elem("save-result-div");
     const saveResultBorderDiv = elem("save-result-border-div");
@@ -409,6 +414,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
+    const updateRemoteDownloadProgress = async (info) =>
+    {
+        switch(info.status) {
+            case "receiving":
+                remoteAttachmentDownloadProgress.value = info.receivedLength
+                break;
+            case "started":
+                remoteAttachmentHostLabel.textContent = info.host;
+                remoteAttachmentFilenameLabel.textContent = info.filename;
+                remoteAttachmentDownloadProgress.value = 0;                
+                remoteAttachmentDownloadProgress.setAttribute("max", info.contentLength);
+                remoteAttachmentPanel.classList.remove("hidden");
+                break;
+            case "complete":
+                remoteAttachmentPanel.classList.add("hidden");
+                remoteAttachmentHostLabel.textContent = "";
+                remoteAttachmentFilenameLabel.textContent = "";
+                remoteAttachmentDownloadProgress.value = 0;                
+                remoteAttachmentDownloadProgress.setAttribute("max", 1);
+                break;
+        }
+    };
+
     const updateSaveResult = async (info) =>
     {
         if(info.status == "started") {
@@ -546,11 +574,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportProcessingComplete: updateProcessingComplete,
 
                 reportPackagingProgress: updatePackagingProgress,
+                reportRemoteDownloadProgress: updateRemoteDownloadProgress,
                 reportSaveResult: updateSaveResult,
 
                 reportDetachProgress: updateDetachProgress,
                 reportDetachResult: updateDetachResult,
 
+                permitRemoteAttachments: capabilities.permitRemoteAttachments,
+                includeRemoteAttachments: capabilities.permitRemoteAttachments && extensionOptions.includeRemoteAttachments,
                 useAdvancedGetRaw: capabilities.useAdvancedGetRaw,
                 useEnhancedLogging: extensionOptions.useEnhancedLogging
             });
@@ -930,7 +961,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             else if(attachment.isEmbed) {
                 previewWrapper.classList.add(defaultImagePreview);
-                previewWrapper.innerHTML = "embed";
+                previewWrapper.innerHTML = messenger.i18n.getMessage("embed");
+            }
+            else if(attachment.isRemote) {
+                previewWrapper.classList.add(defaultImagePreview);
+                previewWrapper.innerHTML = messenger.i18n.getMessage("remote");
             }
             else {
                 previewWrapper.classList.add("none");

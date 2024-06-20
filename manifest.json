@@ -30,7 +30,8 @@
     "menus.overrideContext",
     "storage",
     "downloads",
-    "messagesModifyPermanent"
+    "messagesModifyPermanent",
+    "*://*/*"
   ],
   "default_locale": "en"
 }

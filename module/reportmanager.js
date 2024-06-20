@@ -89,7 +89,14 @@ export class ReportManager {
                         generateFilenameHeaderRow(currentTable, reportData.packagingFilenameList[currentFilenameIndex]);
                     }
 
-                    const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
+                    let specialMessage = null;
+
+                    if(item.isDeleted) {
+                        specialMessage = messenger.i18n.getMessage("detached");
+                    }
+                    else if(item.isRemote) {
+                        specialMessage = item.remoteUrl;
+                    }
 
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, specialMessage));
                 }

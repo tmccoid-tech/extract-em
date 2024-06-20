@@ -1,36 +1,100 @@
 export class HttpUtility {
-    static async head(url, count = 0) {
-
-        count++;
+    static async getLength(url) {
+        let result = {
+            success: false,
+            length: 0
+        }
         
-        if(count > 10) {
-            return null;
+        const response = await this.#head(url);
+
+        if(response && response.headers.has("content-length")) {
+            result.length = parseInt(response.headers.get("content-length"));
+            result.success = true;
         }
 
-        let response;
+        return result;
+    }
+
+    static async #head(url) {
+        let response = null;
 
         try {
-            response = await fetch(url, { method:"HEAD", headers: { "Access-Control-Allow-Origin": "*" } });
+            response = await fetch(url, { method: "HEAD" } );
+        }
+        catch(e) {
+            console.log(e);
+        }
+
+        if(response == null || response.status != 200) {
+            return null;
+        }
+
+        return response;
+    }
+
+    static async fetch(url, filename, reportProgress) {
+        let result = {
+            success: false,
+            file: null
+        };
+
+        let response = null;
+
+        try {
+            response = await fetch(url);
         }
         catch {
-            return null;
+            console.log(e);
+
+            return result;
         }
 
-        if(response = null) {
-            return null;
+        if(response.status == 200) {
+            const mimeType = response.headers.get("content-type");
+            const contentLength = parseInt(response.headers.get("content-length"));
+            const lastModified = new Date(response.headers.get("last-modified")).getTime();
+
+            const receiveBuffer = new Uint8Array(contentLength);
+            let receivedLength = 0;
+
+            const progressInfo = {
+                status: "started",
+                host: new URL(url).origin,
+                filename: filename,
+                receivedLength: receivedLength,
+                contentLength: contentLength
+            };
+
+            reportProgress(progressInfo);
+
+            progressInfo.status = "receiving";
+
+            const reader = response.body.getReader();
+
+            while(true) {
+                const { done: completed, value: data } = await reader.read();
+
+                if(completed) {
+                    progressInfo.status = "complete";
+
+                    reportProgress(progressInfo);
+
+                    break;
+                }
+
+                receiveBuffer.set(data, receivedLength);
+
+                receivedLength += data.length;
+
+                progressInfo.receivedLength = receivedLength;
+
+                reportProgress(progressInfo);
+            }
+
+            result.success = true;
+            result.file = new File([receiveBuffer.buffer], filename, { type: mimeType, lastModified: lastModified });
         }
 
-        switch (response.status) {
-            case 200:
-                return response;
-            case 301:
-            case 302:
-            case 307:
-            case 308:
-                return await this.head(response.location, count);
-            default:
-                return null;
-        }
-
+        return result;
     }
 }

@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const defaultGroupingSelect = elem("default-grouping-select");
     const imagePreviewSelect = elem("image-preview-select");
     const includeEmbedsCheckbox = elem("include-embeds-checkbox");
+    const includeRemoteAttachmentsCheckbox = elem("include-remote-attachments-checkbox");
     
     async function main() {
         listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
@@ -28,6 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(defaultGroupingSelect, (e) => setOption(e));
         listen(imagePreviewSelect, (e) => setOption(e));
         listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(includeRemoteAttachmentsCheckbox, (e) => setOption(e, (c) => c.checked));
 
         const extensionOptions = await OptionsManager.retrieve();
 
@@ -42,6 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         defaultGroupingSelect.value = extensionOptions.defaultGrouping;
         imagePreviewSelect.value = extensionOptions.defaultImagePreview;
         includeEmbedsCheckbox.checked = extensionOptions.includeEmbeds;
+        includeRemoteAttachmentsCheckbox.checked = extensionOptions.includeRemoteAttachments;
 
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;

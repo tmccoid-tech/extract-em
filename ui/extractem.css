@@ -478,6 +478,12 @@ folder-selector-button:disabled:active {
     z-index: 2;
 }
 
+#remote-attachment-panel {
+    position: absolute;
+    margin: 50%;
+    background-color: lightskyblue;
+}
+
 #zip-panel {
     width: 100%;
     height: 100%;

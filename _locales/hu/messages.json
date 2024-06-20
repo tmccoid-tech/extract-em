@@ -58,6 +58,8 @@
     "embed": { "message": "beágyazás" },
     "embeds": { "message": "Beágyazások" },
     "embedsPP": { "message": "beágyazás(ok)" },
+
+    "remote": { "message": "remote" },
     
     "selected": { "message": "kijelölt" },
     "count": { "message": "Szám" },
@@ -183,6 +185,14 @@
         "description": ""
     },
 
+    "includeRemoteAttachments": {
+        "message": "Include remote attachments",
+        "description": ""
+    },
+    "includeRemoteAttachmentsDescription": {
+        "message": "Identifies and includes attachments stored remotely (TB 128+ only)",
+        "description": ""
+    },
 
     "preserveFolderStructure": {
         "message": "Mappaszerkezet megőrzése",
@@ -270,6 +280,7 @@
     "error": { "message": "hiba" },
 
     "missingAttachment": { "message": "A mellékletben nincsenek adatok; vélhetően törölve/leválasztva." },
+    "remoteAttachmentInaccessible": { "message": "The remote attachment could not be downloaded." },
 
     "detachComplete": { "message": "Leválás befejeződött!" },
     "detachErrorMessage": { "message": "Egy vagy több melléklet leválasztása nem sikerült." },

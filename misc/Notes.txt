@@ -75,13 +75,13 @@ XXX Present omissions (detached/deleted)
 
 XXX Rearrange result panel
 
-Deletion tracking
+XXX Deletion tracking
 
-Extraction report
+XXX Extraction report
 
 XXX Embedded image extraction
 
-Issue with "potential detachments"
+XXX Issue with "potential detachments"
 
 XXX Extract (+subfolders) on tmccoid@Inbox:
 	XXX 1) Discovering progress does not complete
@@ -90,6 +90,10 @@ XXX Extract (+subfolders) on tmccoid@Inbox:
 XXX Change immediate discovery message (don't repeat "in x messages")
 
 XXX Let Me Choose reset error: this.#folderCounts is null (attachmentmanager.discoverAttachments, sort routine)
+
+Remote attachments [REQUIRES TESTING]
+	XXX	Identify in Attachment List
+	XXX	Identify in Extraction Report
 
 
 

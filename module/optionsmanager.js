@@ -10,6 +10,7 @@ export class OptionsManager {
         defaultGrouping: "None",
         defaultImagePreview: "sm",
         includeEmbeds: false,
+        includeRemoteAttachments: false,
         lastLoadedVersion: ""
     };
 

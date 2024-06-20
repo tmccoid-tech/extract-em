@@ -58,6 +58,8 @@
     "embed": { "message": "embed" },
     "embeds": { "message": "Embeds" },
     "embedsPP": { "message": "embed(s)" },
+
+    "remote": { "message": "remote" },
     
     "selected": { "message": "selected" },
     "count": { "message": "Count" },
@@ -183,6 +185,14 @@
         "description": ""
     },
 
+    "includeRemoteAttachments": {
+        "message": "Include remote attachments",
+        "description": ""
+    },
+    "includeRemoteAttachmentsDescription": {
+        "message": "Identifies and includes attachments stored remotely (TB 128+ only)",
+        "description": ""
+    },
 
     "preserveFolderStructure": {
         "message": "Preserve folder structure",
@@ -270,6 +280,7 @@
     "error": { "message": "error" },
 
     "missingAttachment": { "message": "Attachment has no data; presumed deleted/detached." },
+    "remoteAttachmentInaccessible": { "message": "The remote attachment could not be downloaded." },
 
     "detachComplete": { "message": "Detachment complete!" },
     "detachErrorMessage": { "message": "One or more attachments failed to detach." },

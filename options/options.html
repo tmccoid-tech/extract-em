@@ -46,6 +46,12 @@
         <dt><hr/></dt>
         <dd></dd>
 
+        <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> __MSG_useFilenamePattern__</label></dt>
+        <dd>
+            <label>__MSG_filenamePattern__: <input type="text" id="filename-pattern-display" disabled="disabled"><button type="button" id="filename-pattern-edit-button">__MSG_edit__</button></label>
+            __MSG_useFilenamePatternDescription__
+        </dd>
+
         <dt>
             <label><input type="checkbox" id="include-embeds-checkbox" option-name="includeEmbeds" /> __MSG_includeEmbeddedImages__</label>
         </dt>
@@ -91,6 +97,19 @@
             __MSG_imagePreviewDescription__
         </dd>
     </dl>
+
+    <div id="filename-pattern-editor-div" class="hidden">
+        <input type="text" id="filename-pattern-textbox">
+        <ul>
+            <li>Date</li>
+            <li>Author</li>
+            <li>Sender</li>
+            <li>Subject</li>
+            <li>Folder</li>
+            <li>Original Filename</li>
+        </ul>
+    </div>
+
     <script src="/module/i18n.js"></script>
     <script type="module" src="/module/optionsmanager.js"></script>
     <script type="module" src="options.js"></script>

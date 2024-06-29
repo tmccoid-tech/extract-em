@@ -220,7 +220,7 @@
                 </div>
                 <div class="result-button-container save-result-content-div">
                     <button id="permanently-detach-button" class="permanently-detach-container close-button disablable" disabled="disabled"><img class="hazard-image" src="hazard-sign.png" /> __MSG_permanentlyDetach__</button>
-                    <button id="view-report-button" class="close-button hidden">__MSG_viewReport__</button>                       
+                    <button id="view-report-button" class="close-button">__MSG_viewReport__</button>                       
                     <button id="close-zip-panel-button" class="close-button disablable" disabled="disabled">__MSG_close__</button>
                     <button id="exit-extension-button" class="close-button disablable" disabled="disabled">__MSG_closeAndExit__</button>
                 </div>
@@ -234,7 +234,7 @@
                     <div><span id="detach-error-count-span">0</span> __MSG_errorsEncountered__</div>
                 </div>
                 <div class="result-button-container save-result-content-div">
-                    <button id="view-report-button" class="close-button hidden">__MSG_viewReport__</button>                       
+                    <button id="detach-view-report-button" class="close-button">__MSG_viewReport__</button>                       
                     <button id="detach-exit-extension-button" class="close-button disablable" disabled="disabled">__MSG_closeAndExit__</button>
                 </div>
             </div>
@@ -261,6 +261,14 @@
                 <ul>
                     <li>__MSG_rn1_2_1_Fix01__</li>
                     <li>__MSG_rn1_2_1_Fix02__</li>
+                </ul>
+            </div>
+            <div class="release-notes-panel hidden" version="1.3.1">
+                <h4>__MSG_releaseNotesTitle__ 1.3.1</h4>
+                <h4>__MSG_whatsNew__</h4>
+                <ul>
+                    <li>__MSG_rn1_3_1_New01__</li>
+                    <li>__MSG_rn1_3_1_New02__</li>
                 </ul>
             </div>
         </div>        
@@ -301,13 +309,183 @@
         </div>
     </template>
 
+    <template id="report-style-template">
+        <style>
+            .hidden {
+                display: none;
+            }
+
+            body {
+                padding: 12px;
+                font-family: Calibri;
+            }
+
+            .report-logo {
+                float: left;
+                margin-right: 8px;
+            }
+
+            .summary-table td:nth-child(even) {
+                width: 48px;
+                text-align: right;
+                padding-right: 32px;
+            }
+
+            .list-table {
+                width: 80%;
+                max-width: 1000px;
+                margin-top: 16px;
+            }
+
+            .list-table h3 {
+                background-color: rgba(255, 228, 196, 0.369);
+                margin-bottom: 0px;
+                padding: 8px;
+            }
+
+            .list-table-item-container {
+                display: grid;
+                grid-template-columns: 48px 1fr 160px;
+                grid-template-areas:
+                    "seq filename   filesize"
+                    "seq author     date"
+                    "seq subject    subject"
+                    "seq special    special"
+                ;   
+            }
+
+            .sequence-number {
+                grid-area: seq;
+            }
+
+            .filename-label {
+                grid-area: filename;
+                font-weight: bold;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .file-size-label {
+                grid-area: filesize;
+                justify-self: end;
+            }
+
+            .author-label {
+                grid-area: author;
+                padding-left: 16px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .message-date-label {
+                grid-area: date;
+                justify-self: end;
+            }
+
+            .subject-label {
+                grid-area: subject;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding-left: 16px;
+            }
+
+            .special-message-label {
+                grid-area: special;
+                padding-left: 16px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .filename-row {
+                background-color: rgba(192, 192, 192, .25);                
+                text-align: center;
+            }
+
+        </style>
+    </template>
+
+    <template id="report-template">
+        <div>
+            <img class="report-logo">
+            <h2>__MSG_extensionName__ __MSG_summaryForDate__ <span class="current-datetime-label"></span></h2>
+
+            <table class="summary-table">
+                <tr>
+                    <td>__MSG_packageFileCount__:</td>
+                    <td class="package-file-count-label">0</td>
+                    <td>__MSG_previouslyDetachedDeleted__:</td>
+                    <td class="alteration-count-label">0</td>
+                    <td>__MSG_packaging__ __MSG_errors__:</td>
+                    <td class="packaging-error-count-label">0</td>
+                </tr>
+                <tr>
+                    <td>__MSG_savedAttachments__:</td>
+                    <td class="saved-attachment-count-label">0</td>
+                    <td>__MSG_duplicateAttachments__:</td>
+                    <td class="duplicate-attachment-count-label">0</td>
+                    <td>__MSG_permanentDetachmentErrors__:</td>
+                    <td class="deletion-error-count-label">0</td>
+                </tr>
+                <tr>
+                    <td>__MSG_savedEmbeds__:</td>
+                    <td class="saved-embed-count-label">0</td>
+                    <td>__MSG_duplicateEmbeds__:</td>
+                    <td class="duplicate-embed-count-label">0</td>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+            </table>
+
+            <div class="list-table attachment-table hidden">
+                <h3>__MSG_savedAttachments__</h3>
+            </div>
+
+            <div class="list-table alteration-table hidden">
+                <h3>__MSG_previouslyDetachedDeleted__ (__MSG_omitted__)</h3>
+            </div>
+
+            <div class="list-table duplicate-table hidden">
+                <h3>__MSG_duplicateAttachments__ (__MSG_omitted__)</h3>
+            </div>
+
+            <div class="list-table embed-table hidden">
+                <h3>__MSG_savedEmbeds__</h3>
+            </div>
+
+            <div class="list-table duplicate-embed-table hidden">
+                <h3>__MSG_duplicateEmbeds__ (__MSG_omitted__)</h3>
+            </div>
+
+            <div class="list-table error-table hidden">
+                <h3>__MSG_errors__</h3>
+            </div>
+
+            <div class="list-table detachment-error-table hidden">
+                <h3>__MSG_permanentDetachmentErrors__</h3>
+            </div>
+        </div>                
+    </template>
+
+    <template id="report-item-template">
+        <div class="list-table-item-container">
+            <div class="sequence-number"></div>
+            <div class="filename-label"></div>
+            <div class="file-size-label"></div>
+
+            <div class="author-label"></div>
+            <div class="message-date-label"></div>
+
+            <div class="subject-label"></div>
+
+            <div class="special-message-label hidden"></div>
+        </div>        
+    </template>
+
     <script src="/module/i18n.js"></script>
-    <script type="module" src="/module/optionsmanager.js"></script>
-<!--    <script src="/module/z-worker.js"></script>     -->
     <script src="/module/zip-full.js"></script>
-    <script type="module" src="/module/zipem.js"></script>
-    <script type="module" src="/module/embedmanager.js"></script>
-    <script type="module" src="/module/attachmentmanager.js"></script>
     <script type="module" src="extractem.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
+import { ReportManager } from "/module/reportmanager.js";
 
 const _filterSelect = function* (test, select) {
     for(const item of this) {
@@ -163,6 +164,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const saveResultBorderDiv = elem("save-result-border-div");
     const saveResultLabel = elem("save-result-label");
     const permanentlyDetachButton = elem("permanently-detach-button");
+    const viewReportButton = elem("view-report-button");
     const closeZipPanelButton = elem("close-zip-panel-button");
     const exitExtensionButton = elem("exit-extension-button");
 
@@ -179,7 +181,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const detachResultBorderDiv = elem("detach-result-border-div");
     const detachResultLabel = elem("detach-result-label");
     const detachErrorCountSpan = elem("detach-error-count-span");
+    const detachViewReportButton = elem("detach-view-report-button");
     const detachExitExtensionButton = elem("detach-exit-extension-button");
+
+    const reportStyleTemplate = elem("report-style-template");
+    const reportTemplate = elem("report-template");
+    const reportItemTemplate = elem("report-item-template");
 
     const releaseNotesOverlay = elem("release-notes-overlay");
     const closeReleaseNotesButton = elem("close-release-notes-button");
@@ -476,6 +483,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         proceedDetachButton.addEventListener("click", proceedDetach);
         cancelDetachButton.addEventListener("click", cancelDetach);
         detachExitExtensionButton.addEventListener("click", (event) => { window.close(); });
+
+        viewReportButton.addEventListener("click", generateReport);
+        detachViewReportButton.addEventListener("click", generateReport);
 
         includeEmbedsCheckbox.addEventListener("change", includeEmbedsCheckboxChanged);
         quickmenuIncludeEmbedsCheckbox.addEventListener("change", quickMenuIncludeEmbedsCheckboxChanged);
@@ -920,7 +930,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             else if(attachment.isEmbed) {
                 previewWrapper.classList.add(defaultImagePreview);
-                previewWrapper.innerHTML = "embed";                     // TODO: add to messages.json when verbiage decided
+                previewWrapper.innerHTML = "embed";
             }
             else {
                 previewWrapper.classList.add("none");
@@ -1273,6 +1283,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         flexContainer.classList.remove("modal");
 
         zoomImage.src = "";
+    }
+
+    function generateReport(event) {
+        ReportManager.generateReport(attachmentManager, {
+            reportStyleTemplate: reportStyleTemplate,
+            reportTemplate: reportTemplate,
+            reportItemTemplate: reportItemTemplate,
+            abbreviateFileSize: abbreviateFileSize
+        });
     }
 
     function closeZipPanel() {

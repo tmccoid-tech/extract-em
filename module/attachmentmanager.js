@@ -22,6 +22,9 @@ export class AttachmentManager {
     #useAdvancedGetRaw = true;
     #useEnhancedLogging = false;
 
+    #useFilenamePattern = false;
+    #filenamePattern = "";
+
     messageList = new Map();
     attachmentList = [];
 
@@ -106,6 +109,9 @@ export class AttachmentManager {
 
         this.#useAdvancedGetRaw = options.useAdvancedGetRaw;
         this.#useEnhancedLogging = options.useEnhancedLogging;
+
+        this.#useFilenamePattern = options.useFilenamePattern && options.filenamePattern.length > 0;
+        this.#filenamePattern = options.filenamePattern;
     }
 
     #onFolderProcessed(folderPath) {
@@ -827,6 +833,11 @@ export class AttachmentManager {
 
             item.hasError = false;
 
+            if(this.#useFilenamePattern) {
+//                this.#generateAlternateFilename(item);
+            }
+
+
             let attachmentFile;
 
             try {
@@ -1297,6 +1308,92 @@ export class AttachmentManager {
         const attachmentFile = await browser.messages.getAttachmentFile(messageId, partName);
 
         return attachmentFile;
+    }
+
+    #generateAlternateFilename(item, messageId) {
+        const alternateFilename = this.#filenamePattern;
+        const originalFilename = item.name;
+        const message = this.messageList.get(messageId);
+
+        // Source
+        if(alternateFilename.indexOf("{sender}") > -1) {
+            const authorParts = this.#parseAuthorField(message.author);
+
+            if(authorParts.sender) {
+                alternateFilename = alternateFilename.replace("{sender}", authorParts.sender);
+            }
+        }
+        else if(alternateFilename.indexOf("{author}") > -1) {
+            const authorParts = this.#parseAuthorField(message.author);
+
+            if(authorParts.author) {
+                alternateFilename = alternateFilename.replace("{author}", authorParts.author);
+            }
+            else if(authorParts.sender) {
+                alternateFilename = alternateFilename.replace("{sender}", authorParts.sender);
+            }
+        }
+
+        const mdp = this.#getFormattedDateParts(message.date);
+
+        // Date
+        if(alternateFilename.indexOf("{mm-dd-yyyy}") > -1) {
+
+        }
+        else if(alternateFilename.indexOf("{dd-mm-yyyy}") > -1) {
+
+        }
+        else if(alternateFilename.indexOf("{yyyy-mm-dd}") > -1) {
+
+        }
+        else if(alternateFilename.indexOf("{yyyymmdd}") > -1) {
+
+        }
+
+        if(alternateFilename.indexOf("{subject}") > -1) {
+            alternateFilename = alternateFilename.replace("{subject}", message.subject);
+        }
+
+        if(alternateFilename.indexOf("{filename}") > -1) {
+            alternateFilename = alternateFilename.replace("{filename}", item.name);
+        }
+
+
+        if(alternateFilename != this.#filenamePattern) {
+            item.originalFilename = item.name;
+            item.name = this.#normalizeFileName(alternateFilename);
+        }
+    }
+
+    #parseAuthorField(author) {
+        const result = {
+            sender: null,
+            author: null
+        }
+
+        const authorRegex = /\<[\w\-\.]+@([\w-]+\.)+[\w-]{2,}\>\w*$/gi
+
+
+        return result;
+    }
+
+    #getFormattedDateParts(date, formatString) {
+        const dateParts = {
+            yyyy: date.getFullYear.toString(),
+            mm: date.getMonth.toString().padStart(2, "0"),
+            dd: date.getDay().toString().padStart(2, "0")
+        }
+
+        switch(formatString) {
+            case "{mm-dd-yyyy}":
+                return `${dateParts.mm}-${dateParts.dd}-${dateParts.yyyy}`;
+            case "{dd-mm-yyyy}":
+                return `${dateParts.dd}-${dateParts.mm}-${dateParts.yyyy}`;
+            case "{yyyy-mm-dd}":
+                return `${dateParts.yyyy}-${dateParts.mm}-${dateParts.dd}`;
+            default:    // yyyymmdd
+                return `${dateParts.yyyy}${dateParts.mm}${dateParts.dd}`;
+        }
     }
 
     #normalizeFileName(originalFileName) {

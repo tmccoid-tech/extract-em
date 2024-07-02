@@ -15,99 +15,91 @@
     </style>
 </head>
 <body>
-    <dl>
-        <dt>
-            <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> __MSG_useInteractiveUi__</label>
-        </dt>
-        <dd>
-            __MSG_useInteractiveUiDescription__
-        </dd>
+    <div>    
+        <dl>
+            <dt>
+                <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> __MSG_useInteractiveUi__</label>
+            </dt>
+            <dd>
+                __MSG_useInteractiveUiDescription__
+            </dd>
 
-        <dt>
-            <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> __MSG_displayQuickMenu__</label>
-        </dt>
-        <dd>
-            __MSG_displayQuickMenuDescription__
-        </dd>
-        
-        <dt>
-            <label><input type="radio" name="user-interaction-option" id="extract-immediate-checkbox" value="immediate"/> __MSG_extractImmediate__</label>
-        </dt>
-        <dd>
-            __MSG_extractImmediateDescription__
-            <dl>
-                <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" option-name="includeSubfolders" disabled="disabled"/> __MSG_includeSubFolders__</label></dt>
-                <dd>__MSG_includeSubFoldersDescription__</dd>
+            <dt>
+                <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> __MSG_displayQuickMenu__</label>
+            </dt>
+            <dd>
+                __MSG_displayQuickMenuDescription__
+            </dd>
+            
+            <dt>
+                <label><input type="radio" name="user-interaction-option" id="extract-immediate-checkbox" value="immediate"/> __MSG_extractImmediate__</label>
+            </dt>
+            <dd>
+                __MSG_extractImmediateDescription__
+                <dl>
+                    <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" option-name="includeSubfolders" disabled="disabled"/> __MSG_includeSubFolders__</label></dt>
+                    <dd>__MSG_includeSubFoldersDescription__</dd>
 
-                <dt><label><input type="checkbox" id="use-silent-mode-checkbox" option-name="useSilentMode" disabled="disabled"/> __MSG_useSilentMode__</label></dt>
-                <dd>__MSG_useSilentModeDescription__</dd>
-            </dl>
-        </dd>
-        <dt><hr/></dt>
-        <dd></dd>
+                    <dt>
+                        <label><input type="checkbox" id="use-silent-mode-checkbox" option-name="useSilentMode" disabled="disabled"/> __MSG_useSilentMode__</label>
+                    </dt>
+                    <dd>__MSG_useSilentModeDescription__</dd>
+                </dl>
+            </dd>
+            <dt><hr/></dt>
+            <dd></dd>
 
-        <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> __MSG_useFilenamePattern__</label></dt>
-        <dd>
-            <label>__MSG_filenamePattern__: <input type="text" id="filename-pattern-display" disabled="disabled"><button type="button" id="filename-pattern-edit-button">__MSG_edit__</button></label>
-            __MSG_useFilenamePatternDescription__
-        </dd>
+            <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> __MSG_useFilenamePattern__</label></dt>
+            <dd>
+                <input type="text" id="filename-pattern-display-textbox" disabled="disabled"><button type="button" id="filename-pattern-edit-button" disabled="disabled">__MSG_edit__</button><br/>
+                __MSG_useFilenamePatternDescription__
+            </dd>
 
-        <dt>
-            <label><input type="checkbox" id="include-embeds-checkbox" option-name="includeEmbeds" /> __MSG_includeEmbeddedImages__</label>
-        </dt>
-        <dd>
-            __MSG_includeEmbeddedImagesDescription__
-        </dd>
+            <dt>
+                <label><input type="checkbox" id="include-embeds-checkbox" option-name="includeEmbeds" /> __MSG_includeEmbeddedImages__</label>
+            </dt>
+            <dd>
+                __MSG_includeEmbeddedImagesDescription__
+            </dd>
 
-        <dt>
-            <label><input type="checkbox" id="preserve-folder-structure-checkbox" option-name="preserveFolderStructure" /> __MSG_preserveFolderStructure__</label>
-        </dt>
-        <dd>
-            __MSG_preserveFolderStructureDescription__
-        </dd>
+            <dt>
+                <label><input type="checkbox" id="preserve-folder-structure-checkbox" option-name="preserveFolderStructure" /> __MSG_preserveFolderStructure__</label>
+            </dt>
+            <dd>
+                __MSG_preserveFolderStructureDescription__
+            </dd>
 
-        <dt>
-            <label><input type="checkbox" id="use-enhanced-logging-checkbox" option-name="useEnhancedLogging" /> __MSG_useEnhancedLogging__</label>
-        </dt>
-        <dd>
-            __MSG_useEnhancedLoggingDescription__
-        </dd>
+            <dt>
+                <label><input type="checkbox" id="use-enhanced-logging-checkbox" option-name="useEnhancedLogging" /> __MSG_useEnhancedLogging__</label>
+            </dt>
+            <dd>
+                __MSG_useEnhancedLoggingDescription__
+            </dd>
 
-        <dt>
-            <label>__MSG_defaultGrouping__: <select id="default-grouping-select" option-name="defaultGrouping">
-                <option value="None" selected>__MSG_none__</option>
-                <option value="Author">__MSG_defaultGroupingByAuthor__</option>
-                <option value="Folder">__MSG_defaultGroupingByFolder__</option>
-                <option value="Extension">__MSG_defaultGroupingByExtension__</option>
-            </select></label>
-        </dt>
-        <dd>
-            __MSG_defaultGroupingDescription__
-        </dd>
+            <dt>
+                <label>__MSG_defaultGrouping__: <select id="default-grouping-select" option-name="defaultGrouping">
+                    <option value="None" selected>__MSG_none__</option>
+                    <option value="Author">__MSG_defaultGroupingByAuthor__</option>
+                    <option value="Folder">__MSG_defaultGroupingByFolder__</option>
+                    <option value="Extension">__MSG_defaultGroupingByExtension__</option>
+                </select></label>
+            </dt>
+            <dd>
+                __MSG_defaultGroupingDescription__
+            </dd>
 
-        <dt>
-            <label>__MSG_imagePreview__: <select id="image-preview-select" option-name="defaultImagePreview">
-                <option value="none">__MSG_none__</option>
-                <option value="sm" selected>__MSG_imagePreviewSmall__</option>
-                <option value="md">__MSG_imagePreviewMedium__</option>
-                <option value="lg">__MSG_imagePreviewLarge__</option>
-            </select></label>
-        </dt>
-        <dd>
-            __MSG_imagePreviewDescription__
-        </dd>
-    </dl>
-
-    <div id="filename-pattern-editor-div" class="hidden">
-        <input type="text" id="filename-pattern-textbox">
-        <ul>
-            <li>Date</li>
-            <li>Author</li>
-            <li>Sender</li>
-            <li>Subject</li>
-            <li>Folder</li>
-            <li>Original Filename</li>
-        </ul>
+            <dt>
+                <label>__MSG_imagePreview__: <select id="image-preview-select" option-name="defaultImagePreview">
+                    <option value="none">__MSG_none__</option>
+                    <option value="sm" selected>__MSG_imagePreviewSmall__</option>
+                    <option value="md">__MSG_imagePreviewMedium__</option>
+                    <option value="lg">__MSG_imagePreviewLarge__</option>
+                </select></label>
+            </dt>
+            <dd>
+                __MSG_imagePreviewDescription__
+            </dd>
+        </dl>
     </div>
 
     <script src="/module/i18n.js"></script>

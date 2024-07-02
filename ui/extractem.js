@@ -552,7 +552,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportDetachResult: updateDetachResult,
 
                 useAdvancedGetRaw: capabilities.useAdvancedGetRaw,
-                useEnhancedLogging: extensionOptions.useEnhancedLogging
+                useEnhancedLogging: extensionOptions.useEnhancedLogging,
+
+                useFilenamePattern: extensionOptions.useFilenamePattern,
+                filenamePattern: extensionOptions.filenamePattern
             });
 
             if(capabilities.extensionVersion !== extensionOptions.lastLoadedVersion) {

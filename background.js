@@ -20,8 +20,8 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
     async function extractSilently(params) {
         const attachmentManager = new AttachmentManager({
             folders: params.selectedFolders,
-            includeEmbeds: params.includeEmbeds,
             silentModeInvoked: true,
+
             reportProcessingComplete: () =>
             {
                 attachmentManager.extract(attachmentManager.attachmentList,
@@ -37,12 +37,18 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
                     }
                   );
             },
-            reportSaveResult: updateSaveResult
+            
+            reportSaveResult: updateSaveResult,
+
+            // TODO: Add useAdvancedGetRaw from capabilities
+            useEnhancedLogging: extensionOptions.useEnhancedLogging,
+            useFilenamePattern: extensionOptions.useFilenamePattern,
+            filenamePattern: extensionOptions.filenamePattern
         });
 
         const selectedFolderPaths = assembleFolderPaths(params.selectedFolders[0]);
 
-        attachmentManager.discoverAttachments(new Set(selectedFolderPaths));
+        attachmentManager.discoverAttachments(new Set(selectedFolderPaths), params.includeEmbeds);
     }
 
     function assembleFolderPaths(folder) {
@@ -114,7 +120,7 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
                         selectionContext: selectionContext,
                         preserveFolderStructure: extensionOptions.preserveFolderStructure,
                         allowExtractImmediate: 
-                        extensionOptions.extractImmediate &&
+                            extensionOptions.extractImmediate &&
                             selectedFolders.length == 1 &&
                             (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders)
                     };
@@ -122,6 +128,11 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
                     messenger.menus.update(menuId, { enabled: false });
 
                     if(extensionOptions.useSilentMode && params.allowExtractImmediate) {
+                        params.includeEmbeds = extensionOptions.includeEmbeds;
+                        params.useEnhancedLogging = extensionOptions.useEnhancedLogging;
+                        params.useFilenamePattern = extensionOptions.useFilenamePattern;
+                        params.filenamePattern = extensionOptions.filenamePattern;
+
                         extractSilently(params);
                     }
                     else {

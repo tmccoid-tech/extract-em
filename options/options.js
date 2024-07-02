@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const defaultGroupingSelect = elem("default-grouping-select");
     const imagePreviewSelect = elem("image-preview-select");
     const includeEmbedsCheckbox = elem("include-embeds-checkbox");
+
+    const useFilenamePatternCheckbox = elem("use-filename-pattern-checkbox");
+    const filenamePatternDisplayTextbox = elem("filename-pattern-display-textbox");
+    const filenamePatternEditButton = elem("filename-pattern-edit-button");
     
     async function main() {
         listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
@@ -28,6 +32,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(defaultGroupingSelect, (e) => setOption(e));
         listen(imagePreviewSelect, (e) => setOption(e));
         listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
+
+        listen(useFilenamePatternCheckbox, onFilenamePatternOptionChanged);
 
         const extensionOptions = await OptionsManager.retrieve();
 
@@ -45,6 +51,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;
+
+        useFilenamePatternCheckbox.checked = options.useFilenamePattern;
+        filenamePatternDisplayTextbox.value = options.filenamePattern;
     }
 
     function listen(element, handler) {
@@ -68,6 +77,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         extractImmediateSubfoldersCheckbox.disabled = !extractImmediate;
         useSilentModeCheckbox.disabled= !extractImmediate;
+    }
+
+    function onFilenamePatternOptionChanged(event) {
+        if(useFilenamePatternCheckbox.checked) {
+            if(filenamePatternDisplayTextbox.value.length == 0) {
+                // Open FP editor
+            }
+            else {
+                filenamePatternEditButton.removeAttribute("disabled");
+            }
+        }
+        else {
+            filenamePatternEditButton.setAttribute("disabled", "disabled");
+        }
     }
 
     await main();

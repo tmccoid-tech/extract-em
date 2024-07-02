@@ -10,6 +10,8 @@ export class OptionsManager {
         defaultGrouping: "None",
         defaultImagePreview: "sm",
         includeEmbeds: false,
+        useFilenamePattern: false,
+        filenamePattern: "",
         lastLoadedVersion: ""
     };
 

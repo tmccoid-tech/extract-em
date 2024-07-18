@@ -882,6 +882,12 @@ export class AttachmentManager {
             }
 
             let fileName = item.name;
+
+            if(this.#useFilenamePattern) {
+                fileName = this.#generateAlternateFilename(item);
+                item.alternateFilename = fileName;
+            }
+
             packagingProgressInfo.lastFileName = fileName;
             
             const duplicateFileNameTracker = this.#duplicateFileNameTracker;
@@ -893,7 +899,7 @@ export class AttachmentManager {
 
                 fileName = this.#sequentializeFileName(fileName, ++sequenceNumber);
 
-                item.serialName = fileName;
+                item.alternateFilename = fileName;
 
                 duplicateFileNameTracker.set(duplicateKey, sequenceNumber);
             }
@@ -1016,6 +1022,7 @@ export class AttachmentManager {
                 }
 
                 let fileName = item.name;
+
                 const decodeData = item.decodeData;
 
                 if(duplicateEmbedFileTracker.has(fileName)) {
@@ -1047,15 +1054,25 @@ export class AttachmentManager {
                         nameDuplicate.sizes.set(item.size, new Map([[decodeData.checksum, []]]));
                     }
 
+                    if(this.#useFilenamePattern) {
+                        fileName = this.#generateAlternateFilename(item);
+                        item.alternateFilename = fileName;
+                    }
+
                     if(sequenceNumber > 0) {
                         fileName = this.#sequentializeFileName(fileName, sequenceNumber);
 
-                        item.serialName = fileName;
+                        item.alternateFilename = fileName;
                     }
                 }
                 else {
                     const checksumEntry = new Map([[decodeData.checksum, []]]);
                     duplicateEmbedFileTracker.set(fileName, { count: 1, sizes: new Map([[item.size, checksumEntry]]) });
+
+                    if(this.#useFilenamePattern) {
+                        fileName = this.#generateAlternateFilename(item);
+                        item.alternateFilename = fileName;
+                    }
                 }
 
                 packagingProgressInfo.lastFileName = fileName;
@@ -1310,59 +1327,65 @@ export class AttachmentManager {
         return attachmentFile;
     }
 
-    #generateAlternateFilename(item, messageId) {
-        const alternateFilename = this.#filenamePattern;
-        const originalFilename = item.name;
-        const message = this.messageList.get(messageId);
+    #generateAlternateFilename(item) {
+        let result = this.#filenamePattern;
+        
+        let originalFilename = item.name;
+        const message = this.messageList.get(item.messageId);
 
         // Source
-        if(alternateFilename.indexOf("{sender}") > -1) {
+        if(result.indexOf("{sender}") > -1) {
             const authorParts = this.#parseAuthorField(message.author);
 
             if(authorParts.sender) {
-                alternateFilename = alternateFilename.replace("{sender}", authorParts.sender);
+                result = result.replace("{sender}", authorParts.sender);
             }
         }
-        else if(alternateFilename.indexOf("{author}") > -1) {
+        else if(result.indexOf("{author}") > -1) {
             const authorParts = this.#parseAuthorField(message.author);
 
             if(authorParts.author) {
-                alternateFilename = alternateFilename.replace("{author}", authorParts.author);
+                result = result.replace("{author}", authorParts.author);
             }
             else if(authorParts.sender) {
-                alternateFilename = alternateFilename.replace("{sender}", authorParts.sender);
+                result = result.replace("{sender}", authorParts.sender);
             }
         }
 
-        const mdp = this.#getFormattedDateParts(message.date);
-
-        // Date
-        if(alternateFilename.indexOf("{mm-dd-yyyy}") > -1) {
-
-        }
-        else if(alternateFilename.indexOf("{dd-mm-yyyy}") > -1) {
-
-        }
-        else if(alternateFilename.indexOf("{yyyy-mm-dd}") > -1) {
-
-        }
-        else if(alternateFilename.indexOf("{yyyymmdd}") > -1) {
-
+        for(let dateFormat of ["{mm-dd-yyyy}", "{dd-mm-yyyy}", "{yyyy-mm-dd}", "{yyyymmdd}"]) {
+            if(result.indexOf(dateFormat) > -1) {
+                result = result.replace(dateFormat, this.#getFormattedDate(message.date));
+                break;
+            }
         }
 
-        if(alternateFilename.indexOf("{subject}") > -1) {
-            alternateFilename = alternateFilename.replace("{subject}", message.subject);
+        if(result.indexOf("{subject}") > -1) {
+            result = result.replace("{subject}", message.subject);
         }
 
-        if(alternateFilename.indexOf("{filename}") > -1) {
-            alternateFilename = alternateFilename.replace("{filename}", item.name);
+        if(result.indexOf("{filename}") > -1) {
+            let extension = "";
+
+            const segments = originalFilename.split(".");
+
+            if (segments.length > 1) {
+                if (segments[segments.length - 1].length < 6) {
+                    extension = "." + segments.pop();
+                    originalFilename = segments.join('.');
+                }
+            }
+
+            result = result.replace("{filename}", originalFilename) + extension;
         }
 
-
-        if(alternateFilename != this.#filenamePattern) {
-            item.originalFilename = item.name;
-            item.name = this.#normalizeFileName(alternateFilename);
+        if(result != this.#filenamePattern) {
+            result = this.#normalizeFileName(result);
         }
+        else {
+            result = item.name;
+        }
+
+        return result;
     }
 
     #parseAuthorField(author) {
@@ -1371,16 +1394,29 @@ export class AttachmentManager {
             author: null
         }
 
-        const authorRegex = /\<[\w\-\.]+@([\w-]+\.)+[\w-]{2,}\>\w*$/gi
+        const authorRegex = /(?<author>.*)\<(?<sender>[\w\-\.]+@([\w-]+\.)+[\w-]{2,})\>\w*$/gi
 
+        const matches = authorRegex.exec(author);
+
+        if(matches && matches.groups) {
+            const groups = matches.groups;
+
+            if(groups.author) {
+                result.author = groups.author.trim();
+            }
+
+            if(groups.sender) {
+                result.sender = groups.sender.trim();
+            }
+        }
 
         return result;
     }
 
-    #getFormattedDateParts(date, formatString) {
+    #getFormattedDate(date, formatString) {
         const dateParts = {
-            yyyy: date.getFullYear.toString(),
-            mm: date.getMonth.toString().padStart(2, "0"),
+            yyyy: date.getFullYear().toString(),
+            mm: date.getMonth().toString().padStart(2, "0"),
             dd: date.getDay().toString().padStart(2, "0")
         }
 

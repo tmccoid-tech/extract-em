@@ -1,0 +1,127 @@
+label {
+    font-weight: bold;
+}
+
+dd {
+    margin-bottom: 6px;
+}
+
+#filename-pattern-display-textbox {
+    width: 360px;
+    margin-right: 4px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 48px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+#filename-editor-div {
+    display: grid;
+    min-width: 620px;
+    max-width: 800px;
+    grid-template-columns: 100px 1fr 120px;
+    grid-template-areas: 
+        "pt-label       pt-content      pt-buttons"
+        "ph-label       ph-panel        ph-panel"
+        "sample-label   sample-value    buttons"
+    ;
+    row-gap: 10px;
+    padding: 12px;
+    background-color: antiquewhite;
+    border: solid 1px darkgoldenrod;                
+}
+
+#pattern-label {
+    grid-area: pt-label;
+}
+
+#pattern-content {
+    grid-area: pt-content;
+    display: flex;
+    align-content: stretch;
+}
+
+#edit-buttons-panel {
+    grid-area: pt-buttons;
+    display: flex;
+    justify-content: end;
+}
+
+#placeholders-label {
+    grid-area: ph-label;
+    display: flex;
+    align-items: center;
+}
+
+#placeholders-panel {
+    grid-area: ph-panel;
+    display: grid;
+    grid-template-columns: 48px 1fr 1fr;
+    row-gap: 10px;
+}
+
+#sample-result-label {
+    grid-area: sample-label;
+}
+
+#sample-result-panel {
+    grid-area: sample-value;
+}
+
+#buttons-panel {
+    grid-area: buttons;
+    display: flex;
+    justify-content: end;
+}
+
+#fp-textbox {
+    flex-grow: 1;
+    outline: none;
+    border: solid 2px green;
+    font-family: "Lucida Console";
+    font-size: 13pt;
+}
+
+#fp-textbox::selection,
+#fp-textbox::-moz-selection {
+    background-color: goldenrod;
+}
+
+#fp-textbox.invalid {
+    border: solid 2px red;
+}
+
+#sample-result-panel span {
+    text-decoration: underline dotted;
+}
+
+.placeholder-select {
+    min-width: 140px;
+}
+
+.sample-label {
+    margin-right: 12px;
+    white-space: nowrap;
+    color: #00000064;
+}
+
+.fp-editor-button {
+    min-width: 52px;
+    min-height: 24px;
+    margin-left: 6px;
+}

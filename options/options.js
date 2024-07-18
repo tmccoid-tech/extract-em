@@ -1,4 +1,5 @@
 import { OptionsManager } from "/module/optionsmanager.js";
+import { initializeEditor } from "/options/filename-pattern.js"
 
 document.addEventListener("DOMContentLoaded", async () => {
     i18n.updateDocument();
@@ -19,6 +20,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const useFilenamePatternCheckbox = elem("use-filename-pattern-checkbox");
     const filenamePatternDisplayTextbox = elem("filename-pattern-display-textbox");
     const filenamePatternEditButton = elem("filename-pattern-edit-button");
+
+    const filenameEditorOverlay = elem("filename-editor-overlay");
     
     async function main() {
         listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
@@ -34,6 +37,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
 
         listen(useFilenamePatternCheckbox, onFilenamePatternOptionChanged);
+
+        filenamePatternEditButton.addEventListener("click", (event) => displayFilenamePatternEditor());
 
         const extensionOptions = await OptionsManager.retrieve();
 
@@ -52,8 +57,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;
 
-        useFilenamePatternCheckbox.checked = options.useFilenamePattern;
-        filenamePatternDisplayTextbox.value = options.filenamePattern;
+        useFilenamePatternCheckbox.checked = extensionOptions.useFilenamePattern;
+        filenamePatternDisplayTextbox.value = extensionOptions.filenamePattern;
+
+        toggleFilenamePatternEditButton(extensionOptions.useFilenamePattern);
     }
 
     function listen(element, handler) {
@@ -79,14 +86,45 @@ document.addEventListener("DOMContentLoaded", async () => {
         useSilentModeCheckbox.disabled= !extractImmediate;
     }
 
+    function displayFilenamePatternEditor() {
+        filenameEditorOverlay.classList.remove("hidden");
+        initializeEditor(filenamePatternDisplayTextbox.value, onFilenamePatternEditorDismissed);
+    }
+
     function onFilenamePatternOptionChanged(event) {
         if(useFilenamePatternCheckbox.checked) {
             if(filenamePatternDisplayTextbox.value.length == 0) {
-                // Open FP editor
+                displayFilenamePatternEditor();
+                return;
             }
-            else {
-                filenamePatternEditButton.removeAttribute("disabled");
-            }
+        }
+        else {
+            OptionsManager.setOption("useFilenamePattern", false);
+        }
+
+        toggleFilenamePatternEditButton(useFilenamePatternCheckbox.checked);
+    }
+
+    function onFilenamePatternEditorDismissed(options) {
+        if(!options.cancel) {
+            OptionsManager.setOption("filenamePattern", options.value);
+        }
+
+        const useFilenamePattern = (options.value.length > 0);
+
+        filenamePatternDisplayTextbox.value = options.value;
+
+        toggleFilenamePatternEditButton(useFilenamePattern);
+
+        useFilenamePatternCheckbox.checked = useFilenamePattern;
+        OptionsManager.setOption("useFilenamePattern", useFilenamePattern)
+
+        filenameEditorOverlay.classList.add("hidden");
+    }
+
+    function toggleFilenamePatternEditButton(useFilenamePattern) {
+        if(useFilenamePattern) {
+            filenamePatternEditButton.removeAttribute("disabled");
         }
         else {
             filenamePatternEditButton.setAttribute("disabled", "disabled");

@@ -61,7 +61,7 @@ export class ReportManager {
             reportItem.querySelector(".subject-label").textContent = messageInfo.subject;
             reportItem.querySelector(".author-label").textContent = messageInfo.author;
             reportItem.querySelector(".message-date-label").textContent = messageInfo.date.toDateString();
-            reportItem.querySelector(".filename-label").textContent =  (item.serialName) ? item.serialName : item.name;
+            reportItem.querySelector(".filename-label").textContent =  (item.alternateFilename) ? item.alternateFilename : item.name;
             reportItem.querySelector(".file-size-label").textContent = abbreviateFileSize(item.size);
 
             if(specialMessage) {

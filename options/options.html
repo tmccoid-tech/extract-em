@@ -4,15 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>__MSG_extensionName__ __MSG_options__</title>
-    <style>
-        label {
-            font-weight: bold;
-        }
-
-        dd {
-            margin-bottom: 6px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" media="screen" href="options.css">
 </head>
 <body>
     <div>    
@@ -102,7 +94,50 @@
         </dl>
     </div>
 
+    <div id="filename-editor-overlay" class="modal-overlay hidden">
+        <div id="filename-editor-div">
+            <div id="pattern-label">Pattern</div>
+            <div id="pattern-content">
+                <input type="text" id="fp-textbox">
+            </div>
+            <div id="edit-buttons-panel">
+                <button type="button" id="clear-button" class="fp-editor-button">Clear</button>
+                <button type="button" id="revert-button" class="fp-editor-button">Revert</button>
+            </div>
+            
+            <div id="placeholders-label">Placeholders</div>
+
+            <div id="placeholders-panel">
+                <div>From: </div>
+                <label><select id="source-select" class="placeholder-select" lastValue="">
+                    <option value="">None</option>
+                    <option value="{sender}">Sender</option>
+                    <option value="{author}">Author</option>
+                </select>&nbsp;&nbsp;<span id="source-sample-label" class="sample-label"></span></label>
+                <label><input type="checkbox" id="filename-checkbox" value="{filename}"> Original Filename</label>
+
+                <div>Date: </div>
+                <label><select id="date-format-select" class="placeholder-select" lastValue="">
+                    <option value="">None</option>
+                    <option value="{mm-dd-yyyy}">MM-DD-YYYY</option>
+                    <option value="{dd-mm-yyyy}">DD-MM-YYYY</option>
+                    <option value="{yyyy-mm-dd}">YYYY-MM-DD</option>
+                    <option value="{yyyymmdd}">YYYYMMDD</option>
+                </select>&nbsp;&nbsp;<span id="date-format-sample-label" class="sample-label"></span></label>
+                <label><input type="checkbox" id="subject-checkbox" value="{subject}"> Subject</label>
+            </div>
+
+            <div id="sample-result-label">Sample</div>
+            <div id="sample-result-panel"></div>
+
+            <div id="buttons-panel">
+                <button type="button" id="cancel-button" class="fp-editor-button">Cancel</button>
+                <button type="button" id="save-button" class="fp-editor-button">Save</button>
+            </div>
+        </div>
+    </div>    
+
     <script src="/module/i18n.js"></script>
     <script type="module" src="options.js"></script>
-</body>
+</body> 
 </html>

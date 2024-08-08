@@ -293,7 +293,7 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
                         }
                     }                
 
-                    console.log(`${value[textbox.selectionStart]} ${value[textbox.selectionEnd]} ${textbox.selectionStart} ${textbox.selectionEnd} ${textbox.selectionDirection}`);
+//                    console.log(`${value[textbox.selectionStart]} ${value[textbox.selectionEnd]} ${textbox.selectionStart} ${textbox.selectionEnd} ${textbox.selectionDirection}`);
 
                     break;
 

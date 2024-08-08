@@ -332,5 +332,9 @@
     },
     "rn1_3_1_New02": {
         "message" : "Added localization for Hungarian (courtesy of user Óvári)"
+    },
+
+    "rn1_4_1_New01": {
+        "message": "Added option to generate custom result filenames using a filename pattern derived from email properties"
     }
 }

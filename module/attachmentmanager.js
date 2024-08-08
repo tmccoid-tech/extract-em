@@ -83,9 +83,9 @@ export class AttachmentManager {
 // < > : " / \ | ? *
 
 
-    #windowsForbiddenCharacterRegex = /[<>:"|?*\/\\]/g;
-    #charsetRegex = /charset=[\"']?(?<charset>[A-Za-z0-9\-_:]+)/g;
-
+//    #windowsForbiddenCharacterRegex = /[<>:"|?*\/\\]/g;
+//    #charsetRegex = /charset=[\"']?(?<charset>[A-Za-z0-9\-_:]+)/g;
+//    #authorRegex = /((?<author>[\w\s]*)(\<))?\s*(?<sender>[\w\-\.]+@([\w-]+\.)+[\w-]{2,})\s*(\>)?/gi
 
     constructor(options) {
         this.#folders = options.folders;
@@ -464,6 +464,8 @@ export class AttachmentManager {
     }
 
     #identifyMessageCharset(parts, result = { success: false, charset: "utf-8" } ) {
+        const charsetRegex = /charset=[\"']?(?<charset>[A-Za-z0-9\-_:]+)/g;
+
         for(const part of parts) {
             if(part.headers) {
                 const contentTypeHeader = part.headers["content-type"];
@@ -471,7 +473,8 @@ export class AttachmentManager {
                 if(contentTypeHeader.length > 0) {
                     const contentType = contentTypeHeader[0];
                     
-                    const matches = this.#charsetRegex.exec(contentType);
+                    charsetRegex.lastIndex = 0;
+                    const matches = charsetRegex.exec(contentType);
 
                     if(matches && matches.groups && matches.groups.charset) {
                         result.charset = matches.groups.charset.toLowerCase();
@@ -832,11 +835,6 @@ export class AttachmentManager {
             const item = packagingTracker.items[i];
 
             item.hasError = false;
-
-            if(this.#useFilenamePattern) {
-//                this.#generateAlternateFilename(item);
-            }
-
 
             let attachmentFile;
 
@@ -1267,10 +1265,15 @@ export class AttachmentManager {
 
                 info.lastFileName = name;
 
-                this.#log(`${messageId} : ${partName} - ${name}`);
+                const message = this.messageList.get(messageId);
+
+                this.#log(`Begin detach: ${message.author} ~ ${message.date} : ${name}`);
 
                 try {
                     await messenger.messages.deleteAttachments(messageId, [partName]);
+
+                    this.#log(`End detach: ${message.author} ~ ${message.date} : ${name}`);
+
                     item.isDeleted = true;
                     info.processedCount++;
                 }
@@ -1340,6 +1343,9 @@ export class AttachmentManager {
             if(authorParts.sender) {
                 result = result.replace("{sender}", authorParts.sender);
             }
+            else {
+                result = result.replace("{sender}", "_");
+            }
         }
         else if(result.indexOf("{author}") > -1) {
             const authorParts = this.#parseAuthorField(message.author);
@@ -1348,7 +1354,10 @@ export class AttachmentManager {
                 result = result.replace("{author}", authorParts.author);
             }
             else if(authorParts.sender) {
-                result = result.replace("{sender}", authorParts.sender);
+                result = result.replace("{author}", authorParts.sender);
+            }
+            else {
+                result = result.replace("{author}", "_");
             }
         }
 
@@ -1389,12 +1398,12 @@ export class AttachmentManager {
     }
 
     #parseAuthorField(author) {
+        const authorRegex = /((?<author>[\w\s]*)(\<))?\s*(?<sender>[\w\-\.]+@([\w-]+\.)+[\w-]{2,})\s*(\>)?/gi
+
         const result = {
             sender: null,
             author: null
         }
-
-        const authorRegex = /(?<author>.*)\<(?<sender>[\w\-\.]+@([\w-]+\.)+[\w-]{2,})\>\w*$/gi
 
         const matches = authorRegex.exec(author);
 
@@ -1433,11 +1442,13 @@ export class AttachmentManager {
     }
 
     #normalizeFileName(originalFileName) {
+        const windowsForbiddenCharacterRegex = /[<>:"|?*\/\\]/g;
+
         let result = originalFileName.trim().split(";")[0];
 
         switch (this.#platformOs) {
             case "win":
-                result = result.replace(this.#windowsForbiddenCharacterRegex, "_");
+                result = result.replace(windowsForbiddenCharacterRegex, "_");
 
                 let hasReplacement = false;
                 const tokens = result.split(".");

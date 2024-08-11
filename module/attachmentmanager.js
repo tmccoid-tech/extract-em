@@ -1258,40 +1258,43 @@ export class AttachmentManager {
         const deletionSets = [packagedItems, duplicateItems];
 
         this.#detachmentErrorList = [];
-
         for(const set of deletionSets) {
             for(const item of set) {
                 const { messageId, partName, name, size } = item;
-
+                this.#log(`Part to be deleted: ${name} ~ !${name.startsWith("Deleted_")}`);
                 info.lastFileName = name;
 
                 const message = this.messageList.get(messageId);
 
-                this.#log(`Begin detach: ${message.author} ~ ${message.date} : ${name}`);
+                if(name.startsWith("Deleted_")) {
+                    this.#log(`Skip already deleted: ${message.author} ~ ${message.date} : ${name}`);
+                } else {
+                    this.#log(`Begin detach: ${message.author} ~ ${message.date} : ${name}`);
 
-                try {
-                    await messenger.messages.deleteAttachments(messageId, [partName]);
+                    try {
+                        messenger.messages.deleteAttachments(messageId, [partName]);
 
-                    this.#log(`End detach: ${message.author} ~ ${message.date} : ${name}`);
+                        this.#log(`End detach: ${message.author} ~ ${message.date} : ${name}`);
 
-                    item.isDeleted = true;
-                    info.processedCount++;
+                        item.isDeleted = true;
+                        info.processedCount++;
+                    }
+                    catch(e) {
+                        this.#detachmentErrorList.push({
+                            messageId: messageId,
+                            name: name,
+                            size: size,
+                            scope: "detach",
+                            error: e.toString()
+                        });
+                        
+                        info.errorCount++;
+
+                        this.#log(e, true);
+                    }
+
+                    this.#reportDetachProgress(info);
                 }
-                catch(e) {
-                    this.#detachmentErrorList.push({
-                        messageId: messageId,
-                        name: name,
-                        size: size,
-                        scope: "detach",
-                        error: e.toString()
-                    });
-                    
-                    info.errorCount++;
-
-                    this.#log(e, true);
-                }
-
-                this.#reportDetachProgress(info);
             }
         }
  

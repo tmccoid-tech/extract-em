@@ -1363,7 +1363,7 @@ export class AttachmentManager {
 
         for(let dateFormat of ["{mm-dd-yyyy}", "{dd-mm-yyyy}", "{yyyy-mm-dd}", "{yyyymmdd}"]) {
             if(result.indexOf(dateFormat) > -1) {
-                result = result.replace(dateFormat, this.#getFormattedDate(message.date));
+                result = result.replace(dateFormat, this.#getFormattedDate(message.date, dateFormat));
                 break;
             }
         }

@@ -124,4 +124,9 @@ dd {
     min-width: 52px;
     min-height: 24px;
     margin-left: 6px;
+    text-align: center;
+}
+
+.editor-checkbox-label {
+    font-weight: normal;
 }

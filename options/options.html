@@ -114,7 +114,7 @@
                     <option value="{sender}">Sender</option>
                     <option value="{author}">Author</option>
                 </select>&nbsp;&nbsp;<span id="source-sample-label" class="sample-label"></span></label>
-                <label><input type="checkbox" id="filename-checkbox" value="{filename}"> Original Filename</label>
+                <label class="editor-checkbox-label"><input type="checkbox" id="filename-checkbox" value="{filename}"> Original Filename</label>
 
                 <div>Date: </div>
                 <label><select id="date-format-select" class="placeholder-select" lastValue="">
@@ -122,9 +122,11 @@
                     <option value="{mm-dd-yyyy}">MM-DD-YYYY</option>
                     <option value="{dd-mm-yyyy}">DD-MM-YYYY</option>
                     <option value="{yyyy-mm-dd}">YYYY-MM-DD</option>
+                    <option value="{dd.mm.yyyy}">DD.MM.YYYY</option>
+                    <option value="{yyyy.mm.dd}">YYYY.MM.DD</option>
                     <option value="{yyyymmdd}">YYYYMMDD</option>
                 </select>&nbsp;&nbsp;<span id="date-format-sample-label" class="sample-label"></span></label>
-                <label><input type="checkbox" id="subject-checkbox" value="{subject}"> Subject</label>
+                <label class="editor-checkbox-label"><input type="checkbox" id="subject-checkbox" value="{subject}"> Subject</label>
             </div>
 
             <div id="sample-result-label">Sample</div>

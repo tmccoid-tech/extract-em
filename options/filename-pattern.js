@@ -3,9 +3,9 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
 (function() {
     document.addEventListener("DOMContentLoaded", async () => {
         const validCharRegex = /^[\w- ]{1}$/i;
-        const tokenRegex = /\{(sender|author|mm-dd-yyyy|dd-mm-yyyy|yyyy-mm-dd|yyyymmdd|filename|subject)\}/gi;
+        const tokenRegex = /\{(sender|author|mm-dd-yyyy|dd-mm-yyyy|yyyy-mm-dd|dd.mm.yyyy|yyyy.mm.dd|yyyymmdd|filename|subject)\}/gi;
         const sourceTokenRegex = /\{(sender|author)\}/gi;
-        const dateFormatTokenRegex = /\{(mm-dd-yyyy|dd-mm-yyyy|yyyy-mm-dd|yyyymmdd)\}/gi;
+        const dateFormatTokenRegex = /\{(mm-dd-yyyy|dd-mm-yyyy|yyyy-mm-dd|dd.mm.yyyy|yyyy.mm.dd|yyyymmdd)\}/gi;
 
         const elem = (id) => { return document.getElementById(id) };
 
@@ -62,6 +62,8 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
             ["{mm-dd-yyyy}", "06-30-2024"],
             ["{dd-mm-yyyy}", "30-06-2024"],
             ["{yyyy-mm-dd}", "2024-06-30"],
+            ["{dd.mm.yyyy}", "30.06.2024"],
+            ["{yyyy.mm.dd}", "2024.06.30"],
             ["{yyyymmdd}", "20240630"],
             ["{filename}", "myfile"],
             ["{subject}", "re:my subject"]

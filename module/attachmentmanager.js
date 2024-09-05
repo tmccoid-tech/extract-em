@@ -1361,7 +1361,7 @@ export class AttachmentManager {
             }
         }
 
-        for(let dateFormat of ["{mm-dd-yyyy}", "{dd-mm-yyyy}", "{yyyy-mm-dd}", "{yyyymmdd}"]) {
+        for(let dateFormat of ["{mm-dd-yyyy}", "{dd-mm-yyyy}", "{yyyy-mm-dd}", "{dd.mm.yyyy}", "{yyyy.mm.dd}", "{yyyymmdd}"]) {
             if(result.indexOf(dateFormat) > -1) {
                 result = result.replace(dateFormat, this.#getFormattedDate(message.date, dateFormat));
                 break;
@@ -1436,6 +1436,10 @@ export class AttachmentManager {
                 return `${dateParts.dd}-${dateParts.mm}-${dateParts.yyyy}`;
             case "{yyyy-mm-dd}":
                 return `${dateParts.yyyy}-${dateParts.mm}-${dateParts.dd}`;
+            case "{dd.mm.yyyy}":
+                return `${dateParts.dd}.${dateParts.mm}.${dateParts.yyyy}`;
+            case "{yyyy.mm.dd}":
+                return `${dateParts.yyyy}.${dateParts.mm}.${dateParts.dd}`;
             default:    // yyyymmdd
                 return `${dateParts.yyyy}${dateParts.mm}${dateParts.dd}`;
         }

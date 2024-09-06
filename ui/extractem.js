@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             this.permitDetachment = (this.#isSufficientVersion(extensionVersionNumbers, [1, 2]) && !!messenger.messages.deleteAttachments);       //  >= EE 1.2
             this.useAdvancedGetRaw = this.#isSufficientVersion(appVersionNumbers, [115, 3, 2]);                                                   //  >= TB 115.3.2
+            this.useMailFolderId = this.#isSufficientVersion(appVersionNumbers, [121]);                                                           //  >= TB 121
         }
 
         #isSufficientVersion(actualVersionNumbers, minimumVersionNumbers) {
@@ -555,7 +556,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 useEnhancedLogging: extensionOptions.useEnhancedLogging,
 
                 useFilenamePattern: extensionOptions.useFilenamePattern,
-                filenamePattern: extensionOptions.filenamePattern
+                filenamePattern: extensionOptions.filenamePattern,
+
+                useMailFolderId: capabilities.useMailFolderId
             });
 
             if(capabilities.extensionVersion !== extensionOptions.lastLoadedVersion) {

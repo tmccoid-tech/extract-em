@@ -25,6 +25,8 @@ export class AttachmentManager {
     #useFilenamePattern = false;
     #filenamePattern = "";
 
+    #useMailFolderId = false;
+
     messageList = new Map();
     attachmentList = [];
 
@@ -112,6 +114,8 @@ export class AttachmentManager {
 
         this.#useFilenamePattern = options.useFilenamePattern && options.filenamePattern.length > 0;
         this.#filenamePattern = options.filenamePattern;
+
+        this.#useMailFolderId = options.useMailFolderId;
     }
 
     #onFolderProcessed(folderPath) {
@@ -147,7 +151,9 @@ export class AttachmentManager {
         summary.folderCount++;
         this.#folderCount++;
 
-        const folderInfo = await messenger.folders.getFolderInfo(folder);
+        const folderParam = this.#useMailFolderId ? folder.id : folder;
+
+        const folderInfo = await messenger.folders.getFolderInfo(folderParam);
 
         this.#folderCounts.set(folder.path, folderInfo.totalMessageCount);
 
@@ -205,7 +211,9 @@ export class AttachmentManager {
     }
 
     async #processPages(folder) {
-        let page = await messenger.messages.list(folder);
+        const folderParam = this.#useMailFolderId ? folder.id : folder;
+
+        let page = await messenger.messages.list(folderParam);
 
         const folderStats = {
             folderPath: folder.path,

@@ -356,9 +356,11 @@
                 grid-template-areas:
                     "seq filename   filesize"
                     "seq author     date"
-                    "seq subject    subject"
+                    "seq subject    time"
                     "seq special    special"
-                ;   
+                ;
+                padding-bottom: 2px;
+                border-bottom: solid 1px lightgray;
             }
 
             .sequence-number {
@@ -397,6 +399,11 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 padding-left: 16px;
+            }
+
+            .message-time-label {
+                grid-area: time;
+                justify-self: end;
             }
 
             .special-message-label {
@@ -486,6 +493,7 @@
             <div class="message-date-label"></div>
 
             <div class="subject-label"></div>
+            <div class="message-time-label"></div>
 
             <div class="special-message-label hidden"></div>
         </div>        

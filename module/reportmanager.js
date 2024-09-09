@@ -36,6 +36,8 @@ export class ReportManager {
 
         const messageList = attachmentManager.messageList;
 
+        const formatTimeElement = (v) => v.toString().padStart(2, "0");
+
         const generateSection = (tableClass, iterate, canDisplay = () => true) =>
         {
             const currentTable = reportBody.querySelector(tableClass);
@@ -57,10 +59,13 @@ export class ReportManager {
         const generateReportLineItem =  (reportItemContent, item, messageInfo, sequenceNumber, specialMessage) => {
             const reportItem = reportItemContent.cloneNode(true);
     
+            const date = messageInfo.date;
+
             reportItem.querySelector(".sequence-number").textContent = sequenceNumber.toString();
             reportItem.querySelector(".subject-label").textContent = messageInfo.subject;
             reportItem.querySelector(".author-label").textContent = messageInfo.author;
-            reportItem.querySelector(".message-date-label").textContent = messageInfo.date.toDateString();
+            reportItem.querySelector(".message-date-label").textContent = date.toDateString();
+            reportItem.querySelector(".message-time-label").textContent = `${formatTimeElement(date.getHours())}:${formatTimeElement(date.getMinutes())}:${formatTimeElement(date.getSeconds())}`;
             reportItem.querySelector(".filename-label").textContent =  (item.alternateFilename) ? item.alternateFilename : item.name;
             reportItem.querySelector(".file-size-label").textContent = abbreviateFileSize(item.size);
 

@@ -3,7 +3,7 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
 (function() {
     document.addEventListener("DOMContentLoaded", async () => {
         const validCharRegex = /^[\w- ]{1}$/i;
-        const tokenRegex = /\{(sender|author|mm-dd-yyyy|dd-mm-yyyy|yyyy-mm-dd|dd.mm.yyyy|yyyy.mm.dd|yyyymmdd|filename|subject)\}/gi;
+        const tokenRegex = /\{(sender|author|mm-dd-yyyy|dd-mm-yyyy|yyyy-mm-dd|dd.mm.yyyy|yyyy.mm.dd|yyyymmdd|timestamp|filename|subject)\}/gi;
         const sourceTokenRegex = /\{(sender|author)\}/gi;
         const dateFormatTokenRegex = /\{(mm-dd-yyyy|dd-mm-yyyy|yyyy-mm-dd|dd.mm.yyyy|yyyy.mm.dd|yyyymmdd)\}/gi;
 
@@ -28,11 +28,13 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
 
         const sourceSelect = elem("source-select");
         const dateFormatSelect = elem("date-format-select");
+        const timestampCheckbox = elem("timestamp-checkbox");
         const filenameCheckbox = elem("filename-checkbox");
         const subjectCheckbox = elem("subject-checkbox");
 
         sourceSelect.addEventListener("change", onTokenSelected);
         dateFormatSelect.addEventListener("change", onTokenSelected);
+        timestampCheckbox.addEventListener("click", onTokenChecked);
         filenameCheckbox.addEventListener("click", onTokenChecked);
         subjectCheckbox.addEventListener("click", onTokenChecked);
 
@@ -65,6 +67,7 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
             ["{dd.mm.yyyy}", "30.06.2024"],
             ["{yyyy.mm.dd}", "2024.06.30"],
             ["{yyyymmdd}", "20240630"],
+            ["{timestamp}", "150759"],
             ["{filename}", "myfile"],
             ["{subject}", "re:my subject"]
         ]);
@@ -152,6 +155,8 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
 
             const dateFormatSampleText = spanify(dateFormatValue);
 
+            const timestampSampleText = spanify((timestampCheckbox.checked) ? timestampCheckbox.value : "");
+
             const filenameSampleText = spanify((filenameCheckbox.checked) ? filenameCheckbox.value : "");
 
             const subjectSampleText = spanify((subjectCheckbox.checked) ? subjectCheckbox.value : "");
@@ -159,6 +164,7 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
             sampleLabelText = sampleLabelText
                 .replace(sourceSelect.value, sourceSampleText)
                 .replace(dateFormatSelect.value, dateFormatSampleText)
+                .replace(timestampCheckbox.value, timestampSampleText)
                 .replace(filenameCheckbox.value, filenameSampleText)
                 .replace(subjectCheckbox.value, subjectSampleText)
             ;
@@ -180,6 +186,10 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
                 if(dateFormatSelect.value != "" && value.indexOf(dateFormatSelect.value) == -1) {
                     dateFormatSelect.value = "";
                     dateFormatSelect.setAttribute("lastValue", "");
+                }
+
+                if(timestampCheckbox.checked && value.indexOf(timestampCheckbox.value) == -1) {
+                    timestampCheckbox.checked = false;
                 }
 
                 if(filenameCheckbox.checked && value.indexOf(filenameCheckbox.value) == -1) {

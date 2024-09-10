@@ -342,6 +342,7 @@ export class AttachmentManager {
                 const attachmentInfo = {
                     messageId: message.id,
                     name: this.#normalizeFileName(attachment.name),
+                    alternateName: null,
                     date: message.date,
                     partName: attachment.partName,
                     contentType: attachment.contentType,
@@ -742,7 +743,14 @@ export class AttachmentManager {
                     }
                 }
                 else {
-                    const duplicateKey = `${item.name}:${item.size}`;
+                    const fileName = item.name;
+
+                    if(this.#useFilenamePattern) {
+                        fileName = this.#generateAlternateFilename(item);
+                        item.alternateFilename = fileName;
+                    }
+        
+                    const duplicateKey = `${fileName}:${item.size}`;
 
                     if(!duplicateKeys.has(duplicateKey)) {
                         item.isDeleted = false;
@@ -751,7 +759,7 @@ export class AttachmentManager {
                         cumulativeSize += item.size;
                     }
                     else {
-                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: item.name, size: item.size, isDeleted: false });
+                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: fileName, size: item.size, isDeleted: false });
 
                         packagingProgressInfo.duplicateCount++;
                         packagingProgressInfo.duplicateTotalBytes += item.size;
@@ -887,12 +895,14 @@ export class AttachmentManager {
                 continue;
             }
 
-            let fileName = item.name;
+            let fileName = (item.alternateFilename) ? item.alternateFilename : item.name;
 
+/*            
             if(this.#useFilenamePattern) {
                 fileName = this.#generateAlternateFilename(item);
                 item.alternateFilename = fileName;
             }
+*/
 
             packagingProgressInfo.lastFileName = fileName;
             
@@ -1376,6 +1386,10 @@ export class AttachmentManager {
             }
         }
 
+        if(result.indexOf("{timestamp}") > -1) {
+            result = result.replace("{timestamp}", this.#getFormattedTimestamp(message.date));
+        }
+
         if(result.indexOf("{subject}") > -1) {
             result = result.replace("{subject}", message.subject);
         }
@@ -1451,6 +1465,12 @@ export class AttachmentManager {
             default:    // yyyymmdd
                 return `${dateParts.yyyy}${dateParts.mm}${dateParts.dd}`;
         }
+    }
+
+    #getFormattedTimestamp(date) {
+        const formatTimeElement = (v) => v.toString().padStart(2, "0");
+
+        return `${formatTimeElement(date.getHours())}${formatTimeElement(date.getMinutes())}${formatTimeElement(date.getSeconds())}`;
     }
 
     #normalizeFileName(originalFileName) {

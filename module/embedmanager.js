@@ -121,6 +121,7 @@ export class EmbedManager {
                                                     const embed = {
                                                         messageId: messageId,
                                                         name: imageName,
+                                                        alternateName: null,
                                                         date: date,
                                                         partName: candidatePart.partName,
                                                         contentTypeBoundary: imageContentType[0],

@@ -185,6 +185,23 @@
 
     "edit": { "message": "Edit" },
 
+    "pattern": { "message": "Pattern" },
+    "clear": { "message": "Clear" },
+    "revert": { "message": "Revert" },
+    "placeholders": { "message": "Placeholders" },
+    "from": { "message" : "From"},
+    "sender": { "message": "Sender" },
+    "author": { "message": "Author" },
+    "originalFilename": { "message": "Original Filename" },
+    "date": { "message": "Date" },
+    "subject": { "message": "Subject" },
+    "timestamp": {
+        "message": "Timestamp (hhmmss)",
+        "description": "h = hour, m = minute, s= second; implies a time format (154230 = 3:42:30 PM)"
+    },
+    "sample": { "message": "Sample" },
+    "save": { "message": "Save" },
+
     "includeEmbeddedImages": {
         "message": "Beágyazott képek tartalmazása",
         "description": ""
@@ -194,7 +211,11 @@
         "description": ""
     },
 
-
+    "omitDuplicates" : { "message": "Omit duplicates" },
+    "omitDuplicatesDescription" : {
+        "message": "Omits duplicate (identical filename and size) attachments; does not pertain to embeds"
+    },
+    
     "preserveFolderStructure": {
         "message": "Mappaszerkezet megőrzése",
         "description": ""

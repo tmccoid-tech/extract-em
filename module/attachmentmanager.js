@@ -25,6 +25,8 @@ export class AttachmentManager {
     #useFilenamePattern = false;
     #filenamePattern = "";
 
+    #omitDuplicates = true;
+
     #useMailFolderId = false;
 
     messageList = new Map();
@@ -114,6 +116,8 @@ export class AttachmentManager {
 
         this.#useFilenamePattern = options.useFilenamePattern && options.filenamePattern.length > 0;
         this.#filenamePattern = options.filenamePattern;
+
+        this.#omitDuplicates = options.omitDuplicates;
 
         this.#useMailFolderId = options.useMailFolderId;
     }
@@ -735,6 +739,9 @@ export class AttachmentManager {
 
         // Segregate embedded/inline imags, determine selected items and identify/isolate attachment duplicates
 
+        const useFilenamePattern = this.#useFilenamePattern;
+        const omitDuplicates = this.#omitDuplicates;
+
         for(const item of this.attachmentList) {
             if(selectedItemKeys.has(`${item.messageId}:${item.partName}`)) {
                 if(item.isEmbed) {
@@ -743,19 +750,23 @@ export class AttachmentManager {
                     }
                 }
                 else {
-                    const fileName = item.name;
+                    let fileName = item.name;
 
-                    if(this.#useFilenamePattern) {
+                    if(useFilenamePattern) {
                         fileName = this.#generateAlternateFilename(item);
                         item.alternateFilename = fileName;
                     }
         
                     const duplicateKey = `${fileName}:${item.size}`;
 
-                    if(!duplicateKeys.has(duplicateKey)) {
+                    if(!(omitDuplicates && duplicateKeys.has(duplicateKey))) {
                         item.isDeleted = false;
                         items.push(item);
-                        duplicateKeys.add(duplicateKey);
+                        
+                        if(omitDuplicates) {
+                            duplicateKeys.add(duplicateKey);
+                        }
+                        
                         cumulativeSize += item.size;
                     }
                     else {
@@ -896,13 +907,6 @@ export class AttachmentManager {
             }
 
             let fileName = (item.alternateFilename) ? item.alternateFilename : item.name;
-
-/*            
-            if(this.#useFilenamePattern) {
-                fileName = this.#generateAlternateFilename(item);
-                item.alternateFilename = fileName;
-            }
-*/
 
             packagingProgressInfo.lastFileName = fileName;
             

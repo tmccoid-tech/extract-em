@@ -55,6 +55,13 @@
             </dd>
 
             <dt>
+                <label><input type="checkbox" id="omit-duplicates-checkbox" option-name="omitDuplicates" /> __MSG_omitDuplicates__</label>
+            </dt>
+            <dd>
+                __MSG_omitDuplicatesDescription__
+            </dd>
+
+            <dt>
                 <label><input type="checkbox" id="preserve-folder-structure-checkbox" option-name="preserveFolderStructure" /> __MSG_preserveFolderStructure__</label>
             </dt>
             <dd>
@@ -96,29 +103,29 @@
 
     <div id="filename-editor-overlay" class="modal-overlay hidden">
         <div id="filename-editor-div">
-            <div id="pattern-label">Pattern</div>
+            <div id="pattern-label">__MSG_pattern__</div>
             <div id="pattern-content">
                 <input type="text" id="fp-textbox">
             </div>
             <div id="edit-buttons-panel">
-                <button type="button" id="clear-button" class="fp-editor-button">Clear</button>
-                <button type="button" id="revert-button" class="fp-editor-button">Revert</button>
+                <button type="button" id="clear-button" class="fp-editor-button">__MSG_clear__</button>
+                <button type="button" id="revert-button" class="fp-editor-button">__MSG_revert__</button>
             </div>
             
-            <div id="placeholders-label">Placeholders</div>
+            <div id="placeholders-label">__MSG_placeholders__</div>
 
             <div id="placeholders-panel">
-                <div>From: </div>
+                <div>__MSG_from__: </div>
                 <label><select id="source-select" class="placeholder-select" lastValue="">
-                    <option value="">None</option>
-                    <option value="{sender}">Sender</option>
-                    <option value="{author}">Author</option>
+                    <option value="">__MSG_none__</option>
+                    <option value="{sender}">__MSG_sender__</option>
+                    <option value="{author}">__MSG_author__</option>
                 </select>&nbsp;&nbsp;<span id="source-sample-label" class="sample-label"></span></label>
-                <label class="editor-checkbox-label"><input type="checkbox" id="filename-checkbox" value="{filename}"> Original Filename</label>
+                <label class="editor-checkbox-label"><input type="checkbox" id="filename-checkbox" value="{filename}"> __MSG_originalFilename__</label>
 
-                <div>Date: </div>
+                <div>__MSG_date__: </div>
                 <label><select id="date-format-select" class="placeholder-select" lastValue="">
-                    <option value="">None</option>
+                    <option value="">__MSG_none__</option>
                     <option value="{mm-dd-yyyy}">MM-DD-YYYY</option>
                     <option value="{dd-mm-yyyy}">DD-MM-YYYY</option>
                     <option value="{yyyy-mm-dd}">YYYY-MM-DD</option>
@@ -126,19 +133,19 @@
                     <option value="{yyyy.mm.dd}">YYYY.MM.DD</option>
                     <option value="{yyyymmdd}">YYYYMMDD</option>
                 </select>&nbsp;&nbsp;<span id="date-format-sample-label" class="sample-label"></span></label>
-                <label class="editor-checkbox-label"><input type="checkbox" id="subject-checkbox" value="{subject}"> Subject</label>
+                <label class="editor-checkbox-label"><input type="checkbox" id="subject-checkbox" value="{subject}"> __MSG_subject__</label>
 
                 <div>&nbsp;</div>
-                <div><label class="editor-checkbox-label"><input type="checkbox" id="timestamp-checkbox" value="{timestamp}"> Timestamp (hhmmss)</label></div>
+                <div><label class="editor-checkbox-label"><input type="checkbox" id="timestamp-checkbox" value="{timestamp}"> __MSG_timestamp__</label></div>
                 <div>&nbsp;</div>
             </div>
 
-            <div id="sample-result-label">Sample</div>
+            <div id="sample-result-label">__MSG_sample__</div>
             <div id="sample-result-panel"></div>
 
             <div id="buttons-panel">
-                <button type="button" id="cancel-button" class="fp-editor-button">Cancel</button>
-                <button type="button" id="save-button" class="fp-editor-button">Save</button>
+                <button type="button" id="cancel-button" class="fp-editor-button">__MSG_cancel__</button>
+                <button type="button" id="save-button" class="fp-editor-button">__MSG_save__</button>
             </div>
         </div>
     </div>    

@@ -558,6 +558,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 useFilenamePattern: extensionOptions.useFilenamePattern,
                 filenamePattern: extensionOptions.filenamePattern,
 
+                omitDuplicates: extensionOptions.omitDuplicates,
+
                 useMailFolderId: capabilities.useMailFolderId
             });
 

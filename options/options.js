@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const defaultGroupingSelect = elem("default-grouping-select");
     const imagePreviewSelect = elem("image-preview-select");
     const includeEmbedsCheckbox = elem("include-embeds-checkbox");
+    const omitDuplicatesCheckbox = elem("omit-duplicates-checkbox");
 
     const useFilenamePatternCheckbox = elem("use-filename-pattern-checkbox");
     const filenamePatternDisplayTextbox = elem("filename-pattern-display-textbox");
@@ -35,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(defaultGroupingSelect, (e) => setOption(e));
         listen(imagePreviewSelect, (e) => setOption(e));
         listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(omitDuplicatesCheckbox, (e) => setOption(e, (c) => c.checked));
 
         listen(useFilenamePatternCheckbox, onFilenamePatternOptionChanged);
 
@@ -53,6 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         defaultGroupingSelect.value = extensionOptions.defaultGrouping;
         imagePreviewSelect.value = extensionOptions.defaultImagePreview;
         includeEmbedsCheckbox.checked = extensionOptions.includeEmbeds;
+        omitDuplicatesCheckbox.checked = extensionOptions.omitDuplicates;
 
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;

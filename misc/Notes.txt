@@ -75,9 +75,9 @@ XXX Present omissions (detached/deleted)
 
 XXX Rearrange result panel
 
-Deletion tracking
+XXX Deletion tracking
 
-Extraction report
+XXX Extraction report
 
 XXX Embedded image extraction
 
@@ -90,6 +90,14 @@ XXX Extract (+subfolders) on tmccoid@Inbox:
 XXX Change immediate discovery message (don't repeat "in x messages")
 
 XXX Let Me Choose reset error: this.#folderCounts is null (attachmentmanager.discoverAttachments, sort routine)
+
+!!! Review logic with folder selection and embeds !!!
+
+Common file types
+DOC: txt, doc, docx, pdf, xls, xlsx, ppt, pptx, csv, rtf, odt, ods, xml, htm, html, eml, log
+IMG: bmp, gif, ico, jpg, jpeg, png, psd, tif, tiff
+AUD: mp3, m4a, ogg, wav, flac, wma
+VID: avi, m4v, mkv, mov, mp4, mpg, mpeg, vob, wmv
 
 
 

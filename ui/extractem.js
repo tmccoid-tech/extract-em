@@ -122,6 +122,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const resetSummaryButton = elem("reset-summary-button");
     const extractSelectedButton = elem("extract-selected-button");
 
+    const filterFileTypeButton = elem("filter-file-type-button");
+
     const zipOverlay = elem("zip-overlay");
     const zipAccountNameLabel = elem("zip-account-name-label");
     const zipAttachmentContextSpan = elem("zip-attachment-context-span");
@@ -209,6 +211,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         ["kb", messenger.i18n.getMessage("kbLabel")],
         ["mb", messenger.i18n.getMessage("mbLabel")],
         ["gb", messenger.i18n.getMessage("gbLabel")]
+    ]);
+
+    const commonFileTypeMap = new Map([
+        ["_doc", new Set([
+            "txt", "doc", "docx", "pdf", "xls", "xlsx",
+            "ppt", "pptx", "csv", "rtf", "odt", "ods",
+            "xml", "htm", "html", "eml", "log"
+        ])],
+        ["_img", new Set([
+            "bmp", "gif", "ico", "jpg", "jpeg", "png",
+            "psd", "tif", "tiff"
+        ])],
+        ["_aud", new Set([
+            "mp3", "m4a", "ogg", "wav", "flac", "wma"
+        ])],
+        ["_vid", new Set([
+            "avi", "m4v", "mkv", "mov", "mp4", "mpg",
+            "mpeg", "vob", "wmv"
+        ])],
     ]);
 
     var extensionOptions;
@@ -600,6 +621,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         discoverAttachmentsButton.addEventListener("click", (event) => { discoverAttachments(); });
         extractAllButton.addEventListener("click", (event) => { extractFolders(); });
+        filterFileTypeButton.addEventListener("click", (event) => { filterByFileType(); });
         resetSummaryButton.addEventListener("click", resetSummary);
         extractSelectedButton.addEventListener("click", (event) => { extractSelected(); });
         zoomImage.addEventListener("click", hideZoom);
@@ -1021,6 +1043,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    function filterByFileExtension() {
+//        const attachmentList = 
+    }
+
     async function extract(list, getInfo, includeEmbeds) {
         if(!useImmediateMode) {
             immediateDiscoveryMessageDiv.classList.add("hidden");
@@ -1086,6 +1112,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             },
             true
         );
+    }
+
+    function extractByFileExtension() {
+
     }
 
     function updateZipDiscoveryInfo(selectedAttachmentCount, selectedAttachmentSize, selectedEmbedCount) {

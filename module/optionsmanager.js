@@ -11,8 +11,20 @@ export class OptionsManager {
         defaultImagePreview: "sm",
         includeEmbeds: false,
         omitDuplicates: true,
+
         useFilenamePattern: false,
         filenamePattern: "",
+        
+        useFileTypeFilter: "",
+        includedFilterFileTypes: [],
+        includeUnlistedFileTypes: false,
+        additionalFilterFileTypes: new Map([
+            new Map([["~doc", new Map()]]),
+            new Map([["~img", new Map()]]),
+            new Map([["~aud", new Map()]]),
+            new Map([["~vid", new Map()]])
+        ]),
+        
         lastLoadedVersion: ""
     };
 

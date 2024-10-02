@@ -214,19 +214,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     ]);
 
     const commonFileTypeMap = new Map([
-        ["_doc", new Set([
-            "txt", "doc", "docx", "pdf", "xls", "xlsx",
-            "ppt", "pptx", "csv", "rtf", "odt", "ods",
-            "xml", "htm", "html", "eml", "log"
+        ["~doc", new Map([
+            ["txt"],
+            ["doc(x)", ["doc", "docx"]],
+            ["pdf"],
+            ["xls(x)", ["xls", "xlsx"]],
+            ["ppt(x)", ["ppt", "pptx"]],
+            ["csv"],
+            ["rtf"],
+            ["odt"],
+            ["ods"],
+            ["xml"],
+            ["html(l)", ["htm", "html"]],
+            ["eml"],
+            ["log"]
         ])],
-        ["_img", new Set([
-            "bmp", "gif", "ico", "jpg", "jpeg", "png",
-            "psd", "tif", "tiff"
+        ["~img", new Map([
+            ["bmp"],
+            ["gif"],
+            ["ico"],
+            ["jp(e)g", ["jpg", "jpeg"]],
+            ["png"],
+            ["psd"],
+            ["tif(f)", ["tif", "tiff"]]
         ])],
-        ["_aud", new Set([
+        ["~aud", new Set([
             "mp3", "m4a", "ogg", "wav", "flac", "wma"
         ])],
-        ["_vid", new Set([
+        ["~vid", new Set([
             "avi", "m4v", "mkv", "mov", "mp4", "mpg",
             "mpeg", "vob", "wmv"
         ])],
@@ -974,6 +989,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         return result;
     }
 
+    function assembleFileTypeFilter() {
+        const result = {
+            selectedExtensions: extensionOptions.includedFilterFileTypes,
+            listedExtensions: ["--"],
+            includeUnlisted: extensionOptions.includeUnlistedFileTypes
+        };
+
+        const assembleListedExtensions = (set) => {
+            for(let categoryEntry of set) {
+                for(let item of categoryEntry) {
+                    if(item[1]) {
+                        result.listedExtensions.push(...item[1])
+                    }
+                    else {
+                        result.push(item);
+                    }
+                }
+            }
+        };
+
+        for(let set of [commonFileTypeMap, extensionOptions.additionalFilterFileTypes]) {
+            assembleListedExtensions(set);
+        }
+
+        return result;
+    }
+
     async function getImagePreviewData(image, messageId, partName) {
         const src = await attachmentManager.getAttachmentFileData(messageId, partName);
         scaleImage(image, src);
@@ -1043,10 +1085,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    function filterByFileExtension() {
-//        const attachmentList = 
-    }
-
     async function extract(list, getInfo, includeEmbeds) {
         if(!useImmediateMode) {
             immediateDiscoveryMessageDiv.classList.add("hidden");
@@ -1112,10 +1150,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             },
             true
         );
-    }
-
-    function extractByFileExtension() {
-
     }
 
     function updateZipDiscoveryInfo(selectedAttachmentCount, selectedAttachmentSize, selectedEmbedCount) {

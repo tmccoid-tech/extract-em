@@ -29,6 +29,8 @@ export class AttachmentManager {
 
     #useMailFolderId = false;
 
+    #fileTypeFilter = null;
+
     messageList = new Map();
     attachmentList = [];
 
@@ -179,9 +181,10 @@ export class AttachmentManager {
         return result;
     }
 
-    async discoverAttachments(selectedFolderPaths, includeEmbeds = false) {
+    async discoverAttachments(selectedFolderPaths, includeEmbeds = false, fileTypeFilter = null) {
         this.#selectedFolderPaths = selectedFolderPaths;
         this.#includeEmbeds = includeEmbeds;
+        this.#fileTypeFilter = fileTypeFilter;
 
         this.#alterationTracker = [];
 
@@ -340,6 +343,14 @@ export class AttachmentManager {
                 if (segments.length > 1) {
                     if (segments[segments.length - 1].length < 6) {
                         extension = segments.pop().toLowerCase();
+                    }
+                }
+
+                if (this.#fileTypeFilter) {
+                    const { selectedExtensions, listedExtensions, includeUnlisted } = this.#fileTypeFilter;
+
+                    if(!(selectedExtensions.has(extension) || (includeUnlisted && !listedExtensions.has(extension)))) {
+                        continue;
                     }
                 }
 

@@ -1,6 +1,7 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { ReportManager } from "/module/reportmanager.js";
+import { FilterManager } from "/module/filtermanager.js";
 
 const _filterSelect = function* (test, select) {
     for(const item of this) {
@@ -57,9 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
     
-
-
-    i18n.updateDocument();
     const errorText = messenger.i18n.getMessage("error");
 
     const elem = (id) => document.getElementById(id);
@@ -123,6 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const extractSelectedButton = elem("extract-selected-button");
 
     const filterFileTypeButton = elem("filter-file-type-button");
+    const filterEditorContainer = elem("filter-editor-container");
 
     const zipOverlay = elem("zip-overlay");
     const zipAccountNameLabel = elem("zip-account-name-label");
@@ -211,40 +210,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         ["kb", messenger.i18n.getMessage("kbLabel")],
         ["mb", messenger.i18n.getMessage("mbLabel")],
         ["gb", messenger.i18n.getMessage("gbLabel")]
-    ]);
-
-    const commonFileTypeMap = new Map([
-        ["~doc", new Map([
-            ["txt"],
-            ["doc(x)", ["doc", "docx"]],
-            ["pdf"],
-            ["xls(x)", ["xls", "xlsx"]],
-            ["ppt(x)", ["ppt", "pptx"]],
-            ["csv"],
-            ["rtf"],
-            ["odt"],
-            ["ods"],
-            ["xml"],
-            ["html(l)", ["htm", "html"]],
-            ["eml"],
-            ["log"]
-        ])],
-        ["~img", new Map([
-            ["bmp"],
-            ["gif"],
-            ["ico"],
-            ["jp(e)g", ["jpg", "jpeg"]],
-            ["png"],
-            ["psd"],
-            ["tif(f)", ["tif", "tiff"]]
-        ])],
-        ["~aud", new Set([
-            "mp3", "m4a", "ogg", "wav", "flac", "wma"
-        ])],
-        ["~vid", new Set([
-            "avi", "m4v", "mkv", "mov", "mp4", "mpg",
-            "mpeg", "vob", "wmv"
-        ])],
     ]);
 
     var extensionOptions;
@@ -545,6 +510,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             extensionOptions = await OptionsManager.retrieve();
+
+            await FilterManager.initializeEditor(filterEditorContainer, extensionOptions);
+
+            i18n.updateDocument();
 
             let displayQuickMenu = extensionOptions.displayQuickMenu && selectedFolders.length == 1;
             const extractImmediate = params.allowExtractImmediate;
@@ -985,33 +954,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         var result = attachmentPanel.firstElementChild;
 
         attachmentListDiv.appendChild(attachmentPanel);
-
-        return result;
-    }
-
-    function assembleFileTypeFilter() {
-        const result = {
-            selectedExtensions: extensionOptions.includedFilterFileTypes,
-            listedExtensions: ["--"],
-            includeUnlisted: extensionOptions.includeUnlistedFileTypes
-        };
-
-        const assembleListedExtensions = (set) => {
-            for(let categoryEntry of set) {
-                for(let item of categoryEntry) {
-                    if(item[1]) {
-                        result.listedExtensions.push(...item[1])
-                    }
-                    else {
-                        result.push(item);
-                    }
-                }
-            }
-        };
-
-        for(let set of [commonFileTypeMap, extensionOptions.additionalFilterFileTypes]) {
-            assembleListedExtensions(set);
-        }
 
         return result;
     }

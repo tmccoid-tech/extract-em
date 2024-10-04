@@ -294,6 +294,14 @@
     "saveComplete": { "message": "Mentés befejeződött!" },
     "saveFailed": { "message": "Mentés nem sikerült; ismeretlen hiba történt." },
 
+    "documents": { "message": "Documents" },
+    "images": { "message": "Images" },
+    "audio": { "message": "Audio" },
+    "video": { "message": "Video" },
+    "unknownFileType": { "message": "Unknown file type" },
+    "unlistedFileTypes": { "message": "All file types not listed above" },
+    "addType": { "message": "Add Type" },
+
     "bytesLabel": { "message": "bájt" },
     "kbLabel": { "message": "kB" },
     "mbLabel": { "message": "MB" },

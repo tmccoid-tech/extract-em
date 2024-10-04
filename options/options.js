@@ -1,5 +1,6 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 import { initializeEditor } from "/options/filename-pattern.js"
+import { FilterManager } from "/module/filtermanager";
 
 document.addEventListener("DOMContentLoaded", async () => {
     i18n.updateDocument();

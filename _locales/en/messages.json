@@ -294,6 +294,14 @@
     "saveComplete": { "message": "Save complete!" },
     "saveFailed": { "message": "Save failed; unknown error." },
 
+    "documents": { "message": "Documents" },
+    "images": { "message": "Images" },
+    "audio": { "message": "Audio" },
+    "video": { "message": "Video" },
+    "unknownFileType": { "message": "Unknown file type" },
+    "unlistedFileTypes": { "message": "All file types not listed above" },
+    "addType": { "message": "Add Type" },
+
     "bytesLabel": { "message": "bytes" },
     "kbLabel": { "message": "kB" },
     "mbLabel": { "message": "MB" },

@@ -56,28 +56,43 @@ export class FilterManager {
 
         const editorPanel = mainTemplate.content.cloneNode(true);
 
+        const createFileTypeControl = (fileType, categoryId, isCustom = false) => {
+            const result = fileTypeControlTemplate.content.cloneNode(true);
+
+            const fileTypeId = fileType[0];
+
+            const fileTypeCheckbox = result.querySelector(".file-type-checkbox");
+            fileTypeCheckbox.value = fileTypeId;
+            fileTypeCheckbox.setAttribute("ft-category", categoryId);
+            fileTypeCheckbox.addEventListener("click", (e) => this.onFileTypeCheckboxChecked(e));
+
+            const fileTypeControlLabel = result.querySelector(".file-type-control-label");
+            fileTypeControlLabel.innerText = fileTypeId;
+
+            if(isCustom) {
+                fileTypeControlLabel.classList.add("custom");
+            }
+
+            return result;
+        };
+
         for(const category of this.commonFileTypeMap) {
-            const itemContainer = editorPanel.querySelector(`.file-type-category-container[ft-category='${category[0]}']`);
+            const categoryId = category[0];
+
+            const itemContainer = editorPanel.querySelector(`.file-type-category-container[ft-category='${categoryId}']`);
 
             for(const fileType of category[1]) {
-                const fileTypeControl = fileTypeControlTemplate.content.cloneNode(true);
-
-                const fileTypeId = fileType[0];
-
-                const fileTypeCheckbox = fileTypeControl.querySelector(".file-type-checkbox");
-                fileTypeCheckbox.value = fileTypeId;
-                fileTypeCheckbox.setAttribute("ft-category", category[0]);
-                fileTypeCheckbox.addEventListener("click", (e) => this.onFileTypeCheckboxChecked(e));
-
-
-                const fileTypeControlLabel = fileTypeControl.querySelector(".file-type-control-label");
-                fileTypeControlLabel.innerText = fileTypeId;
-
+                const fileTypeControl = createFileTypeControl(fileType, categoryId);
                 itemContainer.appendChild(fileTypeControl);
             }
 
+            const customFileTypes = extensionOptions.additionalFilterFileTypes.get(categoryId);
+            for(const fileType of customFileTypes) {
+                const fileTypeControl = createFileTypeControl(fileType, categoryId);
+                itemContainer.appendChild(fileTypeControl);
+            }
 
-            const fileTypeCategoryCheckbox = editorPanel.querySelector(`.file-type-category-checkbox[value='${category[0]}']`);
+            const fileTypeCategoryCheckbox = editorPanel.querySelector(`.file-type-category-checkbox[value='${categoryId}']`);
             fileTypeCategoryCheckbox.addEventListener("click", (e) => this.onCategoryCheckboxChecked(e));
         }
 
@@ -88,19 +103,64 @@ export class FilterManager {
 
     static displayEditor(extensionOptions) {
 
+        // Remove hidden class from overlay
     }
 
     static onCategoryCheckboxChecked(event) {
         const checkbox = event.srcElement;
+        const isChecked = checkbox.checked;
 
-        const fileTypeCheckboxes = this.editorContainer.querySelectorAll(`.file-type-checkbox[ft-category='${checkbox.value}']`)
+        const fileTypeCheckboxes = this.editorContainer.querySelectorAll(`.file-type-checkbox[ft-category='${checkbox.value}']`);
         for(const item of fileTypeCheckboxes) {
-            item.checked = checkbox.checked;
+            item.checked = isChecked;
         }
+
+        this.validate(isChecked);
     }
 
     static onFileTypeCheckboxChecked(event) {
-        alert("FT clicked!");
+        const checkbox = event.srcElement;
+        const isChecked = checkbox.checked;
+        const category = checkbox.getAttribute("ft-category");
+        let categoryChecked = isChecked;
+
+        if(isChecked) {
+            categoryChecked = !this.editorContainer.querySelector(`.file-type-checkbox[ft-category='${category}']:not(:checked)`)
+        }
+
+        this.editorContainer.querySelector(`.file-type-category-checkbox[value='${category}']`).checked = categoryChecked;
+
+        this.validate(isChecked);
+    }
+
+    static validate(isValid) {
+        if(isValid) {
+            isValid = !!this.editorContainer.querySelector(".file-type-checkbox:is(:checked)");
+        }
+
+        this.editorContainer.querySelector("#filter-save-button").disabled = !isValid;
+    }
+
+    static save() {
+        const includedFilterFileTypes = [];
+        const includeUnlistedFileTypes = false;
+
+        const includedFileTypeCheckboxes = this.editorContainer.querySelectorAll(".file-type-checkbox:is(:checked)");
+        for(const checkbox of includedFileTypeCheckboxes) {
+            if(checkbox.value == "*") {
+                includeUnlistedFileTypes = checkbox.checked;
+            }
+            else {
+                includedFilterFileTypes.push(checkbox.value);
+            }
+        }
+
+        //TODO: Store options
+        // Dismiss modal dialog
+    }
+
+    static cancel() {
+        // Dismiss modal dialog
     }
 
     static assembleFileTypeFilter(extensionsOptions) {

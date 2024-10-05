@@ -511,6 +511,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             extensionOptions = await OptionsManager.retrieve();
 
+            extensionOptions.additionalFilterFileTypes.get("~doc").set(["dat"]);
+
             await FilterManager.initializeEditor(filterEditorContainer, extensionOptions);
 
             i18n.updateDocument();

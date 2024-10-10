@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         OptionsManager.setOption("isInitialized", true);
 
         extractImmediateSubfoldersCheckbox.disabled = !extractImmediate;
-        useSilentModeCheckbox.disabled= !extractImmediate;
+        useSilentModeCheckbox.disabled = !extractImmediate;
     }
 
     function displayFilenamePatternEditor() {

@@ -323,6 +323,8 @@ export class AttachmentManager {
             this.#log(`Generate alteration map: ${message.date} - ${message.subject}`);
             const alterationMap = this.#generateAlterationMap(fullMessage.parts);
 
+            const fileTypeFilter = this.#fileTypeFilter;
+
             for (const attachment of messageAttachmentList) {
                 if(attachment.name == "") {
                     continue;
@@ -346,10 +348,8 @@ export class AttachmentManager {
                     }
                 }
 
-                if (this.#fileTypeFilter) {
-                    const { selectedExtensions, listedExtensions, includeUnlisted } = this.#fileTypeFilter;
-
-                    if(!(selectedExtensions.has(extension) || (includeUnlisted && !listedExtensions.has(extension)))) {
+                if (fileTypeFilter) {
+                    if(!(fileTypeFilter.selectedExtensions.has(extension) || (fileTypeFilter.includeUnlisted && !fileTypeFilter.listedExtensions.has(extension)))) {
                         continue;
                     }
                 }
@@ -423,8 +423,10 @@ export class AttachmentManager {
                 this.#alterationTracker.push(...alterationMap.values());
             }
 
-            this.#attachmentMessageCount++;
-            folderStats.attachmentMessageCount++;
+            if(result.hasAttachments) {
+                this.#attachmentMessageCount++;
+                folderStats.attachmentMessageCount++;
+            }
         }
 
         this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));

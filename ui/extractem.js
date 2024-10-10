@@ -71,6 +71,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const quickMenuOptionLabel = elem("quickmenu-option-label");
     const alwaysShowQuickMenuCheckbox = elem("always-show-quickmenu-checkbox");
     const quickmenuIncludeEmbedsCheckbox = elem("quickmenu-include-embeds-checkbox");
+    const quickmenuUseFileTypeFilterCheckbox = elem("quickmenu-use-file-type-filter-checkbox");
+    const quickmenuEditFileTypeButton = elem("quickmenu-edit-file-type-filter-button");
+    const quickmenuFileTypeFilterList = elem("quickmenu-file-type-filter-list-div");
+
+
 
     const statsTable = elem("stats-table");
     const statsSummaryTBody = elem("stats-summary-tbody");
@@ -121,6 +126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const extractSelectedButton = elem("extract-selected-button");
 
     const filterFileTypeButton = elem("filter-file-type-button");
+    const filterOverlay = elem("filter-overlay");
     const filterEditorContainer = elem("filter-editor-container");
 
     const zipOverlay = elem("zip-overlay");
@@ -491,6 +497,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         includeEmbedsCheckbox.addEventListener("change", includeEmbedsCheckboxChanged);
         quickmenuIncludeEmbedsCheckbox.addEventListener("change", quickMenuIncludeEmbedsCheckboxChanged);
+        quickmenuUseFileTypeFilterCheckbox.addEventListener("change", quickmenuUseFileTypeFilterCheckboxChanged);
+        quickmenuEditFileTypeButton.addEventListener("click", FilterManager.displayEditor);
 
         updateDiscoveryProgressMessage();
 
@@ -511,9 +519,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             extensionOptions = await OptionsManager.retrieve();
 
-            extensionOptions.additionalFilterFileTypes.get("~doc").set(["dat"]);
-
-            await FilterManager.initializeEditor(filterEditorContainer, extensionOptions);
+            await FilterManager.initializeEditor(filterEditorContainer, extensionOptions, dismissFilterEditor);
 
             i18n.updateDocument();
 
@@ -663,8 +669,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             immediateDiscoveryProgress.setAttribute("max", summary.messageCount);
 
             const selectedFolderPaths = assembleFolderPaths(selectedFolders[0], extractOptions.includeSubfolders);
-    
-            attachmentManager.discoverAttachments(new Set(selectedFolderPaths), extensionOptions.includeEmbeds);
+
+            let fileTypeFilter;
+
+            if(extensionOptions.useFileTypeFilter) {
+                fileTypeFilter = FilterManager.assembleFileTypeFilter();
+            }
+        
+            attachmentManager.discoverAttachments(new Set(selectedFolderPaths), extensionOptions.includeEmbeds, fileTypeFilter);
 
             zipLogoImage.classList.add("rotating");
         }
@@ -808,6 +820,47 @@ document.addEventListener("DOMContentLoaded", async () => {
         extensionOptions.includeEmbeds = includeEmbeds;
     }
 
+    async function quickmenuUseFileTypeFilterCheckboxChanged(event) {
+        const useFileTypeFilter = quickmenuUseFileTypeFilterCheckbox.checked;
+
+        OptionsManager.setOption("useFileTypeFilter", useFileTypeFilter);
+        extensionOptions.useFileTypeFilter = useFileTypeFilter;
+        
+        if(useFileTypeFilter) {
+            if(!(extensionOptions.includedFilterFileTypes.length > 0 || extensionOptions.includeUnlistedFileTypes)) {
+                FilterManager.displayEditor();
+            }
+            else {
+                quickmenuFileTypeFilterList.classList.remove("ghost");
+                quickmenuEditFileTypeButton.disabled = false;
+            }
+        }
+        else {
+            quickmenuFileTypeFilterList.classList.add("ghost");
+            quickmenuEditFileTypeButton.disabled = true;
+        }
+    }
+
+    async function dismissFilterEditor(dismiss) {
+        filterOverlay.classList.add("hidden");
+
+        const updated = await dismiss();
+
+        if(updated) {
+            const fileTypeList = extensionOptions.includedFilterFileTypes.concat(
+                (extensionOptions.includeUnlistedFileTypes) ? ["*"] : []
+            ).join(", ");
+
+            quickmenuFileTypeFilterList.innerHTML = fileTypeList;
+            quickmenuFileTypeFilterList.classList.remove("ghost");
+            quickmenuEditFileTypeButton.disabled = false;
+        }
+        else if(!(extensionOptions.includedFilterFileTypes.length > 0 || extensionOptions.includeUnlistedFileTypes)) {
+            quickmenuUseFileTypeFilterCheckbox.checked = false;
+            OptionsManager.setOption("useFileTypeFilter", false);
+            extensionOptions.useFileTypeFilter = false;
+        }
+    }
 
     function discoverAttachments() {
         logoImage.classList.remove("initializing");
@@ -842,7 +895,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             v.virtualChecked = true;
         });
 
-        attachmentManager.discoverAttachments(selectedFolderPaths, extensionOptions.includeEmbeds);
+        let fileTypeFilter;
+
+        if(extensionOptions.useFileTypeFilter) {
+            fileTypeFilter = FilterManager.assembleFileTypeFilter();
+        }
+
+        attachmentManager.discoverAttachments(selectedFolderPaths, extensionOptions.includeEmbeds, fileTypeFilter);
     }
 
     async function generateAttachmentPanels() {

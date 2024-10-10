@@ -1,3 +1,5 @@
+import { OptionsManager } from "/module/optionsmanager.js";
+
 export class FilterManager {
     static commonFileTypeMap = new Map([
         ["~doc", new Map([
@@ -44,9 +46,13 @@ export class FilterManager {
         ])]
     ]);
 
-    static editorContainer;
+    static #editorContainer;
+    static #extensionOptions;
+    static #onDismiss;
 
-    static async initializeEditor(container, extensionOptions) {
+    static async initializeEditor(container, extensionOptions, onDismiss) {
+        this.#onDismiss = (dismiss) => onDismiss(dismiss);
+
         const templatesContainer = document.createElement("template");
 
         templatesContainer.innerHTML = await (await fetch("/module/filtertemplate.html")).text();
@@ -96,21 +102,42 @@ export class FilterManager {
             fileTypeCategoryCheckbox.addEventListener("click", (e) => this.onCategoryCheckboxChecked(e));
         }
 
+        editorPanel.querySelector("#filter-save-button").addEventListener("click", async (e) => this.#onDismiss(() => this.save()));
+        editorPanel.querySelector("#filter-cancel-button").addEventListener("click", async (e) => this.#onDismiss(() => this.dismiss()));
+
         container.appendChild(editorPanel);
 
-        this.editorContainer = container;
+        this.#editorContainer = container;
+        this.#extensionOptions = extensionOptions;
     }
 
-    static displayEditor(extensionOptions) {
+    static displayEditor() {
+        const extensionOptions = this.#extensionOptions;
 
-        // Remove hidden class from overlay
+        if(extensionOptions.includeUnlistedFileTypes) {
+            this.#editorContainer.querySelector(`.file-type-checkbox[value='${"*"}']`).checked = true;
+        }
+
+        if(extensionOptions.includedFilterFileTypes.length > 0) {
+            for(const fileType of extensionOptions.includedFilterFileTypes) {
+                this.#editorContainer.querySelector(`.file-type-checkbox[value='${fileType}']`).checked = true;    
+            }
+
+            for(const category of this.commonFileTypeMap) {
+                this.syncCategoryCheckbox(category[0], true);
+            }
+        }
+
+        this.validate(extensionOptions.includeUnlistedFileTypes || extensionOptions.includedFilterFileTypes.length > 0);
+
+        document.getElementById("filter-overlay").classList.remove("hidden");
     }
 
     static onCategoryCheckboxChecked(event) {
         const checkbox = event.srcElement;
         const isChecked = checkbox.checked;
 
-        const fileTypeCheckboxes = this.editorContainer.querySelectorAll(`.file-type-checkbox[ft-category='${checkbox.value}']`);
+        const fileTypeCheckboxes = this.#editorContainer.querySelectorAll(`.file-type-checkbox[ft-category='${checkbox.value}']`);
         for(const item of fileTypeCheckboxes) {
             item.checked = isChecked;
         }
@@ -122,30 +149,34 @@ export class FilterManager {
         const checkbox = event.srcElement;
         const isChecked = checkbox.checked;
         const category = checkbox.getAttribute("ft-category");
-        let categoryChecked = isChecked;
 
-        if(isChecked) {
-            categoryChecked = !this.editorContainer.querySelector(`.file-type-checkbox[ft-category='${category}']:not(:checked)`)
-        }
-
-        this.editorContainer.querySelector(`.file-type-category-checkbox[value='${category}']`).checked = categoryChecked;
+        this.syncCategoryCheckbox(category, isChecked);
 
         this.validate(isChecked);
     }
 
-    static validate(isValid) {
-        if(isValid) {
-            isValid = !!this.editorContainer.querySelector(".file-type-checkbox:is(:checked)");
+    static syncCategoryCheckbox(category, categoryChecked) {
+        if(categoryChecked) {
+            categoryChecked = !this.#editorContainer.querySelector(`.file-type-checkbox[ft-category='${category}']:not(:checked)`)
         }
 
-        this.editorContainer.querySelector("#filter-save-button").disabled = !isValid;
+        this.#editorContainer.querySelector(`.file-type-category-checkbox[value='${category}']`).checked = categoryChecked;
     }
 
-    static save() {
+    static validate(isValid) {
+        if(isValid) {
+            isValid = !!this.#editorContainer.querySelector(".file-type-checkbox:is(:checked)");
+        }
+
+        this.#editorContainer.querySelector("#filter-save-button").disabled = !isValid;
+    }
+
+    static async save() {
         const includedFilterFileTypes = [];
         const includeUnlistedFileTypes = false;
+        const extensionOptions = this.#extensionOptions;
 
-        const includedFileTypeCheckboxes = this.editorContainer.querySelectorAll(".file-type-checkbox:is(:checked)");
+        const includedFileTypeCheckboxes = this.#editorContainer.querySelectorAll(".file-type-checkbox:is(:checked)");
         for(const checkbox of includedFileTypeCheckboxes) {
             if(checkbox.value == "*") {
                 includeUnlistedFileTypes = checkbox.checked;
@@ -155,35 +186,58 @@ export class FilterManager {
             }
         }
 
-        //TODO: Store options
-        // Dismiss modal dialog
+        await OptionsManager.setOption("includedFilterFileTypes", includedFilterFileTypes);
+        extensionOptions.includedFilterFileTypes = includedFilterFileTypes;
+
+        await OptionsManager.setOption("includeUnlistedFileTypes", includeUnlistedFileTypes);
+        extensionOptions.includeUnlistedFileTypes = includeUnlistedFileTypes;
+
+        await this.dismiss();
+
+        return true;
     }
 
-    static cancel() {
-        // Dismiss modal dialog
+    static async dismiss() {
+        const fileTypeCheckboxes = this.#editorContainer.querySelectorAll(".file-type-checkbox");
+        for(const checkbox of fileTypeCheckboxes) {
+            checkbox.checked = false;
+        }
+
+        const fileTypeCategoryCheckboxes = this.#editorContainer.querySelectorAll(".file-type-category-checkbox");
+        for(const checkbox of fileTypeCategoryCheckboxes) {
+            checkbox.checked = false;
+        }
+
+        this.#editorContainer.querySelector("#filter-save-button").disabled = true;
+
+        return false;
     }
 
-    static assembleFileTypeFilter(extensionsOptions) {
+    static assembleFileTypeFilter() {
+        const extensionOptions = this.#extensionOptions;
+
         const result = {
-            selectedExtensions: extensionOptions.includedFilterFileTypes,
-            listedExtensions: ["--"],
+            selectedExtensions: new Set(extensionOptions.includedFilterFileTypes),
+            listedExtensions: new Set(["--"]),
             includeUnlisted: extensionOptions.includeUnlistedFileTypes
         };
 
         const assembleListedExtensions = (set) => {
             for(let categoryEntry of set) {
-                for(let item of categoryEntry) {
-                    if(item[1]) {
-                        result.listedExtensions.push(...item[1])
+                for(let fileTypeEntry of categoryEntry) {
+                    if(fileTypeEntry[1]) {
+                        for(const fileType of fileTypeEntry[1]) {
+                            result.listedExtensions.add(fileType);
+                        }
                     }
                     else {
-                        result.push(item);
+                        result.listedExtensions.add(fileTypeEntry);
                     }
                 }
             }
         };
 
-        for(let set of [commonFileTypeMap, extensionOptions.additionalFilterFileTypes]) {
+        for(let set of [this.commonFileTypeMap, extensionOptions.additionalFilterFileTypes]) {
             assembleListedExtensions(set);
         }
 

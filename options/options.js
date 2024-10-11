@@ -1,6 +1,6 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 import { initializeEditor } from "/options/filename-pattern.js"
-import { FilterManager } from "/module/filtermanager";
+import { FilterManager } from "/module/filtering/filtermanager.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     i18n.updateDocument();
@@ -24,6 +24,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const filenamePatternEditButton = elem("filename-pattern-edit-button");
 
     const filenameEditorOverlay = elem("filename-editor-overlay");
+
+    const filterElements = {
+        quickmenuCheckbox: elem("use-file-type-filter-checkbox"),
+        quickmenuEditButton: elem("edit-file-type-filter-button"),
+        quickmenuFileTypeList: elem("file-type-filter-list-div"),
+        editorOverlay: elem("filter-overlay"),
+        editorContainer: elem("filter-editor-container")
+    };
     
     async function main() {
         listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
@@ -65,6 +73,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         filenamePatternDisplayTextbox.value = extensionOptions.filenamePattern;
 
         toggleFilenamePatternEditButton(extensionOptions.useFilenamePattern);
+
+        FilterManager.initializeEditor(filterElements, extensionOptions);
     }
 
     function listen(element, handler) {

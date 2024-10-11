@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>__MSG_extensionName__ __MSG_options__</title>
     <link rel="stylesheet" type="text/css" media="screen" href="options.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/module/filtering/filtering.css">
 </head>
 <body>
     <div>    
@@ -52,6 +53,14 @@
             </dt>
             <dd>
                 __MSG_includeEmbeddedImagesDescription__
+            </dd>
+
+            <dt>
+                <label><input type="checkbox" id="use-file-type-filter-checkbox" option-name="useFileTypeFilter" /> __MSG_useFileTypeFilter__</label><button type="button" id="edit-file-type-filter-button" disabled="disabled">__MSG_edit__</button>
+            </dt>
+            <dd>
+                <div id="file-type-filter-list-div" class="ghost">...</div>
+                __MSG_useFileTypeFilterDescription
             </dd>
 
             <dt>

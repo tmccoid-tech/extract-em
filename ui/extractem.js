@@ -1,7 +1,7 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { ReportManager } from "/module/reportmanager.js";
-import { FilterManager } from "/module/filtermanager.js";
+import { FilterManager } from "/module/filtering/filtermanager.js";
 
 const _filterSelect = function* (test, select) {
     for(const item of this) {
@@ -71,10 +71,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const quickMenuOptionLabel = elem("quickmenu-option-label");
     const alwaysShowQuickMenuCheckbox = elem("always-show-quickmenu-checkbox");
     const quickmenuIncludeEmbedsCheckbox = elem("quickmenu-include-embeds-checkbox");
-    const quickmenuUseFileTypeFilterCheckbox = elem("quickmenu-use-file-type-filter-checkbox");
-    const quickmenuEditFileTypeButton = elem("quickmenu-edit-file-type-filter-button");
-    const quickmenuFileTypeFilterList = elem("quickmenu-file-type-filter-list-div");
-
 
 
     const statsTable = elem("stats-table");
@@ -125,9 +121,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const resetSummaryButton = elem("reset-summary-button");
     const extractSelectedButton = elem("extract-selected-button");
 
+    const filterElements = {
+        quickmenuCheckbox: elem("quickmenu-use-file-type-filter-checkbox"),
+        quickmenuEditButton: elem("quickmenu-edit-file-type-filter-button"),
+        quickmenuFileTypeList: elem("quickmenu-file-type-filter-list-div"),
+        editorOverlay: elem("filter-overlay"),
+        editorContainer: elem("filter-editor-container")
+    };
+
     const filterFileTypeButton = elem("filter-file-type-button");
-    const filterOverlay = elem("filter-overlay");
-    const filterEditorContainer = elem("filter-editor-container");
 
     const zipOverlay = elem("zip-overlay");
     const zipAccountNameLabel = elem("zip-account-name-label");
@@ -497,8 +499,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         includeEmbedsCheckbox.addEventListener("change", includeEmbedsCheckboxChanged);
         quickmenuIncludeEmbedsCheckbox.addEventListener("change", quickMenuIncludeEmbedsCheckboxChanged);
-        quickmenuUseFileTypeFilterCheckbox.addEventListener("change", quickmenuUseFileTypeFilterCheckboxChanged);
-        quickmenuEditFileTypeButton.addEventListener("click", FilterManager.displayEditor);
 
         updateDiscoveryProgressMessage();
 
@@ -519,7 +519,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             extensionOptions = await OptionsManager.retrieve();
 
-            await FilterManager.initializeEditor(filterEditorContainer, extensionOptions, dismissFilterEditor);
+            await FilterManager.initializeEditor(filterElements, extensionOptions);
 
             i18n.updateDocument();
 
@@ -818,48 +818,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         OptionsManager.setOption("includeEmbeds", includeEmbeds);
         extensionOptions.includeEmbeds = includeEmbeds;
-    }
-
-    async function quickmenuUseFileTypeFilterCheckboxChanged(event) {
-        const useFileTypeFilter = quickmenuUseFileTypeFilterCheckbox.checked;
-
-        OptionsManager.setOption("useFileTypeFilter", useFileTypeFilter);
-        extensionOptions.useFileTypeFilter = useFileTypeFilter;
-        
-        if(useFileTypeFilter) {
-            if(!(extensionOptions.includedFilterFileTypes.length > 0 || extensionOptions.includeUnlistedFileTypes)) {
-                FilterManager.displayEditor();
-            }
-            else {
-                quickmenuFileTypeFilterList.classList.remove("ghost");
-                quickmenuEditFileTypeButton.disabled = false;
-            }
-        }
-        else {
-            quickmenuFileTypeFilterList.classList.add("ghost");
-            quickmenuEditFileTypeButton.disabled = true;
-        }
-    }
-
-    async function dismissFilterEditor(dismiss) {
-        filterOverlay.classList.add("hidden");
-
-        const updated = await dismiss();
-
-        if(updated) {
-            const fileTypeList = extensionOptions.includedFilterFileTypes.concat(
-                (extensionOptions.includeUnlistedFileTypes) ? ["*"] : []
-            ).join(", ");
-
-            quickmenuFileTypeFilterList.innerHTML = fileTypeList;
-            quickmenuFileTypeFilterList.classList.remove("ghost");
-            quickmenuEditFileTypeButton.disabled = false;
-        }
-        else if(!(extensionOptions.includedFilterFileTypes.length > 0 || extensionOptions.includeUnlistedFileTypes)) {
-            quickmenuUseFileTypeFilterCheckbox.checked = false;
-            OptionsManager.setOption("useFileTypeFilter", false);
-            extensionOptions.useFileTypeFilter = false;
-        }
     }
 
     function discoverAttachments() {

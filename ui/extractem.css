@@ -489,57 +489,6 @@ folder-selector-button:disabled:active {
     z-index: 2;
 }
 
-/*****************************/
-/* MOVE TO SEPARATE CSS FILE */
-
-#filter-editor-container {
-    background-color: white;
-    height: 100%;
-    width: 100%;
-    padding: 16px;
-    overflow-y: auto;
-}
-
-.file-type-category-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 32px;
-    padding: 0px 4px;             
-    background-color: antiquewhite;
-    border: solid 1px darkgoldenrod;
-}
-
-.file-type-category-container, .other-file-type-category-container {
-    margin-bottom: 12px;
-    padding: 0px 5px;
-}
-
-.other-file-type-category-container {
-    background-color: aliceblue;
-    border: solid 1px #6262d9;
-}
-
-.file-type-category-container label {
-    display: inline-block;
-    width: 80px;
-}
-
-#filter-buttons-div {
-    text-align: right;
-}
-
-.filter-button {
-    min-width: 52px;
-    min-height: 24px;
-    margin-left: 6px;
-    text-align: center;
-}
-
-/*****************************/
-/*****************************/
-
 #zip-panel {
     width: 100%;
     height: 100%;

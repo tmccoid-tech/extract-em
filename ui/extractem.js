@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const includeEmbedsCheckbox = elem("include-embeds-checkbox");
 
     // Displayed in Attachment List
+    const toggleSelectedAttachmentsCheckbox = elem("toggle-selected-attachments-checkbox");
     const selectedAttachmentCountSpan = elem("selected-attachment-count-span");
     const selectedAttachmentSizeSpan = elem("selected-attachment-size-span");
 
@@ -500,6 +501,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         includeEmbedsCheckbox.addEventListener("change", includeEmbedsCheckboxChanged);
         quickmenuIncludeEmbedsCheckbox.addEventListener("change", quickMenuIncludeEmbedsCheckboxChanged);
 
+        toggleSelectedAttachmentsCheckbox.addEventListener("change", onToggleSelectedAttachmentsCheckboxChanged);
+
         updateDiscoveryProgressMessage();
 
         const params = await messenger.runtime.sendMessage({ action: "getParams" });
@@ -897,7 +900,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     for(const index of groupedAttachmentIndices) {
                         const attachment = attachmentManager.attachmentList[index];
                         const message = attachmentManager.messageList.get(attachment.messageId);
-                        const attachmentPanel = await generateAttachmentPanel(attachment, message);
+                        const attachmentPanel = await generateAttachmentPanel(attachment, message, key);
                         if(isFirstInGroup) {
                             attachmentPanel.classList.add("first-in-group");
                             isFirstInGroup = false;
@@ -913,7 +916,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    async function generateAttachmentPanel(attachment, message) {
+    async function generateAttachmentPanel(attachment, message, groupingKey) {
         const attachmentPanel = attachmentPanelTemplate.content.cloneNode(true);
 
         const attachmentCheckbox = attachmentPanel.querySelector(".attachment-checkbox");
@@ -924,6 +927,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         attachmentCheckbox.setAttribute("file-size", attachment.size);
         attachmentCheckbox.setAttribute("extension", attachment.extension);
         attachmentCheckbox.setAttribute("isEmbed", `${attachment.isEmbed}`);
+
+        if(groupingKey) {
+            attachmentCheckbox.setAttribute("grouping-key", groupingKey);
+        }
 
         attachmentPanel.querySelector(".file-name-label").textContent = attachment.name;
         attachmentPanel.querySelector(".extension-label").textContent = attachment.extension;
@@ -1208,19 +1215,61 @@ document.addEventListener("DOMContentLoaded", async () => {
         updateSelectionCounts();
     }
 
+    function onToggleSelectedAttachmentsCheckboxChanged(event) {
+        const checked = this.checked;
+
+        document.querySelectorAll(".attachment-grouping-checkbox").forEach((checkbox, i) => {
+            checkbox.checked = checked;
+        });
+
+        document.querySelectorAll(".attachment-checkbox").forEach((checkbox, i) => {
+            checkbox.checked = checked;
+        });
+
+        updateAttachmentSelectionDependencies();
+    }
+
     function onAttachmentGroupingCheckboxChanged(event) {
         const groupingCheckbox = event.srcElement;
-        const extension = groupingCheckbox.value;
+        const groupingKey = groupingCheckbox.value;
         const isGroupChecked = groupingCheckbox.checked;
 
-        document.querySelectorAll(`.attachment-checkbox[extension='${extension}']`).forEach((checkbox, i) => {
+        document.querySelectorAll(`.attachment-checkbox[grouping-key='${groupingKey}']`).forEach((checkbox, i) => {
             checkbox.checked = isGroupChecked;
         });
 
-        onAttachmentCheckboxChanged(event);
+        syncToggleSelectedAttachmentsCheckbox(isGroupChecked);
+
+        updateAttachmentSelectionDependencies();
     }
 
     function onAttachmentCheckboxChanged(event) {
+        let isChecked = event.srcElement.checked;
+        const groupingKey = event.srcElement.getAttribute("grouping-key");
+
+        if(groupingKey) {
+            const groupingCheckbox = document.querySelector(`.attachment-grouping-checkbox[value='${groupingKey}']`);
+
+            if(isChecked) {
+                isChecked = !document.querySelector(`.attachment-checkbox[grouping-key='${groupingKey}']:not(:checked)`);
+            }
+
+            groupingCheckbox.checked = isChecked;
+        }
+
+        syncToggleSelectedAttachmentsCheckbox(isChecked);
+        updateAttachmentSelectionDependencies();
+    }
+
+    function syncToggleSelectedAttachmentsCheckbox(isChecked) {
+        if(isChecked) {
+            isChecked = !document.querySelector(".attachment-checkbox:not(:checked)");
+        }
+
+        toggleSelectedAttachmentsCheckbox.checked = isChecked;
+    }
+
+    function updateAttachmentSelectionDependencies() {
         const selections = getSelectedAttachmentCheckboxes(true);
 
         const selectedItemCount = selections.selectedAttachmentCount + selections.selectedEmbedCount;

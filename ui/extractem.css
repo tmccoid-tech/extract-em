@@ -184,8 +184,12 @@ section {
 }
 
 #list-header-div div {
-    align-self: center;
     font-weight: bold;
+    align-self: center;
+}
+
+#toggle-selected-attachments-checkbox {
+    margin-left: 4px;
 }
 
 #summary-buttons-div {

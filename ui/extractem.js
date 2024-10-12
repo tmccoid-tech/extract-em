@@ -98,6 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const includeEmbedsCheckbox = elem("include-embeds-checkbox");
 
     // Displayed in Attachment List
+    const toggleSelectedAttachmentsCheckbox = elem("toggle-selected-attachments-checkbox");
     const selectedAttachmentCountSpan = elem("selected-attachment-count-span");
     const selectedAttachmentSizeSpan = elem("selected-attachment-size-span");
 
@@ -490,6 +491,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         includeEmbedsCheckbox.addEventListener("change", includeEmbedsCheckboxChanged);
         quickmenuIncludeEmbedsCheckbox.addEventListener("change", quickMenuIncludeEmbedsCheckboxChanged);
+
+        toggleSelectedAttachmentsCheckbox.addEventListener("change", onToggleSelectedAttachmentsCheckboxChanged);
 
         updateDiscoveryProgressMessage();
 
@@ -1181,6 +1184,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         updateSelectionCounts();
+    }
+
+    function onToggleSelectedAttachmentsCheckboxChanged(event) {
+        const checked = this.checked;
+
+        document.querySelectorAll(".attachment-grouping-checkbox").forEach((checkbox, i) => {
+            checkbox.checked = checked;
+        });
+
+        document.querySelectorAll(".attachment-checkbox").forEach((checkbox, i) => {
+            checkbox.checked = checked;
+        });
+
+        onAttachmentCheckboxChanged(event);
     }
 
     function onAttachmentGroupingCheckboxChanged(event) {

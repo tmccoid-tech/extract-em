@@ -3,8 +3,6 @@ import { initializeEditor } from "/options/filename-pattern.js"
 import { FilterManager } from "/module/filtering/filtermanager.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    i18n.updateDocument();
-
     const elem = (id) => document.getElementById(id);
 
     const standardUiModeCheckbox = elem("standard-ui-mode-checkbox");
@@ -33,6 +31,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         editorContainer: elem("filter-editor-container")
     };
     
+    const extensionOptions = await OptionsManager.retrieve();
+
+    await FilterManager.initializeEditor(filterElements, extensionOptions);
+
+    i18n.updateDocument();
+
     async function main() {
         listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
         listen(displayQuickMenuCheckbox, onUserInteractionOptionChanged);
@@ -50,8 +54,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(useFilenamePatternCheckbox, onFilenamePatternOptionChanged);
 
         filenamePatternEditButton.addEventListener("click", (event) => displayFilenamePatternEditor());
-
-        const extensionOptions = await OptionsManager.retrieve();
 
         standardUiModeCheckbox.checked = !(extensionOptions.displayQuickMenu || extensionOptions.extractImmediate);
         displayQuickMenuCheckbox.checked = extensionOptions.displayQuickMenu;
@@ -73,8 +75,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         filenamePatternDisplayTextbox.value = extensionOptions.filenamePattern;
 
         toggleFilenamePatternEditButton(extensionOptions.useFilenamePattern);
-
-        FilterManager.initializeEditor(filterElements, extensionOptions);
     }
 
     function listen(element, handler) {

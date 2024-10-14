@@ -31,6 +31,8 @@
         "description": "Action description for standard-selection QuickMenu button"
     },
 
+    "includeEmbeds": { "message": "Include embeds (inline-attached images)" },
+    "useFileTypeFilter": { "message": "Use file type filter" },
     "alwaysShowQuickMenu": {
         "message": "Always show this QuickMenu",
         "description": "Label for QuickMenu persistence checkbox"
@@ -210,6 +212,9 @@
         "message": "Identifies and includes images embedded in the message body (inline images)",
         "description": ""
     },
+    "useFileTypeFilterDescription": {
+        "message": "Limits results to selected file types, specified by extension (.jpg, .mp3, .mov, etc.)"
+    },
 
     "omitDuplicates" : { "message": "Omit duplicates" },
     "omitDuplicatesDescription" : {
@@ -294,7 +299,7 @@
     "saveComplete": { "message": "Save complete!" },
     "saveFailed": { "message": "Save failed; unknown error." },
 
-    "documents": { "message": "Documents" },
+    "general": { "message": "General" },
     "images": { "message": "Images" },
     "audio": { "message": "Audio" },
     "video": { "message": "Video" },

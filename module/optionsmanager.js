@@ -19,7 +19,7 @@ export class OptionsManager {
         includedFilterFileTypes: [],
         includeUnlistedFileTypes: false,
         additionalFilterFileTypes: new Map([
-            ["~doc", new Map()],
+            ["~gen", new Map()],
             ["~img", new Map()],
             ["~aud", new Map()],
             ["~vid", new Map()]

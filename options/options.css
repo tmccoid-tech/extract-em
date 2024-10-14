@@ -6,9 +6,17 @@ dd {
     margin-bottom: 6px;
 }
 
+.ghost {
+    opacity: 0.4;
+    -moz-transition: opacity 1000ms linear;
+}
+
+.options-control {
+    margin-left: 4px;
+}
+
 #filename-pattern-display-textbox {
     width: 360px;
-    margin-right: 4px;
 }
 
 .modal-overlay {

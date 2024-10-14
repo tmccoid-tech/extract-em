@@ -44,7 +44,7 @@
 
             <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> __MSG_useFilenamePattern__</label></dt>
             <dd>
-                <input type="text" id="filename-pattern-display-textbox" disabled="disabled"><button type="button" id="filename-pattern-edit-button" disabled="disabled">__MSG_edit__</button><br/>
+                <input type="text" id="filename-pattern-display-textbox" disabled="disabled"><button type="button" id="filename-pattern-edit-button" class="options-control" disabled="disabled">__MSG_edit__</button><br/>
                 __MSG_useFilenamePatternDescription__
             </dd>
 
@@ -56,11 +56,11 @@
             </dd>
 
             <dt>
-                <label><input type="checkbox" id="use-file-type-filter-checkbox" option-name="useFileTypeFilter" /> __MSG_useFileTypeFilter__</label><button type="button" id="edit-file-type-filter-button" disabled="disabled">__MSG_edit__</button>
+                <label><input type="checkbox" id="use-file-type-filter-checkbox" option-name="useFileTypeFilter" /> __MSG_useFileTypeFilter__</label><button type="button" id="edit-file-type-filter-button" class="options-control" disabled="disabled">__MSG_edit__</button>
             </dt>
             <dd>
-                <div id="file-type-filter-list-div" class="ghost">...</div>
-                __MSG_useFileTypeFilterDescription
+                <div id="file-type-filter-list-div" class="filter-list-div ghost">...</div>
+                __MSG_useFileTypeFilterDescription__
             </dd>
 
             <dt>
@@ -85,7 +85,7 @@
             </dd>
 
             <dt>
-                <label>__MSG_defaultGrouping__: <select id="default-grouping-select" option-name="defaultGrouping">
+                <label>__MSG_defaultGrouping__: <select id="default-grouping-select" class="options-control" option-name="defaultGrouping">
                     <option value="None" selected>__MSG_none__</option>
                     <option value="Author">__MSG_defaultGroupingByAuthor__</option>
                     <option value="Folder">__MSG_defaultGroupingByFolder__</option>
@@ -97,7 +97,7 @@
             </dd>
 
             <dt>
-                <label>__MSG_imagePreview__: <select id="image-preview-select" option-name="defaultImagePreview">
+                <label>__MSG_imagePreview__: <select id="image-preview-select" class="options-control" option-name="defaultImagePreview">
                     <option value="none">__MSG_none__</option>
                     <option value="sm" selected>__MSG_imagePreviewSmall__</option>
                     <option value="md">__MSG_imagePreviewMedium__</option>

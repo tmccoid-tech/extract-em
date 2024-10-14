@@ -2,7 +2,7 @@ import { OptionsManager } from "/module/optionsmanager.js";
 
 export class FilterManager {
     static commonFileTypeMap = new Map([
-        ["~doc", new Map([
+        ["~gen", new Map([
             ["csv"],
             ["doc(x)", ["doc", "docx"]],
             ["eml"],

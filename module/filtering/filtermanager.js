@@ -46,6 +46,8 @@ export class FilterManager {
         ])]
     ]);
 
+    static #provisionalFileTypes = null;
+
     static #elements;
     static #extensionOptions;
 
@@ -89,11 +91,11 @@ export class FilterManager {
         };
 
         for(const category of this.commonFileTypeMap) {
-            const categoryId = category[0];
+            const [categoryId, entryList] = category;
 
             const itemContainer = editorPanel.querySelector(`.file-type-category-container[ft-category='${categoryId}']`);
 
-            for(const fileType of category[1]) {
+            for(const fileType of entryList) {
                 const fileTypeControl = createFileTypeControl(fileType, categoryId);
                 itemContainer.appendChild(fileTypeControl);
             }
@@ -167,6 +169,8 @@ export class FilterManager {
 
         this.#validate(extensionOptions.includeUnlistedFileTypes || extensionOptions.includedFilterFileTypes.length > 0);
 
+        this.#provisionalFileTypes = new Map();
+
         editorOverlay.classList.remove("hidden");
     }
 
@@ -220,6 +224,24 @@ export class FilterManager {
         const { editorContainer  } = this.#elements;
         const extensionOptions = this.#extensionOptions;
 
+        if(this.#provisionalFileTypes.size > 0) {
+            const additionalFilterFileTypes = extensionOptions.additionalFilterFileTypes;
+
+            for(const fileEntry of this.#provisionalFileTypes) {
+                const [fileType, categoryAssignment] = fileEntry;
+
+                const provisionalItemCategory = additionalFilterFileTypes.get(categoryAssignment.categoryId);
+                provisionalItemCategory.set(fileType);
+
+                if(categoryAssignment.priorCategoryID) {
+                    const priorCategory = additionalFilterFileTypes.get(categoryAssignment.priorCategoryID);
+                    priorCategory.remove(fileType);
+                }
+            }
+
+            await OptionsManager.setOption("additionalFilterFileTypes", extensionOptions.additionalFilterFileTypes);
+        }
+
         const includedFilterFileTypes = [];
         let includeUnlistedFileTypes = false;
 
@@ -240,16 +262,6 @@ export class FilterManager {
         extensionOptions.includeUnlistedFileTypes = includeUnlistedFileTypes;
 
         this.#syncMainControls(extensionOptions, true);
-
-        /*
-            const fileTypeList = extensionOptions.includedFilterFileTypes.concat(
-                (extensionOptions.includeUnlistedFileTypes) ? ["*"] : []
-            ).join(", ");
-
-            quickmenuFileTypeList.innerHTML = fileTypeList;
-            quickmenuFileTypeList.classList.remove("ghost");
-            quickmenuEditButton.disabled = false;
-        */
 
         this.#dismiss();
     }
@@ -299,6 +311,8 @@ export class FilterManager {
    
         editorOverlay.classList.add("hidden");
 
+        this.#provisionalFileTypes = null;
+
         const fileTypeCheckboxes = editorContainer.querySelectorAll(".file-type-checkbox");
         for(const checkbox of fileTypeCheckboxes) {
             checkbox.checked = false;
@@ -310,6 +324,77 @@ export class FilterManager {
         }
 
         saveButton.disabled = true;
+    }
+
+    static #addFileType() {
+        const newFileType = "";
+        const targetCategoryId = "";
+        const priorCategoryId = null;
+
+        const extensionRegex = /^\w{3,5}$/;
+
+        if(!extensionRegex.test(newFileType)) {
+            // Error!
+            return;
+        }
+
+        const additionalFilterFileTypes = this.#extensionOptions.additionalFilterFileTypes;
+
+        // Start optimistic, contrary to form...
+        const isValid = true;
+
+        // Ensure this type hasn't been added during this edit session
+        if(this.#provisionalFileTypes.has(fileType)) {
+            isValid = false;
+        }
+
+        // Test standard file types
+        if(isValid) {
+            test_standard:
+            for(const category of this.commonFileTypeMap) {
+                const [, entryList] = category;
+
+                for(const [fileTypeId, itemList] of entryList) {
+                    if(fileTypeId == newFileType || (itemList && itemList.includes)){
+                        isValid = false;
+                        break test_standard;
+                    }
+                }
+            }
+        }
+
+        // Test existing custom file types
+        if(isValid) {
+            test_custom:
+            for(const [categoryId, entryList] of additionalFilterFileTypes) {
+                for(const [fileTypeId, ] of entryList) {
+                    if(fileTypeId == newFileType) {
+                        if(categoryId == targetCategoryId) {
+                            isValid = false;
+                        }
+                        else {
+                            priorCategoryId = categoryId;
+
+                            // Remove the html control
+                            // Ensure prior category checkbox sync'd
+                        }
+
+                        break test_custom;
+                    }
+                }
+            }
+        }
+
+        if(isValid) {
+            this.#provisionalFileTypes.set(newFileType, { categoryId: categoryId, priorCategoryID: priorCategoryId });
+
+            // Add the html control
+        }
+
+        // Check the appropriate input
+        this.#elements.editorContainer.querySelector(`.file-type-checkbox[value='${newFileType}']`).checked = true;
+
+        this.#validate(true);
     }
 
     static assembleFileTypeFilter() {

@@ -1,8 +1,13 @@
 <template id="filter-file-type-editor-template">
     <div>
+        <input id="add-file-type-textbox"/>
+        <button type="button" id="initialize-new-file-type-button" disabled="disabled">__MSG_addType__</button>
+        <button type="button" id="cancel-add-file-type-button">__MSG_cancel__</button>
+    </div>
+    <div>
         <div class="file-type-category-header">
             <label><input type="checkbox" class="file-type-category-checkbox" value="~gen" /> __MSG_general__</label>
-            <button type="button" class="edit-file-type-category-button" value="~gen">__MSG_addType__</button>
+            <button type="button" class="edit-file-type-category-button" category="__MSG_general__" value="~gen">__MSG_addType__</button>
         </div>
         <div class="file-type-category-container" ft-category="~gen">
         </div>
@@ -10,7 +15,7 @@
     <div>
         <div class="file-type-category-header">
             <label><input type="checkbox" class="file-type-category-checkbox" value="~img" /> __MSG_images__</label>
-            <button type="button" class="edit-file-type-category-button" value="~img">__MSG_addType__</button>
+            <button type="button" class="edit-file-type-category-button" category="__MSG_images__" value="~img">__MSG_addType__</button>
         </div>
         <div class="file-type-category-container" ft-category="~img">
         </div>
@@ -18,7 +23,7 @@
     <div>
         <div class="file-type-category-header">
             <label><input type="checkbox" class="file-type-category-checkbox" value="~aud" /> __MSG_audio__</label>
-            <button type="button" class="edit-file-type-category-button" value="~aud">__MSG_addType__</button>
+            <button type="button" class="edit-file-type-category-button" category="__MSG_audio__" value="~aud">__MSG_addType__</button>
         </div>
         <div class="file-type-category-container" ft-category="~aud">
         </div>
@@ -26,7 +31,7 @@
     <div>
         <div class="file-type-category-header">
             <label><input type="checkbox" class="file-type-category-checkbox" value="~vid" /> __MSG_video__</label>
-            <button type="button" class="edit-file-type-category-button" value="~vid">__MSG_addType__</button>
+            <button type="button" class="edit-file-type-category-button" category="__MSG_video__" value="~vid">__MSG_addType__</button>
         </div>
         <div class="file-type-category-container" ft-category="~vid">
         </div>

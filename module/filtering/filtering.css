@@ -41,6 +41,22 @@
     width: 80px;
 }
 
+.file-type-control-label.custom {
+    text-decoration: underline dotted;
+}
+
+#add-file-type-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+    background-color: white;
+    padding: 4px;
+}
+
+#add-file-type-control-header {
+    font-weight: bold;
+}
+
 #filter-buttons-div {
     text-align: right;
 }

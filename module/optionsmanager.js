@@ -35,6 +35,12 @@ export class OptionsManager {
 
         this.#options = { ...this.#defaultOptions, ...storedOptions?.options };
 
+        const options = this.#options;
+
+        if(options.useFileTypeFilter && !(options.includedFilterFileTypes.length > 0 || options.includeUnlistedFileTypes)) {
+            options.useFileTypeFilter = false;
+        }
+
         await this.#save();
 
         return this.#options;

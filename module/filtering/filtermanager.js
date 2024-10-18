@@ -46,10 +46,9 @@ export class FilterManager {
         ])]
     ]);
 
-    static #provisionalFileTypes = null;
-
     static #elements;
     static #extensionOptions;
+    static #fileTypeControlTemplate;
 
     static async initializeEditor(elements, extensionOptions) {
         this.#elements = elements;
@@ -66,29 +65,9 @@ export class FilterManager {
         templatesContainer.innerHTML = await (await fetch("/module/filtering/filtertemplate.html")).text();
 
         const mainTemplate = templatesContainer.content.getElementById("filter-file-type-editor-template");
-        const fileTypeControlTemplate = templatesContainer.content.getElementById("file-type-control-template");
+        this.#fileTypeControlTemplate = templatesContainer.content.getElementById("file-type-control-template");
 
         const editorPanel = mainTemplate.content.cloneNode(true);
-
-        const createFileTypeControl = (fileType, categoryId, isCustom = false) => {
-            const result = fileTypeControlTemplate.content.cloneNode(true);
-
-            const fileTypeId = fileType[0];
-
-            const fileTypeCheckbox = result.querySelector(".file-type-checkbox");
-            fileTypeCheckbox.value = fileTypeId;
-            fileTypeCheckbox.setAttribute("ft-category", categoryId);
-            fileTypeCheckbox.addEventListener("click", (e) => this.#onFileTypeCheckboxChecked(e));
-
-            const fileTypeControlLabel = result.querySelector(".file-type-control-label");
-            fileTypeControlLabel.innerText = fileTypeId;
-
-            if(isCustom) {
-                fileTypeControlLabel.classList.add("custom");
-            }
-
-            return result;
-        };
 
         for(const category of this.commonFileTypeMap) {
             const [categoryId, entryList] = category;
@@ -96,13 +75,13 @@ export class FilterManager {
             const itemContainer = editorPanel.querySelector(`.file-type-category-container[ft-category='${categoryId}']`);
 
             for(const fileType of entryList) {
-                const fileTypeControl = createFileTypeControl(fileType, categoryId);
+                const fileTypeControl = this.#createFileTypeControl(fileType, categoryId);
                 itemContainer.appendChild(fileTypeControl);
             }
 
             const customFileTypes = extensionOptions.additionalFilterFileTypes.get(categoryId);
             for(const fileType of customFileTypes) {
-                const fileTypeControl = createFileTypeControl(fileType, categoryId);
+                const fileTypeControl = this.#createFileTypeControl(fileType, categoryId, true);
                 itemContainer.appendChild(fileTypeControl);
             }
 
@@ -113,10 +92,36 @@ export class FilterManager {
         const editorContainer = elements.editorContainer;
 
         editorContainer.appendChild(editorPanel);
-
         
         editorContainer.querySelector(".file-type-checkbox[value='--']").addEventListener("click", (e) => this.#onFileTypeCheckboxChecked(e));
         editorContainer.querySelector(".file-type-checkbox[value='*']").addEventListener("click", (e) => this.#onFileTypeCheckboxChecked(e));
+
+        // Add file type editing elements
+
+        elements.addFileTypeOverlay = editorContainer.querySelector("#add-file-type-overlay");
+        elements.addFileTypeControlLabel = editorContainer.querySelector("#add-file-type-control-label");
+
+        const addTypeButtons = editorContainer.querySelectorAll(".add-file-type-button");
+        for(const button of addTypeButtons) {
+            button.addEventListener("click", (e) => this.#displayNewFilterFileTypeDialog(e));
+        }
+
+        const addFileTypeTextbox = editorContainer.querySelector("#add-file-type-textbox");
+        addFileTypeTextbox.addEventListener("keydown", (e) => this.#onFileTypeInputKeyDown(e));
+        addFileTypeTextbox.addEventListener("input", (e) => this.#onFileTypeInputTextChanged(e));
+        addFileTypeTextbox.addEventListener("cut paste drop", (e) => { e.preventDefault(); return false; });
+        elements.addFileTypeTextbox = addFileTypeTextbox;
+
+
+        const saveNewFileTypeButton = editorContainer.querySelector("#save-new-file-type-button");
+        saveNewFileTypeButton.addEventListener("click", async (e) => this.#onSaveNewFileTypeButtonClicked(e));
+        elements.saveNewFileTypeButton = saveNewFileTypeButton;
+
+        const cancelAddFileTypeButton = editorContainer.querySelector("#cancel-add-file-type-button");
+        cancelAddFileTypeButton.addEventListener("click", (e) => this.#dismissAddFileType());
+        elements.cancelAddFileTypeButton = cancelAddFileTypeButton;
+
+        ////////////////////////////
 
         elements.saveButton = editorContainer.querySelector("#filter-save-button");
         elements.saveButton.addEventListener("click", async (e) => this.#save());
@@ -124,6 +129,30 @@ export class FilterManager {
         elements.cancelButton = editorContainer.querySelector("#filter-cancel-button");
         elements.cancelButton.addEventListener("click", (e) => this.#cancel());
     }
+
+    static #createFileTypeControl = (fileType, categoryId, isCustom = false) => {
+        const result = this.#fileTypeControlTemplate.content.cloneNode(true);
+
+        const [fileTypeId ,] = fileType;
+
+        const fileTypeControl = result.querySelector(".file-type-control");
+        fileTypeControl.setAttribute("control-id", `${categoryId}:${fileTypeId}`);
+
+        const fileTypeCheckbox = result.querySelector(".file-type-checkbox");
+        fileTypeCheckbox.value = fileTypeId;
+        fileTypeCheckbox.setAttribute("ft-category", categoryId);
+        fileTypeCheckbox.addEventListener("click", (e) => this.#onFileTypeCheckboxChecked(e));
+
+        const fileTypeControlLabel = result.querySelector(".file-type-control-label");
+        fileTypeControlLabel.innerText = fileTypeId;
+
+        if(isCustom) {
+            fileTypeControlLabel.classList.add("custom");
+        }
+
+        return result;
+    };
+
 
     static async #onQuickmenuCheckboxChanged(event) {
         const { quickmenuCheckbox, quickmenuEditButton, quickmenuFileTypeList } = this.#elements;
@@ -169,8 +198,6 @@ export class FilterManager {
 
         this.#validate(extensionOptions.includeUnlistedFileTypes || extensionOptions.includedFilterFileTypes.length > 0);
 
-        this.#provisionalFileTypes = new Map();
-
         editorOverlay.classList.remove("hidden");
     }
 
@@ -211,36 +238,18 @@ export class FilterManager {
     }
 
     static #validate(isValid) {
-        const { editorContainer } = this.#elements;
+        const { editorContainer, saveButton } = this.#elements;
 
         if(!isValid) {
             isValid = !!editorContainer.querySelector(".file-type-checkbox:is(:checked)");
         }
 
-        editorContainer.querySelector("#filter-save-button").disabled = !isValid;
+        saveButton.disabled = !isValid;
     }
 
     static async #save() {
         const { editorContainer  } = this.#elements;
         const extensionOptions = this.#extensionOptions;
-
-        if(this.#provisionalFileTypes.size > 0) {
-            const additionalFilterFileTypes = extensionOptions.additionalFilterFileTypes;
-
-            for(const fileEntry of this.#provisionalFileTypes) {
-                const [fileType, categoryAssignment] = fileEntry;
-
-                const provisionalItemCategory = additionalFilterFileTypes.get(categoryAssignment.categoryId);
-                provisionalItemCategory.set(fileType);
-
-                if(categoryAssignment.priorCategoryID) {
-                    const priorCategory = additionalFilterFileTypes.get(categoryAssignment.priorCategoryID);
-                    priorCategory.remove(fileType);
-                }
-            }
-
-            await OptionsManager.setOption("additionalFilterFileTypes", extensionOptions.additionalFilterFileTypes);
-        }
 
         const includedFilterFileTypes = [];
         let includeUnlistedFileTypes = false;
@@ -311,8 +320,6 @@ export class FilterManager {
    
         editorOverlay.classList.add("hidden");
 
-        this.#provisionalFileTypes = null;
-
         const fileTypeCheckboxes = editorContainer.querySelectorAll(".file-type-checkbox");
         for(const checkbox of fileTypeCheckboxes) {
             checkbox.checked = false;
@@ -326,27 +333,56 @@ export class FilterManager {
         saveButton.disabled = true;
     }
 
-    static #addFileType() {
-        const newFileType = "";
-        const targetCategoryId = "";
-        const priorCategoryId = null;
+    static #displayNewFilterFileTypeDialog(event) {
+        const { addFileTypeOverlay, addFileTypeControlLabel, addFileTypeTextbox, saveNewFileTypeButton } = this.#elements;
+        saveNewFileTypeButton.value = event.srcElement.value;
+        addFileTypeControlLabel.innerText = event.srcElement.getAttribute("ft-category-desc");
+        addFileTypeOverlay.classList.remove("hidden");
+        addFileTypeTextbox.focus();
+    }
 
-        const extensionRegex = /^\w{3,5}$/;
+    static #onFileTypeInputKeyDown(event) {
+        const key = event.key;
+        const { value } = event.target;
+        const extensionRegex = /^[a-zA-Z0-9]{1}$/;
 
-        if(!extensionRegex.test(newFileType)) {
-            // Error!
-            return;
+        if(key.length == 1) {
+            if(!(extensionRegex.test(key) && value.length < 5)) {
+                event.preventDefault();
+            }
         }
+        else if(key == "Escape") {
+            this.#dismissAddFileType(event);
+        }
+        else if(key == "Enter") {
+            if(value.length > 2) {
+                const targetCategoryId = this.#elements.saveNewFileTypeButton.value;
+                this.#saveNewFileType(targetCategoryId);
+            }
+        }
+    }
+
+    static #onFileTypeInputTextChanged(event) {
+        const { saveNewFileTypeButton } = this.#elements;
+        const { value } = event.target;
+
+        saveNewFileTypeButton.disabled = (value.length < 3);
+    }
+
+    static #onSaveNewFileTypeButtonClicked(event) {
+        const targetCategoryId = event.srcElement.value;
+        this.#saveNewFileType(targetCategoryId);
+    }
+
+    static async #saveNewFileType(targetCategoryId) {
+        const { editorContainer, addFileTypeTextbox } = this.#elements;
+        const newFileType = addFileTypeTextbox.value.toLowerCase();
+        let priorCategoryId = null;
 
         const additionalFilterFileTypes = this.#extensionOptions.additionalFilterFileTypes;
 
         // Start optimistic, contrary to form...
-        const isValid = true;
-
-        // Ensure this type hasn't been added during this edit session
-        if(this.#provisionalFileTypes.has(fileType)) {
-            isValid = false;
-        }
+        let isValid = true;
 
         // Test standard file types
         if(isValid) {
@@ -355,7 +391,7 @@ export class FilterManager {
                 const [, entryList] = category;
 
                 for(const [fileTypeId, itemList] of entryList) {
-                    if(fileTypeId == newFileType || (itemList && itemList.includes)){
+                    if(fileTypeId == newFileType || (itemList && itemList.includes(newFileType))){
                         isValid = false;
                         break test_standard;
                     }
@@ -376,7 +412,11 @@ export class FilterManager {
                             priorCategoryId = categoryId;
 
                             // Remove the html control
+                            const priorControl = editorContainer.querySelector(`.file-type-control[control-id='${priorCategoryId}:${newFileType}']`);
+                            priorControl.remove();
+
                             // Ensure prior category checkbox sync'd
+                            this.#syncCategoryCheckbox(priorCategoryId, true);
                         }
 
                         break test_custom;
@@ -386,15 +426,38 @@ export class FilterManager {
         }
 
         if(isValid) {
-            this.#provisionalFileTypes.set(newFileType, { categoryId: categoryId, priorCategoryID: priorCategoryId });
+            const additionalFilterFileTypes = this.#extensionOptions.additionalFilterFileTypes;
+
+            if(priorCategoryId) {
+                const priorCategoryEntry = additionalFilterFileTypes.get(priorCategoryId);
+                priorCategoryEntry.delete(newFileType);
+            }
+
+            const categoryEntry = additionalFilterFileTypes.get(targetCategoryId);
+            categoryEntry.set(newFileType);
+
+            await OptionsManager.setOption("additionalFilterFileTypes", additionalFilterFileTypes);
 
             // Add the html control
+            const container = editorContainer.querySelector(`.file-type-category-container[ft-category='${targetCategoryId}']`);
+            const control = this.#createFileTypeControl([newFileType], targetCategoryId, true);
+            container.appendChild(control);
         }
 
         // Check the appropriate input
         this.#elements.editorContainer.querySelector(`.file-type-checkbox[value='${newFileType}']`).checked = true;
 
+        this.#dismissAddFileType();
+
         this.#validate(true);
+    }
+
+    static #dismissAddFileType() {
+        const { addFileTypeOverlay, addFileTypeControlLabel, addFileTypeTextbox, saveNewFileTypeButton } = this.#elements;
+        addFileTypeOverlay.classList.add("hidden");
+        addFileTypeTextbox.value = "";
+        addFileTypeControlLabel.innerText = "";
+        saveNewFileTypeButton.value = "";
     }
 
     static assembleFileTypeFilter() {

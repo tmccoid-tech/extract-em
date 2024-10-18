@@ -1,13 +1,8 @@
 <template id="filter-file-type-editor-template">
     <div>
-        <input id="add-file-type-textbox"/>
-        <button type="button" id="initialize-new-file-type-button" disabled="disabled">__MSG_addType__</button>
-        <button type="button" id="cancel-add-file-type-button">__MSG_cancel__</button>
-    </div>
-    <div>
         <div class="file-type-category-header">
             <label><input type="checkbox" class="file-type-category-checkbox" value="~gen" /> __MSG_general__</label>
-            <button type="button" class="edit-file-type-category-button" category="__MSG_general__" value="~gen">__MSG_addType__</button>
+            <button type="button" class="add-file-type-button" ft-category-desc="__MSG_general__" value="~gen">__MSG_addType__</button>
         </div>
         <div class="file-type-category-container" ft-category="~gen">
         </div>
@@ -15,7 +10,7 @@
     <div>
         <div class="file-type-category-header">
             <label><input type="checkbox" class="file-type-category-checkbox" value="~img" /> __MSG_images__</label>
-            <button type="button" class="edit-file-type-category-button" category="__MSG_images__" value="~img">__MSG_addType__</button>
+            <button type="button" class="add-file-type-button" ft-category-desc="__MSG_images__" value="~img">__MSG_addType__</button>
         </div>
         <div class="file-type-category-container" ft-category="~img">
         </div>
@@ -23,7 +18,7 @@
     <div>
         <div class="file-type-category-header">
             <label><input type="checkbox" class="file-type-category-checkbox" value="~aud" /> __MSG_audio__</label>
-            <button type="button" class="edit-file-type-category-button" category="__MSG_audio__" value="~aud">__MSG_addType__</button>
+            <button type="button" class="add-file-type-button" ft-category-desc="__MSG_audio__" value="~aud">__MSG_addType__</button>
         </div>
         <div class="file-type-category-container" ft-category="~aud">
         </div>
@@ -31,7 +26,7 @@
     <div>
         <div class="file-type-category-header">
             <label><input type="checkbox" class="file-type-category-checkbox" value="~vid" /> __MSG_video__</label>
-            <button type="button" class="edit-file-type-category-button" category="__MSG_video__" value="~vid">__MSG_addType__</button>
+            <button type="button" class="add-file-type-button" ft-category-desc="__MSG_video__" value="~vid">__MSG_addType__</button>
         </div>
         <div class="file-type-category-container" ft-category="~vid">
         </div>
@@ -44,8 +39,21 @@
         <button type="button" id="filter-save-button" class="filter-button" disabled="disabled">__MSG_save__</button>
         <button type="button" id="filter-cancel-button" class="filter-button">__MSG_cancel__</button>
     </div>
+
+    <div id="add-file-type-overlay" class="modal-overlay hidden">
+        <div id="add-file-type-container">
+            <div class="file-type-category-header"><span id="add-file-type-control-label"></span></div>
+            <div>
+                <input id="add-file-type-textbox" type="text"/>
+                <button type="button" id="save-new-file-type-button" disabled="disabled">__MSG_addType__</button>
+                <button type="button" id="cancel-add-file-type-button">__MSG_cancel__</button>
+            </div>            
+            <div>Enter a 3-5 character file extension (txt, csv, etc).</div>
+        </div>        
+    </div>
+
 </template>
 
 <template id="file-type-control-template">
-    <label><input type="checkbox" class="file-type-checkbox" /> <span class="file-type-control-label"></span></label>
+    <label class="file-type-control"><input type="checkbox" class="file-type-checkbox" /> <span class="file-type-control-label"></span></label>
 </template>

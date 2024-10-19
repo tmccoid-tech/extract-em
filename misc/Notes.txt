@@ -99,6 +99,7 @@ IMG: bmp, gif, ico, jpg, jpeg, png, psd, tif, tiff
 AUD: mp3, m4a, ogg, wav, flac, wma
 VID: avi, m4v, mkv, mov, mp4, mpg, mpeg, vob, wmv
 
+Disable Generate Report when save canceled
 
 
 LQ

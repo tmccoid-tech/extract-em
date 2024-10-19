@@ -37,7 +37,7 @@ export class OptionsManager {
 
         const options = this.#options;
 
-        if(options.useFileTypeFilter && !(options.includedFilterFileTypes.length > 0 || options.includeUnlistedFileTypes)) {
+        if(options.useFileTypeFilter && !(options.includedFilterFileTypes.size > 0 || options.includeUnlistedFileTypes)) {
             options.useFileTypeFilter = false;
         }
 

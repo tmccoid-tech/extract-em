@@ -205,6 +205,15 @@ section {
     height: 40px;
 }
 
+#use-file-type-filter-link-div {
+    display: flex;
+}
+
+#use-file-type-filter-link-button:disabled {
+    text-decoration: none;
+    color: black;
+}
+
 #discover-attachments-progress {
     width: 100%;
 }
@@ -310,11 +319,11 @@ td.summary-header {
     color: orange;
 }
 
-folder-selector-button:disabled:hover {
+.folder-selector-button:disabled:hover {
     cursor: not-allowed;
 }
 
-folder-selector-button:disabled:active {
+.folder-selector-button:disabled:active {
     color: unset;
 }
 

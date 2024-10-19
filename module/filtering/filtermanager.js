@@ -64,11 +64,11 @@ export class FilterManager {
         this.#elements = elements;
         this.#extensionOptions = extensionOptions;
 
-        elements.quickmenuCheckbox.checked = extensionOptions.useFileTypeFilter;
+        elements.menuCheckbox.checked = extensionOptions.useFileTypeFilter;
         this.#syncMainControls(extensionOptions, (extensionOptions.includedFilterFileTypes.size > 0 || extensionOptions.includeUnlistedFileTypes));
 
-        elements.quickmenuCheckbox.addEventListener("change", (e) => this.#onQuickmenuCheckboxChanged(e));
-        elements.quickmenuEditButton.addEventListener("click", (e) => this.#displayEditor(e));
+        elements.menuCheckbox.addEventListener("change", (e) => this.#onMenuCheckboxChanged(e));
+        elements.menuEditButton.addEventListener("click", (e) => this.#displayEditor(e));
 
         const templatesContainer = document.createElement("template");
 
@@ -162,12 +162,11 @@ export class FilterManager {
     };
 
 
-    // TODO: Change from quickmenu to menu
-    static async #onQuickmenuCheckboxChanged(event) {
-        const { quickmenuCheckbox, quickmenuEditButton, quickmenuFileTypeList } = this.#elements;
+    static async #onMenuCheckboxChanged(event) {
+        const { menuCheckbox, menuEditButton, menuFileTypeList } = this.#elements;
         const extensionOptions = this.#extensionOptions;
 
-        const useFileTypeFilter = quickmenuCheckbox.checked;
+        const useFileTypeFilter = menuCheckbox.checked;
 
         await OptionsManager.setOption("useFileTypeFilter", useFileTypeFilter);
         extensionOptions.useFileTypeFilter = useFileTypeFilter;
@@ -177,13 +176,13 @@ export class FilterManager {
                 this.#displayEditor();
             }
             else {
-                quickmenuFileTypeList.classList.remove("ghost");
-                quickmenuEditButton.disabled = false;
+                menuFileTypeList.classList.remove("ghost");
+                menuEditButton.disabled = false;
             }
         }
         else {
-            quickmenuFileTypeList.classList.add("ghost");
-            quickmenuEditButton.disabled = true;
+            menuFileTypeList.classList.add("ghost");
+            menuEditButton.disabled = true;
         }
     }
 
@@ -285,7 +284,7 @@ export class FilterManager {
     }
 
     static #syncMainControls(extensionOptions, isInitialized) {
-        const { quickmenuFileTypeList, quickmenuEditButton } = this.#elements;
+        const { menuFileTypeList, menuEditButton } = this.#elements;
 
         let fileTypeList = "...";
 
@@ -295,20 +294,20 @@ export class FilterManager {
             ).join(", ");
         }
 
-        quickmenuFileTypeList.innerHTML = fileTypeList;
+        menuFileTypeList.innerHTML = fileTypeList;
 
         if(extensionOptions.useFileTypeFilter) {
-            quickmenuFileTypeList.classList.remove("ghost");
+            menuFileTypeList.classList.remove("ghost");
         }
         else {
-            quickmenuFileTypeList.classList.add("ghost");
+            menuFileTypeList.classList.add("ghost");
         }
 
-        quickmenuEditButton.disabled = !extensionOptions.useFileTypeFilter;
+        menuEditButton.disabled = !extensionOptions.useFileTypeFilter;
     }
 
     static #cancel() {
-        const { quickmenuCheckbox } = this.#elements;
+        const { menuCheckbox } = this.#elements;
         const extensionOptions = this.#extensionOptions
 
         const isInitialized = (extensionOptions.includedFilterFileTypes.size > 0 || extensionOptions.includeUnlistedFileTypes);
@@ -317,7 +316,7 @@ export class FilterManager {
             OptionsManager.setOption("useFileTypeFilter", false);
             extensionOptions.useFileTypeFilter = false;
 
-            quickmenuCheckbox.checked = false;
+            menuCheckbox.checked = false;
             this.#syncMainControls(extensionOptions, false);
         }
 
@@ -470,46 +469,40 @@ export class FilterManager {
 
     static assembleFileTypeFilter() {
         const extensionOptions = this.#extensionOptions;
+        const groupedFileTypeMap = this.groupedFileTypeMap;
 
         const result = {
             selectedExtensions: new Set(extensionOptions.includedFilterFileTypes),
-            listedExtensions: new Set(["--"]),
-            includeUnlisted: extensionOptions.includeUnlistedFileTypes
+            includeUnlisted: extensionOptions.includeUnlistedFileTypes,
+            listedExtensions: null
         };
 
         const { selectedExtensions } = result;
 
-        for(let fileType of selectedExtensions) {
-            const groupedFileTypes = this.groupedFileTypeMap.get(fileType);
+        for(const [fileTypeId, fileTypes] of groupedFileTypeMap) {
+            if(selectedExtensions.has(fileTypeId)) {
+                selectedExtensions.delete(fileTypeId);
 
-            if(groupedFileTypes) {
-                selectedExtensions.delete(fileType);
-
-                for(fileType of groupedFileTypes) {
+                for(const fileType of fileTypes) {
                     selectedExtensions.add(fileType);
                 }
             }
         }
 
-        const assembleListedExtensions = (set) => {
-            for(const [, fileTypes] of set) {
-                for(let fileType of fileTypes) {
-                    const groupedFileTypes = this.groupedFileTypeMap.get(fileType);
+        if(result.includeUnlisted) {
+            const listedExtensions = ["--"];
 
-                    if(groupedFileTypes) {
-                        for(fileType of groupedFileTypes) {
-                            result.listedExtensions.add(fileType);
-                        }
-                    }
-                    else {
-                        result.listedExtensions.add(fileType);
-                    }
+            const addFileTypes = (set) => {
+                for(const [, fileTypes] of set) {
+                    listedExtensions.push(...fileTypes.values());
                 }
-            }
-        };
+            };
 
-        for(const set of [this.commonFileTypeMap, extensionOptions.additionalFilterFileTypes]) {
-            assembleListedExtensions(set);
+            addFileTypes(this.commonFileTypeMap);
+            addFileTypes(extensionOptions.additionalFilterFileTypes);
+            addFileTypes(this.groupedFileTypeMap);
+
+            result.listedExtensions = new Set(listedExtensions);
         }
 
         return result;

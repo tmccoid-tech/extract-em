@@ -123,14 +123,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const extractSelectedButton = elem("extract-selected-button");
 
     const filterElements = {
-        quickmenuCheckbox: elem("quickmenu-use-file-type-filter-checkbox"),
-        quickmenuEditButton: elem("quickmenu-edit-file-type-filter-button"),
-        quickmenuFileTypeList: elem("quickmenu-file-type-filter-list-div"),
+        menuCheckbox: elem("quickmenu-use-file-type-filter-checkbox"),
+        menuEditButton: elem("quickmenu-edit-file-type-filter-button"),
+        menuFileTypeList: elem("quickmenu-file-type-filter-list-div"),
         editorOverlay: elem("filter-overlay"),
         editorContainer: elem("filter-editor-container")
     };
-
-    const filterFileTypeButton = elem("filter-file-type-button");
 
     const zipOverlay = elem("zip-overlay");
     const zipAccountNameLabel = elem("zip-account-name-label");
@@ -616,7 +614,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         discoverAttachmentsButton.addEventListener("click", (event) => { discoverAttachments(); });
         extractAllButton.addEventListener("click", (event) => { extractFolders(); });
-        filterFileTypeButton.addEventListener("click", (event) => { filterByFileType(); });
         resetSummaryButton.addEventListener("click", resetSummary);
         extractSelectedButton.addEventListener("click", (event) => { extractSelected(); });
         zoomImage.addEventListener("click", hideZoom);

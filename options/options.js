@@ -24,9 +24,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const filenameEditorOverlay = elem("filename-editor-overlay");
 
     const filterElements = {
-        quickmenuCheckbox: elem("use-file-type-filter-checkbox"),
-        quickmenuEditButton: elem("edit-file-type-filter-button"),
-        quickmenuFileTypeList: elem("file-type-filter-list-div"),
+        menuCheckbox: elem("use-file-type-filter-checkbox"),
+        menuEditButton: elem("edit-file-type-filter-button"),
+        menuFileTypeList: elem("file-type-filter-list-div"),
         editorOverlay: elem("filter-overlay"),
         editorContainer: elem("filter-editor-container")
     };

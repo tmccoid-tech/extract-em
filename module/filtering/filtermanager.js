@@ -1,48 +1,58 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 
 export class FilterManager {
+    static groupedFileTypeMap = new Map([
+        ["doc(x)", new Set(["doc", "docx"])],
+        ["htm(l)", new Set(["htm", "html"])],
+        ["ppt(x)", new Set(["ppt", "pptx"])],
+        ["xls(x)", new Set(["xls", "xlsx"])],
+        ["jp(e)g", new Set(["jpg", "jpeg"])],
+        ["tif(f)", new Set(["tif", "tiff"])],
+        ["mp(e)g", new Set(["mpg", "mpeg"])]
+    ]);
+
     static commonFileTypeMap = new Map([
-        ["~gen", new Map([
-            ["csv"],
-            ["doc(x)", ["doc", "docx"]],
-            ["eml"],
-            ["htm(l)", ["htm", "html"]],
-            ["log"],
-            ["ods"],
-            ["odt"],
-            ["pdf"],
-            ["ppt(x)", ["ppt", "pptx"]],
-            ["rtf"],
-            ["txt"],
-            ["xls(x)", ["xls", "xlsx"]],
-            ["xml"]
+        ["~gen", new Set([
+            "csv",
+            "doc(x)",
+            "eml",
+            "htm(l)",
+            "log",
+            "ods",
+            "odt",
+            "pdf",
+            "ppt(x)",
+            "rtf",
+            "txt",
+            "xls(x)",
+            "xml"
         ])],
-        ["~img", new Map([
-            ["bmp"],
-            ["gif"],
-            ["ico"],
-            ["jp(e)g", ["jpg", "jpeg"]],
-            ["png"],
-            ["psd"],
-            ["tif(f)", ["tif", "tiff"]]
+        ["~img", new Set([
+            "bmp",
+            "gif",
+            "ico",
+            "jp(e)g",
+            "png",
+            "psd",
+            "tif(f)"
         ])],
-        ["~aud", new Map([
-            ["flac"],
-            ["m4a"],
-            ["mp3"],
-            ["ogg"],
-            ["wav"],
-            ["wma"]
+        ["~aud", new Set([
+            "flac",
+            "m4a",
+            "mp3",
+            "ogg",
+            "wav",
+            "wma"
         ])],
-        ["~vid", new Map([
-            ["avi"],
-            ["m4v"],
-            ["mkv"],
-            ["mov"],
-            ["mp4"],
-            ["mp(e)g", ["mpg", "mpeg"]],
-            ["vob"],
-            ["wmv"]
+        ["~vid", new Set([
+            "avi",
+            "m4v",
+            "mkv",
+            "mov",
+            "mp4",
+            "mp(e)g",
+            "vob",
+            "wmv"
         ])]
     ]);
 
@@ -55,7 +65,7 @@ export class FilterManager {
         this.#extensionOptions = extensionOptions;
 
         elements.quickmenuCheckbox.checked = extensionOptions.useFileTypeFilter;
-        this.#syncMainControls(extensionOptions, (extensionOptions.includedFilterFileTypes.length > 0 || extensionOptions.includeUnlistedFileTypes));
+        this.#syncMainControls(extensionOptions, (extensionOptions.includedFilterFileTypes.size > 0 || extensionOptions.includeUnlistedFileTypes));
 
         elements.quickmenuCheckbox.addEventListener("change", (e) => this.#onQuickmenuCheckboxChanged(e));
         elements.quickmenuEditButton.addEventListener("click", (e) => this.#displayEditor(e));
@@ -69,12 +79,12 @@ export class FilterManager {
 
         const editorPanel = mainTemplate.content.cloneNode(true);
 
-        for(const category of this.commonFileTypeMap) {
-            const [categoryId, entryList] = category;
+        for(const categoryEntry of this.commonFileTypeMap) {
+            const [categoryId, fileTypes] = categoryEntry;
 
             const itemContainer = editorPanel.querySelector(`.file-type-category-container[ft-category='${categoryId}']`);
 
-            for(const fileType of entryList) {
+            for(const fileType of fileTypes) {
                 const fileTypeControl = this.#createFileTypeControl(fileType, categoryId);
                 itemContainer.appendChild(fileTypeControl);
             }
@@ -133,18 +143,16 @@ export class FilterManager {
     static #createFileTypeControl = (fileType, categoryId, isCustom = false) => {
         const result = this.#fileTypeControlTemplate.content.cloneNode(true);
 
-        const [fileTypeId ,] = fileType;
-
         const fileTypeControl = result.querySelector(".file-type-control");
-        fileTypeControl.setAttribute("control-id", `${categoryId}:${fileTypeId}`);
+        fileTypeControl.setAttribute("control-id", `${categoryId}:${fileType}`);
 
         const fileTypeCheckbox = result.querySelector(".file-type-checkbox");
-        fileTypeCheckbox.value = fileTypeId;
+        fileTypeCheckbox.value = fileType;
         fileTypeCheckbox.setAttribute("ft-category", categoryId);
         fileTypeCheckbox.addEventListener("click", (e) => this.#onFileTypeCheckboxChecked(e));
 
         const fileTypeControlLabel = result.querySelector(".file-type-control-label");
-        fileTypeControlLabel.innerText = fileTypeId;
+        fileTypeControlLabel.innerText = fileType;
 
         if(isCustom) {
             fileTypeControlLabel.classList.add("custom");
@@ -154,6 +162,7 @@ export class FilterManager {
     };
 
 
+    // TODO: Change from quickmenu to menu
     static async #onQuickmenuCheckboxChanged(event) {
         const { quickmenuCheckbox, quickmenuEditButton, quickmenuFileTypeList } = this.#elements;
         const extensionOptions = this.#extensionOptions;
@@ -164,7 +173,7 @@ export class FilterManager {
         extensionOptions.useFileTypeFilter = useFileTypeFilter;
         
         if(useFileTypeFilter) {
-            if(!(extensionOptions.includedFilterFileTypes.length > 0 || extensionOptions.includeUnlistedFileTypes)) {
+            if(!(extensionOptions.includedFilterFileTypes.size > 0 || extensionOptions.includeUnlistedFileTypes)) {
                 this.#displayEditor();
             }
             else {
@@ -186,17 +195,17 @@ export class FilterManager {
             editorContainer.querySelector(`.file-type-checkbox[value='${"*"}']`).checked = true;
         }
 
-        if(extensionOptions.includedFilterFileTypes.length > 0) {
+        if(extensionOptions.includedFilterFileTypes.size > 0) {
             for(const fileType of extensionOptions.includedFilterFileTypes) {
                 editorContainer.querySelector(`.file-type-checkbox[value='${fileType}']`).checked = true;    
             }
 
-            for(const category of this.commonFileTypeMap) {
-                this.#syncCategoryCheckbox(category[0], true);
+            for(const [categoryId, ] of this.commonFileTypeMap) {
+                this.#syncCategoryCheckbox(categoryId, true);
             }
         }
 
-        this.#validate(extensionOptions.includeUnlistedFileTypes || extensionOptions.includedFilterFileTypes.length > 0);
+        this.#validate(extensionOptions.includeUnlistedFileTypes || extensionOptions.includedFilterFileTypes.size > 0);
 
         editorOverlay.classList.remove("hidden");
     }
@@ -251,7 +260,7 @@ export class FilterManager {
         const { editorContainer  } = this.#elements;
         const extensionOptions = this.#extensionOptions;
 
-        const includedFilterFileTypes = [];
+        const includedFilterFileTypes = new Set();
         let includeUnlistedFileTypes = false;
 
         const includedFileTypeCheckboxes = editorContainer.querySelectorAll(".file-type-checkbox:is(:checked)");
@@ -260,7 +269,7 @@ export class FilterManager {
                 includeUnlistedFileTypes = checkbox.checked;
             }
             else {
-                includedFilterFileTypes.push(checkbox.value);
+                includedFilterFileTypes.add(checkbox.value);
             }
         }
 
@@ -281,7 +290,7 @@ export class FilterManager {
         let fileTypeList = "...";
 
         if(isInitialized) {
-            fileTypeList = extensionOptions.includedFilterFileTypes.concat(
+            fileTypeList = [...extensionOptions.includedFilterFileTypes].concat(
                 (extensionOptions.includeUnlistedFileTypes) ? ["*"] : []
             ).join(", ");
         }
@@ -302,7 +311,7 @@ export class FilterManager {
         const { quickmenuCheckbox } = this.#elements;
         const extensionOptions = this.#extensionOptions
 
-        const isInitialized = (extensionOptions.includedFilterFileTypes.length > 0 || extensionOptions.includeUnlistedFileTypes);
+        const isInitialized = (extensionOptions.includedFilterFileTypes.size > 0 || extensionOptions.includeUnlistedFileTypes);
 
         if(!isInitialized) {
             OptionsManager.setOption("useFileTypeFilter", false);
@@ -379,7 +388,7 @@ export class FilterManager {
         const newFileType = addFileTypeTextbox.value.toLowerCase();
         let priorCategoryId = null;
 
-        const additionalFilterFileTypes = this.#extensionOptions.additionalFilterFileTypes;
+        const { additionalFilterFileTypes } = this.#extensionOptions;
 
         // Start optimistic, contrary to form...
         let isValid = true;
@@ -387,11 +396,12 @@ export class FilterManager {
         // Test standard file types
         if(isValid) {
             test_standard:
-            for(const category of this.commonFileTypeMap) {
-                const [, entryList] = category;
+            for(const [, fileTypes] of this.commonFileTypeMap) {
 
-                for(const [fileTypeId, itemList] of entryList) {
-                    if(fileTypeId == newFileType || (itemList && itemList.includes(newFileType))){
+                for(const fileType of fileTypes) {
+                    const groupedFileTypes = this.groupedFileTypeMap.get(fileType);
+
+                    if(fileType == newFileType || (groupedFileTypes && groupedFileTypes.has(newFileType))){
                         isValid = false;
                         break test_standard;
                     }
@@ -402,9 +412,9 @@ export class FilterManager {
         // Test existing custom file types
         if(isValid) {
             test_custom:
-            for(const [categoryId, entryList] of additionalFilterFileTypes) {
-                for(const [fileTypeId, ] of entryList) {
-                    if(fileTypeId == newFileType) {
+            for(const [categoryId, fileTypes] of additionalFilterFileTypes) {
+                for(const fileType of fileTypes) {
+                    if(fileType == newFileType) {
                         if(categoryId == targetCategoryId) {
                             isValid = false;
                         }
@@ -426,26 +436,24 @@ export class FilterManager {
         }
 
         if(isValid) {
-            const additionalFilterFileTypes = this.#extensionOptions.additionalFilterFileTypes;
-
             if(priorCategoryId) {
-                const priorCategoryEntry = additionalFilterFileTypes.get(priorCategoryId);
-                priorCategoryEntry.delete(newFileType);
+                const priorCategoryFileTypes = additionalFilterFileTypes.get(priorCategoryId);
+                priorCategoryFileTypes.delete(newFileType);
             }
 
-            const categoryEntry = additionalFilterFileTypes.get(targetCategoryId);
-            categoryEntry.set(newFileType);
+            const targetCategoryFileTypes = additionalFilterFileTypes.get(targetCategoryId);
+            targetCategoryFileTypes.add(newFileType);
 
             await OptionsManager.setOption("additionalFilterFileTypes", additionalFilterFileTypes);
 
             // Add the html control
             const container = editorContainer.querySelector(`.file-type-category-container[ft-category='${targetCategoryId}']`);
-            const control = this.#createFileTypeControl([newFileType], targetCategoryId, true);
+            const control = this.#createFileTypeControl(newFileType, targetCategoryId, true);
             container.appendChild(control);
         }
 
         // Check the appropriate input
-        this.#elements.editorContainer.querySelector(`.file-type-checkbox[value='${newFileType}']`).checked = true;
+        editorContainer.querySelector(`.file-type-checkbox[value='${newFileType}']`).checked = true;
 
         this.#dismissAddFileType();
 
@@ -469,22 +477,38 @@ export class FilterManager {
             includeUnlisted: extensionOptions.includeUnlistedFileTypes
         };
 
+        const { selectedExtensions } = result;
+
+        for(let fileType of selectedExtensions) {
+            const groupedFileTypes = this.groupedFileTypeMap.get(fileType);
+
+            if(groupedFileTypes) {
+                selectedExtensions.delete(fileType);
+
+                for(fileType of groupedFileTypes) {
+                    selectedExtensions.add(fileType);
+                }
+            }
+        }
+
         const assembleListedExtensions = (set) => {
-            for(let categoryEntry of set) {
-                for(let fileTypeEntry of categoryEntry) {
-                    if(fileTypeEntry[1]) {
-                        for(const fileType of fileTypeEntry[1]) {
+            for(const [, fileTypes] of set) {
+                for(let fileType of fileTypes) {
+                    const groupedFileTypes = this.groupedFileTypeMap.get(fileType);
+
+                    if(groupedFileTypes) {
+                        for(fileType of groupedFileTypes) {
                             result.listedExtensions.add(fileType);
                         }
                     }
                     else {
-                        result.listedExtensions.add(fileTypeEntry);
+                        result.listedExtensions.add(fileType);
                     }
                 }
             }
         };
 
-        for(let set of [this.commonFileTypeMap, extensionOptions.additionalFilterFileTypes]) {
+        for(const set of [this.commonFileTypeMap, extensionOptions.additionalFilterFileTypes]) {
             assembleListedExtensions(set);
         }
 

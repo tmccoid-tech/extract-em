@@ -16,13 +16,13 @@ export class OptionsManager {
         filenamePattern: "",
         
         useFileTypeFilter: "",
-        includedFilterFileTypes: [],
+        includedFilterFileTypes: new Set(),
         includeUnlistedFileTypes: false,
         additionalFilterFileTypes: new Map([
-            ["~gen", new Map()],
-            ["~img", new Map()],
-            ["~aud", new Map()],
-            ["~vid", new Map()]
+            ["~gen", new Set()],
+            ["~img", new Set()],
+            ["~aud", new Set()],
+            ["~vid", new Set()]
         ]),
         
         lastLoadedVersion: ""

@@ -103,11 +103,12 @@
                         <button type="button" id="discover-attachments-button" class="summary-button">__MSG_discoverAttachments__</button>
                         <progress id="discover-attachments-progress" max="1" value="0"></progress>
                     </div>                    
-                    <button type="button" id="extract-all-button" class="summary-button" disabled="disabled">__MSG_extensionName__</button>
                     <div id="use-file-type-filter-link-div" title="...">
                         <input type="checkbox" id="use-file-type-filter-checkbox">
                         <button type="button" id="use-file-type-filter-link-button" class="folder-selector-button" disabled="disabled"> __MSG_useFileTypeFilter__</button>
                     </div>
+                    <hr/>
+                    <button type="button" id="extract-all-button" class="summary-button" disabled="disabled">__MSG_extensionName__</button>
                     <button type="button" id="reset-summary-button" class="summary-button">__MSG_reset__</button>
                 </div>
             </div>
@@ -151,7 +152,8 @@
                     <td>
                         <div id="immediate-discovery-message-div">
                             <div id="immediate-discovery-progress-message-div"></div>
-                            <span id="immediate-discovered-embeds-span">0</span> __MSG_embedsPP__                            
+                            <span id="immediate-discovered-embeds-span">0</span> __MSG_embedsPP__
+                            <div><span id="file-type-filter-applied-div" class="hidden">__MSG_fileTypeFilterApplied__</span></div>                            
                         </div>
                         <div id="prediscovery-message-div" class="hidden">
                             <div id="discovery-selection-message-div"></div>
@@ -290,7 +292,13 @@
                     <li>__MSG_rn1_4_1_New01__</li>
                 </ul>
             </div>
-        </div>        
+            <div class="release-notes-panel hidden" version="1.5.1">
+                <h4>__MSG_releaseNotesTitle__ 1.5.1</h4>
+                <h4>__MSG_whatsNew__</h4>
+                <ul>
+                    <li>__MSG_rn1_5_1_New01__</li>
+                </ul>
+            </div>        
     </div>
 
     <template id="folder-stats-template">
@@ -465,6 +473,8 @@
                 </tr>
             </table>
 
+            <div id="report-filter-div" class="hidden">__MSG_fileTypeFilter__: <span id="report-file-type-list-span"></span></div>                
+
             <div class="list-table attachment-table hidden">
                 <h3>__MSG_savedAttachments__</h3>
             </div>
@@ -492,7 +502,7 @@
             <div class="list-table detachment-error-table hidden">
                 <h3>__MSG_permanentDetachmentErrors__</h3>
             </div>
-        </div>                
+        </div>
     </template>
 
     <template id="report-item-template">

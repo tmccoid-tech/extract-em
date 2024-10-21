@@ -123,11 +123,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const extractSelectedButton = elem("extract-selected-button");
 
     const filterElements = {
+        editorOverlay: elem("filter-overlay"),
+        editorContainer: elem("filter-editor-container"),
         menuCheckbox: elem("quickmenu-use-file-type-filter-checkbox"),
         menuEditButton: elem("quickmenu-edit-file-type-filter-button"),
         menuFileTypeList: elem("quickmenu-file-type-filter-list-div"),
-        editorOverlay: elem("filter-overlay"),
-        editorContainer: elem("filter-editor-container")
+        secondaryCheckbox: elem("use-file-type-filter-checkbox"),
+        secondaryEditButton: elem("use-file-type-filter-link-button"),
+        secondaryFileTypeList: elem("use-file-type-filter-link-div")
     };
 
     const zipOverlay = elem("zip-overlay");
@@ -365,6 +368,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             if(includeEmbedsCheckbox.checked) {
                 includeEmbedsCheckbox.disabled = false;
             }
+
+            filterElements.secondaryCheckbox.disabled = true;
+            filterElements.secondaryEditButton.disabled = true;
 
             resetSummaryButton.disabled = false;
 
@@ -1163,6 +1169,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             selectedAttachmentCountSpan.innerText = "0";
             selectedAttachmentSizeSpan.innerText = abbreviateFileSize();
             includeEmbedsCheckbox.disabled = false;
+
+            filterElements.secondaryCheckbox.disabled = false;
+            filterElements.secondaryEditButton.disabled = !extensionOptions.useFileTypeFilter;
         }
 
         resetProgressElement(discoverAttachmentsProgress);
@@ -1369,7 +1378,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             reportStyleTemplate: reportStyleTemplate,
             reportTemplate: reportTemplate,
             reportItemTemplate: reportItemTemplate,
-            abbreviateFileSize: abbreviateFileSize
+            abbreviateFileSize: abbreviateFileSize,
+            fileTypeFilterList: (extensionOptions.useFileTypeFilter)
+                ? filterElements.menuFileTypeList.innerHTML
+                : null
         });
     }
 

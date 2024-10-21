@@ -32,7 +32,11 @@
     },
 
     "includeEmbeds": { "message": "Include embeds (inline-attached images)" },
+    
     "useFileTypeFilter": { "message": "Use file type filter" },
+    "fileTypeFilter": { "message": "File Type Filter"},
+    "fileTypeFilterApplied": { "message" : "File type filter applied"},
+
     "alwaysShowQuickMenu": {
         "message": "Mindig jelenítse meg ezt a Gyorsmenüt",
         "description": "Label for QuickMenu persistence checkbox"
@@ -370,5 +374,9 @@
 
     "rn1_4_1_New01": {
         "message": "Added option to generate custom result filenames using a filename pattern derived from email properties"
+    },
+
+    "rn1_5_1_New01": {
+        "message": "Added option for filtering by file type (extension)"
     }
 }

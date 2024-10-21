@@ -197,6 +197,12 @@ export class ReportManager {
             reportBody.querySelector(".deletion-error-count-label").textContent = reportData.detachmentErrorList.length.toString();
         }
 
+        // Filtering, when applicable
+        if(parameters.fileTypeFilterList) {
+            reportBody.querySelector("#report-file-type-list-span").innerText = parameters.fileTypeFilterList;
+            reportBody.querySelector("#report-filter-div").classList.remove("hidden");
+        }
+
         // Fetch image files and assign appropriately
 
         const [iconDataUrl, backgroundDataUrl] = await Promise.all([

@@ -24,11 +24,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const filenameEditorOverlay = elem("filename-editor-overlay");
 
     const filterElements = {
+        editorOverlay: elem("filter-overlay"),
+        editorContainer: elem("filter-editor-container"),
         menuCheckbox: elem("use-file-type-filter-checkbox"),
         menuEditButton: elem("edit-file-type-filter-button"),
         menuFileTypeList: elem("file-type-filter-list-div"),
-        editorOverlay: elem("filter-overlay"),
-        editorContainer: elem("filter-editor-container")
+        secondaryCheckbox: null,
+        secondaryEditButton: null,
+        secondaryFileTypeList: null
     };
     
     const extensionOptions = await OptionsManager.retrieve();

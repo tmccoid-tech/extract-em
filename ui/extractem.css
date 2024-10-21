@@ -205,6 +205,14 @@ section {
     height: 40px;
 }
 
+#summary-buttons-div hr {
+    height: 1px;
+    width: 100%;
+    margin: 0px;
+    background-color: black;
+    border: none;
+}
+
 #use-file-type-filter-link-div {
     display: flex;
 }

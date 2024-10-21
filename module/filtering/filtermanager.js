@@ -57,18 +57,26 @@ export class FilterManager {
     ]);
 
     static #elements;
+    static #hasSecondaryControls = false;
     static #extensionOptions;
     static #fileTypeControlTemplate;
 
     static async initializeEditor(elements, extensionOptions) {
         this.#elements = elements;
         this.#extensionOptions = extensionOptions;
+        this.#hasSecondaryControls = !!elements.secondaryCheckbox;
 
         elements.menuCheckbox.checked = extensionOptions.useFileTypeFilter;
         this.#syncMainControls(extensionOptions, (extensionOptions.includedFilterFileTypes.size > 0 || extensionOptions.includeUnlistedFileTypes));
 
         elements.menuCheckbox.addEventListener("change", (e) => this.#onMenuCheckboxChanged(e));
         elements.menuEditButton.addEventListener("click", (e) => this.#displayEditor(e));
+
+        if(this.#hasSecondaryControls) {
+            elements.secondaryCheckbox.checked = extensionOptions.useFileTypeFilter;
+            elements.secondaryCheckbox.addEventListener("change", (e) => this.#onMenuCheckboxChanged(e));
+            elements.secondaryEditButton.addEventListener("click", (e) => this.#displayEditor(e));
+        }
 
         const templatesContainer = document.createElement("template");
 
@@ -163,10 +171,10 @@ export class FilterManager {
 
 
     static async #onMenuCheckboxChanged(event) {
-        const { menuCheckbox, menuEditButton, menuFileTypeList } = this.#elements;
+        const { menuCheckbox, menuEditButton, menuFileTypeList, secondaryCheckbox, secondaryEditButton } = this.#elements;
         const extensionOptions = this.#extensionOptions;
 
-        const useFileTypeFilter = menuCheckbox.checked;
+        const useFileTypeFilter = event.srcElement.checked;
 
         await OptionsManager.setOption("useFileTypeFilter", useFileTypeFilter);
         extensionOptions.useFileTypeFilter = useFileTypeFilter;
@@ -178,12 +186,21 @@ export class FilterManager {
             else {
                 menuFileTypeList.classList.remove("ghost");
                 menuEditButton.disabled = false;
+                if(this.#hasSecondaryControls) {
+                    secondaryEditButton.disabled = false;
+                }
             }
         }
         else {
             menuFileTypeList.classList.add("ghost");
             menuEditButton.disabled = true;
+            if(this.#hasSecondaryControls) {
+                secondaryEditButton.disabled = true;
+            }
         }
+
+        menuCheckbox.checked = useFileTypeFilter;
+        secondaryCheckbox.checked = useFileTypeFilter;
     }
 
     static #displayEditor() {
@@ -284,7 +301,7 @@ export class FilterManager {
     }
 
     static #syncMainControls(extensionOptions, isInitialized) {
-        const { menuFileTypeList, menuEditButton } = this.#elements;
+        const { menuFileTypeList, menuEditButton, secondaryFileTypeList, secondaryEditButton } = this.#elements;
 
         let fileTypeList = "...";
 
@@ -295,6 +312,9 @@ export class FilterManager {
         }
 
         menuFileTypeList.innerHTML = fileTypeList;
+        if(this.#hasSecondaryControls) {
+            secondaryFileTypeList.title = fileTypeList;
+        }
 
         if(extensionOptions.useFileTypeFilter) {
             menuFileTypeList.classList.remove("ghost");
@@ -304,10 +324,13 @@ export class FilterManager {
         }
 
         menuEditButton.disabled = !extensionOptions.useFileTypeFilter;
+        if(this.#hasSecondaryControls) {
+            secondaryEditButton.disabled = !extensionOptions.useFileTypeFilter;
+        }
     }
 
     static #cancel() {
-        const { menuCheckbox } = this.#elements;
+        const { menuCheckbox, secondaryCheckbox } = this.#elements;
         const extensionOptions = this.#extensionOptions
 
         const isInitialized = (extensionOptions.includedFilterFileTypes.size > 0 || extensionOptions.includeUnlistedFileTypes);
@@ -317,6 +340,10 @@ export class FilterManager {
             extensionOptions.useFileTypeFilter = false;
 
             menuCheckbox.checked = false;
+            if(this.#hasSecondaryControls) {
+                secondaryCheckbox.checked = false;
+            }
+
             this.#syncMainControls(extensionOptions, false);
         }
 

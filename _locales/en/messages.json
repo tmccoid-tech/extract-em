@@ -31,9 +31,6 @@
         "description": "Action description for standard-selection QuickMenu button"
     },
 
-    "alwaysPromptForDownloadLocation": { "message": "Always prompt for download location" },
-    "alwaysPromptForDownloadLocationMessage": { "message": "Overrides the Thunderbird option to download files directly to a specified directory" },
-
     "includeEmbeds": { "message": "Include embeds (inline-attached images)" },
     
     "useFileTypeFilter": { "message": "Use file type filter" },
@@ -163,6 +160,11 @@
     "extractImmediateDescription": {
         "message": "Saves all attachments from messages in the selected folder with limited user intervention; excludes sub-folders",
         "description": ""
+    },
+
+    "alwaysPromptForDownloadLocation": { "message": "Always prompt for save location" },
+    "alwaysPromptForDownloadLocationMessage": { "message":
+        "If checked, the user is always prompted to select a save directory; otherwise, files are directly saved to the folder specified in the Thunderbird settings"
     },
 
     "includeSubFolders": {
@@ -380,10 +382,16 @@
         "message": "Added option to generate custom result filenames using a filename pattern derived from email properties"
     },
 
+    "rn1_5_1_Notice01": {
+        "message": "NOTICE: The Permanently Detach feature currently fails/stalls when used with IMAP accounts. For details, please click the following link."
+    },
     "rn1_5_1_New01": {
         "message": "Added option for filtering by file type (extension)"
     },
     "rn1_5_1_New02": {
         "message": "Added toggle-all checkbox for attachment selection (Attachment List)"
+    },
+    "rn1_5_1_New03": {
+        "message": "Added option for always prompting for a save location for package files, or directly saving to the directory specified by the respective Thunderbird setting"
     }
 }

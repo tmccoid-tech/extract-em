@@ -103,11 +103,11 @@ XXX Selectively display zip-discovery panel message if file type filter employed
 
 Extraction Report: handle case of user cancellation (either full or partial)
 
-Ensure background execution sync'd to new features (filename pattern, filtering)
+XXX Ensure background execution sync'd to new features (filename pattern, filtering)
 
 Ensure resets comprehensive
 
-Add Always Prompt for Donwload Location option (default = true)
+XXX Add Always Prompt for Donwload Location option (default = true)
 
 
 

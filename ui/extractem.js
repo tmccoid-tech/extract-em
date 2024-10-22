@@ -576,6 +576,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportDetachProgress: updateDetachProgress,
                 reportDetachResult: updateDetachResult,
 
+                alwaysPromptForDownloadLocation: extensionOptions.alwaysPromptForDownloadLocation,
+
                 useAdvancedGetRaw: CapabilitiesManager.useAdvancedGetRaw,
                 useEnhancedLogging: extensionOptions.useEnhancedLogging,
 

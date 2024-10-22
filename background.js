@@ -44,6 +44,8 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
             
             reportSaveResult: updateSaveResult,
 
+            alwaysPromptForDownloadLocation: extensionOptions.alwaysPromptForDownloadLocation,
+
             useAdvancedGetRaw: CapabilitiesManager.useAdvancedGetRaw,
             useEnhancedLogging: extensionOptions.useEnhancedLogging,
 

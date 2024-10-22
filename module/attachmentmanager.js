@@ -18,6 +18,7 @@ export class AttachmentManager {
     #folderCounts;              // Do not reset
 
     #silentModeInvoked = false;
+    #alwaysPromptForDownloadLocation = true;
     #includeEmbeds = false;
     #useAdvancedGetRaw = true;
     #useEnhancedLogging = false;
@@ -112,6 +113,8 @@ export class AttachmentManager {
 
         this.#reportProcessingComplete = options.reportProcessingComplete;
         this.#reportSaveResult = options.reportSaveResult;
+
+        this.#alwaysPromptForDownloadLocation = options.alwaysPromptForDownloadLocation;
 
         this.#useAdvancedGetRaw = options.useAdvancedGetRaw;
         this.#useEnhancedLogging = options.useEnhancedLogging;
@@ -1167,7 +1170,7 @@ export class AttachmentManager {
             url: URL.createObjectURL(zipFile),
             filename: `${messenger.i18n.getMessage(disposition)}-${new Date().getTime()}.zip`,
             conflictAction: "uniquify",
-            saveAs: true
+            saveAs: this.#alwaysPromptForDownloadLocation
         };
 
         this.#download(zipParams, packagingProgressInfo);

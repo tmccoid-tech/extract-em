@@ -1,3 +1,4 @@
+import { CapabilitiesManager } from "/module/capabilitiesmanager.js";
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { ReportManager } from "/module/reportmanager.js";
@@ -28,6 +29,7 @@ NodeList.prototype.toSet = _toSet;
 
 
 document.addEventListener("DOMContentLoaded", async () => {
+/*    
     const browserInfo = await browser.runtime.getBrowserInfo();
 
     class Capabilities {
@@ -57,7 +59,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             return true;
         }
     }
-    
+*/
+
     const errorText = messenger.i18n.getMessage("error");
 
     const elem = (id) => document.getElementById(id);
@@ -147,6 +150,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const immediateDiscoveryMessageDiv = elem("immediate-discovery-message-div");
     const immediateDiscoveryProgressMessageDiv = elem("immediate-discovery-progress-message-div");
     const immediateDiscoveredEmbedsSpan = elem("immediate-discovered-embeds-span");
+    const fileTypeFilterAppliedSpan = elem("file-type-filter-applied-span");
 
     const prediscoveryMessageDiv = elem("prediscovery-message-div");
     const discoverySelectionMessageDiv = elem("discovery-selection-message-div");
@@ -231,7 +235,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     var selectedFolders;
     var hasAttachments = false;
 
-    var capabilities = new Capabilities();
+//    var capabilities = new Capabilities();
     
     const updateProcessingFolder = async (folderPath) => {
         if(!useImmediateMode) {
@@ -437,7 +441,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });            
 
-            if(!(capabilities.permitDetachment && success && info.attachmentCount > 0)) {
+            if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0)) {
                 permanentlyDetachButton.classList.add("hidden");
             }
 
@@ -546,7 +550,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 displayQuickMenu = true;
             }
 
-            if(capabilities.permitDetachment) {
+            if(CapabilitiesManager.permitDetachment) {
                 detachOperationRow.classList.remove("hidden");
             }
 
@@ -572,7 +576,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportDetachProgress: updateDetachProgress,
                 reportDetachResult: updateDetachResult,
 
-                useAdvancedGetRaw: capabilities.useAdvancedGetRaw,
+                useAdvancedGetRaw: CapabilitiesManager.useAdvancedGetRaw,
                 useEnhancedLogging: extensionOptions.useEnhancedLogging,
 
                 useFilenamePattern: extensionOptions.useFilenamePattern,
@@ -580,19 +584,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 omitDuplicates: extensionOptions.omitDuplicates,
 
-                useMailFolderId: capabilities.useMailFolderId
+                useMailFolderId: CapabilitiesManager.useMailFolderId
             });
 
-            if(capabilities.extensionVersion !== extensionOptions.lastLoadedVersion) {
+            if(CapabilitiesManager.extensionVersion !== extensionOptions.lastLoadedVersion) {
                 closeReleaseNotesButton.addEventListener("click", closeReleaseNotes);
-                const releaseNotesPanel = document.querySelector(`.release-notes-panel[version='${capabilities.extensionVersion}']`);
+                const releaseNotesPanel = document.querySelector(`.release-notes-panel[version='${CapabilitiesManager.extensionVersion}']`);
 
                 if(releaseNotesPanel) {
                     releaseNotesPanel.classList.remove("hidden");
                     releaseNotesOverlay.classList.remove("hidden");
                 }
 
-                OptionsManager.setOption("lastLoadedVersion", capabilities.extensionVersion);
+                OptionsManager.setOption("lastLoadedVersion", CapabilitiesManager.extensionVersion);
             }
 
             if(displayQuickMenu) {
@@ -698,6 +702,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         zipAttachmentContextSpan.classList.remove("hidden");
+
+        fileTypeFilterAppliedSpan.classList.toggle("hidden", !extensionOptions.useFileTypeFilter);
 
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");
@@ -1063,6 +1069,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             zipLogoImage.classList.add("rotating");
         }
+
+        fileTypeFilterAppliedSpan.classList.toggle("hidden", !extensionOptions.useFileTypeFilter);
 
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");

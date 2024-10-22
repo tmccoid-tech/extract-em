@@ -536,6 +536,10 @@ td.summary-header {
     border-collapse: collapse;
 }
 
+#file-type-filter-applied-div {
+    background-color: antiquewhite;
+}
+
 #exclusions-row {
     background-color: rgba(255, 207, 207, 0.37);
 }

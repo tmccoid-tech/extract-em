@@ -10,16 +10,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const extractImmediateCheckbox = elem("extract-immediate-checkbox");
     const extractImmediateSubfoldersCheckbox = elem("extract-immediate-subfolders-checkbox");
     const useSilentModeCheckbox = elem("use-silent-mode-checkbox");
-    const preserveFolderStructureCheckbox = elem("preserve-folder-structure-checkbox");
-    const useEnhancedLoggingCheckbox = elem("use-enhanced-logging-checkbox");
-    const defaultGroupingSelect = elem("default-grouping-select");
-    const imagePreviewSelect = elem("image-preview-select");
-    const includeEmbedsCheckbox = elem("include-embeds-checkbox");
-    const omitDuplicatesCheckbox = elem("omit-duplicates-checkbox");
+
+    const alwaysPromptForDownloadLocationCheckbox = elem("always-prompt-for-donwload-location-checkbox");
 
     const useFilenamePatternCheckbox = elem("use-filename-pattern-checkbox");
     const filenamePatternDisplayTextbox = elem("filename-pattern-display-textbox");
     const filenamePatternEditButton = elem("filename-pattern-edit-button");
+
+    const includeEmbedsCheckbox = elem("include-embeds-checkbox");
+    const omitDuplicatesCheckbox = elem("omit-duplicates-checkbox");
+    const preserveFolderStructureCheckbox = elem("preserve-folder-structure-checkbox");
+    const useEnhancedLoggingCheckbox = elem("use-enhanced-logging-checkbox");
+
+    const defaultGroupingSelect = elem("default-grouping-select");
+    const imagePreviewSelect = elem("image-preview-select");
 
     const filenameEditorOverlay = elem("filename-editor-overlay");
 
@@ -44,40 +48,44 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
         listen(displayQuickMenuCheckbox, onUserInteractionOptionChanged);
         listen(extractImmediateCheckbox, onUserInteractionOptionChanged);
-
         listen(extractImmediateSubfoldersCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(useSilentModeCheckbox, (e) => setOption(e, (c) => c.checked));
-        listen(preserveFolderStructureCheckbox, (e) => setOption(e, (c) => c.checked));
-        listen(useEnhancedLoggingCheckbox, (e) => setOption(e, (c) => c.checked));
-        listen(defaultGroupingSelect, (e) => setOption(e));
-        listen(imagePreviewSelect, (e) => setOption(e));
-        listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
-        listen(omitDuplicatesCheckbox, (e) => setOption(e, (c) => c.checked));
+
+        listen(alwaysPromptForDownloadLocationCheckbox, (e) => setOption(e, (c) => c.checked))
 
         listen(useFilenamePatternCheckbox, onFilenamePatternOptionChanged);
-
         filenamePatternEditButton.addEventListener("click", (event) => displayFilenamePatternEditor());
+
+        listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(omitDuplicatesCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(preserveFolderStructureCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(useEnhancedLoggingCheckbox, (e) => setOption(e, (c) => c.checked));
+
+        listen(defaultGroupingSelect, (e) => setOption(e));
+        listen(imagePreviewSelect, (e) => setOption(e));
 
         standardUiModeCheckbox.checked = !(extensionOptions.displayQuickMenu || extensionOptions.extractImmediate);
         displayQuickMenuCheckbox.checked = extensionOptions.displayQuickMenu;
         extractImmediateCheckbox.checked = extensionOptions.extractImmediate;
-
         extractImmediateSubfoldersCheckbox.checked = extensionOptions.includeSubfolders;
         useSilentModeCheckbox.checked = extensionOptions.useSilentMode;
-        preserveFolderStructureCheckbox.checked = extensionOptions.preserveFolderStructure;
-        useEnhancedLoggingCheckbox.checked = extensionOptions.useEnhancedLogging;
-        defaultGroupingSelect.value = extensionOptions.defaultGrouping;
-        imagePreviewSelect.value = extensionOptions.defaultImagePreview;
-        includeEmbedsCheckbox.checked = extensionOptions.includeEmbeds;
-        omitDuplicatesCheckbox.checked = extensionOptions.omitDuplicates;
 
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;
 
+        alwaysPromptForDownloadLocationCheckbox.checked = extensionOptions.alwaysPromptForDownloadLocation;
+
         useFilenamePatternCheckbox.checked = extensionOptions.useFilenamePattern;
         filenamePatternDisplayTextbox.value = extensionOptions.filenamePattern;
-
         toggleFilenamePatternEditButton(extensionOptions.useFilenamePattern);
+
+        includeEmbedsCheckbox.checked = extensionOptions.includeEmbeds;
+        omitDuplicatesCheckbox.checked = extensionOptions.omitDuplicates;
+        preserveFolderStructureCheckbox.checked = extensionOptions.preserveFolderStructure;
+        useEnhancedLoggingCheckbox.checked = extensionOptions.useEnhancedLogging;
+
+        defaultGroupingSelect.value = extensionOptions.defaultGrouping;
+        imagePreviewSelect.value = extensionOptions.defaultImagePreview;
     }
 
     function listen(element, handler) {

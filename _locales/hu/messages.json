@@ -31,6 +31,9 @@
         "description": "Action description for standard-selection QuickMenu button"
     },
 
+    "alwaysPromptForDownloadLocation": { "message": "Always prompt for download location" },
+    "alwaysPromptForDownloadLocationMessage": { "message": "Overrides the Thunderbird option to download files directly to a specified directory" },
+
     "includeEmbeds": { "message": "Include embeds (inline-attached images)" },
     
     "useFileTypeFilter": { "message": "Use file type filter" },
@@ -310,6 +313,7 @@
     "unknownFileType": { "message": "Unknown file type" },
     "unlistedFileTypes": { "message": "All file types not listed above" },
     "addType": { "message": "Add Type" },
+    "addTypeMessage": { "message": "Enter a 3-5 character file extension (txt, csv, etc)." },
 
     "bytesLabel": { "message": "bájt" },
     "kbLabel": { "message": "kB" },
@@ -378,5 +382,8 @@
 
     "rn1_5_1_New01": {
         "message": "Added option for filtering by file type (extension)"
+    },
+    "rn1_5_1_New02": {
+        "message": "Added toggle-all checkbox for attachment selection (Attachment List)"
     }
 }

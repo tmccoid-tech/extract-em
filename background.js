@@ -1,5 +1,7 @@
+import { CapabilitiesManager } from "/module/capabilitiesmanager.js";
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
+import { FilterManager } from "/module/filtering/filtermanager.js";
 
     const documentTitle = messenger.i18n.getMessage("extensionName");
 
@@ -18,6 +20,8 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
     document.addEventListener("DOMContentLoaded", () => { document.title = documentTitle; });
 
     async function extractSilently(params) {
+        const { extensionOptions } = params;
+
         const attachmentManager = new AttachmentManager({
             folders: params.selectedFolders,
             silentModeInvoked: true,
@@ -40,15 +44,27 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
             
             reportSaveResult: updateSaveResult,
 
-            // TODO: Add useAdvancedGetRaw from capabilities
+            useAdvancedGetRaw: CapabilitiesManager.useAdvancedGetRaw,
             useEnhancedLogging: extensionOptions.useEnhancedLogging,
+
             useFilenamePattern: extensionOptions.useFilenamePattern,
-            filenamePattern: extensionOptions.filenamePattern
+            filenamePattern: extensionOptions.filenamePattern,
+
+            omitDuplicates: extensionOptions.omitDuplicates,
+
+            useMailFolderId: CapabilitiesManager.useMailFolderId
+
+            // TODO: Add useAdvancedGetRaw from capabilities
+            // TODO: Add useMailFolderId from capabilities
         });
 
         const selectedFolderPaths = assembleFolderPaths(params.selectedFolders[0]);
 
-        attachmentManager.discoverAttachments(new Set(selectedFolderPaths), params.includeEmbeds);
+        const fileTypeFilter = (extensionOptions.useFileTypeFilter)
+            ? FilterManager.assembleFileTypeFilter(extensionOptions)
+            : null
+
+        attachmentManager.discoverAttachments(new Set(selectedFolderPaths), extensionOptions.includeEmbeds, fileTypeFilter);
     }
 
     function assembleFolderPaths(folder) {
@@ -128,10 +144,13 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
                     messenger.menus.update(menuId, { enabled: false });
 
                     if(extensionOptions.useSilentMode && params.allowExtractImmediate) {
+                        params.extensionOptions = extensionOptions;
+                        /*
                         params.includeEmbeds = extensionOptions.includeEmbeds;
                         params.useEnhancedLogging = extensionOptions.useEnhancedLogging;
                         params.useFilenamePattern = extensionOptions.useFilenamePattern;
                         params.filenamePattern = extensionOptions.filenamePattern;
+                        */
 
                         extractSilently(params);
                     }

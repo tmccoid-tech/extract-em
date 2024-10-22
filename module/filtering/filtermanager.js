@@ -67,7 +67,7 @@ export class FilterManager {
         this.#hasSecondaryControls = !!elements.secondaryCheckbox;
 
         elements.menuCheckbox.checked = extensionOptions.useFileTypeFilter;
-        this.#syncMainControls(extensionOptions, (extensionOptions.includedFilterFileTypes.size > 0 || extensionOptions.includeUnlistedFileTypes));
+        this.#syncMainControls();
 
         elements.menuCheckbox.addEventListener("change", (e) => this.#onMenuCheckboxChanged(e));
         elements.menuEditButton.addEventListener("click", (e) => this.#displayEditor(e));
@@ -295,37 +295,32 @@ export class FilterManager {
         await OptionsManager.setOption("includeUnlistedFileTypes", includeUnlistedFileTypes);
         extensionOptions.includeUnlistedFileTypes = includeUnlistedFileTypes;
 
-        this.#syncMainControls(extensionOptions, true);
+        this.#syncMainControls();
 
         this.#dismiss();
     }
 
-    static #syncMainControls(extensionOptions, isInitialized) {
+    static #syncMainControls() {
         const { menuFileTypeList, menuEditButton, secondaryFileTypeList, secondaryEditButton } = this.#elements;
+        const { useFileTypeFilter } = this.#extensionOptions;
 
-        let fileTypeList = "...";
-
-        if(isInitialized) {
-            fileTypeList = [...extensionOptions.includedFilterFileTypes].concat(
-                (extensionOptions.includeUnlistedFileTypes) ? ["*"] : []
-            ).join(", ");
-        }
+        const fileTypeList = this.assembleFileTypeList();
 
         menuFileTypeList.innerHTML = fileTypeList;
         if(this.#hasSecondaryControls) {
             secondaryFileTypeList.title = fileTypeList;
         }
 
-        if(extensionOptions.useFileTypeFilter) {
+        if(useFileTypeFilter) {
             menuFileTypeList.classList.remove("ghost");
         }
         else {
             menuFileTypeList.classList.add("ghost");
         }
 
-        menuEditButton.disabled = !extensionOptions.useFileTypeFilter;
+        menuEditButton.disabled = !useFileTypeFilter;
         if(this.#hasSecondaryControls) {
-            secondaryEditButton.disabled = !extensionOptions.useFileTypeFilter;
+            secondaryEditButton.disabled = !useFileTypeFilter;
         }
     }
 
@@ -344,7 +339,7 @@ export class FilterManager {
                 secondaryCheckbox.checked = false;
             }
 
-            this.#syncMainControls(extensionOptions, false);
+            this.#syncMainControls();
         }
 
         this.#dismiss();
@@ -494,8 +489,11 @@ export class FilterManager {
         saveNewFileTypeButton.value = "";
     }
 
-    static assembleFileTypeFilter() {
-        const extensionOptions = this.#extensionOptions;
+    static assembleFileTypeFilter(extensionOptions) {
+        if(!extensionOptions) {
+            extensionOptions = this.#extensionOptions
+        }
+
         const groupedFileTypeMap = this.groupedFileTypeMap;
 
         const result = {
@@ -530,6 +528,22 @@ export class FilterManager {
             addFileTypes(this.groupedFileTypeMap);
 
             result.listedExtensions = new Set(listedExtensions);
+        }
+
+        return result;
+    }
+
+    static assembleFileTypeList() {
+        const { includedFilterFileTypes, includeUnlistedFileTypes } = this.#extensionOptions;
+
+        let result  = "...";
+
+        const isInitialized = (includedFilterFileTypes.size > 0 || includeUnlistedFileTypes);
+
+        if(isInitialized) {
+            result = [...includedFilterFileTypes].concat(
+                (includeUnlistedFileTypes) ? ["*"] : []
+            ).join(", ");
         }
 
         return result;

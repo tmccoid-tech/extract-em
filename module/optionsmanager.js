@@ -14,6 +14,8 @@ export class OptionsManager {
 
         useFilenamePattern: false,
         filenamePattern: "",
+
+        alwaysPromptForDownloadLocation: true,
         
         useFileTypeFilter: "",
         includedFilterFileTypes: new Set(),

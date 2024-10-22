@@ -1166,7 +1166,8 @@ export class AttachmentManager {
         const zipParams = {
             url: URL.createObjectURL(zipFile),
             filename: `${messenger.i18n.getMessage(disposition)}-${new Date().getTime()}.zip`,
-            conflictAction: "uniquify"
+            conflictAction: "uniquify",
+            saveAs: true
         };
 
         this.#download(zipParams, packagingProgressInfo);

@@ -29,38 +29,6 @@ NodeList.prototype.toSet = _toSet;
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-/*    
-    const browserInfo = await browser.runtime.getBrowserInfo();
-
-    class Capabilities {
-        constructor() {
-            this.appVersion = browserInfo.version;
-            const appVersionNumbers = this.appVersion.split(".").map((n) => parseInt(n));
-
-            this.extensionVersion = browser.runtime.getManifest().version;
-            const extensionVersionNumbers = this.extensionVersion.split(".").map((n) => parseInt(n));
-
-            this.permitDetachment = (this.#isSufficientVersion(extensionVersionNumbers, [1, 2]) && !!messenger.messages.deleteAttachments);       //  >= EE 1.2
-            this.useAdvancedGetRaw = this.#isSufficientVersion(appVersionNumbers, [115, 3, 2]);                                                   //  >= TB 115.3.2
-            this.useMailFolderId = this.#isSufficientVersion(appVersionNumbers, [121]);                                                           //  >= TB 121
-        }
-
-        #isSufficientVersion(actualVersionNumbers, minimumVersionNumbers) {
-            for(let i = 0; i < actualVersionNumbers.length; i++) {
-                if(actualVersionNumbers[i] > minimumVersionNumbers[i]) {
-                    return true;
-                }
-
-                if(actualVersionNumbers[i] < minimumVersionNumbers[i]) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-    }
-*/
-
     const errorText = messenger.i18n.getMessage("error");
 
     const elem = (id) => document.getElementById(id);
@@ -234,6 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     var folderSummary;
     var selectedFolders;
     var hasAttachments = false;
+    var preventDetachment = false;
 
 //    var capabilities = new Capabilities();
     
@@ -444,6 +413,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0)) {
                 permanentlyDetachButton.classList.add("hidden");
             }
+            else if(preventDetachment) {
+                permanentlyDetachButton.disabled = true;
+                permanentlyDetachButton.title = messenger.i18n.getMessage("imapDetachUnavailable");
+            }
 
             saveResultDiv.classList.add("materialize");
 
@@ -519,6 +492,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const account = await messenger.accounts.get(params.accountId, false);
             document.title = `${messenger.i18n.getMessage("extensionName")} (${account.name})`;
             zipAccountNameLabel.innerHTML = account.name;
+            preventDetachment = CapabilitiesManager.preventDetachment(account.type);
         }
 
         selectedFolders = params?.selectedFolders;
@@ -591,7 +565,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if(CapabilitiesManager.extensionVersion !== extensionOptions.lastLoadedVersion) {
                 closeReleaseNotesButton.addEventListener("click", closeReleaseNotes);
-                const releaseNotesPanel = document.querySelector(`.release-notes-panel[version='${CapabilitiesManager.extensionVersion}']`);
+                const releaseNotesPanel = document.querySelector(`.release-notes-panel[version^='${CapabilitiesManager.featureVersion}']`);
 
                 if(releaseNotesPanel) {
                     releaseNotesPanel.classList.remove("hidden");
@@ -1447,6 +1421,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         saveResultLabel.innerText = "";
         packagingErrorCountSpan.innerText = "0";
         permanentlyDetachButton.classList.remove("hidden");
+        permanentlyDetachButton.removeAttribute("title");
 
         detachTable.classList.add("hidden");
         zipTable.classList.remove("hidden");

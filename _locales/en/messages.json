@@ -119,6 +119,7 @@
     "result": { "message": "Result" },
 
     "permanentlyDetach": { "message": "Permanently Detach" },
+    "imapDetachUnavailable": { "message": "This feature is currently unavaialble for IMAP accounts." },
 
     "close":{ "message": "Close" },
     "closeAndExit": { "message": "Close & Exit" },
@@ -393,5 +394,8 @@
     },
     "rn1_5_1_New03": {
         "message": "Added option for always prompting for a save location for package files, or directly saving to the directory specified by the respective Thunderbird setting"
+    },
+    "rn1_5_2_New01": {
+        "message": "Permanently Detach button disabled for IMAP accounts until further notice."
     }
 }

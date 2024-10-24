@@ -124,6 +124,7 @@
     "close":{ "message": "Bezárás" },
     "closeAndExit": { "message": "Bezárás és kilépés" },
     "viewReport": { "message": "Jelentés megtekintése" },
+    "reportSavedTo": { "message": "Report saved to"},
 
     "permanentDetachWarning": {
         "message": "FIGYELMEZTETÉS: Ez a művelet véglegesen eltávolítja a kicsomagolt mellékleteket (és ismétlődéseket) a forrás e-mail üzeneteiből. A beágyazások ki vannak zárva."

@@ -1243,12 +1243,12 @@ export class AttachmentManager {
             }
         };
 
-        const handleCreated = ((downloadItem) =>
+        const handleCreated = (downloadItem) =>
         {
             if(downloadItem.url == zipParams.url) {
                 this.#packagingFilenameList.push(downloadItem.filename);
             }
-        });
+        };
 
         browser.downloads.onChanged.addListener(handleChanged);
         browser.downloads.onCreated.addListener(handleCreated);

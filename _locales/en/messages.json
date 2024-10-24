@@ -124,6 +124,7 @@
     "close":{ "message": "Close" },
     "closeAndExit": { "message": "Close & Exit" },
     "viewReport": { "message": "Generate Report" },
+    "reportSavedTo": { "message": "Report saved to"},
 
     "permanentDetachWarning": {
         "message": "WARNING: This action will permanently remove the extracted attachments (and duplicates) from their source email messages. Embeds are excluded."

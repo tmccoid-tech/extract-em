@@ -256,7 +256,8 @@ export class ReportManager {
         const fileParameters = {
             url: URL.createObjectURL(reportFileData),
             filename: `${messenger.i18n.getMessage("extractionReport")}-${new Date().getTime()}.html`,
-            conflictAction: "uniquify"
+            conflictAction: "uniquify",
+            saveAs: true
         };
 
         let downloadId;
@@ -278,19 +279,29 @@ export class ReportManager {
 
                     if(resolved) {
                         browser.downloads.onChanged.removeListener(handleChanged);
+                        browser.downloads.onChanged.removeListener(handleCreated);
                         URL.revokeObjectURL(fileParameters.url);
                         resolve(success);
                     }
                 }
             };
 
+            const handleCreated = (downloadItem) => {
+                browser.downloads.onCreated.removeListener(handleCreated);
+
+                const alertText = `${messenger.i18n.getMessage("reportSavedTo")} ${downloadItem.filename}`;
+                alert(alertText);
+            };
+
             browser.downloads.onChanged.addListener(handleChanged);
+            browser.downloads.onCreated.addListener(handleCreated);
 
             browser.downloads.download(fileParameters)
                 .then(
                     (id) => { downloadId = id; },
                     (error) => {
                         browser.downloads.onChanged.removeListener(handleChanged);
+                        browser.downloads.onChanged.removeListener(handleCreated);
                         URL.revokeObjectURL(fileParameters.url);
                     }
                 );

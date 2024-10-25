@@ -1,3 +1,5 @@
+import { SaveManager } from "/module/savemanager.js";
+
 export class ReportManager {
     static async generateReport(attachmentManager, parameters) {
         const {
@@ -230,7 +232,25 @@ export class ReportManager {
 
         const reportFileData = new Blob([fileText], { type: "text/html" });
 
-        await this.#downloadReport(reportFileData);
+//        await this.#downloadReport(reportFileData);
+
+        let reportFilePath = null;
+
+        await SaveManager.save({
+            fileData: reportFileData,
+            filename: `${messenger.i18n.getMessage("extractionReport")}-${new Date().getTime()}.html`,
+            saveAs: true,
+            onSaveStarted: async (downloadItem) => {
+                reportFilePath = downloadItem.filename;
+            },
+            onSaveError: (e) => {},
+            onSaveComplete: (downloadId) => {
+                if(reportFilePath) {
+                    const alertText = `${messenger.i18n.getMessage("reportSavedTo")} ${reportFilePath}`;
+                    alert(alertText);
+                }
+            },
+        });
     }
 
     static #getImageDataUrl(filename) {
@@ -251,6 +271,8 @@ export class ReportManager {
             xhr.send();        
         });
     }
+
+/*
 
     static #downloadReport(reportFileData) {
         const fileParameters = {
@@ -307,4 +329,6 @@ export class ReportManager {
                 );
         });
     }
+
+    */
 }

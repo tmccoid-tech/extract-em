@@ -148,7 +148,7 @@ export class FilterManager {
         elements.cancelButton.addEventListener("click", (e) => this.#cancel());
     }
 
-    static #createFileTypeControl = (fileType, categoryId, isCustom = false) => {
+    static #createFileTypeControl (fileType, categoryId, isCustom = false) {
         const result = this.#fileTypeControlTemplate.content.cloneNode(true);
 
         const fileTypeControl = result.querySelector(".file-type-control");

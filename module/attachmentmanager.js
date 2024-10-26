@@ -1,5 +1,6 @@
 import { ZipEm } from "/module/zipem.js";
 import { EmbedManager } from "/module/embedmanager.js";
+import { SaveManager } from "/module/savemanager.js";
 
 export class AttachmentManager {
     #platformOs;
@@ -690,6 +691,8 @@ export class AttachmentManager {
     async extract(list, getInfo, extractOptions) {
         // Preparation phase
 
+        SaveManager.determineDownloadDirectory();
+
         const {
             preserveFolderStructure,
             includeEmbeds
@@ -857,10 +860,10 @@ export class AttachmentManager {
             }
         }
 
-        this.#package(packagingProgressInfo);        
+        this.#package(packagingProgressInfo, true);        
     }
 
-    async #package(packagingProgressInfo) {
+    async #package(packagingProgressInfo, directSave) {
         const zipEm = new ZipEm();
 
         const packagingTracker = this.#packagingTracker;
@@ -943,7 +946,7 @@ export class AttachmentManager {
                 duplicateFileNameTracker.set(duplicateKey, 1);
             }
 
-            if(packagingTracker.preserveFolderStructure) {
+            if(packagingTracker.preserveFolderStructure && !directSave) {
                 const message = this.messageList.get(item.messageId);
                 fileName = `${message.folderPath.slice(1)}/${fileName}`;
             }
@@ -951,7 +954,12 @@ export class AttachmentManager {
             try {
                 this.#log(`Packaging - add file to zip buffer: ${item.name}`);
 
-                await zipEm.addFile(fileName, attachmentFile, item.date);
+                if(directSave) {
+                    await this.#saveAttachment(attachmentFile, fileName);
+                }
+                else {
+                    await zipEm.addFile(fileName, attachmentFile, item.date);
+                }
 
                 packagingProgressInfo.includedCount++;
                 packagingProgressInfo.totalBytes += item.size;
@@ -981,7 +989,11 @@ export class AttachmentManager {
 
         packagingTracker.currentPackageIndex++;
 
-        await this.#prepareDownload(zipEm, packagingProgressInfo);
+        if(!directSave) {
+            await this.#saveZipFile(zipEm, packagingProgressInfo);
+        }
+
+//        await this.#prepareDownload(zipEm, packagingProgressInfo);
     }
 
     async #packageEmbeds(packagingProgressInfo) {
@@ -1151,9 +1163,76 @@ export class AttachmentManager {
 
         packagingProgressInfo.lastFileName = "...";
 
-        this.#prepareDownload(zipEm, packagingProgressInfo, "embeds");
+        this.#saveZipFile(zipEm, packagingProgressInfo, "embeds");
+
+        //        this.#prepareDownload(zipEm, packagingProgressInfo, "embeds");
     }
 
+    async #saveZipFile(zipEm, packagingProgressInfo, disposition = "attachments") {
+        let zipFile;
+
+        try {
+            zipFile = await zipEm.complete();
+        }
+        catch(e) {
+            this.#log(e, true);
+
+            return;
+        }
+
+        const packagingTracker = this.#packagingTracker;
+        const isFirst = (packagingTracker.currentPackageIndex == 1);
+        const isFinal = (packagingTracker.currentPackageIndex == packagingTracker.extractionSubsets.length);
+        const hasEmbeds = (this.#packagingTracker.embedItems.length > 0);
+        const isEmbedFinal = (packagingTracker.totalEmbedMessageCount > 0 && packagingTracker.currentEmbedMessageIndex == packagingTracker.totalEmbedMessageCount);
+
+        const saveOptions = {
+            fileData: zipFile,
+            filename: `${messenger.i18n.getMessage(disposition)}-${new Date().getTime()}.zip`,
+            saveAs: this.#alwaysPromptForDownloadLocation,
+            onSaveStarted: (downloadItem) => {
+                this.#packagingFilenameList.push(downloadItem.filename);
+
+                if(isFirst) {
+                    this.#reportSaveResult({ status: "started" });
+                }
+            },
+            onSaveError: (errorMessage) => {
+                this.#reportSaveResult({
+                    status: "error",
+                    message: errorMessage
+                });
+            },
+            onSaveComplete: (downloadId) => {
+                packagingProgressInfo.filesCreated++;
+                this.#reportPackagingProgress(packagingProgressInfo);
+
+                if(isFinal) {
+                    if(hasEmbeds && !isEmbedFinal) {
+                        this.#packageEmbeds(packagingProgressInfo);
+                    }
+                    else {
+                        this.#reportSaveResult({
+                            status: "success",
+                            message: messenger.i18n.getMessage("saveComplete"),
+                            attachmentCount: packagingTracker.items.length
+                        });
+                    }
+                }
+                else {
+                    this.#package(packagingProgressInfo);       // Package the next set of attachments
+                }
+            }
+        };
+
+
+        packagingProgressInfo.status = "downloading";
+        this.#reportPackagingProgress(packagingProgressInfo);
+
+        await SaveManager.save(saveOptions);
+    }
+
+    /*
     async #prepareDownload(zipEm, packagingProgressInfo, disposition = "attachments") {
         let zipFile;
 
@@ -1277,6 +1356,7 @@ export class AttachmentManager {
                 }
             );
     }
+*/
 
     async deleteAttachments() {
         const packagedItems = this.#packagingTracker.items.filter((item) => !item.hasError);
@@ -1553,5 +1633,24 @@ export class AttachmentManager {
         if(condition) {
             console.log(message);
         }
+    }
+
+    async #saveAttachment(fileData, filename) {
+        const saveOptions = {
+            fileData: fileData,
+            filename: filename,
+            saveAs: false,
+            onSaveStarted: (downloadItem) => {
+
+            },
+            onSaveError: (error) => {
+                throw new Error(`${error} [${filename}]`);
+            },
+            onSaveComplete: (downloadId) => {
+
+            }
+        };
+        
+        await SaveManager.save(saveOptions);
     }
 }

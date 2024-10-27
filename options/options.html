@@ -39,15 +39,48 @@
                     <dd>__MSG_useSilentModeDescription__</dd>
                 </dl>
             </dd>
+
             <dt><hr/></dt>
             <dd></dd>
 
             <dt>
-                <label><input type="checkbox" id="always-prompt-for-donwload-location-checkbox" option-name="alwaysPromptForDownloadLocation" /> __MSG_alwaysPromptForDownloadLocation__</label>
+                <label><input type="radio" name="storage-option" id="package-attachments-radio" value="false"> __MSG_packageAttachments__</label>
             </dt>
             <dd>
-                __MSG_alwaysPromptForDownloadLocationMessage__
+                __MSG_packageAttachmentsDesc__
+                <dl>
+                    <dt>
+                        <label><input type="checkbox" id="always-prompt-for-donwload-location-checkbox" option-name="alwaysPromptForDownloadLocation" /> __MSG_alwaysPromptForDownloadLocation__</label>
+                    </dt>
+                    <dd>
+                        __MSG_alwaysPromptForDownloadLocationMessage__
+                    </dd>
+
+                    <dt>
+                        <label><input type="checkbox" id="preserve-folder-structure-checkbox" option-name="preserveFolderStructure" /> __MSG_preserveFolderStructure__</label>
+                    </dt>
+                    <dd>
+                        __MSG_preserveFolderStructureDescription__
+                    </dd>
+                </dl>
             </dd>
+
+            <dt>
+                <label><input type="radio" name="storage-option" id="direct-save-radio" value="true"> __MSG_directSave__</label>
+            </dt>
+            <dd>
+                __MSG_directSaveDesc__
+            </dd>
+
+            <dt>
+                __MSG_currentSaveDirectory__:
+            </dt>
+            <dd>
+                <span id="current-save-directory-span">...</span>
+            </dd>
+
+            <dt><hr/></dt>
+            <dd></dd>
 
             <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> __MSG_useFilenamePattern__</label></dt>
             <dd>
@@ -75,13 +108,6 @@
             </dt>
             <dd>
                 __MSG_omitDuplicatesDescription__
-            </dd>
-
-            <dt>
-                <label><input type="checkbox" id="preserve-folder-structure-checkbox" option-name="preserveFolderStructure" /> __MSG_preserveFolderStructure__</label>
-            </dt>
-            <dd>
-                __MSG_preserveFolderStructureDescription__
             </dd>
 
             <dt>

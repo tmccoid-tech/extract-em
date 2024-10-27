@@ -131,6 +131,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const embedDuplicateSpan = elem("embed-duplicate-span");
     const duplicatesSizeLabel = elem("duplicates-size-label");
 
+    const packagingProgressRow = elem("packaging-progress-row");
     const packagingCurrentSpan = elem("packaging-current-span");
     const packagingTotalSpan = elem("packaging-total-span");
     const embedPackagingCurrentSpan = elem("embed-packaging-current-span");
@@ -141,6 +142,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const packagingFileTotalSpan = elem("packaging-file-total-span");
     const packagingErrorCountSpan = elem("packaging-error-count-span");
     const packagingProgress = elem("packaging-progress");
+
+    const savingProgessRow = elem("saving-progress-row");
+    const savingCurrentSpan = elem("saving-current-span");
+    const embedSavingCurrentSpan = elem("embed-saving-current-span");
+    const savingSizeSpan = elem("saving-size-span");
+    const embedSavingSizeSpan = elem("embed-saving-size-span");
+    const savingProgress = elem("saving-progress");
 
     const lastFileNameDiv = elem("last-filename-div");
 
@@ -397,6 +405,51 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
+    const updateSavingProgress = async (info) => {
+        switch(info.status) {
+            case "started":
+                preparationAlterationsSpan.innerText = info.alterationCount.toString();
+                break;
+
+            case "preparing":
+                packagingSkippedSpan.innerText = info.duplicateCount.toString();
+                duplicatesSizeLabel.innerText = abbreviateFileSize(info.duplicateTotalBytes);
+                savingProgress.setAttribute("max", info.totalItems + info.totalEmbedItems);
+
+                break;
+
+            case "prepackaging":
+//                packagingTotalSpan.innerText = info.totalItems.toString();
+//                embedPackagingTotalSpan.innerText = info.totalEmbedItems.toString();
+                packagingProgress.setAttribute("max", info.totalItems + info.totalEmbedItems);
+                packagingProgress.value = 0;
+    
+                break;
+
+            default: // "packaging"
+//                packagingFileTotalSpan.innerText = info.fileCount.toString();
+
+                savingCurrentSpan.innerText = info.includedCount.toString();
+                embedSavingCurrentSpan.innerText = info.includedEmbedCount.toString();
+                
+//                packagingFileCurrentSpan.innerText = info.filesCreated.toString();
+                preparationAlterationsSpan.innerText = info.alterationCount.toString();
+                packagingErrorCountSpan.innerText = info.errorCount.toString();        
+                
+                lastFileNameDiv.innerText = info.lastFileName;
+        
+                savingProgress.value = info.includedCount + info.includedEmbedCount + info.duplicateEmbedCount + info.errorCount;
+                savingSizeSpan.innerText = abbreviateFileSize(info.totalBytes);
+                embedSavingSizeSpan.innerText = abbreviateFileSize(info.totalEmbedBytes);
+        
+                packagingSkippedSpan.innerText = info.duplicateCount.toString();
+                embedDuplicateSpan.innerText = info.duplicateEmbedCount.toString();
+                duplicatesSizeLabel.innerText = abbreviateFileSize(info.duplicateTotalBytes);
+
+                break;
+        }
+    };
+
     const updateSaveResult = async (info) =>
     {
         if(info.status == "started") {
@@ -544,8 +597,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportFolderProcessed: updateProcessedFolder,
                 reportProcessingComplete: updateProcessingComplete,
 
-                reportPackagingProgress: updatePackagingProgress,
-                reportSaveResult: updateSaveResult,
+                reportStorageProgress: (extensionOptions.directSave)
+                    ? updateSavingProgress
+                    : updatePackagingProgress,
+                
+                    reportSaveResult: updateSaveResult,
 
                 reportDetachProgress: updateDetachProgress,
                 reportDetachResult: updateDetachResult,
@@ -680,6 +736,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         zipAttachmentContextSpan.classList.remove("hidden");
 
         fileTypeFilterAppliedSpan.classList.toggle("hidden", !extensionOptions.useFileTypeFilter);
+
+        packagingProgressRow.classList.toggle("hidden", extensionOptions.directSave);
+        savingProgessRow.classList.toggle("hidden", !extensionOptions.directSave);
 
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");
@@ -1052,6 +1111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         zipOverlay.classList.remove("hidden");
 
         attachmentManager.extract(list, getInfo, {
+            directSave: extensionOptions.directSave,
             preserveFolderStructure: extensionOptions.preserveFolderStructure,
             includeEmbeds: includeEmbeds
         });
@@ -1404,6 +1464,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         packagingFileTotalSpan.innerText = "0";
         packagingSizeSpan.innerText = abbreviateFileSize();
         embedPackagingSizeSpan.innerText = abbreviateFileSize();
+        packagingProgressRow.classList.add("hidden");
+
+        // Saving
+        savingCurrentSpan.innerText = "0";
+        embedSavingCurrentSpan.innerText = "0";
+        savingSizeSpan.innerText = abbreviateFileSize();
+        embedSavingSizeSpan.innerText = abbreviateFileSize();
+        savingProgessRow.classList.add("hidden");
 
         //Detaching
 

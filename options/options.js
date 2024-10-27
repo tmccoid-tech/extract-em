@@ -1,6 +1,7 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 import { initializeEditor } from "/options/filename-pattern.js"
 import { FilterManager } from "/module/filtering/filtermanager.js";
+import { SaveManager } from "/module/savemanager.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const elem = (id) => document.getElementById(id);
@@ -11,7 +12,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const extractImmediateSubfoldersCheckbox = elem("extract-immediate-subfolders-checkbox");
     const useSilentModeCheckbox = elem("use-silent-mode-checkbox");
 
+    const packageAttachmentsRadio = elem("package-attachments-radio");
+    const directSaveRadio = elem("direct-save-radio");
     const alwaysPromptForDownloadLocationCheckbox = elem("always-prompt-for-donwload-location-checkbox");
+    const preserveFolderStructureCheckbox = elem("preserve-folder-structure-checkbox");
+    const currentSaveDirectorySpan = elem("current-save-directory-span");
 
     const useFilenamePatternCheckbox = elem("use-filename-pattern-checkbox");
     const filenamePatternDisplayTextbox = elem("filename-pattern-display-textbox");
@@ -19,7 +24,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const includeEmbedsCheckbox = elem("include-embeds-checkbox");
     const omitDuplicatesCheckbox = elem("omit-duplicates-checkbox");
-    const preserveFolderStructureCheckbox = elem("preserve-folder-structure-checkbox");
     const useEnhancedLoggingCheckbox = elem("use-enhanced-logging-checkbox");
 
     const defaultGroupingSelect = elem("default-grouping-select");
@@ -42,6 +46,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await FilterManager.initializeEditor(filterElements, extensionOptions);
 
+    const currentSaveDirectory = await SaveManager.determineDownloadDirectory();
+
     i18n.updateDocument();
 
     async function main() {
@@ -51,14 +57,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(extractImmediateSubfoldersCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(useSilentModeCheckbox, (e) => setOption(e, (c) => c.checked));
 
+        listen(packageAttachmentsRadio, onStorageOptionChanged);
+        listen(directSaveRadio, onStorageOptionChanged);
+
         listen(alwaysPromptForDownloadLocationCheckbox, (e) => setOption(e, (c) => c.checked))
+        listen(preserveFolderStructureCheckbox, (e) => setOption(e, (c) => c.checked));
 
         listen(useFilenamePatternCheckbox, onFilenamePatternOptionChanged);
         filenamePatternEditButton.addEventListener("click", (event) => displayFilenamePatternEditor());
 
         listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(omitDuplicatesCheckbox, (e) => setOption(e, (c) => c.checked));
-        listen(preserveFolderStructureCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(useEnhancedLoggingCheckbox, (e) => setOption(e, (c) => c.checked));
 
         listen(defaultGroupingSelect, (e) => setOption(e));
@@ -73,7 +82,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;
 
+        packageAttachmentsRadio.checked = !extensionOptions.directSave;
+        directSaveRadio.checked = extensionOptions.directSave;
         alwaysPromptForDownloadLocationCheckbox.checked = extensionOptions.alwaysPromptForDownloadLocation;
+        alwaysPromptForDownloadLocationCheckbox.disabled = extensionOptions.directSave;
+        preserveFolderStructureCheckbox.checked = extensionOptions.preserveFolderStructure;
+        preserveFolderStructureCheckbox.disabled = extensionOptions.directSave;
+        currentSaveDirectorySpan.innerText = currentSaveDirectory;
 
         useFilenamePatternCheckbox.checked = extensionOptions.useFilenamePattern;
         filenamePatternDisplayTextbox.value = extensionOptions.filenamePattern;
@@ -81,7 +96,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         includeEmbedsCheckbox.checked = extensionOptions.includeEmbeds;
         omitDuplicatesCheckbox.checked = extensionOptions.omitDuplicates;
-        preserveFolderStructureCheckbox.checked = extensionOptions.preserveFolderStructure;
         useEnhancedLoggingCheckbox.checked = extensionOptions.useEnhancedLogging;
 
         defaultGroupingSelect.value = extensionOptions.defaultGrouping;
@@ -109,6 +123,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         extractImmediateSubfoldersCheckbox.disabled = !extractImmediate;
         useSilentModeCheckbox.disabled = !extractImmediate;
+    }
+
+    function onStorageOptionChanged(event) {
+        const directSave = (event.srcElement.value === "true");
+
+        OptionsManager.setOption("directSave", directSave);
+
+        alwaysPromptForDownloadLocationCheckbox.disabled = directSave;
+        preserveFolderStructureCheckbox.disabled = directSave;
     }
 
     function displayFilenamePatternEditor() {

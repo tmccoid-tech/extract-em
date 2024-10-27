@@ -165,7 +165,7 @@
                         <div>&nbsp;</div>
                     </td>
                 </tr>
-                <tr>
+                <tr id="packaging-progress-row" class="hidden">
                     <td>
                         <div class="zip-operation-label">__MSG_packaging__</div>
                         <progress id="packaging-progress" value="0" max="1"></progress>
@@ -178,6 +178,20 @@
                     <td>
                         <span id="packaging-size-span">0 __MSG_bytesLabel__</span>
                         <div><span id="embed-packaging-size-span">0 __MSG_bytesLabel__</span></div>
+                    </td>
+                </tr>
+                <tr id="saving-progress-row" class="hidden">
+                    <td>
+                        <div class="zip-operation-label">__MSG_saving__</div>
+                        <progress id="saving-progress" value="0" max="1"></progress>
+                    </td>
+                    <td>
+                        <span id="saving-current-span">0</span> __MSG_attachmentsSaved__
+                        <div><span id="embed-saving-current-span">0</span> __MSG_embedsSaved__</div>
+                    </td>
+                    <td>
+                        <span id="saving-size-span">0 __MSG_bytesLabel__</span>
+                        <div><span id="embed-saving-size-span">0 __MSG_bytesLabel__</span></div>
                     </td>
                 </tr>
                 <tr id="exclusions-row">

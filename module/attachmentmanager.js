@@ -44,7 +44,7 @@ export class AttachmentManager {
     #reportFolderProcessed = async (folderPath) => {};
     #reportProcessingComplete = async () => {};
 
-    #reportPackagingProgress = async (info) => {};
+    #reportStorageProgress = async (info) => {};
     #reportSaveResult = async (info) => {};
 
     #reportDetachProgress = async (info) => {};
@@ -106,7 +106,7 @@ export class AttachmentManager {
             this.#reportAttachmentStats = options.reportAttachmentStats;
             this.#reportFolderProcessed = options.reportFolderProcessed;
 
-            this.#reportPackagingProgress = options.reportPackagingProgress;
+            this.#reportStorageProgress = options.reportStorageProgress;
 
             this.#reportDetachProgress = options.reportDetachProgress;
             this.#reportDetachResult = options.reportDetachResult;
@@ -691,14 +691,13 @@ export class AttachmentManager {
     async extract(list, getInfo, extractOptions) {
         // Preparation phase
 
-        SaveManager.determineDownloadDirectory();
-
         const {
             preserveFolderStructure,
-            includeEmbeds
+            includeEmbeds,
+            directSave,
         } = extractOptions;
 
-        const packagingProgressInfo = {
+        const storageProgressInfo = {
             status: "started",
 
             alterationCount: this.getAlterationCount(),
@@ -720,12 +719,13 @@ export class AttachmentManager {
             filesCreated: 0,
             fileCount: 0,
 
+            directSave: directSave,
             lastFileName: ""
         };
 
-        this.#reportPackagingProgress(packagingProgressInfo);
+        this.#reportStorageProgress(storageProgressInfo);
 
-        packagingProgressInfo.status = "preparing";
+        storageProgressInfo.status = "preparing";
 
         const selectedItemKeys = new Set(list.map((item) => {
             const info = getInfo(item);
@@ -791,10 +791,10 @@ export class AttachmentManager {
                     else {
                         this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: fileName, size: item.size, isDeleted: false });
 
-                        packagingProgressInfo.duplicateCount++;
-                        packagingProgressInfo.duplicateTotalBytes += item.size;
+                        storageProgressInfo.duplicateCount++;
+                        storageProgressInfo.duplicateTotalBytes += item.size;
 
-                        this.#reportPackagingProgress(packagingProgressInfo);
+                        this.#reportStorageProgress(storageProgressInfo);
                     }
                 }
             }
@@ -832,19 +832,19 @@ export class AttachmentManager {
 
         extractionSubsets.push(items.length);
 
-        packagingProgressInfo.fileCount = packagingTracker.extractionSubsets.length;
+        storageProgressInfo.fileCount = packagingTracker.extractionSubsets.length;
         
         if(embedItems.length > 0 && items.length > 0) {
-            packagingProgressInfo.fileCount++;
+            storageProgressInfo.fileCount++;
         }
 
-        packagingProgressInfo.totalItems = items.length;
-        packagingProgressInfo.totalEmbedItems = embedItems.length;
+        storageProgressInfo.totalItems = items.length;
+        storageProgressInfo.totalEmbedItems = embedItems.length;
 
         // Begin Packaging phase...
-        packagingProgressInfo.status = "prepackaging";
+        storageProgressInfo.status = "prepackaging";
 
-        this.#reportPackagingProgress(packagingProgressInfo);
+        this.#reportStorageProgress(storageProgressInfo);
 
         this.#packagingErrorList = [];
 
@@ -855,15 +855,17 @@ export class AttachmentManager {
 
             if(items.length == 0) {                                 // The rare case where there are only embeds...
                 packagingTracker.currentPackageIndex = 1;           // Bit of a hack; should reconsider how this is handled
-                this.#packageEmbeds(packagingProgressInfo);
+                this.#packageEmbeds(storageProgressInfo);
                 return;
             }
         }
 
-        this.#package(packagingProgressInfo, true);        
+        this.#extractAttachments(storageProgressInfo);
+
+//        this.#package(storageProgressInfo, false);        
     }
 
-    async #package(packagingProgressInfo, directSave) {
+    async #package(storageProgressInfo, directSave) {
         const zipEm = new ZipEm();
 
         const packagingTracker = this.#packagingTracker;
@@ -873,9 +875,9 @@ export class AttachmentManager {
         let start = (currentPackageIndex == 0) ? 0 : packagingTracker.extractionSubsets[currentPackageIndex - 1];
         let nextStart = packagingTracker.extractionSubsets[currentPackageIndex];
 
-        packagingProgressInfo.status = "packaging";
+        storageProgressInfo.status = "packaging";
 
-        this.#reportPackagingProgress(packagingProgressInfo);
+        this.#reportStorageProgress(storageProgressInfo);
 
         for (let i = start; i < nextStart; i++) {
             const item = packagingTracker.items[i];
@@ -904,9 +906,9 @@ export class AttachmentManager {
                     error: e.toString()
                 });
 
-                packagingProgressInfo.errorCount = errorList.length;
+                storageProgressInfo.errorCount = errorList.length;
 
-                this.#reportPackagingProgress(packagingProgressInfo);
+                this.#reportStorageProgress(storageProgressInfo);
 
                 const rootMessage = this.messageList.get(item.messageId);
 
@@ -927,7 +929,7 @@ export class AttachmentManager {
 
             let fileName = (item.alternateFilename) ? item.alternateFilename : item.name;
 
-            packagingProgressInfo.lastFileName = fileName;
+            storageProgressInfo.lastFileName = fileName;
             
             const duplicateFileNameTracker = this.#duplicateFileNameTracker;
 
@@ -961,8 +963,8 @@ export class AttachmentManager {
                     await zipEm.addFile(fileName, attachmentFile, item.date);
                 }
 
-                packagingProgressInfo.includedCount++;
-                packagingProgressInfo.totalBytes += item.size;
+                storageProgressInfo.includedCount++;
+                storageProgressInfo.totalBytes += item.size;
 
                 item.packagingFilenameIndex = this.#packagingFilenameList.length;
             }
@@ -977,26 +979,26 @@ export class AttachmentManager {
                     error: e.toString()
                 });
 
-                packagingProgressInfo.errorCount = errorList.length;
+                storageProgressInfo.errorCount = errorList.length;
 
                 this.#log(e, true);
             }
 
-            this.#reportPackagingProgress(packagingProgressInfo);
+            this.#reportStorageProgress(storageProgressInfo);
         }
 
-        packagingProgressInfo.lastFileName = "...";
+        storageProgressInfo.lastFileName = "...";
 
         packagingTracker.currentPackageIndex++;
 
         if(!directSave) {
-            await this.#saveZipFile(zipEm, packagingProgressInfo);
+            await this.#saveZipFile(zipEm, storageProgressInfo);
         }
 
-//        await this.#prepareDownload(zipEm, packagingProgressInfo);
+//        await this.#prepareDownload(zipEm, storageProgressInfo);
     }
 
-    async #packageEmbeds(packagingProgressInfo) {
+    async #packageEmbeds(storageProgressInfo) {
         const zipEm = new ZipEm();
         const packagingTracker = this.#packagingTracker;
         const duplicateEmbedFileTracker = this.#duplicateEmbedFileTracker;
@@ -1024,7 +1026,7 @@ export class AttachmentManager {
             packagingTracker.totalEmbedMessageCount = groupedEmbedItems.length;
         }
         else {
-            packagingProgressInfo.fileCount++;
+            storageProgressInfo.fileCount++;
         }
 
         const maxSize = 750000000;
@@ -1063,9 +1065,9 @@ export class AttachmentManager {
 
                     this.#log(`Embed error: ${message.author} ${message.folderPath} - ${item.date} :${item.error}`, true);
 
-                    packagingProgressInfo.errorCount = errorList.length;
+                    storageProgressInfo.errorCount = errorList.length;
 
-                    this.#reportPackagingProgress(packagingProgressInfo);
+                    this.#reportStorageProgress(storageProgressInfo);
                     continue;
                 }
 
@@ -1086,10 +1088,10 @@ export class AttachmentManager {
                             checksumDuplicate.push(item.messageId);
                             item.isDuplicate = true;
 
-                            packagingProgressInfo.duplicateEmbedCount++;
-                            packagingProgressInfo.duplicateTotalBytes += item.size;
+                            storageProgressInfo.duplicateEmbedCount++;
+                            storageProgressInfo.duplicateTotalBytes += item.size;
 
-                            this.#reportPackagingProgress(packagingProgressInfo);
+                            this.#reportStorageProgress(storageProgressInfo);
                             continue;
                         }
                         else {
@@ -1123,7 +1125,7 @@ export class AttachmentManager {
                     }
                 }
 
-                packagingProgressInfo.lastFileName = fileName;
+                storageProgressInfo.lastFileName = fileName;
     
                 if(packagingTracker.preserveFolderStructure) {
                     const message = this.messageList.get(item.messageId);
@@ -1133,8 +1135,8 @@ export class AttachmentManager {
                 try {
                     await zipEm.addFile(fileName, new Blob([decodeData.data]), item.date);
 
-                    packagingProgressInfo.totalEmbedBytes += decodeData.data.length;
-                    packagingProgressInfo.includedEmbedCount++;
+                    storageProgressInfo.totalEmbedBytes += decodeData.data.length;
+                    storageProgressInfo.includedEmbedCount++;
 
                     item.packagingFilenameIndex = this.#packagingFilenameList.length;
                 }
@@ -1149,26 +1151,26 @@ export class AttachmentManager {
                         error: `${e}`
                     });
 
-                    packagingProgressInfo.errorCount = errorList.length;
+                    storageProgressInfo.errorCount = errorList.length;
                 }
                 finally {
                     item.decodeData = null;
                 }
             }
 
-            this.#reportPackagingProgress(packagingProgressInfo);
+            this.#reportStorageProgress(storageProgressInfo);
 
             packagingTracker.currentEmbedMessageIndex = i + 1;
         }
 
-        packagingProgressInfo.lastFileName = "...";
+        storageProgressInfo.lastFileName = "...";
 
-        this.#saveZipFile(zipEm, packagingProgressInfo, "embeds");
+        this.#saveZipFile(zipEm, storageProgressInfo, "embeds");
 
-        //        this.#prepareDownload(zipEm, packagingProgressInfo, "embeds");
+        //        this.#prepareDownload(zipEm, storageProgressInfo, "embeds");
     }
 
-    async #saveZipFile(zipEm, packagingProgressInfo, disposition = "attachments") {
+    async #saveZipFile(zipEm, storageProgressInfo, disposition = "attachments") {
         let zipFile;
 
         try {
@@ -1204,12 +1206,12 @@ export class AttachmentManager {
                 });
             },
             onSaveComplete: (downloadId) => {
-                packagingProgressInfo.filesCreated++;
-                this.#reportPackagingProgress(packagingProgressInfo);
+                storageProgressInfo.filesCreated++;
+                this.#reportStorageProgress(storageProgressInfo);
 
                 if(isFinal) {
                     if(hasEmbeds && !isEmbedFinal) {
-                        this.#packageEmbeds(packagingProgressInfo);
+//                        this.#packageEmbeds(storageProgressInfo);
                     }
                     else {
                         this.#reportSaveResult({
@@ -1220,143 +1222,37 @@ export class AttachmentManager {
                     }
                 }
                 else {
-                    this.#package(packagingProgressInfo);       // Package the next set of attachments
+  //                  this.#package(storageProgressInfo);       // Package the next set of attachments
                 }
             }
         };
 
 
-        packagingProgressInfo.status = "downloading";
-        this.#reportPackagingProgress(packagingProgressInfo);
+        storageProgressInfo.status = "downloading";
+        this.#reportStorageProgress(storageProgressInfo);
 
         await SaveManager.save(saveOptions);
     }
 
-    /*
-    async #prepareDownload(zipEm, packagingProgressInfo, disposition = "attachments") {
-        let zipFile;
+    async #saveAttachment(fileData, filename) {
+        const saveOptions = {
+            fileData: fileData,
+            filename: filename,
+            saveAs: false,
+            onSaveStarted: (downloadItem) => {
 
-        try {
-            zipFile = await zipEm.complete();
-        }
-        catch(e) {
-            this.#log(e, true);
-
-            return;
-        }
-
-        const zipParams = {
-            url: URL.createObjectURL(zipFile),
-            filename: `${messenger.i18n.getMessage(disposition)}-${new Date().getTime()}.zip`,
-            conflictAction: "uniquify",
-            saveAs: this.#alwaysPromptForDownloadLocation
-        };
-
-        this.#download(zipParams, packagingProgressInfo);
-    }
-
-
-    async #download(zipParams, packagingProgressInfo) {
-        let downloadId = null;
-
-        const packagingTracker = this.#packagingTracker;
-        const isFirst = (packagingTracker.currentPackageIndex == 1);
-        const isFinal = (packagingTracker.currentPackageIndex == packagingTracker.extractionSubsets.length);
-        const hasEmbeds = (this.#packagingTracker.embedItems.length > 0);
-        const isEmbedFinal = (packagingTracker.totalEmbedMessageCount > 0 && packagingTracker.currentEmbedMessageIndex == packagingTracker.totalEmbedMessageCount);
-
-        packagingProgressInfo.status = "downloading";
-        this.#reportPackagingProgress(packagingProgressInfo);
-
-        const removeHandlers = () =>
-        {
-            browser.downloads.onChanged.removeListener(handleChanged);
-            browser.downloads.onCreated.removeListener(handleCreated);
-        };
-
-        const handleChanged = (progress) =>
-        {
-            if(progress.id == downloadId && progress.state) {
-                let info = null;
-                let success = false;
-
-                if(progress.state.current == "complete") {
-                    info = {
-                        status: "success",
-                        message: messenger.i18n.getMessage("saveComplete"),
-                        attachmentCount: packagingTracker.items.length
-                    };
-
-                    packagingProgressInfo.filesCreated++;
-                    this.#reportPackagingProgress(packagingProgressInfo);
-
-                    success = true;
-                }
-                else if(progress.state.current  == "interrupted") {
-                    info = {
-                        status: "error",
-                        message: (progress.error) ? progress.error : messenger.i18n.getMessage("saveFailed")
-                    };
-                }
-
-                if(info) {
-                    if(isFinal && (!hasEmbeds || isEmbedFinal)) {
-                        this.#reportSaveResult(info);
-                    }
-
-                    removeHandlers();
-
-                    this.#log(`Removing download data (${info.status})`);
-
-                    URL.revokeObjectURL(zipParams.url);
-
-                    if(success) {
-                        if(!isFinal) {
-                            this.#package(packagingProgressInfo);       // Package the next set of attachments
-                        }
-                        else if(hasEmbeds && !isEmbedFinal) {
-                            this.#packageEmbeds(packagingProgressInfo);
-                        }
-                    }
-                }
+            },
+            onSaveError: (error) => {
+                throw new Error(`${error} [${filename}]`);
+            },
+            onSaveComplete: (downloadId) => {
+                // TODO: Capture downloadId for containing folder display
             }
         };
-
-        const handleCreated = (downloadItem) =>
-        {
-            if(downloadItem.url == zipParams.url) {
-                this.#packagingFilenameList.push(downloadItem.filename);
-            }
-        };
-
-        browser.downloads.onChanged.addListener(handleChanged);
-        browser.downloads.onCreated.addListener(handleCreated);
-
-        browser.downloads
-            .download(zipParams)
-            .then(
-                (id) => {
-                    downloadId = id;
-
-                    if(isFirst) {
-                        this.#reportSaveResult({ status: "started" });
-                    }
-                },
-                (error) => {
-                    this.#reportSaveResult({
-                        status: "error",
-                        message: error.message
-                    });
-
-                    removeHandlers();
-
-                    this.#log("Removing download data (error)");
-
-                    URL.revokeObjectURL(zipParams.url);
-                }
-            );
+        
+        await SaveManager.save(saveOptions);
     }
-*/
+
 
     async deleteAttachments() {
         const packagedItems = this.#packagingTracker.items.filter((item) => !item.hasError);
@@ -1635,22 +1531,149 @@ export class AttachmentManager {
         }
     }
 
-    async #saveAttachment(fileData, filename) {
-        const saveOptions = {
-            fileData: fileData,
-            filename: filename,
-            saveAs: false,
-            onSaveStarted: (downloadItem) => {
 
-            },
-            onSaveError: (error) => {
-                throw new Error(`${error} [${filename}]`);
-            },
-            onSaveComplete: (downloadId) => {
+    async #extractAttachments(storageProgressInfo) {
+        const { directSave } = storageProgressInfo;
 
+        const packagingTracker = this.#packagingTracker;
+        const errorList = this.#packagingErrorList;
+        let currentItemIndex = 0;
+
+        storageProgressInfo.status = "packaging";
+        this.#reportStorageProgress(storageProgressInfo);
+
+        for(const subsetBoundary of packagingTracker.extractionSubsets) {
+            let zipEm;
+
+            if(!directSave) {
+                zipEm = new ZipEm();
             }
-        };
-        
-        await SaveManager.save(saveOptions);
+
+            for(let i = currentItemIndex; i < subsetBoundary; i++) {
+                const item = packagingTracker.items[i];
+
+                item.hasError = false;
+    
+                let attachmentFile;
+    
+                try {
+                    this.#log(`Packaging - get attachment file: ${item.name}`);
+    
+                    attachmentFile = await this.#getAttachmentFile(item.messageId, item.partName);
+    
+                    if(attachmentFile.size == 0) {
+                        throw new Error(messenger.i18n.getMessage("missingAttachment"));
+                    }
+                }
+                catch(e) {
+                    item.hasError = true;
+    
+                    errorList.push({
+                        messageId: item.messageId,
+                        name: item.name,
+                        size: item.size,
+                        scope: "getFileData",
+                        error: e.toString()
+                    });
+    
+                    storageProgressInfo.errorCount = errorList.length;
+    
+                    this.#reportStorageProgress(storageProgressInfo);
+    
+                    const rootMessage = this.messageList.get(item.messageId);
+    
+                    const errorInfo = { 
+                        source: "#processMessage / browser.messages.getAttachmentFile",
+                        rootMessageId: item.messageId,
+                        folder: rootMessage.folderPath,
+                        author: rootMessage.author,
+                        date: rootMessage.date,
+                        subject: rootMessage.subject,
+                        error: `${e}`
+                    };
+    
+                    this.#log(errorInfo, true);
+    
+                    continue;
+                }
+    
+                let fileName = (item.alternateFilename) ? item.alternateFilename : item.name;
+    
+                storageProgressInfo.lastFileName = fileName;
+                
+                const duplicateFileNameTracker = this.#duplicateFileNameTracker;
+    
+                const duplicateKey = fileName.toLowerCase();
+    
+                if(duplicateFileNameTracker.has(duplicateKey)) {
+                    let sequenceNumber = duplicateFileNameTracker.get(duplicateKey);
+    
+                    fileName = this.#sequentializeFileName(fileName, ++sequenceNumber);
+    
+                    item.alternateFilename = fileName;
+    
+                    duplicateFileNameTracker.set(duplicateKey, sequenceNumber);
+                }
+                else {
+                    duplicateFileNameTracker.set(duplicateKey, 1);
+                }
+    
+                if(packagingTracker.preserveFolderStructure && !directSave) {
+                    const message = this.messageList.get(item.messageId);
+                    fileName = `${message.folderPath.slice(1)}/${fileName}`;
+                }
+    
+                try {
+                    this.#log(`Packaging - add file to zip buffer: ${item.name}`);
+    
+                    if(directSave) {
+                        await this.#saveAttachment(attachmentFile, fileName);
+                    }
+                    else {
+                        await zipEm.addFile(fileName, attachmentFile, item.date);
+                    }
+    
+                    storageProgressInfo.includedCount++;
+                    storageProgressInfo.totalBytes += item.size;
+    
+                    item.packagingFilenameIndex = this.#packagingFilenameList.length;
+                }
+                catch(e) {
+                    item.hasError = true;
+    
+                    errorList.push({
+                        messageId: item.messageId,
+                        name: item.name,
+                        size: item.size,
+                        scope: "addToZip",
+                        error: e.toString()
+                    });
+    
+                    storageProgressInfo.errorCount = errorList.length;
+    
+                    this.#log(e, true);
+                }
+    
+                this.#reportStorageProgress(storageProgressInfo);
+            }
+
+            storageProgressInfo.lastFileName = "...";
+
+            packagingTracker.currentPackageIndex++;
+
+            if(!directSave) {
+                const zipSaveSuccess = await this.#saveZipFile(zipEm, storageProgressInfo);
+
+                if(!zipSaveSuccess) {
+                    break;
+                }
+            }
+
+            currentItemIndex = subsetBoundary;
+        }
+    }
+
+    async #extractEmbeds() {
+
     }
 }

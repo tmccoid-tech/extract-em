@@ -7,8 +7,7 @@ export class SaveManager {
             filename: `extractem_${new Date().getTime()}`,
             saveAs: false,
             onSaveStarted: (downloadItem) => {
-                result = downloadItem.filename;
-                console.log(/^(.*)\\/.exec(result)[0]);
+                result = /^(.*)\\/.exec(downloadItem.filename)[0];
             },
             onError: (error) => {
 
@@ -42,68 +41,77 @@ export class SaveManager {
             saveAs: saveOptions.saveAs
         };
 
-        const cleanup = () => {
-//            console.log("Cleaning up");
+        return new Promise((resolve) =>
+        {
+            const cleanup = () => {
+    //            console.log("Cleaning up");
 
-            URL.revokeObjectURL(downloadParams.url);
-            onChanged.removeListener(handleChanged);
-            onCreated.removeListener(handleCreated);
-        };
+                URL.revokeObjectURL(downloadParams.url);
+                onChanged.removeListener(handleChanged);
+                onCreated.removeListener(handleCreated);
+            };
 
-        const handleCreated = (downloadItem) => {
-            if(downloadItem.url == downloadParams.url) {
-//                console.log("Save started");
+            const handleCreated = (downloadItem) => {
+                if(downloadItem.url == downloadParams.url) {
+    //                console.log("Save started");
 
-                if(onSaveStarted) {
-                    onSaveStarted(downloadItem);
+                    if(onSaveStarted) {
+                        onSaveStarted(downloadItem);
+                    }
                 }
-            }
-        };
+            };
 
-        const handleChanged = (progress) => {
-            if(progress.id == downloadId) {
-//                console.log("Save state changed");
+            const handleChanged = (progress) => {
+                if(progress.id == downloadId) {
+    //                console.log("Save state changed");
 
-                const currentState = progress.state.current;
-                let executionComplete = false;
+                    const currentState = progress.state.current;
+                    let executionComplete = false;
+                    let success = false;
 
-                if(currentState == "complete") {
-//                    console.log("Save complete");
+                    if(currentState == "complete") {
+    //                    console.log("Save complete");
 
-                    onSaveComplete(progress.id);
+                        onSaveComplete(progress.id);
 
-                    executionComplete = true;
+                        executionComplete = true;
+                        success = true;
+                    }
+                    else if(currentState == "interrupted") {
+    //                    console.log("Save interrupted");
+
+                        const error = (progress.error) ? progress.error.message : messenger.i18n.getMessage("saveFailed");
+
+                        onSaveError(error);
+
+                        executionComplete = true;
+                    }
+
+                    if(executionComplete) {
+                        cleanup();
+
+                        resolve(success);
+                    }
                 }
-                else if(currentState == "interrupted") {
-//                    console.log("Save interrupted");
+            };
 
-                    const error = (progress.error) ? progress.error.message : messenger.i18n.getMessage("saveFailed");
+            onChanged.addListener(handleChanged);
+            onCreated.addListener(handleCreated);
 
-                    onSaveError(error);
+            download(downloadParams).then(
+                (id) => {
+                    downloadId = id;
+                },
+                (error) => {
+    //                console.log("Save error");
 
-                    executionComplete = true;
-                }
+                    onSaveError(error.message);
 
-                if(executionComplete) {
                     cleanup();
+
+                    resolve(false);
                 }
-            }
-        };
-
-        onChanged.addListener(handleChanged);
-        onCreated.addListener(handleCreated);
-
-        return download(downloadParams).then(
-            (id) => {
-                downloadId = id;
-            },
-            (error) => {
-//                console.log("Save error");
-
-                onSaveError(error.message);
-
-                cleanup();
-            }
-        );
+            );
+        });
     }
 }

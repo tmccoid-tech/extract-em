@@ -109,6 +109,19 @@ Ensure resets comprehensive
 
 XXX Add Always Prompt for Donwload Location option (default = true)
 
+Direct save:
+	XXX Modify options
+
+	XXX Add save progress panel
+
+	Integrate save logic with packaging
+
+	Display download directory
+
+	Open download directory/ies post-extraction
+
+	Modify report
+
 
 
 LQ

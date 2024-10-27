@@ -398,5 +398,23 @@
     },
     "rn1_5_2_New01": {
         "message": "Permanently Detach button disabled for IMAP accounts until further notice."
-    }
+    },
+
+    "saving": { "message": "Saving" },
+    "attachmentsSaved": { "message": "attachment(s) saved" },
+    "embedsSaved": { "message": "embed(s) saved" },
+
+    "packageAttachments": {
+        "message": "Package attachments"
+    },
+    "packageAttachmentsDesc": {
+        "message": "Stores extracted items in archive (.zip) files"
+    },
+    "directSave": {
+        "message": "Save individual attachments"
+    },
+    "directSaveDesc": {
+        "message": "Items are individually saved to the folder specified in the Thunderbird settings"
+    },
+    "currentSaveDirectory": { "message": "Current save directory (Thunderbird settings)" }
 }

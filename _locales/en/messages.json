@@ -416,5 +416,6 @@
     "directSaveDesc": {
         "message": "Items are individually saved to the folder specified in the Thunderbird settings"
     },
-    "currentSaveDirectory": { "message": "Current save directory (Thunderbird settings)" }
+    "currentSaveDirectory": { "message": "Current save directory (Thunderbird settings)" },
+    "unavailable": { "message": "Unavailable" }
 }

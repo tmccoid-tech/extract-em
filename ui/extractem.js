@@ -421,8 +421,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             case "prepackaging":
 //                packagingTotalSpan.innerText = info.totalItems.toString();
 //                embedPackagingTotalSpan.innerText = info.totalEmbedItems.toString();
-                packagingProgress.setAttribute("max", info.totalItems + info.totalEmbedItems);
-                packagingProgress.value = 0;
+                savingProgress.setAttribute("max", info.totalItems + info.totalEmbedItems);
+                savingProgress.value = 0;
     
                 break;
 

@@ -2,12 +2,15 @@ export class SaveManager {
     static async determineDownloadDirectory() {
         let result = null;
 
+        const tempFilename = `extractem${new Date().getTime()}`;
+
         const saveOptions = {
             fileData: new Blob([]),
-            filename: `extractem_${new Date().getTime()}`,
+            filename: tempFilename,
             saveAs: false,
             onSaveStarted: (downloadItem) => {
-                result = /^(.*)\\/.exec(downloadItem.filename)[0];
+                const regEx = new RegExp(`^(.*)${tempFilename}`);
+                result = regEx.exec(downloadItem.filename)[1];
             },
             onError: (error) => {
 

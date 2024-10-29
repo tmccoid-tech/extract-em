@@ -290,7 +290,8 @@ export class AttachmentManager {
     async #identifyAttachments(message, folderStats) {
         const result = {
             hasAttachments: false,
-            fullMessage: null
+            fullMessage: null,
+            attachmentNames: new Set()
         };
 
         let messageAttachmentList = [];
@@ -334,6 +335,12 @@ export class AttachmentManager {
                     continue;
                 }
 
+                const isEmbed = !!attachment.contentId;
+
+                if(isEmbed && !this.#includeEmbeds){
+                    continue;
+                }
+
                 if(alterationMap.has(attachment.partName)) {
                     const alterationEntry = alterationMap.get(attachment.partName);
 
@@ -358,6 +365,7 @@ export class AttachmentManager {
                     }
                 }
 
+
                 const attachmentInfo = {
                     messageId: message.id,
                     name: this.#normalizeFileName(attachment.name),
@@ -367,7 +375,7 @@ export class AttachmentManager {
                     contentType: attachment.contentType,
                     size: attachment.size,
                     extension: extension,
-                    isEmbed: false,
+                    isEmbed: isEmbed,
                     isPreviewable: this.#previewSet.has(extension)
                 };
     
@@ -411,16 +419,23 @@ export class AttachmentManager {
                 }
 
                 this.attachmentList.push(attachmentInfo);
-
                 result.hasAttachments = true;
 
+                if(isEmbed) {
+                    result.attachmentNames.add(attachment.name);
+
+                    this.#embedCount++;
+                    folderStats.embedCount++;
+                }
+                else {
+                    this.#attachmentCount++;
+                    folderStats.attachmentCount++;
+    
+                    this.#cumulativeAttachmentSize += attachmentInfo.size;
+                    folderStats.attachmentSize += attachmentInfo.size;
+                }
+
                 folderStats.lastFileName = attachment.name;
-
-                this.#attachmentCount++;
-                folderStats.attachmentCount++;
-
-                this.#cumulativeAttachmentSize += attachmentInfo.size;
-                folderStats.attachmentSize += attachmentInfo.size;
             }
 
             if(alterationMap.size > 0) {
@@ -446,7 +461,8 @@ export class AttachmentManager {
         if(this.#includeEmbeds) {
             let {
                 hasAttachments,
-                fullMessage
+                fullMessage,
+                attachmentNames
             } = identifyAttachmentsResult;
 
             if(!fullMessage) {
@@ -465,18 +481,26 @@ export class AttachmentManager {
                         messageCharset = identifyMessageCharsetResult.charset;
                     }
 
+                    let hasEmbeds = false;
+
                     for(const embed of embeds) {
+                        if(attachmentNames.has(embed.name)) {
+                            continue;
+                        }
+
+                        hasEmbeds = true;
+
                         embed.charset = messageCharset;
+
+                        this.attachmentList.push(embed);
+
+                        folderStats.lastFileName = embeds.name;
+    
+                        this.#embedCount++;
+                        folderStats.embedCount++;
                     }
 
-                    this.attachmentList.push(...embeds);
-
-                    folderStats.lastFileName = embeds[0].name;
-
-                    this.#embedCount+= embeds.length;
-                    folderStats.embedCount += embeds.length;
-
-                    if(!hasAttachments) {
+                    if(hasEmbeds && !hasAttachments) {
                         this.#attachmentMessageCount++;
                         folderStats.attachmentMessageCount++;
                     }
@@ -1195,7 +1219,7 @@ export class AttachmentManager {
 
         if(!directSave) {
             storageProgressInfo.lastFileName = "...";
-            await this.#saveZipFile(zipEm, storageProgressInfo);
+            await this.#saveZipFile(zipEm, storageProgressInfo, "embeds");
         }
     }
 

@@ -147,12 +147,6 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
 
                     if(extensionOptions.useSilentMode && params.allowExtractImmediate) {
                         params.extensionOptions = extensionOptions;
-                        /*
-                        params.includeEmbeds = extensionOptions.includeEmbeds;
-                        params.useEnhancedLogging = extensionOptions.useEnhancedLogging;
-                        params.useFilenamePattern = extensionOptions.useFilenamePattern;
-                        params.filenamePattern = extensionOptions.filenamePattern;
-                        */
 
                         extractSilently(params);
                     }

@@ -122,6 +122,10 @@ Direct save:
 
 	Modify report
 
+Determine new embed logic/prevent embed deletionEntry
+
+Report: Do not display detach errors section when no errors encountered
+
 
 
 LQ

@@ -12,9 +12,6 @@ export class SaveManager {
                 const regEx = new RegExp(`^(.*)${tempFilename}`);
                 result = regEx.exec(downloadItem.filename)[1];
             },
-            onError: (error) => {
-
-            },
             onSaveComplete: (downloadId) => {
                 browser.downloads.removeFile(downloadId);
             }
@@ -25,11 +22,21 @@ export class SaveManager {
         return result;
     }
 
+    // May not require; reconsider
+    static async getDownloadFolder(downloadId) {
+        let result = await browser.downloads.search({ id: downloadId })
+        return result;
+    }
+
     static async save(saveOptions) {
         let downloadId = null;
 
         const { download, onChanged, onCreated } = browser.downloads;
-        const { onSaveStarted, onSaveError, onSaveComplete } = saveOptions;
+        const {
+            onSaveStarted,
+            onSaveError = this.#onSaveError,
+            onSaveComplete = this.#onSaveComplete
+        } = saveOptions;
 
         const downloadParams = {
             url: URL.createObjectURL(saveOptions.fileData),
@@ -70,22 +77,21 @@ export class SaveManager {
 
                     const currentState = progress.state.current;
                     let executionComplete = false;
-                    let success = false;
+                    let result;
 
                     if(currentState == "complete") {
     //                    console.log("Save complete");
 
-                        onSaveComplete(progress.id);
+                        result = onSaveComplete(progress.id);
 
                         executionComplete = true;
-                        success = true;
                     }
                     else if(currentState == "interrupted") {
     //                    console.log("Save interrupted");
 
                         const error = (progress.error) ? progress.error.message : messenger.i18n.getMessage("saveFailed");
 
-                        onSaveError(error);
+                        result = onSaveError(error);
 
                         executionComplete = true;
                     }
@@ -93,7 +99,7 @@ export class SaveManager {
                     if(executionComplete) {
                         cleanup();
 
-                        resolve(success);
+                        resolve(result);
                     }
                 }
             };
@@ -106,15 +112,30 @@ export class SaveManager {
                     downloadId = id;
                 },
                 (error) => {
-    //                console.log("Save error");
-
-                    onSaveError(error.message);
+                    const result = onSaveError(error.message);
 
                     cleanup();
 
-                    resolve(false);
+                    resolve(result);
                 }
             );
         });
+    }
+
+    static #onSaveError(errorMessage) {
+        return {
+            success: false,
+            status: "error",
+            message: errorMessage
+        };
+    }
+
+    static #onSaveComplete(downloadId) {
+        return {
+            success: true,
+            status: "success",
+            message: messenger.i18n.getMessage("saveComplete"),
+            downloadId: downloadId
+        };
     }
 }

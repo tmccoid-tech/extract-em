@@ -15,7 +15,7 @@ export class OptionsManager {
         useFilenamePattern: false,
         filenamePattern: "",
 
-        directSave: false,
+        packageAttachments: true,
         alwaysPromptForDownloadLocation: true,
         
         useFileTypeFilter: "",

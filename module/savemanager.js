@@ -44,9 +44,6 @@ export class SaveManager {
             // Hack to compensate for .url files resulting in "illegal characters" error during save
             // https://bugzilla.mozilla.org/show_bug.cgi?id=1827115
             filename: saveOptions.filename.replace(/\.url$/, ".ur_"),
-
-//            headers: [ { "name": "Last-Modified", "value": "Wed, 21 Oct 2015 07:28:00 GMT" } ],
-
             conflictAction: "uniquify",
             saveAs: saveOptions.saveAs
         };
@@ -104,8 +101,8 @@ export class SaveManager {
                 }
             };
 
-            onChanged.addListener(handleChanged);
             onCreated.addListener(handleCreated);
+            onChanged.addListener(handleChanged);
 
             download(downloadParams).then(
                 (id) => {

@@ -452,31 +452,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const updateSaveResult = async (info) =>
     {
-        if(info.status == "started") {
+        const success = (info.status == "success");
+
+        zipLogoImage.classList.remove("rotating");
+
+        saveResultLabel.innerHTML = info.message;
+
+        document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });            
+
+        if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0)) {
+            permanentlyDetachButton.classList.add("hidden");
         }
-        else {
-            const success = (info.status == "success");
-
-            zipLogoImage.classList.remove("rotating");
-
-            saveResultLabel.innerHTML = info.message;
-
-            document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });            
-
-            if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0)) {
-                permanentlyDetachButton.classList.add("hidden");
-            }
-            else if(preventDetachment) {
-                permanentlyDetachButton.disabled = true;
-                permanentlyDetachButton.title = messenger.i18n.getMessage("imapDetachUnavailable");
-            }
-
-            saveResultDiv.classList.add("materialize");
-
-            const saveResult = (success) ? "success" : "error";
-
-            saveResultBorderDiv.classList.add(saveResult);
+        else if(preventDetachment) {
+            permanentlyDetachButton.disabled = true;
+            permanentlyDetachButton.title = messenger.i18n.getMessage("imapDetachUnavailable");
         }
+
+        saveResultDiv.classList.add("materialize");
+
+        const saveResult = (success) ? "success" : "error";
+
+        saveResultBorderDiv.classList.add(saveResult);
     };
 
     const updateDetachProgress = async (info) => {
@@ -597,9 +593,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportFolderProcessed: updateProcessedFolder,
                 reportProcessingComplete: updateProcessingComplete,
 
-                reportStorageProgress: (extensionOptions.directSave)
-                    ? updateSavingProgress
-                    : updatePackagingProgress,
+                reportStorageProgress: (extensionOptions.packageAttachments)
+                    ? updatePackagingProgress
+                    : updateSavingProgress,
                 
                     reportSaveResult: updateSaveResult,
 
@@ -737,8 +733,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         fileTypeFilterAppliedSpan.classList.toggle("hidden", !extensionOptions.useFileTypeFilter);
 
-        packagingProgressRow.classList.toggle("hidden", extensionOptions.directSave);
-        savingProgessRow.classList.toggle("hidden", !extensionOptions.directSave);
+        packagingProgressRow.classList.toggle("hidden", !extensionOptions.packageAttachments);
+        savingProgessRow.classList.toggle("hidden", extensionOptions.packageAttachments);
 
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");
@@ -1107,11 +1103,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         fileTypeFilterAppliedSpan.classList.toggle("hidden", !extensionOptions.useFileTypeFilter);
 
+        packagingProgressRow.classList.toggle("hidden", !extensionOptions.packageAttachments);
+        savingProgessRow.classList.toggle("hidden", !extensionOptions.packageAttachments);
+
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");
 
         attachmentManager.extract(list, getInfo, {
-            directSave: extensionOptions.directSave,
+            packageAttachments: extensionOptions.packageAttachments,
             preserveFolderStructure: extensionOptions.preserveFolderStructure,
             includeEmbeds: includeEmbeds
         });

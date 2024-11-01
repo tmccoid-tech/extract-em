@@ -82,12 +82,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;
 
-        packageAttachmentsRadio.checked = !extensionOptions.directSave;
-        directSaveRadio.checked = extensionOptions.directSave;
+        packageAttachmentsRadio.checked = extensionOptions.packageAttachments;
+        directSaveRadio.checked = !extensionOptions.packageAttachments;
         alwaysPromptForDownloadLocationCheckbox.checked = extensionOptions.alwaysPromptForDownloadLocation;
-        alwaysPromptForDownloadLocationCheckbox.disabled = extensionOptions.directSave;
+        alwaysPromptForDownloadLocationCheckbox.disabled = !extensionOptions.packageAttachments;
         preserveFolderStructureCheckbox.checked = extensionOptions.preserveFolderStructure;
-        preserveFolderStructureCheckbox.disabled = extensionOptions.directSave;
+        preserveFolderStructureCheckbox.disabled = !extensionOptions.packageAttachments;
         currentSaveDirectorySpan.innerText = currentSaveDirectory;
 
         useFilenamePatternCheckbox.checked = extensionOptions.useFilenamePattern;
@@ -126,12 +126,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function onStorageOptionChanged(event) {
-        const directSave = (event.srcElement.value === "true");
+        const packageAttachments = (event.srcElement.value === "true");
 
-        OptionsManager.setOption("directSave", directSave);
+        OptionsManager.setOption("packageAttachments", packageAttachments);
 
-        alwaysPromptForDownloadLocationCheckbox.disabled = directSave;
-        preserveFolderStructureCheckbox.disabled = directSave;
+        alwaysPromptForDownloadLocationCheckbox.disabled = !packageAttachments;
+        preserveFolderStructureCheckbox.disabled = !packageAttachments;
     }
 
     function displayFilenamePatternEditor() {

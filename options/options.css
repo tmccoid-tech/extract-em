@@ -1,5 +1,14 @@
+h4 {
+    text-decoration: underline;
+}
+
 label {
     font-weight: bold;
+}
+
+dl:not(:last-child) {
+    border-bottom: dashed 1px black;
+    padding-bottom: 4px;
 }
 
 dd {

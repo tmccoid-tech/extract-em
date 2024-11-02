@@ -9,7 +9,7 @@
 
     "extractSingleDescription": {
         "message": "Extracts attachments from the selected folder, omitting sub-folders",
-        "description": "Action description for extract-single QuickMenu button"
+        "description": "Action description for extract-single Quickmenu button"
     },
 
     "subfolders": {
@@ -18,17 +18,17 @@
 
     "extractRecursiveDescription": {
         "message": "Extracts attachments from the selected folders and sub-folders (recursive)",
-        "description": "Action description for extract-recursive QuickMenu button"
+        "description": "Action description for extract-recursive Quickmenu button"
     },
 
     "letMeChoose": {
         "message": "Let Me Choose",
-        "description": "Label for standard-selection QuickMenu button"
+        "description": "Label for standard-selection Quickmenu button"
     },
 
     "standardSelectionDescription": {
         "message": "Allows you to choose specific folders, or even specific attachments for discovery and extraction",
-        "description": "Action description for standard-selection QuickMenu button"
+        "description": "Action description for standard-selection Quickmenu button"
     },
 
     "includeEmbeds": { "message": "Include embeds (inline-attached images)" },
@@ -37,9 +37,9 @@
     "fileTypeFilter": { "message": "File Type Filter"},
     "fileTypeFilterApplied": { "message" : "File type filter applied"},
 
-    "alwaysShowQuickMenu": {
-        "message": "Always show this QuickMenu",
-        "description": "Label for QuickMenu persistence checkbox"
+    "alwaysShowQuickmenu": {
+        "message": "Always show this Quickmenu",
+        "description": "Label for Quickmenu persistence checkbox"
     },
 
     "noAttachmentsMessage": {
@@ -146,11 +146,11 @@
         "description": ""
     },
 
-    "displayQuickMenu": {
-        "message": "Display QuickMenu",
+    "displayQuickmenu": {
+        "message": "Display Quickmenu",
         "description": ""
     },
-    "displayQuickMenuDescription": {
+    "displayQuickmenuDescription": {
         "message": "Displays a shortcut menu when Extract 'Em! is opened",
         "description": ""
     },
@@ -405,7 +405,7 @@
     "embedsSaved": { "message": "embed(s) saved" },
 
     "packageAttachments": {
-        "message": "Package attachments"
+        "message": "Package attachments (recommended)"
     },
     "packageAttachmentsDesc": {
         "message": "Stores extracted items in archive (.zip) files"
@@ -417,5 +417,9 @@
         "message": "Items are individually saved to the folder specified in the Thunderbird settings"
     },
     "currentSaveDirectory": { "message": "Current save directory (Thunderbird settings)" },
-    "unavailable": { "message": "Unavailable" }
+    "unavailable": { "message": "Unavailable" },
+
+    "uiMode": { "message": "UI Mode" },
+    "discoveryOptions": { "message": "Discovery Options" },
+    "storageOptions": { "message": "Storage Options" }
 }

@@ -200,7 +200,9 @@ export class FilterManager {
         }
 
         menuCheckbox.checked = useFileTypeFilter;
-        secondaryCheckbox.checked = useFileTypeFilter;
+        if(this.#hasSecondaryControls) {
+            secondaryCheckbox.checked = useFileTypeFilter;
+        }
     }
 
     static #displayEditor() {

@@ -1,23 +1,15 @@
 export class OptionsManager {
     static #defaultOptions = {
         isInitialized: false,
-        displayQuickMenu: true,
+
+        // UI Mode
+        displayQuickmenu: true,
         extractImmediate: false,
         includeSubfolders: false,
         useSilentMode: false,
-        preserveFolderStructure: false,
-        useEnhancedLogging: false,
-        defaultGrouping: "None",
-        defaultImagePreview: "sm",
-        includeEmbeds: false,
-        omitDuplicates: true,
-
-        useFilenamePattern: false,
-        filenamePattern: "",
-
-        packageAttachments: true,
-        alwaysPromptForDownloadLocation: true,
         
+        // Discovery Options
+        includeEmbeds: false,
         useFileTypeFilter: "",
         includedFilterFileTypes: new Set(),
         includeUnlistedFileTypes: false,
@@ -27,7 +19,19 @@ export class OptionsManager {
             ["~aud", new Set()],
             ["~vid", new Set()]
         ]),
+        omitDuplicates: true,
+        defaultGrouping: "None",
+        defaultImagePreview: "None",
+
+        // Storage Options
+        packageAttachments: true,
+        alwaysPromptForDownloadLocation: true,
+        preserveFolderStructure: false,
+        useFilenamePattern: false,
+        filenamePattern: "",
         
+        useEnhancedLogging: false,
+
         lastLoadedVersion: ""
     };
 

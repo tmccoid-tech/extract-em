@@ -1237,6 +1237,7 @@ export class AttachmentManager {
 
         if(packageAttachments) {
             storageProgressInfo.lastFileName = "...";
+            this.#reportStorageProgress(storageProgressInfo);
             
             const saveResult = await this.#saveZipFile(zipEm, storageProgressInfo, "embeds");
 
@@ -1253,7 +1254,6 @@ export class AttachmentManager {
         }
         else {
             // TODO: Add error handling in rare instance saving a file fails
-            this.#reportStorageProgress(storageProgressInfo);
             
             this.#reportSaveResult({
                 status: "success",

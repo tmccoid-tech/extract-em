@@ -9,7 +9,7 @@
 
     "extractSingleDescription": {
         "message": "A mellékletek kibontása a kijelölt mappából, az almappák kihagyásával",
-        "description": "Action description for extract-single QuickMenu button"
+        "description": "Action description for extract-single Quickmenu button"
     },
 
     "subfolders": {
@@ -18,17 +18,17 @@
 
     "extractRecursiveDescription": {
         "message": "Mellékletek kibontása a kijelölt mappákból és almappákból (rekurzív)",
-        "description": "Action description for extract-recursive QuickMenu button"
+        "description": "Action description for extract-recursive Quickmenu button"
     },
 
     "letMeChoose": {
         "message": "Hadd válasszon",
-        "description": "Label for standard-selection QuickMenu button"
+        "description": "Label for standard-selection Quickmenu button"
     },
 
     "standardSelectionDescription": {
         "message": "Lehetővé teszi bizonyos mappák vagy akár konkrét mellékletek kiválasztását a felfedezéshez és kibontáshoz",
-        "description": "Action description for standard-selection QuickMenu button"
+        "description": "Action description for standard-selection Quickmenu button"
     },
 
     "includeEmbeds": { "message": "Include embeds (inline-attached images)" },
@@ -37,9 +37,9 @@
     "fileTypeFilter": { "message": "File Type Filter"},
     "fileTypeFilterApplied": { "message" : "File type filter applied"},
 
-    "alwaysShowQuickMenu": {
+    "alwaysShowQuickmenu": {
         "message": "Mindig jelenítse meg ezt a Gyorsmenüt",
-        "description": "Label for QuickMenu persistence checkbox"
+        "description": "Label for Quickmenu persistence checkbox"
     },
 
     "noAttachmentsMessage": {
@@ -146,11 +146,11 @@
         "description": ""
     },
 
-    "displayQuickMenu": {
+    "displayQuickmenu": {
         "message": "Gyorsmenü megjelenítése",
         "description": ""
     },
-    "displayQuickMenuDescription": {
+    "displayQuickmenuDescription": {
         "message": "Melléklet kibontása! megnyitásakor egy helyi menüt jelenít meg",
         "description": ""
     },

@@ -6,31 +6,15 @@ import { SaveManager } from "/module/savemanager.js";
 document.addEventListener("DOMContentLoaded", async () => {
     const elem = (id) => document.getElementById(id);
 
-    const standardUiModeCheckbox = elem("standard-ui-mode-checkbox");
-    const displayQuickMenuCheckbox = elem("display-quickmenu-checkbox");
+    // UI Mode
+    const displayQuickmenuCheckbox = elem("display-quickmenu-checkbox");
     const extractImmediateCheckbox = elem("extract-immediate-checkbox");
     const extractImmediateSubfoldersCheckbox = elem("extract-immediate-subfolders-checkbox");
     const useSilentModeCheckbox = elem("use-silent-mode-checkbox");
+    const standardUiModeCheckbox = elem("standard-ui-mode-checkbox");
 
-    const packageAttachmentsRadio = elem("package-attachments-radio");
-    const directSaveRadio = elem("direct-save-radio");
-    const alwaysPromptForDownloadLocationCheckbox = elem("always-prompt-for-donwload-location-checkbox");
-    const preserveFolderStructureCheckbox = elem("preserve-folder-structure-checkbox");
-    const currentSaveDirectorySpan = elem("current-save-directory-span");
-
-    const useFilenamePatternCheckbox = elem("use-filename-pattern-checkbox");
-    const filenamePatternDisplayTextbox = elem("filename-pattern-display-textbox");
-    const filenamePatternEditButton = elem("filename-pattern-edit-button");
-
+    // Discovery Options
     const includeEmbedsCheckbox = elem("include-embeds-checkbox");
-    const omitDuplicatesCheckbox = elem("omit-duplicates-checkbox");
-    const useEnhancedLoggingCheckbox = elem("use-enhanced-logging-checkbox");
-
-    const defaultGroupingSelect = elem("default-grouping-select");
-    const imagePreviewSelect = elem("image-preview-select");
-
-    const filenameEditorOverlay = elem("filename-editor-overlay");
-
     const filterElements = {
         editorOverlay: elem("filter-overlay"),
         editorContainer: elem("filter-editor-container"),
@@ -41,7 +25,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         secondaryEditButton: null,
         secondaryFileTypeList: null
     };
-    
+    const omitDuplicatesCheckbox = elem("omit-duplicates-checkbox");
+    const defaultGroupingSelect = elem("default-grouping-select");
+    const imagePreviewSelect = elem("image-preview-select");
+
+    // Storage Options
+    const packageAttachmentsRadio = elem("package-attachments-radio");
+    const alwaysPromptForDownloadLocationCheckbox = elem("always-prompt-for-donwload-location-checkbox");
+    const preserveFolderStructureCheckbox = elem("preserve-folder-structure-checkbox");
+    const directSaveRadio = elem("direct-save-radio");
+    const currentSaveDirectorySpan = elem("current-save-directory-span");
+    const useFilenamePatternCheckbox = elem("use-filename-pattern-checkbox");
+    const filenamePatternDisplayTextbox = elem("filename-pattern-display-textbox");
+    const filenamePatternEditButton = elem("filename-pattern-edit-button");
+    const filenameEditorOverlay = elem("filename-editor-overlay");
+
+    const useEnhancedLoggingCheckbox = elem("use-enhanced-logging-checkbox");
+   
+
     const extensionOptions = await OptionsManager.retrieve();
 
     await FilterManager.initializeEditor(filterElements, extensionOptions);
@@ -51,55 +52,56 @@ document.addEventListener("DOMContentLoaded", async () => {
     i18n.updateDocument();
 
     async function main() {
-        listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
-        listen(displayQuickMenuCheckbox, onUserInteractionOptionChanged);
+        // UI Mode
+        listen(displayQuickmenuCheckbox, onUserInteractionOptionChanged);
         listen(extractImmediateCheckbox, onUserInteractionOptionChanged);
         listen(extractImmediateSubfoldersCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(useSilentModeCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
 
-        listen(packageAttachmentsRadio, onStorageOptionChanged);
-        listen(directSaveRadio, onStorageOptionChanged);
-
-        listen(alwaysPromptForDownloadLocationCheckbox, (e) => setOption(e, (c) => c.checked))
-        listen(preserveFolderStructureCheckbox, (e) => setOption(e, (c) => c.checked));
-
-        listen(useFilenamePatternCheckbox, onFilenamePatternOptionChanged);
-        filenamePatternEditButton.addEventListener("click", (event) => displayFilenamePatternEditor());
-
-        listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
-        listen(omitDuplicatesCheckbox, (e) => setOption(e, (c) => c.checked));
-        listen(useEnhancedLoggingCheckbox, (e) => setOption(e, (c) => c.checked));
-
-        listen(defaultGroupingSelect, (e) => setOption(e));
-        listen(imagePreviewSelect, (e) => setOption(e));
-
-        standardUiModeCheckbox.checked = !(extensionOptions.displayQuickMenu || extensionOptions.extractImmediate);
-        displayQuickMenuCheckbox.checked = extensionOptions.displayQuickMenu;
+        displayQuickmenuCheckbox.checked = extensionOptions.displayQuickmenu;
         extractImmediateCheckbox.checked = extensionOptions.extractImmediate;
         extractImmediateSubfoldersCheckbox.checked = extensionOptions.includeSubfolders;
         useSilentModeCheckbox.checked = extensionOptions.useSilentMode;
+        standardUiModeCheckbox.checked = !(extensionOptions.displayQuickmenu || extensionOptions.extractImmediate);
 
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;
 
-        packageAttachmentsRadio.checked = extensionOptions.packageAttachments;
-        directSaveRadio.checked = !extensionOptions.packageAttachments;
-        alwaysPromptForDownloadLocationCheckbox.checked = extensionOptions.alwaysPromptForDownloadLocation;
-        alwaysPromptForDownloadLocationCheckbox.disabled = !extensionOptions.packageAttachments;
-        preserveFolderStructureCheckbox.checked = extensionOptions.preserveFolderStructure;
-        preserveFolderStructureCheckbox.disabled = !extensionOptions.packageAttachments;
-        currentSaveDirectorySpan.innerText = currentSaveDirectory;
-
-        useFilenamePatternCheckbox.checked = extensionOptions.useFilenamePattern;
-        filenamePatternDisplayTextbox.value = extensionOptions.filenamePattern;
-        toggleFilenamePatternEditButton(extensionOptions.useFilenamePattern);
+        // Discovery Options
+        listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(omitDuplicatesCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(defaultGroupingSelect, (e) => setOption(e));
+        listen(imagePreviewSelect, (e) => setOption(e));
 
         includeEmbedsCheckbox.checked = extensionOptions.includeEmbeds;
         omitDuplicatesCheckbox.checked = extensionOptions.omitDuplicates;
-        useEnhancedLoggingCheckbox.checked = extensionOptions.useEnhancedLogging;
-
         defaultGroupingSelect.value = extensionOptions.defaultGrouping;
         imagePreviewSelect.value = extensionOptions.defaultImagePreview;
+
+        // Storage Options
+        listen(packageAttachmentsRadio, onStorageOptionChanged);
+        listen(alwaysPromptForDownloadLocationCheckbox, (e) => setOption(e, (c) => c.checked))
+        listen(preserveFolderStructureCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(directSaveRadio, onStorageOptionChanged);
+        listen(useFilenamePatternCheckbox, onFilenamePatternOptionChanged);
+        filenamePatternEditButton.addEventListener("click", (e) => displayFilenamePatternEditor());
+
+        packageAttachmentsRadio.checked = extensionOptions.packageAttachments;
+        alwaysPromptForDownloadLocationCheckbox.checked = extensionOptions.alwaysPromptForDownloadLocation;
+        preserveFolderStructureCheckbox.checked = extensionOptions.preserveFolderStructure;
+        directSaveRadio.checked = !extensionOptions.packageAttachments;
+        currentSaveDirectorySpan.innerText = currentSaveDirectory;
+        useFilenamePatternCheckbox.checked = extensionOptions.useFilenamePattern;
+        filenamePatternDisplayTextbox.value = extensionOptions.filenamePattern;
+
+        alwaysPromptForDownloadLocationCheckbox.disabled = !extensionOptions.packageAttachments;
+        preserveFolderStructureCheckbox.disabled = !extensionOptions.packageAttachments;
+        toggleFilenamePatternEditButton(extensionOptions.useFilenamePattern);
+
+        listen(useEnhancedLoggingCheckbox, (e) => setOption(e, (c) => c.checked));
+
+        useEnhancedLoggingCheckbox.checked = extensionOptions.useEnhancedLogging;
     }
 
     function listen(element, handler) {
@@ -114,10 +116,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function onUserInteractionOptionChanged(event) {
         const mode = event.srcElement.value;
-        const displayQuickMenu = (mode == "quickmenu");
+        const displayQuickmenu = (mode == "quickmenu");
         const extractImmediate = (mode == "immediate");
 
-        OptionsManager.setOption("displayQuickMenu", displayQuickMenu);
+        OptionsManager.setOption("displayQuickmenu", displayQuickmenu);
         OptionsManager.setOption("extractImmediate", extractImmediate);
         OptionsManager.setOption("isInitialized", true);
 

@@ -39,8 +39,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const logoImage  = elem("logo-img");
 
-    const quickMenuOptionLabel = elem("quickmenu-option-label");
-    const alwaysShowQuickMenuCheckbox = elem("always-show-quickmenu-checkbox");
+    const quickmenuOptionLabel = elem("quickmenu-option-label");
+    const alwaysShowQuickmenuCheckbox = elem("always-show-quickmenu-checkbox");
     const quickmenuIncludeEmbedsCheckbox = elem("quickmenu-include-embeds-checkbox");
 
 
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selectedAttachmentSizeSpan = elem("selected-attachment-size-span");
 
     const flexContainer = elem("flex-container");
-    const quickMenuSection = elem("quickmenu-section");
+    const quickmenuSection = elem("quickmenu-section");
     const mainSection = elem("main-section");
 
     const quickmenuExtractRecursiveDiv = elem("quickmenu-extract-recursive-div");
@@ -457,6 +457,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         zipLogoImage.classList.remove("rotating");
 
         saveResultLabel.innerHTML = info.message;
+        lastFileNameDiv.innerText = "...";
 
         document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });            
 
@@ -529,7 +530,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         detachViewReportButton.addEventListener("click", generateReport);
 
         includeEmbedsCheckbox.addEventListener("change", includeEmbedsCheckboxChanged);
-        quickmenuIncludeEmbedsCheckbox.addEventListener("change", quickMenuIncludeEmbedsCheckboxChanged);
+        quickmenuIncludeEmbedsCheckbox.addEventListener("change", quickmenuIncludeEmbedsCheckboxChanged);
 
         toggleSelectedAttachmentsCheckbox.addEventListener("change", onToggleSelectedAttachmentsCheckboxChanged);
 
@@ -557,20 +558,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             i18n.updateDocument();
 
-            let displayQuickMenu = extensionOptions.displayQuickMenu && selectedFolders.length == 1;
+            let displayQuickmenu = extensionOptions.displayQuickmenu && selectedFolders.length == 1;
             const extractImmediate = params.allowExtractImmediate;
 
             const selectionContext = params.selectionContext;
 
             if(selectionContext != "account" && !extensionOptions.isInitialized) {
-                quickMenuOptionLabel.classList.remove("invisible");
-                alwaysShowQuickMenuCheckbox.checked = extensionOptions.displayQuickMenu;
+                quickmenuOptionLabel.classList.remove("invisible");
+                alwaysShowQuickmenuCheckbox.checked = extensionOptions.displayQuickmenu;
 
-                alwaysShowQuickMenuCheckbox.addEventListener("change", alwaysShowQuickMenuOptionChanged);
+                alwaysShowQuickmenuCheckbox.addEventListener("change", alwaysShowQuickmenuOptionChanged);
 
                 OptionsManager.setOption("isInitialized", true);
 
-                displayQuickMenu = true;
+                displayQuickmenu = true;
             }
 
             if(CapabilitiesManager.permitDetachment) {
@@ -627,8 +628,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 OptionsManager.setOption("lastLoadedVersion", CapabilitiesManager.extensionVersion);
             }
 
-            if(displayQuickMenu) {
-                invokeQuickMenu();
+            if(displayQuickmenu) {
+                invokeQuickmenu();
             }
             else if(extractImmediate) {
                 const includeSubfolders = extensionOptions.includeSubfolders && selectedFolders[0].subFolders.length > 0;
@@ -671,10 +672,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         attachmentSummaryDiv.classList.add("materialize");
     }
 
-    function invokeQuickMenu() {
+    function invokeQuickmenu() {
         document.querySelectorAll(".quickmenu-button").forEach((button, i) =>
         {
-            button.addEventListener("click", onQuickMenuButtonClicked);
+            button.addEventListener("click", onQuickmenuButtonClicked);
         });
 
         if(selectedFolders[0].subFolders.length > 0) {
@@ -682,7 +683,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         mainSection.classList.add("hidden");
-        quickMenuSection.classList.remove("hidden");
+        quickmenuSection.classList.remove("hidden");
     }
 
     async function invokeExtractImmediate(extractOptions) {
@@ -714,6 +715,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 fileTypeFilter = FilterManager.assembleFileTypeFilter();
             }
         
+            packagingProgressRow.classList.toggle("hidden", !extensionOptions.packageAttachments);
+            savingProgessRow.classList.toggle("hidden", extensionOptions.packageAttachments);
+
             attachmentManager.discoverAttachments(new Set(selectedFolderPaths), extensionOptions.includeEmbeds, fileTypeFilter);
 
             zipLogoImage.classList.add("rotating");
@@ -733,9 +737,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         fileTypeFilterAppliedSpan.classList.toggle("hidden", !extensionOptions.useFileTypeFilter);
 
-        packagingProgressRow.classList.toggle("hidden", !extensionOptions.packageAttachments);
-        savingProgessRow.classList.toggle("hidden", extensionOptions.packageAttachments);
-
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");
     }
@@ -753,7 +754,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return result;
     }
 
-    function onQuickMenuButtonClicked(event) {
+    function onQuickmenuButtonClicked(event) {
         const action = event.srcElement.getAttribute("action");
 
         switch(action) {
@@ -766,7 +767,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 break;
 
             case "standard-selection":
-                quickMenuSection.classList.add("hidden");
+                quickmenuSection.classList.add("hidden");
                 invokeStandardMode();
                 break;
         }
@@ -855,7 +856,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    function quickMenuIncludeEmbedsCheckboxChanged(event) {
+    function quickmenuIncludeEmbedsCheckboxChanged(event) {
         const includeEmbeds = quickmenuIncludeEmbedsCheckbox.checked;
         includeEmbedsCheckbox.checked = includeEmbeds;
 
@@ -1104,7 +1105,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         fileTypeFilterAppliedSpan.classList.toggle("hidden", !extensionOptions.useFileTypeFilter);
 
         packagingProgressRow.classList.toggle("hidden", !extensionOptions.packageAttachments);
-        savingProgessRow.classList.toggle("hidden", !extensionOptions.packageAttachments);
+        savingProgessRow.classList.toggle("hidden", extensionOptions.packageAttachments);
 
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");
@@ -1507,10 +1508,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    function alwaysShowQuickMenuOptionChanged(event) {
-        const displayQuickMenu = alwaysShowQuickMenuCheckbox.checked;
+    function alwaysShowQuickmenuOptionChanged(event) {
+        const displayQuickmenu = alwaysShowQuickmenuCheckbox.checked;
 
-        OptionsManager.setOption("displayQuickMenu", displayQuickMenu);
+        OptionsManager.setOption("displayQuickmenu", displayQuickmenu);
     }
 
     function abbreviateFileSize(size = 0) {

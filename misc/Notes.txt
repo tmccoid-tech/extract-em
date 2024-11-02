@@ -114,7 +114,7 @@ Direct save:
 
 	XXX Add save progress panel
 
-	Integrate save logic with packaging
+	XXX Integrate save logic with packaging
 
 	Display download directory
 
@@ -122,7 +122,9 @@ Direct save:
 
 	Modify report
 
-Determine new embed logic/prevent embed deletionEntry
+	Reset filename label to ... post-extraction
+
+XXX Determine new embed logic/prevent embed deletionEntry
 
 Report: Do not display detach errors section when no errors encountered
 

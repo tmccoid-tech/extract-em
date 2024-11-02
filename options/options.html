@@ -8,22 +8,16 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/module/filtering/filtering.css">
 </head>
 <body>
-    <div>    
+    <div>
+        <h4>__MSG_uiMode__</h4>    
         <dl>
             <dt>
-                <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> __MSG_useInteractiveUi__</label>
+                <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> __MSG_displayQuickmenu__</label>
             </dt>
             <dd>
-                __MSG_useInteractiveUiDescription__
+                __MSG_displayQuickmenuDescription__
             </dd>
 
-            <dt>
-                <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> __MSG_displayQuickMenu__</label>
-            </dt>
-            <dd>
-                __MSG_displayQuickMenuDescription__
-            </dd>
-            
             <dt>
                 <label><input type="radio" name="user-interaction-option" id="extract-immediate-checkbox" value="immediate"/> __MSG_extractImmediate__</label>
             </dt>
@@ -40,9 +34,64 @@
                 </dl>
             </dd>
 
-            <dt><hr/></dt>
-            <dd></dd>
+            <dt>
+                <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> __MSG_useInteractiveUi__</label>
+            </dt>
+            <dd>
+                __MSG_useInteractiveUiDescription__
+            </dd>
+        </dl>
 
+        <h4>__MSG_discoveryOptions__</h4>
+        <dl>
+            <dt>
+                <label><input type="checkbox" id="include-embeds-checkbox" option-name="includeEmbeds" /> __MSG_includeEmbeddedImages__</label>
+            </dt>
+            <dd>
+                __MSG_includeEmbeddedImagesDescription__
+            </dd>
+
+            <dt>
+                <label><input type="checkbox" id="use-file-type-filter-checkbox" option-name="useFileTypeFilter" /> __MSG_useFileTypeFilter__</label><button type="button" id="edit-file-type-filter-button" class="options-control" disabled="disabled">__MSG_edit__</button>
+            </dt>
+            <dd>
+                <div id="file-type-filter-list-div" class="filter-list-div ghost">...</div>
+                __MSG_useFileTypeFilterDescription__
+            </dd>
+
+            <dt>
+                <label><input type="checkbox" id="omit-duplicates-checkbox" option-name="omitDuplicates" /> __MSG_omitDuplicates__</label>
+            </dt>
+            <dd>
+                __MSG_omitDuplicatesDescription__
+            </dd>
+            <dt>
+                <label>__MSG_defaultGrouping__: <select id="default-grouping-select" class="options-control" option-name="defaultGrouping">
+                    <option value="None" selected>__MSG_none__</option>
+                    <option value="Author">__MSG_defaultGroupingByAuthor__</option>
+                    <option value="Folder">__MSG_defaultGroupingByFolder__</option>
+                    <option value="Extension">__MSG_defaultGroupingByExtension__</option>
+                </select></label>
+            </dt>
+            <dd>
+                __MSG_defaultGroupingDescription__
+            </dd>
+
+            <dt>
+                <label>__MSG_imagePreview__: <select id="image-preview-select" class="options-control" option-name="defaultImagePreview">
+                    <option value="none">__MSG_none__</option>
+                    <option value="sm" selected>__MSG_imagePreviewSmall__</option>
+                    <option value="md">__MSG_imagePreviewMedium__</option>
+                    <option value="lg">__MSG_imagePreviewLarge__</option>
+                </select></label>
+            </dt>
+            <dd>
+                __MSG_imagePreviewDescription__
+            </dd>
+        </dl>
+
+        <h4>__MSG_storageOptions__</h4>    
+        <dl>
             <dt>
                 <label><input type="radio" name="storage-option" id="package-attachments-radio" value="true"> __MSG_packageAttachments__</label>
             </dt>
@@ -78,67 +127,19 @@
             <dd>
                 <span id="current-save-directory-span">__MSG_unavailable__</span>
             </dd>
-
-            <dt><hr/></dt>
-            <dd></dd>
-
             <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> __MSG_useFilenamePattern__</label></dt>
             <dd>
                 <input type="text" id="filename-pattern-display-textbox" disabled="disabled"><button type="button" id="filename-pattern-edit-button" class="options-control" disabled="disabled">__MSG_edit__</button><br/>
                 __MSG_useFilenamePatternDescription__
             </dd>
+        </dl>
 
-            <dt>
-                <label><input type="checkbox" id="include-embeds-checkbox" option-name="includeEmbeds" /> __MSG_includeEmbeddedImages__</label>
-            </dt>
-            <dd>
-                __MSG_includeEmbeddedImagesDescription__
-            </dd>
-
-            <dt>
-                <label><input type="checkbox" id="use-file-type-filter-checkbox" option-name="useFileTypeFilter" /> __MSG_useFileTypeFilter__</label><button type="button" id="edit-file-type-filter-button" class="options-control" disabled="disabled">__MSG_edit__</button>
-            </dt>
-            <dd>
-                <div id="file-type-filter-list-div" class="filter-list-div ghost">...</div>
-                __MSG_useFileTypeFilterDescription__
-            </dd>
-
-            <dt>
-                <label><input type="checkbox" id="omit-duplicates-checkbox" option-name="omitDuplicates" /> __MSG_omitDuplicates__</label>
-            </dt>
-            <dd>
-                __MSG_omitDuplicatesDescription__
-            </dd>
-
+        <dl>
             <dt>
                 <label><input type="checkbox" id="use-enhanced-logging-checkbox" option-name="useEnhancedLogging" /> __MSG_useEnhancedLogging__</label>
             </dt>
             <dd>
                 __MSG_useEnhancedLoggingDescription__
-            </dd>
-
-            <dt>
-                <label>__MSG_defaultGrouping__: <select id="default-grouping-select" class="options-control" option-name="defaultGrouping">
-                    <option value="None" selected>__MSG_none__</option>
-                    <option value="Author">__MSG_defaultGroupingByAuthor__</option>
-                    <option value="Folder">__MSG_defaultGroupingByFolder__</option>
-                    <option value="Extension">__MSG_defaultGroupingByExtension__</option>
-                </select></label>
-            </dt>
-            <dd>
-                __MSG_defaultGroupingDescription__
-            </dd>
-
-            <dt>
-                <label>__MSG_imagePreview__: <select id="image-preview-select" class="options-control" option-name="defaultImagePreview">
-                    <option value="none">__MSG_none__</option>
-                    <option value="sm" selected>__MSG_imagePreviewSmall__</option>
-                    <option value="md">__MSG_imagePreviewMedium__</option>
-                    <option value="lg">__MSG_imagePreviewLarge__</option>
-                </select></label>
-            </dt>
-            <dd>
-                __MSG_imagePreviewDescription__
             </dd>
         </dl>
     </div>

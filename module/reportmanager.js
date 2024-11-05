@@ -6,9 +6,19 @@ export class ReportManager {
             reportStyleTemplate,
             reportTemplate,
             reportItemTemplate,
-            abbreviateFileSize,
-            packageAttachments
+            abbreviateFileSize
         } = parameters;
+
+        const {
+            packagingFilenameList,
+            packagingTracker,
+            duplicateFileTracker,
+            duplicateEmbedFileTracker,
+            alterationTracker,
+            errorList,
+            detachmentErrorList
+        } = attachmentManager.getReportData();
+
 
         const namespace = "http://www.w3.org/1999/xhtml";
         const reportDocument = document.implementation.createDocument(namespace, "html", null);
@@ -33,9 +43,8 @@ export class ReportManager {
 
         const reportItemContent = reportItemTemplate.content;
 
-        const reportData = attachmentManager.getReportData();
         reportBody.querySelector(".current-datetime-label").textContent = new Date().toLocaleDateString();
-        reportBody.querySelector(".package-file-count-label").textContent = reportData.packagingFilenameList.length.toString();
+        reportBody.querySelector(".package-file-count-label").textContent = packagingFilenameList.length.toString();
 
         const messageList = attachmentManager.messageList;
 
@@ -85,23 +94,23 @@ export class ReportManager {
 
         // Standard attachments
 
-        const attachmentItems = reportData.packagingTracker.items.filter((item) => !item.hasError);
+        const attachmentItems = packagingTracker.items.filter((item) => !item.hasError);
 
-        let savePath = null;
-        if(!packageAttachments) {
-            savePath = await SaveManager.getFolderByDownloadId(attachmentItems[0].downloadId, attachmentItems[0].name);
-        }
+        const savePath = (packagingTracker.lastDownloadItem) 
+            ? await SaveManager.getFolderByDownloadId(packagingTracker.lastDownloadItem.downloadId, packagingTracker.lastDownloadItem.filename)
+            : null
+        ;
 
         if(attachmentItems.length > 0) {
             generateSection(".attachment-table", (currentTable) => {
                 let sequenceNumber = 0;
                 for(const item of attachmentItems) {
-                    if(!packageAttachments && currentFilenameIndex == -1 || packageAttachments && item.packagingFilenameIndex !== currentFilenameIndex) {
+                    if(savePath && currentFilenameIndex == -1 || !savePath && item.packagingFilenameIndex !== currentFilenameIndex) {
                         currentFilenameIndex = item.packagingFilenameIndex;
 
-                        const filename = (packageAttachments)
-                            ? reportData.packagingFilenameList[currentFilenameIndex]
-                            : savePath;
+                        const filename = (savePath)
+                            ? savePath
+                            : packagingFilenameList[currentFilenameIndex]
                         ;
 
                         generateFilenameHeaderRow(currentTable, filename);
@@ -118,44 +127,52 @@ export class ReportManager {
 
         // Duplicate attachments
 
-        if(reportData.duplicateFileTracker.length > 0) {
+        if(duplicateFileTracker.length > 0) {
             generateSection(".duplicate-table", (currentTable) => {
                 let sequenceNumber = 0;
-                for(const item of reportData.duplicateFileTracker) {
+                for(const item of duplicateFileTracker) {
                     const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
 
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, specialMessage));
                 }
             });
 
-            reportBody.querySelector(".duplicate-attachment-count-label").textContent = reportData.duplicateFileTracker.length.toString();
+            reportBody.querySelector(".duplicate-attachment-count-label").textContent = duplicateFileTracker.length.toString();
         }
 
         // Alterations
 
-        if(reportData.alterationTracker.length > 0) {
+        if(alterationTracker.length > 0) {
             generateSection(".alteration-table", (currentTable) => {
                 let sequenceNumber = 0;
-                for(const item of reportData.alterationTracker) {
+                for(const item of alterationTracker) {
                     currentTable.append(generateReportLineItem(reportItemContent, item, item, ++sequenceNumber, item.alteration));
                 }
             });
 
-            reportBody.querySelector(".alteration-count-label").textContent = reportData.alterationTracker.length.toString();
+            reportBody.querySelector(".alteration-count-label").textContent = alterationTracker.length.toString();
         }
 
         // Embeds
 
-        const embedItems = reportData.packagingTracker.embedItems.filter((item) => !(item.isDuplicate || item.hasError));
+        const embedItems = packagingTracker.embedItems.filter((item) => !(item.isDuplicate || item.hasError));
+
+        let embedHeaderGenerated = false;
 
         if(embedItems.length > 0) {
             generateSection(".embed-table", (currentTable) => {
                 let sequenceNumber = 0;
                 for(const item of embedItems) {
-                    if(item.packagingFilenameIndex !== currentFilenameIndex) {
+                    if(savePath && !embedHeaderGenerated || !savePath && item.packagingFilenameIndex !== currentFilenameIndex) {
                         currentFilenameIndex = item.packagingFilenameIndex;
+                        embedHeaderGenerated = true;
 
-                        generateFilenameHeaderRow(currentTable, reportData.packagingFilenameList[currentFilenameIndex]);
+                        const filename = (savePath)
+                            ? savePath
+                            : packagingFilenameList[currentFilenameIndex]
+                        ;
+
+                        generateFilenameHeaderRow(currentTable, filename);
                     }
 
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber));
@@ -167,10 +184,10 @@ export class ReportManager {
 
         // Duplicate embeds
 
-        if(reportData.duplicateEmbedFileTracker && reportData.duplicateEmbedFileTracker.size > 0) {
+        if(duplicateEmbedFileTracker && duplicateEmbedFileTracker.size > 0) {
             let sequenceNumber = 0;
             generateSection(".duplicate-embed-table", (currentTable) => {
-                for(const filenameEntry of reportData.duplicateEmbedFileTracker.entries()) {
+                for(const filenameEntry of duplicateEmbedFileTracker.entries()) {
                     for(const sizeEntry of filenameEntry[1].sizes.entries()) {
                         for(const checksumEntry of sizeEntry[1].entries()) {
                             for(const messageId of checksumEntry[1]) {
@@ -186,28 +203,28 @@ export class ReportManager {
 
         // Errors
 
-        if(reportData.errorList.length > 0) {
+        if(errorList.length > 0) {
             generateSection(".error-table", (currentTable) => {
                 let sequenceNumber = 0;
-                for(const item of reportData.errorList) {
+                for(const item of errorList) {
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, item.error));
                 }
             });
 
-            reportBody.querySelector(".packaging-error-count-label").textContent = reportData.errorList.length.toString();
+            reportBody.querySelector(".packaging-error-count-label").textContent = errorList.length.toString();
         }
 
         // Detachment errors
 
-        if(reportData.detachmentErrorList && reportData.detachmentErrorList.length > 0) {
+        if(detachmentErrorList && detachmentErrorList.length > 0) {
             generateSection(".detachment-error-table", (currentTable) => {
                 let sequenceNumber = 0;
-                for(const item of reportData.detachmentErrorList) {
+                for(const item of detachmentErrorList) {
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, item.error));
                 }
             });
 
-            reportBody.querySelector(".deletion-error-count-label").textContent = reportData.detachmentErrorList.length.toString();
+            reportBody.querySelector(".deletion-error-count-label").textContent = detachmentErrorList.length.toString();
         }
 
         // Filtering, when applicable
@@ -242,8 +259,6 @@ export class ReportManager {
         const fileText = `<!DOCTYPE html>${element.outerHTML}`;
 
         const reportFileData = new Blob([fileText], { type: "text/html" });
-
-//        await this.#downloadReport(reportFileData);
 
         let reportFilePath = null;
 
@@ -282,64 +297,4 @@ export class ReportManager {
             xhr.send();        
         });
     }
-
-/*
-
-    static #downloadReport(reportFileData) {
-        const fileParameters = {
-            url: URL.createObjectURL(reportFileData),
-            filename: `${messenger.i18n.getMessage("extractionReport")}-${new Date().getTime()}.html`,
-            conflictAction: "uniquify",
-            saveAs: true
-        };
-
-        let downloadId;
-
-        return new Promise((resolve) =>
-        {
-            const handleChanged = (progress) => {
-                if(progress.id == downloadId && progress.state) {
-                    let resolved = false;
-                    let success = false;
-
-                    if(progress.state.current == "complete") {
-                        success = true;
-                        resolved = true;
-                    }
-                    else if(progress.state.current == "interrupted") {
-                        resolved = true;
-                    }
-
-                    if(resolved) {
-                        browser.downloads.onChanged.removeListener(handleChanged);
-                        browser.downloads.onChanged.removeListener(handleCreated);
-                        URL.revokeObjectURL(fileParameters.url);
-                        resolve(success);
-                    }
-                }
-            };
-
-            const handleCreated = (downloadItem) => {
-                browser.downloads.onCreated.removeListener(handleCreated);
-
-                const alertText = `${messenger.i18n.getMessage("reportSavedTo")} ${downloadItem.filename}`;
-                alert(alertText);
-            };
-
-            browser.downloads.onChanged.addListener(handleChanged);
-            browser.downloads.onCreated.addListener(handleCreated);
-
-            browser.downloads.download(fileParameters)
-                .then(
-                    (id) => { downloadId = id; },
-                    (error) => {
-                        browser.downloads.onChanged.removeListener(handleChanged);
-                        browser.downloads.onChanged.removeListener(handleCreated);
-                        URL.revokeObjectURL(fileParameters.url);
-                    }
-                );
-        });
-    }
-
-    */
 }

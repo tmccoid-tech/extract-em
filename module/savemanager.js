@@ -9,8 +9,6 @@ export class SaveManager {
             filename: tempFilename,
             saveAs: false,
             onSaveStarted: (downloadItem) => {
-//                const regEx = new RegExp(`^(.*)${tempFilename}`);
-//                result = regEx.exec(downloadItem.filename)[1];
                 result = this.getFolderFromPath(downloadItem.filename, tempFilename);
             },
             onSaveComplete: (downloadId) => {
@@ -30,6 +28,8 @@ export class SaveManager {
     }
 
     static getFolderFromPath(path, filename) {
+        filename = filename.replace(/\.url$/, ".ur_");
+
         const regEx = new RegExp(`^(.*)${filename}`);
         return regEx.exec(path)[1];
     }

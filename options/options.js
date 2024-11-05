@@ -102,6 +102,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(useEnhancedLoggingCheckbox, (e) => setOption(e, (c) => c.checked));
 
         useEnhancedLoggingCheckbox.checked = extensionOptions.useEnhancedLogging;
+
+        const body = elem("body");
+        body.classList.add("shown");
     }
 
     function listen(element, handler) {

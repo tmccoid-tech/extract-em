@@ -746,7 +746,8 @@ export class AttachmentManager {
             embedItems: [],
 //            currentEmbedMessageIndex: 0,
             totalEmbedMessageCount: 0,
-            preserveFolderStructure: preserveFolderStructure
+            preserveFolderStructure: preserveFolderStructure,
+            lastDownloadItem: null
         };
 
         this.#packagingFilenameList = [];
@@ -968,7 +969,11 @@ export class AttachmentManager {
                     }
                     else {
                         const saveResult = await this.#saveAttachment(attachmentFile, fileName);
-                        item.downloadId = saveResult.downloadId;
+
+                        packagingTracker.lastDownloadItem = {
+                            downloadId: saveResult.downloadId,
+                            filename: fileName
+                        };
                     }
     
                     storageProgressInfo.includedCount++;
@@ -1205,7 +1210,12 @@ export class AttachmentManager {
                         await zipEm.addFile(fileName, new Blob([decodeData.data]), item.date);
                     }
                     else {
-                        await this.#saveAttachment(new Blob([decodeData.data]), fileName);
+                        const saveResult = await this.#saveAttachment(new Blob([decodeData.data]), fileName);
+
+                        packagingTracker.lastDownloadItem = {
+                            downloadId: saveResult.downloadId,
+                            filename: fileName
+                        };
                     }
 
                     storageProgressInfo.totalEmbedBytes += decodeData.data.length;

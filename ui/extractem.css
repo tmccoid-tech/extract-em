@@ -24,6 +24,7 @@ body {
 
 .ghost {
     opacity: 0.4;
+    transition: opacity 1000ms linear;
     -moz-transition: opacity 1000ms linear;
 }
 
@@ -164,6 +165,7 @@ section {
 
 .tab-content-div[context='summary'].materialize {
     opacity: 1.0;
+    transition: opacity 750ms ease-in;
     -moz-transition: opacity 750ms ease-in;
 }
 
@@ -286,6 +288,7 @@ td.summary-header {
     background: linear-gradient(90deg, rgba(152, 251, 152, .8) 0%, transparent 50%, rgba(152, 251, 152, .8) 100%);
     background-size: 200% 100%;
     animation: processingSlider linear infinite 2s;
+    transition: background-color 1000ms linear;
     -moz-transition: background-color 1000ms linear;
 }
 
@@ -308,6 +311,7 @@ td.summary-header {
 
 #stats-summary-tbody .processing.processed {
     background: transparent;
+    transition: background-color 1000ms linear;
     -moz-transition: background-color 1000ms linear;
 }
 
@@ -588,6 +592,7 @@ td.summary-header {
 #packaging-div.materialize, #save-result-div.materialize,
 #detach-operation-row.materialize, #detach-result-div.materialize {
     opacity: 1.0;
+    transition: opacity 500ms ease-in;
     -moz-transition: opacity 500ms ease-in;
 }
 

@@ -1,3 +1,13 @@
+body {
+    opacity: 0;
+}
+
+body.shown {
+    opacity: 1;
+    transition: opacity 500ms linear;
+    -moz-transition: opacity 500ms linear;
+}
+
 h4 {
     text-decoration: underline;
 }
@@ -17,6 +27,7 @@ dd {
 
 .ghost {
     opacity: 0.4;
+    transition: opacity 1000ms linear;
     -moz-transition: opacity 1000ms linear;
 }
 

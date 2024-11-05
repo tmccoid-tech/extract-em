@@ -967,7 +967,8 @@ export class AttachmentManager {
                         await zipEm.addFile(fileName, attachmentFile, item.date);
                     }
                     else {
-                        await this.#saveAttachment(attachmentFile, fileName);
+                        const saveResult = await this.#saveAttachment(attachmentFile, fileName);
+                        item.downloadId = saveResult.downloadId;
                     }
     
                     storageProgressInfo.includedCount++;

@@ -1425,7 +1425,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             abbreviateFileSize: abbreviateFileSize,
             fileTypeFilterList: (extensionOptions.useFileTypeFilter)
                 ? filterElements.menuFileTypeList.innerHTML
-                : null
+                : null,
+            packageAttachments: extensionOptions.packageAttachments
         });
     }
 

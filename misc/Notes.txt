@@ -101,13 +101,19 @@ VID: avi, m4v, mkv, mov, mp4, mpg, mpeg, vob, wmv
 
 XXX Selectively display zip-discovery panel message if file type filter employed
 
-Extraction Report: handle case of user cancellation (either full or partial)
-
 XXX Ensure background execution sync'd to new features (filename pattern, filtering)
+
+XXX Add Always Prompt for Donwload Location option (default = true)
+
+XXX	Reset filename label to ... post-extraction
+
+XXX Determine new embed logic/prevent embed deletionEntry
+
+XXX Report: Do not display detach errors section when no errors encountered
 
 Ensure resets comprehensive
 
-XXX Add Always Prompt for Donwload Location option (default = true)
+Extraction Report: handle case of user cancellation (either full or partial)
 
 Direct save:
 	XXX Modify options
@@ -116,17 +122,11 @@ Direct save:
 
 	XXX Integrate save logic with packaging
 
-	Display download directory
-
-	Open download directory/ies post-extraction
-
 	Modify report
 
-	Reset filename label to ... post-extraction
+Display download directory
 
-XXX Determine new embed logic/prevent embed deletionEntry
-
-Report: Do not display detach errors section when no errors encountered
+Open download directory/ies post-extraction
 
 
 

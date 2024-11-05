@@ -9,8 +9,9 @@ export class SaveManager {
             filename: tempFilename,
             saveAs: false,
             onSaveStarted: (downloadItem) => {
-                const regEx = new RegExp(`^(.*)${tempFilename}`);
-                result = regEx.exec(downloadItem.filename)[1];
+//                const regEx = new RegExp(`^(.*)${tempFilename}`);
+//                result = regEx.exec(downloadItem.filename)[1];
+                result = this.getFolderFromPath(downloadItem.filename, tempFilename);
             },
             onSaveComplete: (downloadId) => {
                 browser.downloads.removeFile(downloadId);
@@ -22,10 +23,15 @@ export class SaveManager {
         return result;
     }
 
-    // May not require; reconsider
-    static async getDownloadFolder(downloadId) {
-        let result = await browser.downloads.search({ id: downloadId })
-        return result;
+    static async getFolderByDownloadId(downloadId, filename) {
+        const downloadItems = await browser.downloads.search({ id: downloadId })
+        const path = downloadItems[0].filename;
+        return this.getFolderFromPath(path, filename);
+    }
+
+    static getFolderFromPath(path, filename) {
+        const regEx = new RegExp(`^(.*)${filename}`);
+        return regEx.exec(path)[1];
     }
 
     static async save(saveOptions) {

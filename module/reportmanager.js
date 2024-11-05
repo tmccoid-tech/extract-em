@@ -7,6 +7,7 @@ export class ReportManager {
             reportTemplate,
             reportItemTemplate,
             abbreviateFileSize,
+            packageAttachments
         } = parameters;
 
         const namespace = "http://www.w3.org/1999/xhtml";
@@ -86,14 +87,24 @@ export class ReportManager {
 
         const attachmentItems = reportData.packagingTracker.items.filter((item) => !item.hasError);
 
+        let savePath = null;
+        if(!packageAttachments) {
+            savePath = await SaveManager.getFolderByDownloadId(attachmentItems[0].downloadId, attachmentItems[0].name);
+        }
+
         if(attachmentItems.length > 0) {
             generateSection(".attachment-table", (currentTable) => {
                 let sequenceNumber = 0;
                 for(const item of attachmentItems) {
-                    if(item.packagingFilenameIndex !== currentFilenameIndex) {
+                    if(!packageAttachments && currentFilenameIndex == -1 || packageAttachments && item.packagingFilenameIndex !== currentFilenameIndex) {
                         currentFilenameIndex = item.packagingFilenameIndex;
 
-                        generateFilenameHeaderRow(currentTable, reportData.packagingFilenameList[currentFilenameIndex]);
+                        const filename = (packageAttachments)
+                            ? reportData.packagingFilenameList[currentFilenameIndex]
+                            : savePath;
+                        ;
+
+                        generateFilenameHeaderRow(currentTable, filename);
                     }
 
                     const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
@@ -188,7 +199,7 @@ export class ReportManager {
 
         // Detachment errors
 
-        if(reportData.detachmentErrorList) {
+        if(reportData.detachmentErrorList && reportData.detachmentErrorList.length > 0) {
             generateSection(".detachment-error-table", (currentTable) => {
                 let sequenceNumber = 0;
                 for(const item of reportData.detachmentErrorList) {

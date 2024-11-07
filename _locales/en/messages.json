@@ -8,7 +8,7 @@
     },
 
     "extractSingleDescription": {
-        "message": "Extracts attachments from the selected folder, omitting sub-folders",
+        "message": "Extracts attachments from the selected folder, omitting subfolders",
         "description": "Action description for extract-single Quickmenu button"
     },
 
@@ -17,7 +17,7 @@
     },
 
     "extractRecursiveDescription": {
-        "message": "Extracts attachments from the selected folders and sub-folders (recursive)",
+        "message": "Extracts attachments from the selected folders and subfolders (recursive)",
         "description": "Action description for extract-recursive Quickmenu button"
     },
 
@@ -160,7 +160,7 @@
         "description": ""
     },
     "extractImmediateDescription": {
-        "message": "Saves all attachments from messages in the selected folder with limited user intervention; excludes sub-folders",
+        "message": "Saves all attachments from messages in the selected folder with limited user intervention; excludes subfolders",
         "description": ""
     },
 

@@ -421,5 +421,7 @@
 
     "uiMode": { "message": "UI Mode" },
     "discoveryOptions": { "message": "Discovery Options" },
-    "storageOptions": { "message": "Storage Options" }
+    "storageOptions": { "message": "Storage Options" },
+
+    "showFiles": { "message": "Show Files" }
 }

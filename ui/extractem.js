@@ -1417,8 +1417,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         zoomImage.src = "";
     }
 
-    function generateReport(event) {
-        ReportManager.generateReport(attachmentManager, {
+    async function generateReport(event) {
+        const saveResult = await ReportManager.generateReport(attachmentManager, {
             reportStyleTemplate: reportStyleTemplate,
             reportTemplate: reportTemplate,
             reportItemTemplate: reportItemTemplate,
@@ -1427,6 +1427,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ? filterElements.menuFileTypeList.innerHTML
                 : null
         });
+
+        if(saveResult.success) {
+            browser.downloads.open(saveResult.downloadId);
+        }
     }
 
     function closeZipPanel() {

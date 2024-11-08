@@ -22,7 +22,11 @@ export class SaveManager {
     }
 
     static async getFolderByDownloadId(downloadId, filename) {
-        const downloadItems = await browser.downloads.search({ id: downloadId })
+        
+        // TODO: Correct
+        filename = filename.replace(/(.*)(?=(\(\d+\)))/, "");
+        
+        const downloadItems = await browser.downloads.search({ id: downloadId });
         const path = downloadItems[0].filename;
         return this.getFolderFromPath(path, filename);
     }

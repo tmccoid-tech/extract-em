@@ -747,7 +747,8 @@ export class AttachmentManager {
 //            currentEmbedMessageIndex: 0,
             totalEmbedMessageCount: 0,
             preserveFolderStructure: preserveFolderStructure,
-            lastDownloadItem: null
+            lastDownloadItem: null,
+            downloadLocations: new Map()
         };
 
         this.#packagingFilenameList = [];
@@ -1036,12 +1037,20 @@ export class AttachmentManager {
             currentItemIndex = subsetBoundary;
         }
 
-        if(!packageAttachments && !hasEmbeds) {
-            this.#reportSaveResult({
-                status: "success",
-                message: messenger.i18n.getMessage("saveComplete"),
-                attachmentCount: packagingTracker.items.length
-            });
+        if(!packageAttachments) {
+            if(packagingTracker.lastDownloadItem) {
+                const path = await SaveManager.getFolderByDownloadId(packagingTracker.lastDownloadItem.downloadId, packagingTracker.lastDownloadItem.filename);
+
+                packagingTracker.downloadLocations.set(path, { downloadId: packagingTracker.lastDownloadItem.downloadId, count: packagingTracker.items.length });
+            }
+
+            if(!hasEmbeds) {
+                this.#reportSaveResult({
+                    status: "success",
+                    message: messenger.i18n.getMessage("saveComplete"),
+                    attachmentCount: packagingTracker.items.length
+                });
+            }
         }
     }
 
@@ -1265,7 +1274,22 @@ export class AttachmentManager {
         }
         else {
             // TODO: Add error handling in rare instance saving a file fails
-            
+
+            if(packagingTracker.lastDownloadItem) {
+                const { downloadId } = packagingTracker.lastDownloadItem;
+
+                const path = await SaveManager.getFolderByDownloadId(downloadId, packagingTracker.lastDownloadItem.filename);
+
+                if(packagingTracker.downloadLocations.has(path)) {
+                    const downloadLocation = packagingTracker.downloadLocations.get(path);
+                    downloadLocation.downloadId = downloadId;
+                    downloadLocation.count+= packagingTracker.embedItems.length;
+                }
+                else {
+                    packagingTracker.downloadLocations.set(path, { downloadId: downloadId, count: packagingTracker.embedItems.length });
+                }
+            }
+
             this.#reportSaveResult({
                 status: "success",
                 message: messenger.i18n.getMessage("saveComplete"),

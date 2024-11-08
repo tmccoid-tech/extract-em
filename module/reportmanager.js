@@ -260,23 +260,13 @@ export class ReportManager {
 
         const reportFileData = new Blob([fileText], { type: "text/html" });
 
-        let reportFilePath = null;
-
-        await SaveManager.save({
+        const result = await SaveManager.save({
             fileData: reportFileData,
             filename: `${messenger.i18n.getMessage("extractionReport")}-${new Date().getTime()}.html`,
-            saveAs: true,
-            onSaveStarted: async (downloadItem) => {
-                reportFilePath = downloadItem.filename;
-            },
-            onSaveError: (e) => {},
-            onSaveComplete: (downloadId) => {
-                if(reportFilePath) {
-                    const alertText = `${messenger.i18n.getMessage("reportSavedTo")} ${reportFilePath}`;
-                    alert(alertText);
-                }
-            },
+            saveAs: true
         });
+
+        return result;
     }
 
     static #getImageDataUrl(filename) {

@@ -423,5 +423,7 @@
     "discoveryOptions": { "message": "Discovery Options" },
     "storageOptions": { "message": "Storage Options" },
 
-    "showFiles": { "message": "Show Files" }
+    "showFiles": { "message": "Show Files" },
+    "extractedItems": { "message": "Extracted Items" },
+    "report": { "message": "Report" }
 }

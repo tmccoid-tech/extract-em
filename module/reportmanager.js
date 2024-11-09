@@ -96,8 +96,8 @@ export class ReportManager {
 
         const attachmentItems = packagingTracker.items.filter((item) => !item.hasError);
 
-        const savePath = (packagingTracker.lastDownloadItem) 
-            ? await SaveManager.getFolderByDownloadId(packagingTracker.lastDownloadItem.downloadId, packagingTracker.lastDownloadItem.filename)
+        const savePath = (packagingTracker.lastDownloadId) 
+            ? await SaveManager.getFolderByDownloadId(packagingTracker.lastDownloadId)
             : null
         ;
 

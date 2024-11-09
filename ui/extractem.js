@@ -3,6 +3,7 @@ import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { ReportManager } from "/module/reportmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
+import { SaveManager } from "/module/savemanager.js";
 
 const _filterSelect = function* (test, select) {
     for(const item of this) {
@@ -155,10 +156,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     const saveResultDiv = elem("save-result-div");
     const saveResultBorderDiv = elem("save-result-border-div");
     const saveResultLabel = elem("save-result-label");
-    const permanentlyDetachButton = elem("permanently-detach-button");
+
+    const showFilesButton = elem("show-files-button");
     const viewReportButton = elem("view-report-button");
+    const permanentlyDetachButton = elem("permanently-detach-button");
     const closeZipPanelButton = elem("close-zip-panel-button");
     const exitExtensionButton = elem("exit-extension-button");
+
+    const downloadFoldersOverlay = elem("download-folders-overlay");
+    const closeDownloadFoldersButton = elem("close-download-folders-button");
+    const downloadFoldersItemContainer = elem("download-folders-item-container");
+    const downloadFolderItemTemplate = elem("download-folder-item-template");
 
     const detachOperationRow = elem("detach-operation-row");
 
@@ -211,6 +219,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     var selectedFolders;
     var hasAttachments = false;
     var preventDetachment = false;
+    let downloadLocations;
 
 //    var capabilities = new Capabilities();
     
@@ -450,6 +459,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
+    function addDownloadFolderItem(path, downloadId, label) {
+        const templateNode = downloadFolderItemTemplate.content.cloneNode(true);
+        const downloadFolderItem = templateNode.firstElementChild;
+
+        downloadFolderItem.querySelector(".download-folder-label").innerText = label;
+
+        const button = downloadFolderItem.querySelector(".link-button");
+        button.value = downloadId;
+        button.innerText = path;
+        button.addEventListener("click", (e) => {
+            browser.downloads.show(parseInt(e.srcElement.value));
+        });
+
+        downloadFoldersItemContainer.appendChild(downloadFolderItem);
+    }
+
     const updateSaveResult = async (info) =>
     {
         const success = (info.status == "success");
@@ -460,6 +485,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         lastFileNameDiv.innerText = "...";
 
         document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });            
+
+        if(success) {
+            downloadLocations = new Map(info.downloadLocations);
+
+            if(downloadLocations.size == 1) {
+                const [downloadId] = downloadLocations.values();
+
+                showFilesButton.value = downloadId;
+            }
+            else {
+                showFilesButton.value = "*";
+
+                downloadFoldersItemContainer.innerHTML = "";
+
+                const extractedItemsText = messenger.i18n.getMessage("extractedItems");
+    
+                for(const [path, downloadId] of downloadLocations.entries()) {
+                    addDownloadFolderItem(path, downloadId, extractedItemsText);
+                }
+            }
+        }
 
         if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0)) {
             permanentlyDetachButton.classList.add("hidden");
@@ -525,6 +571,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         proceedDetachButton.addEventListener("click", proceedDetach);
         cancelDetachButton.addEventListener("click", cancelDetach);
         detachExitExtensionButton.addEventListener("click", (event) => { window.close(); });
+
+        showFilesButton.addEventListener("click", showFiles);
+        closeDownloadFoldersButton.addEventListener("click", closeDownloadFoldersOverlay);
 
         viewReportButton.addEventListener("click", generateReport);
         detachViewReportButton.addEventListener("click", generateReport);
@@ -1417,6 +1466,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         zoomImage.src = "";
     }
 
+    function showFiles(event) {
+        let downloadId = event.srcElement.value;
+
+        if(downloadId == "*") {
+
+            downloadFoldersOverlay.classList.remove("hidden");
+        }
+        else {
+            downloadId = parseInt(event.srcElement.value);
+            browser.downloads.show(downloadId);
+        }
+    }
+
+    function closeDownloadFoldersOverlay(event) {
+        downloadFoldersOverlay.classList.add("hidden");
+    }
+
     async function generateReport(event) {
         const saveResult = await ReportManager.generateReport(attachmentManager, {
             reportStyleTemplate: reportStyleTemplate,
@@ -1429,7 +1495,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if(saveResult.success) {
-            browser.downloads.open(saveResult.downloadId);
+            const path = await SaveManager.getFolderByDownloadId(saveResult.downloadId);
+
+            if(!downloadLocations.has(path)) {
+                downloadLocations.set(path, saveResult.downloadId);
+                addDownloadFolderItem(path, saveResult.downloadId, messenger.i18n.getMessage("report"));
+                showFilesButton.value = "*";
+            }
         }
     }
 

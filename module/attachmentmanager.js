@@ -725,8 +725,7 @@ export class AttachmentManager {
             filesCreated: 0,
 
             packageAttachments: packageAttachments,
-            lastFileName: "",
-            lastDownloadId: null
+            lastFileName: ""
         };
 
         this.#reportStorageProgress(storageProgressInfo);
@@ -747,7 +746,7 @@ export class AttachmentManager {
 //            currentEmbedMessageIndex: 0,
             totalEmbedMessageCount: 0,
             preserveFolderStructure: preserveFolderStructure,
-            lastDownloadItem: null,
+            lastDownloadId: null,
             downloadLocations: new Map()
         };
 
@@ -971,10 +970,7 @@ export class AttachmentManager {
                     else {
                         const saveResult = await this.#saveAttachment(attachmentFile, fileName);
 
-                        packagingTracker.lastDownloadItem = {
-                            downloadId: saveResult.downloadId,
-                            filename: fileName
-                        };
+                        packagingTracker.lastDownloadId = saveResult.downloadId;
                     }
     
                     storageProgressInfo.includedCount++;
@@ -1013,18 +1009,18 @@ export class AttachmentManager {
 
                 if(saveResult.success) {
                     storageProgressInfo.filesCreated++;
-                    storageProgressInfo.lastDownloadId = saveResult.downloadId;
 
                     this.#reportStorageProgress(storageProgressInfo);
+
+                    await this.#updateDownloadLocations(saveResult.downloadId);
 
                     const isFinal = (packagingTracker.currentPackageIndex == packagingTracker.extractionSubsets.length);
 
                     if(isFinal && !hasEmbeds) {
                         saveResult.attachmentCount = packagingTracker.items.length;
+                        saveResult.downloadLocations = packagingTracker.downloadLocations;
 
                         this.#reportSaveResult(saveResult);
-
-//                        browser.downloads.show(storageProgressInfo.lastDownloadId);
                     }
                 }
                 else {
@@ -1038,17 +1034,16 @@ export class AttachmentManager {
         }
 
         if(!packageAttachments) {
-            if(packagingTracker.lastDownloadItem) {
-                const path = await SaveManager.getFolderByDownloadId(packagingTracker.lastDownloadItem.downloadId, packagingTracker.lastDownloadItem.filename);
-
-                packagingTracker.downloadLocations.set(path, { downloadId: packagingTracker.lastDownloadItem.downloadId, count: packagingTracker.items.length });
+            if(packagingTracker.lastDownloadId) {
+                await this.#updateDownloadLocations(packagingTracker.lastDownloadId);
             }
 
             if(!hasEmbeds) {
                 this.#reportSaveResult({
                     status: "success",
                     message: messenger.i18n.getMessage("saveComplete"),
-                    attachmentCount: packagingTracker.items.length
+                    attachmentCount: packagingTracker.items.length,
+                    downloadLocations: packagingTracker.downloadLocations                    
                 });
             }
         }
@@ -1114,9 +1109,10 @@ export class AttachmentManager {
 
                 if(saveResult.success) {
                     storageProgressInfo.filesCreated++;
-                    storageProgressInfo.lastDownloadId = saveResult.downloadId;
 
                     this.#reportStorageProgress(storageProgressInfo);
+
+                    await this.#updateDownloadLocations(saveResult.downloadId);
 
                     zipEm = new ZipEm();
                     currentSize = 0;
@@ -1221,10 +1217,7 @@ export class AttachmentManager {
                     else {
                         const saveResult = await this.#saveAttachment(new Blob([decodeData.data]), fileName);
 
-                        packagingTracker.lastDownloadItem = {
-                            downloadId: saveResult.downloadId,
-                            filename: fileName
-                        };
+                        packagingTracker.lastDownloadId = saveResult.downloadId;
                     }
 
                     storageProgressInfo.totalEmbedBytes += decodeData.data.length;
@@ -1263,11 +1256,13 @@ export class AttachmentManager {
 
             if(saveResult.success) {
                 storageProgressInfo.filesCreated++;
-                storageProgressInfo.lastDownloadId = saveResult.downloadId;
 
                 this.#reportStorageProgress(storageProgressInfo);
 
+                await this.#updateDownloadLocations(saveResult.downloadId);
+
                 saveResult.attachmentCount = packagingTracker.items.length;
+                saveResult.downloadLocations = packagingTracker.downloadLocations;
             }
 
             this.#reportSaveResult(saveResult);
@@ -1275,25 +1270,15 @@ export class AttachmentManager {
         else {
             // TODO: Add error handling in rare instance saving a file fails
 
-            if(packagingTracker.lastDownloadItem) {
-                const { downloadId } = packagingTracker.lastDownloadItem;
-
-                const path = await SaveManager.getFolderByDownloadId(downloadId, packagingTracker.lastDownloadItem.filename);
-
-                if(packagingTracker.downloadLocations.has(path)) {
-                    const downloadLocation = packagingTracker.downloadLocations.get(path);
-                    downloadLocation.downloadId = downloadId;
-                    downloadLocation.count+= packagingTracker.embedItems.length;
-                }
-                else {
-                    packagingTracker.downloadLocations.set(path, { downloadId: downloadId, count: packagingTracker.embedItems.length });
-                }
+            if(packagingTracker.lastDownloadId) {
+                await this.#updateDownloadLocations(packagingTracker.lastDownloadId);
             }
 
             this.#reportSaveResult({
                 status: "success",
                 message: messenger.i18n.getMessage("saveComplete"),
-                attachmentCount: packagingTracker.items.length
+                attachmentCount: packagingTracker.items.length,
+                downloadLocations: packagingTracker.downloadLocations
             });
         }
     }
@@ -1336,6 +1321,16 @@ export class AttachmentManager {
         
         let result = await SaveManager.save(saveOptions);
         return result;
+    }
+
+    async #updateDownloadLocations(downloadId, isReport = false) {
+        const { downloadLocations } = this.#packagingTracker;
+
+        const path = await SaveManager.getFolderByDownloadId(downloadId);
+
+        if(!downloadLocations.has(path)) {
+            downloadLocations.set(path, downloadId);
+        }
     }
 
 

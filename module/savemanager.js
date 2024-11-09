@@ -9,7 +9,7 @@ export class SaveManager {
             filename: tempFilename,
             saveAs: false,
             onSaveStarted: (downloadItem) => {
-                result = this.getFolderFromPath(downloadItem.filename, tempFilename);
+                result = this.getFolderFromPath(downloadItem.filename);
             },
             onSaveComplete: (downloadId) => {
                 browser.downloads.removeFile(downloadId);
@@ -21,21 +21,15 @@ export class SaveManager {
         return result;
     }
 
-    static async getFolderByDownloadId(downloadId, filename) {
-        
-        // TODO: Correct
-        filename = filename.replace(/(.*)(?=(\(\d+\)))/, "");
-        
+    static async getFolderByDownloadId(downloadId) {
         const downloadItems = await browser.downloads.search({ id: downloadId });
-        const path = downloadItems[0].filename;
-        return this.getFolderFromPath(path, filename);
+        const result =  this.getFolderFromPath(downloadItems[0].filename);
+        return result;
     }
 
-    static getFolderFromPath(path, filename) {
-        filename = filename.replace(/\.url$/, ".ur_");
-
-        const regEx = new RegExp(`^(.*)${filename}`);
-        return regEx.exec(path)[1];
+    static getFolderFromPath(filename) {
+        const result = /(.*)([\\\/])/.exec(filename)[0];
+        return result;
     }
 
     static async save(saveOptions) {

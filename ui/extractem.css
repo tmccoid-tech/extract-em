@@ -315,27 +315,27 @@ td.summary-header {
     -moz-transition: background-color 1000ms linear;
 }
 
-.folder-selector-button {
+.link-button {
     border: none;
     background-color: transparent;
     color: blue;
     text-decoration: underline;
 }
 
-.folder-selector-button:hover {
+.link-button:hover {
     text-decoration: none;
     cursor: pointer;
 }
 
-.folder-selector-button:active {
+.link-button:active {
     color: orange;
 }
 
-.folder-selector-button:disabled:hover {
+.link-button:disabled:hover {
     cursor: not-allowed;
 }
 
-.folder-selector-button:disabled:active {
+.link-button:disabled:active {
     color: unset;
 }
 
@@ -676,7 +676,16 @@ td.summary-header {
     overflow-y: auto;
 }
 
-#close-release-notes-button {
+#download-folders-panel {
+    background-color:white;
+    padding: 8px;
+}
+
+#download-folders-item-container > div {
+    margin-top: 12px;
+}
+
+#close-release-notes-button, #close-download-folders-button {
     float: right;
 }
 

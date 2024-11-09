@@ -105,7 +105,7 @@
                     </div>                    
                     <div id="use-file-type-filter-link-div" title="...">
                         <input type="checkbox" id="use-file-type-filter-checkbox">
-                        <button type="button" id="use-file-type-filter-link-button" class="folder-selector-button" disabled="disabled"> __MSG_useFileTypeFilter__</button>
+                        <button type="button" id="use-file-type-filter-link-button" class="link-button" disabled="disabled"> __MSG_useFileTypeFilter__</button>
                     </div>
                     <hr/>
                     <button type="button" id="extract-all-button" class="summary-button" disabled="disabled">__MSG_extensionName__</button>
@@ -273,7 +273,7 @@
     
     <div id="release-notes-overlay" class="modal-overlay hidden">
         <div id="release-notes-close-panel">
-            <button type="button" id="close-release-notes-button">Close</button>
+            <button type="button" id="close-release-notes-button">__MSG_close__</button>
             <div class="release-notes-panel hidden" version="1.5">
                 <h4>__MSG_releaseNotesTitle__ 1.5.2</h4>
                 <div class="notice-panel">
@@ -326,10 +326,21 @@
         </div>
     </div>
 
+    <div id="download-folders-overlay" class="modal-overlay hidden">
+        <div id="download-folders-panel">
+            <div>
+                <b>__MSG_showFiles__</b>
+                <button type="button" id="close-download-folders-button">__MSG_close__</button>
+            <div></div>
+            <div id="download-folders-item-container">
+            </div>
+         </div>
+    </div>
+
     <template id="folder-stats-template">
         <tr class="message-stats-tr">
             <td><input type="checkbox" class="folder-checkbox" checked="checked" /></td>
-            <td class="folder-td"><span class="spacer"></span><button type="button" class="folder-selector-button"></button></td>
+            <td class="folder-td"><span class="spacer"></span><button type="button" class="folder-selector-button link-button"></button></td>
 
             <td class="message-count-td">0</td>
             <td class="processed-message-count-td">0</td>
@@ -358,6 +369,13 @@
             <div class="preview-wrapper">
                 <img class="preview-image hidden" alt="" />
             </div>
+        </div>
+    </template>
+
+    <template id="download-folder-item-template">
+        <div>
+            <div><span class="download-folder-label"></span></div>
+            <button class="link-button"></button>
         </div>
     </template>
 

@@ -4,6 +4,7 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
 import { ReportManager } from "/module/reportmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { SaveManager } from "/module/savemanager.js";
+import { i18nText } from "/module/i18nText.js";
 
 const _filterSelect = function* (test, select) {
     for(const item of this) {
@@ -30,7 +31,7 @@ NodeList.prototype.toSet = _toSet;
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const errorText = messenger.i18n.getMessage("error");
+    const errorText = i18nText.error;
 
     const elem = (id) => document.getElementById(id);
 
@@ -204,10 +205,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gb = mb * kb;
 
     const storageUnitMap = new Map([
-        ["by", messenger.i18n.getMessage("bytesLabel")],
-        ["kb", messenger.i18n.getMessage("kbLabel")],
-        ["mb", messenger.i18n.getMessage("mbLabel")],
-        ["gb", messenger.i18n.getMessage("gbLabel")]
+        ["by", i18nText.bytesLabel],
+        ["kb", i18nText.kbLabel],
+        ["mb", i18nText.mbLabel],
+        ["gb", i18nText.gbLabel]
     ]);
 
     var extensionOptions;
@@ -327,7 +328,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 const info = {
                     status: "error",
-                    message: messenger.i18n.getMessage("noAttachmentsMessage")
+                    message: i18nText.noAttachmentsMessage
                 }
 
                 updateSaveResult(info);
@@ -459,21 +460,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    function addDownloadFolderItem(path, downloadId, label) {
-        const templateNode = downloadFolderItemTemplate.content.cloneNode(true);
-        const downloadFolderItem = templateNode.firstElementChild;
-
-        downloadFolderItem.querySelector(".download-folder-label").innerText = label;
-
-        const button = downloadFolderItem.querySelector(".link-button");
-        button.value = downloadId;
-        button.innerText = path;
-        button.addEventListener("click", (e) => {
-            browser.downloads.show(parseInt(e.srcElement.value));
-        });
-
-        downloadFoldersItemContainer.appendChild(downloadFolderItem);
-    }
+    // TODO: Relocate
 
     const updateSaveResult = async (info) =>
     {
@@ -499,7 +486,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 downloadFoldersItemContainer.innerHTML = "";
 
-                const extractedItemsText = messenger.i18n.getMessage("extractedItems");
+                const extractedItemsText = i18nText.extractedItems;
     
                 for(const [path, downloadId] of downloadLocations.entries()) {
                     addDownloadFolderItem(path, downloadId, extractedItemsText);
@@ -512,7 +499,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         else if(preventDetachment) {
             permanentlyDetachButton.disabled = true;
-            permanentlyDetachButton.title = messenger.i18n.getMessage("imapDetachUnavailable");
+            permanentlyDetachButton.title = i18nText.imapDetachUnavailable;
         }
 
         saveResultDiv.classList.add("materialize");
@@ -542,10 +529,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         detachResultDiv.classList.add("materialize");
 
         if(success) {
-            detachResultLabel.innerHTML = messenger.i18n.getMessage("detachComplete");
+            detachResultLabel.innerHTML = i18nText.detachComplete;
         }
         else {
-            detachResultLabel.innerHTML = messenger.i18n.getMessage("detachErrorMessage");
+            detachResultLabel.innerHTML =i18nText.detachErrorMessage;
             detachErrorCountSpan.innerText = info.errorCount.toString();
         }
 
@@ -589,7 +576,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if(params?.accountId) {
             const account = await messenger.accounts.get(params.accountId, false);
-            document.title = `${messenger.i18n.getMessage("extensionName")} (${account.name})`;
+            document.title = `${i18nText.extensionName} (${account.name})`;
             zipAccountNameLabel.innerHTML = account.name;
             preventDetachment = CapabilitiesManager.preventDetachment(account.type);
         }
@@ -746,7 +733,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             
             const info = {
                 status: "error",
-                message: messenger.i18n.getMessage("noMessagesMessage")
+                message: i18nText.noMessagesMessage
             }
 
             packagingDiv.classList.add("hidden");
@@ -1483,6 +1470,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         downloadFoldersOverlay.classList.add("hidden");
     }
 
+    function addDownloadFolderItem(path, downloadId, label) {
+        const templateNode = downloadFolderItemTemplate.content.cloneNode(true);
+        const downloadFolderItem = templateNode.firstElementChild;
+
+        downloadFolderItem.querySelector(".download-folder-label").innerText = label;
+
+        const button = downloadFolderItem.querySelector(".link-button");
+        button.value = downloadId;
+        button.innerText = path;
+        button.addEventListener("click", (e) => {
+            browser.downloads.show(parseInt(e.srcElement.value));
+        });
+
+        downloadFoldersItemContainer.appendChild(downloadFolderItem);
+    }
+
     async function generateReport(event) {
         const saveResult = await ReportManager.generateReport(attachmentManager, {
             reportStyleTemplate: reportStyleTemplate,
@@ -1499,7 +1502,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if(!downloadLocations.has(path)) {
                 downloadLocations.set(path, saveResult.downloadId);
-                addDownloadFolderItem(path, saveResult.downloadId, messenger.i18n.getMessage("report"));
+                addDownloadFolderItem(path, saveResult.downloadId, i18nText.report);
                 showFilesButton.value = "*";
             }
         }
@@ -1575,6 +1578,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         detachResultDiv.classList.add("hidden");
         detachResultLabel.innerText = "";
         detachErrorCountSpan.innerText = "0";
+
+        downloadLocations = null;
+        downloadFoldersItemContainer.innerHTML = "";
+        showFilesButton.value = "";
 
         document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = true; });            
     }

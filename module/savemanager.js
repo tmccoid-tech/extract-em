@@ -1,3 +1,5 @@
+import { i18nText } from "/module/i18nText.js";
+
 export class SaveManager {
     static async determineDownloadDirectory() {
         let result = null;
@@ -90,7 +92,7 @@ export class SaveManager {
                     else if(currentState == "interrupted") {
     //                    console.log("Save interrupted");
 
-                        const error = (progress.error) ? progress.error.message : messenger.i18n.getMessage("saveFailed");
+                        const error = (progress.error) ? progress.error.message : i18nText.saveFailed;
 
                         result = onSaveError(error);
 
@@ -135,7 +137,7 @@ export class SaveManager {
         return {
             success: true,
             status: "success",
-            message: messenger.i18n.getMessage("saveComplete"),
+            message: i18nText.saveComplete,
             downloadId: downloadId
         };
     }

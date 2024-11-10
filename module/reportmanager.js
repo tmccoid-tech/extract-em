@@ -1,4 +1,5 @@
 import { SaveManager } from "/module/savemanager.js";
+import { i18nText } from "/module/i18nText.js";
 
 export class ReportManager {
     static async generateReport(attachmentManager, parameters) {
@@ -116,7 +117,7 @@ export class ReportManager {
                         generateFilenameHeaderRow(currentTable, filename);
                     }
 
-                    const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
+                    const specialMessage = (item.isDeleted) ? i18nText.detached : null;
 
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, specialMessage));
                 }
@@ -131,7 +132,7 @@ export class ReportManager {
             generateSection(".duplicate-table", (currentTable) => {
                 let sequenceNumber = 0;
                 for(const item of duplicateFileTracker) {
-                    const specialMessage = (item.isDeleted) ? messenger.i18n.getMessage("detached") : null;
+                    const specialMessage = (item.isDeleted) ? i18nText.detached : null;
 
                     currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(item.messageId), ++sequenceNumber, specialMessage));
                 }
@@ -262,7 +263,7 @@ export class ReportManager {
 
         const result = await SaveManager.save({
             fileData: reportFileData,
-            filename: `${messenger.i18n.getMessage("extractionReport")}-${new Date().getTime()}.html`,
+            filename: `${i18nText.extractionReport}-${new Date().getTime()}.html`,
             saveAs: true
         });
 

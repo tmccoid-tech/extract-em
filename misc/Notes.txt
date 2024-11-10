@@ -124,9 +124,9 @@ Direct save:
 
 	Modify report
 
-Display download directory
+XXX Display download directory (show files)
 
-Open download directory/ies post-extraction
+XXX Open download directory/ies post-extraction
 
 
 

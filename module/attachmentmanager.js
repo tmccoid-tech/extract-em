@@ -1,6 +1,7 @@
 import { ZipEm } from "/module/zipem.js";
 import { EmbedManager } from "/module/embedmanager.js";
 import { SaveManager } from "/module/savemanager.js";
+import { i18nText } from "/module/i18nText.js";
 
 export class AttachmentManager {
     #platformOs;
@@ -384,7 +385,7 @@ export class AttachmentManager {
                         const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
 
                         if(attachmentFile.size == 0) {
-                            throw new Error(messenger.i18n.getMessage("missingAttachment"));
+                            throw new Error(i18nText.missingAttachment);
                         }
 
                         attachmentInfo.size = attachmentFile.size;
@@ -900,7 +901,7 @@ export class AttachmentManager {
                     attachmentFile = await this.#getAttachmentFile(item.messageId, item.partName);
     
                     if(attachmentFile.size == 0) {
-                        throw new Error(messenger.i18n.getMessage("missingAttachment"));
+                        throw new Error(i18nText.missingAttachment);
                     }
                 }
                 catch(e) {
@@ -1041,7 +1042,7 @@ export class AttachmentManager {
             if(!hasEmbeds) {
                 this.#reportSaveResult({
                     status: "success",
-                    message: messenger.i18n.getMessage("saveComplete"),
+                    message: i18nText.saveComplete,
                     attachmentCount: packagingTracker.items.length,
                     downloadLocations: packagingTracker.downloadLocations                    
                 });
@@ -1276,7 +1277,7 @@ export class AttachmentManager {
 
             this.#reportSaveResult({
                 status: "success",
-                message: messenger.i18n.getMessage("saveComplete"),
+                message: i18nText.saveComplete,
                 attachmentCount: packagingTracker.items.length,
                 downloadLocations: packagingTracker.downloadLocations
             });
@@ -1297,7 +1298,7 @@ export class AttachmentManager {
 
         const saveOptions = {
             fileData: zipFile,
-            filename: `${messenger.i18n.getMessage(disposition)}-${new Date().getTime()}.zip`,
+            filename: `${i18nText[disposition]}-${new Date().getTime()}.zip`,
             saveAs: this.#alwaysPromptForDownloadLocation,
             onSaveStarted: (downloadItem) => {
                 this.#packagingFilenameList.push(downloadItem.filename);

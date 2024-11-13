@@ -812,7 +812,8 @@ export class AttachmentManager {
 
         items.sort((a, b) => a.size - b.size);
 
-        const maxSize = 100_000_000;
+        const maxSize = 750_000_000;
+//        const maxSize = 100_000_000;
         let currentSize = 0;
         let currentStart = 0;
 
@@ -858,11 +859,13 @@ export class AttachmentManager {
 
         this.#duplicateFileNameTracker = new Map();
 
+        let extractionCompleted = true;
+
         if(items.length > 0) {
-            await this.#extractAttachments(storageProgressInfo);
+            extractionCompleted = await this.#extractAttachments(storageProgressInfo);
         }
 
-        if(embedItems.length > 0) {
+        if(embedItems.length > 0 && extractionCompleted) {
             this.#duplicateEmbedFileTracker = new Map();
 
             await this.#extractEmbeds(storageProgressInfo);
@@ -1008,14 +1011,14 @@ export class AttachmentManager {
 
                 const saveResult = await this.#saveZipFile(zipEm, storageProgressInfo);
 
+                const isFinal = (packagingTracker.currentPackageIndex == packagingTracker.extractionSubsets.length);
+
                 if(saveResult.success) {
                     storageProgressInfo.filesCreated++;
 
                     this.#reportStorageProgress(storageProgressInfo);
 
                     await this.#updateDownloadLocations(saveResult.downloadId);
-
-                    const isFinal = (packagingTracker.currentPackageIndex == packagingTracker.extractionSubsets.length);
 
                     if(isFinal && !hasEmbeds) {
                         saveResult.attachmentCount = packagingTracker.items.length;
@@ -1025,9 +1028,10 @@ export class AttachmentManager {
                     }
                 }
                 else {
+                    saveResult.downloadLocations = packagingTracker.downloadLocations;
                     this.#reportSaveResult(saveResult);
 
-                    return;
+                    return false;
                 }
             }
 
@@ -1048,6 +1052,8 @@ export class AttachmentManager {
                 });
             }
         }
+
+        return true;
     }
 
     async #extractEmbeds(storageProgressInfo) {
@@ -1082,7 +1088,6 @@ export class AttachmentManager {
         }
 
         const maxSize = 750_000_000;
-//        const maxSize = 1_000_000;
         let currentSize = 0;
 
         let zipEm;
@@ -1122,6 +1127,7 @@ export class AttachmentManager {
                     continue;
                 }
                 else {
+                    saveResult.downloadLocations = packagingTracker.downloadLocations;
                     this.#reportSaveResult(saveResult);
 
                     return;
@@ -1266,6 +1272,7 @@ export class AttachmentManager {
                 saveResult.downloadLocations = packagingTracker.downloadLocations;
             }
 
+            saveResult.downloadLocations = packagingTracker.downloadLocations;
             this.#reportSaveResult(saveResult);
         }
         else {

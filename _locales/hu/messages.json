@@ -398,5 +398,42 @@
     },
     "rn1_5_2_New01": {
         "message": "Permanently Detach button disabled for IMAP accounts until further notice."
-    }
+    },
+
+    "rn1_6_1_Notice01": {
+        "message": "CAUTION IS ADVISED when using the new \"Save individual attachments\" storage option; it is mandatorily restricted to the directory specified in the Thunderbird settings, which may, by default, be the user's desktop folder!"
+    },
+    "rn1_6_1_New01": { "message": "Added option/setting (Save individual attachments) to download extracted files directly to the file system; please see the cautionary note above" },
+    "rn1_6_1_New02": { "message": "Added Show Files button for opening save locations following extraction" },
+    "rn1_6_1_New03": { "message": "Report improvements when save operations are canceled by the user" },
+    "rn1_6_1_New04": { "message": "Improved options/settings layout" },
+
+    "saving": { "message": "Saving" },
+    "attachmentsSaved": { "message": "attachment(s) saved" },
+    "embedsSaved": { "message": "embed(s) saved" },
+
+    "packageAttachments": {
+        "message": "Package attachments (recommended)"
+    },
+    "packageAttachmentsDesc": {
+        "message": "Stores extracted items in archive (.zip) files"
+    },
+    "directSave": {
+        "message": "Save individual attachments"
+    },
+    "directSaveDesc": {
+        "message": "Items are individually saved to the folder specified in the Thunderbird settings"
+    },
+    "currentSaveDirectory": { "message": "Current save directory (Thunderbird settings)" },
+    "unavailable": { "message": "Unavailable" },
+
+    "uiMode": { "message": "UI Mode" },
+    "discoveryOptions": { "message": "Discovery Options" },
+    "storageOptions": { "message": "Storage Options" },
+
+    "showFiles": { "message": "Show Files" },
+    "extractedItems": { "message": "Extracted Items" },
+    "report": { "message": "Report" },
+
+    "saveCanceled": { "message": "Save canceled" }
 }

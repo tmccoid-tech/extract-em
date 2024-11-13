@@ -247,8 +247,8 @@
                     <span id="save-result-label"></span>
                 </div>
                 <div class="result-button-container save-result-content-div">
-                    <button id="show-files-button" class="permanently-detach-container close-button disablable" disabled="disabled">__MSG_showFiles__</button>
-                    <button id="view-report-button" class="close-button">__MSG_viewReport__</button>                       
+                    <button id="show-files-button" class="permanently-detach-container close-button hidden">__MSG_showFiles__</button>
+                    <button id="view-report-button" class="close-button hidden">__MSG_viewReport__</button>                       
                     <button id="permanently-detach-button" class="permanently-detach-container close-button disablable" disabled="disabled"><img class="hazard-image" src="hazard-sign.png" /><span>__MSG_permanentlyDetach__</span></button>
                     <button id="close-zip-panel-button" class="close-button disablable" disabled="disabled">__MSG_close__</button>
                     <button id="exit-extension-button" class="close-button disablable" disabled="disabled">__MSG_closeAndExit__</button>
@@ -274,6 +274,19 @@
     <div id="release-notes-overlay" class="modal-overlay hidden">
         <div id="release-notes-close-panel">
             <button type="button" id="close-release-notes-button">__MSG_close__</button>
+            <div class="release-notes-panel hidden" version="1.6">
+                <h4>__MSG_releaseNotesTitle__ 1.6.1</h4>
+                <div class="notice-panel">
+                    __MSG_rn1_6_1_Notice01__
+                </div>
+                <h4>__MSG_whatsNew__</h4>
+                <ul>
+                    <li>[1.6.1] __MSG_rn1_6_1_New01__</li>
+                    <li>[1.6.1] __MSG_rn1_6_1_New02__</li>
+                    <li>[1.6.1] __MSG_rn1_6_1_New03__</li>
+                    <li>[1.6.1] __MSG_rn1_6_1_New04__</li>
+                </ul>
+            </div>
             <div class="release-notes-panel hidden" version="1.5">
                 <h4>__MSG_releaseNotesTitle__ 1.5.2</h4>
                 <div class="notice-panel">
@@ -480,6 +493,10 @@
             .filename-row {
                 background-color: rgba(192, 192, 192, .25);                
                 text-align: center;
+            }
+
+            .filename-row.canceled {
+                background-color: rgba(255, 207, 207, 0.37);
             }
 
         </style>

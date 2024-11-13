@@ -113,7 +113,7 @@ XXX Report: Do not display detach errors section when no errors encountered
 
 Ensure resets comprehensive
 
-Extraction Report: handle case of user cancellation (either full or partial)
+XXX Extraction Report: handle case of user cancellation (either full or partial)
 
 Direct save:
 	XXX Modify options
@@ -122,13 +122,17 @@ Direct save:
 
 	XXX Integrate save logic with packaging
 
-	Modify report
+	XXX Modify report
 
 XXX Display download directory (show files)
 
 XXX Open download directory/ies post-extraction
 
+Fix release notes displayed twice (TB 102 & 115)
 
+XXX [NOT POSSIBLE - message count not known in advance] Do not display Extract Immediate button when only subfolders have attachments
+
+Images HUGE in preview (beta; only happens with large number of files???)
 
 LQ
 

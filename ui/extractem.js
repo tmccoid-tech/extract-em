@@ -471,9 +471,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         saveResultLabel.innerHTML = info.message;
         lastFileNameDiv.innerText = "...";
 
-        document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });            
+        document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });
 
-        if(success) {
+        if(success || info.downloadLocations?.size) {
             downloadLocations = new Map(info.downloadLocations);
 
             if(downloadLocations.size == 1) {
@@ -483,15 +483,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             else {
                 showFilesButton.value = "*";
-
-                downloadFoldersItemContainer.innerHTML = "";
-
-                const extractedItemsText = i18nText.extractedItems;
-    
-                for(const [path, downloadId] of downloadLocations.entries()) {
-                    addDownloadFolderItem(path, downloadId, extractedItemsText);
-                }
             }
+
+            downloadFoldersItemContainer.innerHTML = "";
+
+            const extractedItemsText = i18nText.extractedItems;
+    
+            for(const [path, downloadId] of downloadLocations.entries()) {
+                addDownloadFolderItem(path, downloadId, extractedItemsText);
+            }
+
+            showFilesButton.classList.remove("hidden");
+            viewReportButton.classList.remove("hidden");
         }
 
         if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0)) {
@@ -735,8 +738,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 status: "error",
                 message: i18nText.noMessagesMessage
             }
-
-            packagingDiv.classList.add("hidden");
 
             updateSaveResult(info);
         }
@@ -1022,7 +1023,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const previewWrapper = attachmentPanel.querySelector(".preview-wrapper");
 
-        if(defaultImagePreview != "none") {
+        if(defaultImagePreview.toLowerCase() != "none") {
             if (attachment.isPreviewable) {
                 previewWrapper.classList.add(defaultImagePreview);
 
@@ -1509,6 +1510,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function closeZipPanel() {
+        downloadLocations = null;
+
         if(useImmediateMode) {
             attachmentManager.reset();
         }
@@ -1579,9 +1582,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         detachResultLabel.innerText = "";
         detachErrorCountSpan.innerText = "0";
 
-        downloadLocations = null;
         downloadFoldersItemContainer.innerHTML = "";
         showFilesButton.value = "";
+
+        showFilesButton.classList.add("hidden");
+        viewReportButton.classList.add("hidden");
 
         document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = true; });            
     }

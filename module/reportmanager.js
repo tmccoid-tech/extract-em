@@ -65,7 +65,8 @@ export class ReportManager {
         const generateFilenameHeaderRow = (currentTable, filename) => {
             const row = document.createElement("div");
             row.classList.add("filename-row");
-            row.textContent = filename;
+            row.classList.toggle("canceled", !filename)
+            row.textContent = (filename) ? filename : `*** ${i18nText.saveCanceled} ***`;
             currentTable.append(row);
         };
 

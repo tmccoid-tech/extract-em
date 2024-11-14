@@ -33,9 +33,9 @@
 
     "includeEmbeds": { "message": "Include embeds (inline-attached images)" },
     
-    "useFileTypeFilter": { "message": "Use file type filter" },
-    "fileTypeFilter": { "message": "File Type Filter"},
-    "fileTypeFilterApplied": { "message" : "File type filter applied"},
+    "useFileTypeFilter": { "message": "Use file-type filter" },
+    "fileTypeFilter": { "message": "File-type Filter"},
+    "fileTypeFilterApplied": { "message" : "File-type filter applied"},
 
     "alwaysShowQuickmenu": {
         "message": "Always show this Quickmenu",
@@ -166,7 +166,7 @@
 
     "alwaysPromptForDownloadLocation": { "message": "Always prompt for save location" },
     "alwaysPromptForDownloadLocationMessage": { "message":
-        "If checked, the user is always prompted to select a save directory; otherwise, files are directly saved to the folder specified in the Thunderbird settings"
+        "If checked, the user is always prompted to select a save directory; otherwise, files are directly saved to the folder* specified in the Thunderbird settings"
     },
 
     "includeSubFolders": {
@@ -407,6 +407,7 @@
     "rn1_6_1_New02": { "message": "Added Show Files button for opening save locations following extraction" },
     "rn1_6_1_New03": { "message": "Report improvements when save operations are canceled by the user" },
     "rn1_6_1_New04": { "message": "Improved options/settings layout" },
+    "rn1_6_1_Fix01": { "message": "Previously deleted attachments were not properly identified" },
 
     "saving": { "message": "Saving" },
     "attachmentsSaved": { "message": "attachment(s) saved" },
@@ -422,7 +423,7 @@
         "message": "Save individual attachments"
     },
     "directSaveDesc": {
-        "message": "Items are individually saved to the folder specified in the Thunderbird settings"
+        "message": "Items are individually saved to the folder* specified in the Thunderbird settings"
     },
     "currentSaveDirectory": { "message": "Current save directory (Thunderbird settings)" },
     "unavailable": { "message": "Unavailable" },

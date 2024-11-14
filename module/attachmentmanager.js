@@ -326,7 +326,7 @@ export class AttachmentManager {
             const fullMessage = result.fullMessage;
 
             this.#log(`Generate alteration map: ${message.date} - ${message.subject}`);
-            const alterationMap = this.#generateAlterationMap(fullMessage.parts);
+            const alterationMap = this.#generateAlterationMap(fullMessage.parts, message);
 
             const fileTypeFilter = this.#fileTypeFilter;
 
@@ -601,7 +601,7 @@ export class AttachmentManager {
             }
 
             if(part.parts) {
-                this.#generateAlterationMap(part.parts, alterationMap);
+                this.#generateAlterationMap(part.parts, message, alterationMap);
             }
         }
 
@@ -1095,6 +1095,8 @@ export class AttachmentManager {
         if(packageAttachments) {
             zipEm = new ZipEm();
         }
+
+        storageProgressInfo.status = "packaging";
 
         for(let i = 0; i < groupedEmbedItems.length; i++) {
             const messageItems = groupedEmbedItems[i];

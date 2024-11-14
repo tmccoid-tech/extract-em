@@ -37,7 +37,9 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
                       };
                     },
                     {
-                        preserveFolderStructure: params.preserveFolderStructure
+                        preserveFolderStructure: params.preserveFolderStructure,
+                        includeEmbeds: extensionOptions.includeEmbeds,
+                        packageAttachments: extensionOptions.packageAttachments
                     }
                   );
             },
@@ -55,9 +57,6 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
             omitDuplicates: extensionOptions.omitDuplicates,
 
             useMailFolderId: CapabilitiesManager.useMailFolderId
-
-            // TODO: Add useAdvancedGetRaw from capabilities
-            // TODO: Add useMailFolderId from capabilities
         });
 
         const selectedFolderPaths = assembleFolderPaths(params.selectedFolders[0]);

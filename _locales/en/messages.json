@@ -406,7 +406,8 @@
     "rn1_6_1_New01": { "message": "Added option/setting (Save individual attachments) to download extracted files directly to the file system; please see the cautionary note above" },
     "rn1_6_1_New02": { "message": "Added Show Files button for opening save locations following extraction" },
     "rn1_6_1_New03": { "message": "Report improvements when save operations are canceled by the user" },
-    "rn1_6_1_New04": { "message": "Improved options/settings layout" },
+    "rn1_6_1_New04": { "message": "Report opens immediately in new tab" },
+    "rn1_6_1_New05": { "message": "Improved options/settings layout" },
     "rn1_6_1_Fix01": { "message": "Previously deleted attachments were not properly identified" },
 
     "saving": { "message": "Saving" },

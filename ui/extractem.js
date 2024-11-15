@@ -1499,13 +1499,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         if(saveResult.success) {
-            const path = await SaveManager.getFolderByDownloadId(saveResult.downloadId);
+            const path = SaveManager.getFolderFromPath(saveResult.reportFilename);
 
             if(!downloadLocations.has(path)) {
                 downloadLocations.set(path, saveResult.downloadId);
                 addDownloadFolderItem(path, saveResult.downloadId, i18nText.report);
                 showFilesButton.value = "*";
             }
+
+            messenger.tabs.create({ url: saveResult.reportFilename });
         }
     }
 

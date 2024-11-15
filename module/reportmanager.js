@@ -28,6 +28,9 @@ export class ReportManager {
         const reportBody = document.createElementNS(namespace, "body");
 
         // Populate head section
+        const reportTitle = document.createElement("title");
+        reportTitle.innerText = `${i18nText.extensionName} - ${i18nText.extractionReport}`;
+        reportHead.append(reportTitle);
 
         const reportIcon = document.createElement("link");
         reportIcon.setAttribute("rel", "icon");
@@ -262,11 +265,18 @@ export class ReportManager {
 
         const reportFileData = new Blob([fileText], { type: "text/html" });
 
+        let reportFilename = null;
+
         const result = await SaveManager.save({
             fileData: reportFileData,
             filename: `${i18nText.extractionReport}-${new Date().getTime()}.html`,
-            saveAs: true
+            saveAs: true,
+            onSaveStarted: (downloadItem) => {
+                reportFilename = downloadItem.filename
+            }
         });
+
+        result.reportFilename = reportFilename;
 
         return result;
     }

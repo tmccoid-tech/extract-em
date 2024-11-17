@@ -1,0 +1,587 @@
+{
+    "extensionName": {
+        "message": "Extrayez les pièces jointes!"
+    },
+    "extensionDescription": {
+        "message": "Extrait les pièces jointes des messages sous le dossier ou le compte sélectionné."
+    },
+    "extractSingleDescription": {
+        "message": "Extrait les pièces jointes du dossier sélectionné, en omettant les sous-dossiers",
+        "description": "Description de l'action pour le bouton Quickmenu d'extraction unique"
+    },
+    "subfolders": {
+        "message": "sous-dossiers"
+    },
+    "extractRecursiveDescription": {
+        "message": "Extrait les pièces jointes des dossiers et sous-dossiers sélectionnés (récursif)",
+        "description": "Description de l'action pour le bouton Quickmenu d'extraction récursive"
+    },
+    "letMeChoose": {
+        "message": "Laisse-moi choisir",
+        "description": "Étiquette pour le bouton Quickmenu de sélection standard"
+    },
+    "standardSelectionDescription": {
+        "message": "Vous permet de choisir des dossiers spécifiques, ou même des pièces jointes spécifiques pour la découverte et l'extraction",
+        "description": "Description de l'action pour le bouton Quickmenu de sélection standard"
+    },
+    "includeEmbeds": {
+        "message": "Inclure les intégrations (images jointes en ligne)"
+    },
+    "useFileTypeFilter": {
+        "message": "Utiliser le filtre de type de fichier"
+    },
+    "fileTypeFilter": {
+        "message": "Filtre de type de fichier"
+    },
+    "fileTypeFilterApplied": {
+        "message": "Filtre de type de fichier appliqué"
+    },
+    "alwaysShowQuickmenu": {
+        "message": "Toujours afficher ce menu rapide",
+        "description": "Étiquette pour la case à cocher de persistance du menu rapide"
+    },
+    "noAttachmentsMessage": {
+        "message": "Il n'y a aucune pièce jointe dans le dossier sélectionné.",
+        "description": ""
+    },
+    "noMessagesMessage": {
+        "message": "Il n'y a aucun message dans le dossier sélectionné.",
+        "description": ""
+    },
+    "attachmentSummary": {
+        "message": "Résumé des pièces jointes"
+    },
+    "attachmentList": {
+        "message": "Liste des pièces jointes"
+    },
+    "folders": {
+        "message": "Dossiers"
+    },
+    "messages": {
+        "message": "Messages"
+    },
+    "attachment": {
+        "message": "pièce jointe"
+    },
+    "attachments": {
+        "message": "Pièces jointes"
+    },
+    "attachmentsPP": {
+        "message": "pièce jointe(s)",
+        "description": "PP = parenthèse pluriel"
+    },
+    "embed": {
+        "message": "intégration"
+    },
+    "embeds": {
+        "message": "Intégrations"
+    },
+    "embedsPP": {
+        "message": "intégration(s)"
+    },
+    "selected": {
+        "message": "choisi"
+    },
+    "count": {
+        "message": "Compte"
+    },
+    "processed": {
+        "message": "Traité"
+    },
+    "withAbbrev": {
+        "message": "avec"
+    },
+    "size": {
+        "message": "Taille"
+    },
+    "discoverAttachments": {
+        "message": "Découvrez les pièces jointes",
+        "description": "Étiquette pour le bouton de découverte des pièces jointes"
+    },
+    "reset": {
+        "message": "Réinitialiser"
+    },
+    "closeZoomMessage": {
+        "message": "Cliquez sur l'image pour fermer."
+    },
+    "discovering": {
+        "message": "Découvrir"
+    },
+    "discoveryProgressMessage": {
+        "message": "$1 pièce(s) jointe(s) dans $2 de message(s) à $3",
+        "description": "{# of discovered} pièce(s) jointe(s) dans {# of messages including attachments/embeds)} sur {total # of discovered messages}"
+    },
+    "discoverySelectionMessage": {
+        "message": "$1 sur $2 pièce(s) jointe(s) sélectionnée(s)",
+        "description": "{# of selected} des {# of discovered} pièces jointes sélectionnées"
+    },
+    "embedDiscoverySelectionMessage": {
+        "message": "$1 sur $2 intégré(s) sélectionné(s)",
+        "description": "{# of selected} sur {# of discovered} intégration(s) sélectionnée(s)"
+    },
+    "preparing": {
+        "message": "Préparation",
+        "description": "OBSOLÈTE"
+    },
+    "exclusions": {
+        "message": "Exclusions"
+    },
+    "alterationsIdentified": {
+        "message": "Pièces jointes détachées/supprimées identifiées",
+        "description": "Cordialement les pièces jointes qui ont été détachées ou supprimées du message source (modifié)."
+    },
+    "duplicatesOmitted": {
+        "message": "doublon(s) omis"
+    },
+    "packaging": {
+        "message": "Emballement"
+    },
+    "of": {
+        "message": "de",
+        "description": "Utilisé dans le sens de «x éléments sur y éléments au total»"
+    },
+    "attachmentsPackaged": {
+        "message": "pièce(s) jointe(s) emballée(s)"
+    },
+    "embedsPackaged": {
+        "message": "intégrer(s) emballé(s)"
+    },
+    "packageFilesSaved": {
+        "message": "fichier(s) de package enregistré(s)"
+    },
+    "errorsEncountered": {
+        "message": "erreurs rencontrées"
+    },
+    "result": {
+        "message": "Résultat"
+    },
+    "permanentlyDetach": {
+        "message": "Détacher définitivement"
+    },
+    "imapDetachUnavailable": {
+        "message": "Cette fonctionnalité n'est actuellement pas disponible pour les comptes IMAP."
+    },
+    "close": {
+        "message": "Fermer"
+    },
+    "closeAndExit": {
+        "message": "Fermer et quitter"
+    },
+    "viewReport": {
+        "message": "Générer un rapport"
+    },
+    "reportSavedTo": {
+        "message": "Rapport enregistré dans"
+    },
+    "permanentDetachWarning": {
+        "message": "AVERTISSEMENT: Cette action supprimera définitivement les pièces jointes extraites (et les doublons) de leurs messages électroniques sources. Les intégrations sont exclues."
+    },
+    "proceed": {
+        "message": "Procéder"
+    },
+    "cancel": {
+        "message": "Annuler"
+    },
+    "detached": {
+        "message": "détaché"
+    },
+    "options": {
+        "message": "Possibilités"
+    },
+    "none": {
+        "message": "Aucun"
+    },
+    "useInteractiveUi": {
+        "message": "Utiliser l'interface utilisateur interactive",
+        "description": ""
+    },
+    "useInteractiveUiDescription": {
+        "message": "Interface utilisateur entièrement interactive; permet la sélection de pièces jointes spécifiques à extraire",
+        "description": ""
+    },
+    "displayQuickmenu": {
+        "message": "Afficher le menu rapide",
+        "description": ""
+    },
+    "displayQuickmenuDescription": {
+        "message": "Affiche un menu contextuel lorsque Extract 'Em! est ouvert",
+        "description": ""
+    },
+    "extractImmediate": {
+        "message": "Extraire immédiatement",
+        "description": ""
+    },
+    "extractImmediateDescription": {
+        "message": "Enregistre toutes les pièces jointes des messages dans le dossier sélectionné avec une intervention limitée de l'utilisateur; exclut les sous-dossiers",
+        "description": ""
+    },
+    "alwaysPromptForDownloadLocation": {
+        "message": "Toujours demander l'emplacement de sauvegarde"
+    },
+    "alwaysPromptForDownloadLocationMessage": {
+        "message": "Si cette case est cochée, l'utilisateur est toujours invité à sélectionner un répertoire de sauvegarde; sinon, les fichiers sont directement enregistrés dans le dossier* spécifié dans les paramètres de Thunderbird"
+    },
+    "includeSubFolders": {
+        "message": "Inclure les sous-dossiers",
+        "description": ""
+    },
+    "includeSubFoldersDescription": {
+        "message": "Inclut les pièces jointes dans les sous-dossiers lors de l'extraction immédiate",
+        "description": ""
+    },
+    "useSilentMode": {
+        "message": "Utiliser le mode \"silencieux\"",
+        "description": ""
+    },
+    "useSilentModeDescription": {
+        "message": "Omet la présentation de l'interface utilisateur, à l'exception de l'invite de sauvegarde",
+        "description": ""
+    },
+    "useFilenamePattern": {
+        "message": "Utiliser le modèle de nom de fichier",
+        "description": "Option permettant de remplacer le nom de fichier de la pièce jointe d'origine par un nom construit à partir des attributs du message"
+    },
+    "useFilenamePatternDescription": {
+        "message": "Remplace le nom de fichier de la pièce jointe d'origine par un nom construit à partir des attributs du message"
+    },
+    "edit": {
+        "message": "Modifier"
+    },
+    "pattern": {
+        "message": "Modèle"
+    },
+    "clear": {
+        "message": "Effacer"
+    },
+    "revert": {
+        "message": "Revenir"
+    },
+    "placeholders": {
+        "message": "Espaces réservés"
+    },
+    "from": {
+        "message": "Depuis"
+    },
+    "sender": {
+        "message": "Expéditeur"
+    },
+    "author": {
+        "message": "Auteur"
+    },
+    "originalFilename": {
+        "message": "Nom de fichier d'origine"
+    },
+    "date": {
+        "message": "Date"
+    },
+    "subject": {
+        "message": "Sujet"
+    },
+    "timestamp": {
+        "message": "Horodatage (hhmmss)",
+        "description": "h = heure, m = minute, s = seconde; implique un format d'heure (154230 = 15:42:30 PM)"
+    },
+    "sample": {
+        "message": "Échantillon"
+    },
+    "save": {
+        "message": "Sauvegarder"
+    },
+    "includeEmbeddedImages": {
+        "message": "Inclure des images intégrées",
+        "description": ""
+    },
+    "includeEmbeddedImagesDescription": {
+        "message": "Identifie et inclut des images intégrées dans le corps du message (images en ligne)",
+        "description": ""
+    },
+    "useFileTypeFilterDescription": {
+        "message": "Limite les résultats aux types de fichiers sélectionnés, spécifiés par extension (.jpg, .mp3, .mov, etc.)"
+    },
+    "omitDuplicates": {
+        "message": "Omettre les doublons"
+    },
+    "omitDuplicatesDescription": {
+        "message": "Omet les pièces jointes en double (nom de fichier et taille identiques); ne concerne pas les intégrations"
+    },
+    "preserveFolderStructure": {
+        "message": "Préserver la structure des dossiers",
+        "description": ""
+    },
+    "preserveFolderStructureDescription": {
+        "message": "Stocke les pièces jointes dans l'archive .zip dans les mêmes dossiers dans lesquels elles résident dans Thunderbird",
+        "description": ""
+    },
+    "useEnhancedLogging": {
+        "message": "Utiliser la journalisation améliorée"
+    },
+    "useEnhancedLoggingDescription": {
+        "message": "Affiche des informations de dépannage supplémentaires sur la console du débogueur."
+    },
+    "defaultGrouping": {
+        "message": "Regroupement par défaut",
+        "description": ""
+    },
+    "defaultGroupingByAuthor": {
+        "message": "Par auteur",
+        "description": ""
+    },
+    "defaultGroupingByFolder": {
+        "message": "Par dossier",
+        "description": ""
+    },
+    "defaultGroupingByExtension": {
+        "message": "Par extension de fichier",
+        "description": ""
+    },
+    "defaultGroupingDescription": {
+        "message": "Regroupe les éléments dans la liste des pièces jointes en fonction de l'attribut spécifié",
+        "description": ""
+    },
+    "imagePreview": {
+        "message": "Aperçu de l'image",
+        "description": ""
+    },
+    "imagePreviewSmall": {
+        "message": "Petit",
+        "description": ""
+    },
+    "imagePreviewMedium": {
+        "message": "Moyen",
+        "description": ""
+    },
+    "imagePreviewLarge": {
+        "message": "Grand",
+        "description": ""
+    },
+    "imagePreviewDescription": {
+        "message": "Spécifie la taille de l'image d'aperçu pour les éléments de la liste des pièces jointes.",
+        "description": ""
+    },
+    "extractionReport": {
+        "message": "Rapport_d'extraction"
+    },
+    "summaryForDate": {
+        "message": "Résumé pour",
+        "description": "Résumé pour {date}"
+    },
+    "savedAttachments": {
+        "message": "Pièces jointes enregistrées"
+    },
+    "savedEmbeds": {
+        "message": "Intégrations enregistrées"
+    },
+    "packageFileCount": {
+        "message": "Nombre de fichiers de package"
+    },
+    "previouslyDetachedDeleted": {
+        "message": "Pièces jointes précédemment détachées/supprimées"
+    },
+    "duplicateAttachments": {
+        "message": "Pièces jointes en double"
+    },
+    "duplicateEmbeds": {
+        "message": "Intégrations en double"
+    },
+    "omitted": {
+        "message": "Omis"
+    },
+    "errors": {
+        "message": "Erreurs"
+    },
+    "permanentDetachmentErrors": {
+        "message": "Erreurs de détachement permanent"
+    },
+    "saveComplete": {
+        "message": "Sauvegarde terminée!"
+    },
+    "saveFailed": {
+        "message": "L'enregistrement a échoué; erreur inconnue."
+    },
+    "general": {
+        "message": "Général"
+    },
+    "images": {
+        "message": "Images"
+    },
+    "audio": {
+        "message": "Audio"
+    },
+    "video": {
+        "message": "Vidéo"
+    },
+    "unknownFileType": {
+        "message": "Type de fichier inconnu"
+    },
+    "unlistedFileTypes": {
+        "message": "Tous les types de fichiers non répertoriés ci-dessus"
+    },
+    "addType": {
+        "message": "Ajouter un type"
+    },
+    "addTypeMessage": {
+        "message": "Saisissez une extension de fichier de 3 à 5 caractères (txt, csv, etc.)."
+    },
+    "bytesLabel": {
+        "message": "octets"
+    },
+    "kbLabel": {
+        "message": "Ko"
+    },
+    "mbLabel": {
+        "message": "Mo"
+    },
+    "gbLabel": {
+        "message": "Go"
+    },
+    "error": {
+        "message": "erreur"
+    },
+    "missingAttachment": {
+        "message": "La pièce jointe ne contient aucune donnée; présumé supprimé/détaché."
+    },
+    "detachComplete": {
+        "message": "Détachement terminé!"
+    },
+    "detachErrorMessage": {
+        "message": "Une ou plusieurs pièces jointes n'ont pas réussi à se détacher."
+    },
+    "embedErrorUnableToReadFile": {
+        "message": "Impossible de lire le message intégré ($1)."
+    },
+    "embedErrorInvalidBase64": {
+        "message": "Données Base64 non valides dans l'intégration $1."
+    },
+    "embedContentTypeMissing": {
+        "message": "En-tête Intégrer le type de contenu introuvable ($1)."
+    },
+    "releaseNotesTitle": {
+        "message": "Notes de version pour Extract 'Em!"
+    },
+    "whatsNew": {
+        "message": "Quoi de neuf"
+    },
+    "whatsFixed": {
+        "message": "Ce qui est corrigé"
+    },
+    "rn1_2_1_Notice01": {
+        "message": "AVIS: Si vous avez utilisé la version 1.1.4 de cette extension (disponible entre le 10 et le 23 avril 2024 environ), tous les fichiers d'archive que vous avez produits sont susceptibles d'être corrompus."
+    },
+    "rn1_2_1_Notice02": {
+        "message": "Cela était dû à une mauvaise configuration de la bibliothèque de codes tierce (zip.js) utilisée pour générer l'archive."
+    },
+    "rn1_2_1_Notice03": {
+        "message": "L'auteur de cette extension souhaite exprimer ses plus sincères excuses à tous les utilisateurs qui auraient pu être gênés par ce problème."
+    },
+    "rn1_2_1_New01": {
+        "message": "Option ajoutée pour extraire les images intégrées (jointes en ligne)"
+    },
+    "rn1_2_1_New02": {
+        "message": "Ajout d'une notification de nouvelle version (affichage automatique des notes de version) lors de la sortie d'une nouvelle version"
+    },
+    "rn1_2_1_New03": {
+        "message": "Ajout d'une option de détachement permanent (Thunderbird version 123 ou ultérieure requise)"
+    },
+    "rn1_2_1_New04": {
+        "message": "Ajout de l'identification des pièces jointes détachées et supprimées"
+    },
+    "rn1_2_1_Fix01": {
+        "message": "Suppression de l'extraction récursive (extraction de pièces jointes dans des fichiers de courrier électronique [.eml] qui sont eux-mêmes des pièces jointes)"
+    },
+    "rn1_2_1_Fix02": {
+        "message": "Passé à la bibliothèque zip.js (depuis jszip) pour atténuer un problème de mémoire intermittent"
+    },
+    "rn1_3_1_New01": {
+        "message": "Ajout de la possibilité de générer/enregistrer un rapport d'extraction (.html) après l'exécution"
+    },
+    "rn1_3_1_New02": {
+        "message": "Localisation ajoutée pour le hongrois (avec l'aimable autorisation de l'utilisateur Óvári)"
+    },
+    "rn1_4_1_New01": {
+        "message": "Ajout d'une option pour générer des noms de fichiers de résultats personnalisés à l'aide d'un modèle de nom de fichier dérivé des propriétés de courrier électronique"
+    },
+    "rn1_5_1_Notice01": {
+        "message": "AVIS: la fonctionnalité Détacher définitivement échoue/se bloque actuellement lorsqu'elle est utilisée avec des comptes IMAP. Pour plus de détails, veuillez cliquer sur le lien suivant."
+    },
+    "rn1_5_1_New01": {
+        "message": "Option ajoutée pour filtrer par type de fichier (extension)"
+    },
+    "rn1_5_1_New02": {
+        "message": "Ajout d'une case à cocher bascule-tout pour la sélection des pièces jointes (liste des pièces jointes)"
+    },
+    "rn1_5_1_New03": {
+        "message": "Ajout d'une option permettant de toujours demander un emplacement de sauvegarde pour les fichiers du package ou de sauvegarder directement dans le répertoire spécifié par le paramètre Thunderbird correspondant."
+    },
+    "rn1_5_2_New01": {
+        "message": "Bouton Détacher définitivement désactivé pour les comptes IMAP jusqu'à nouvel ordre."
+    },
+    "rn1_6_1_Notice01": {
+        "message": "LA ATTENTION EST CONSEILLÉE lors de l'utilisation de la nouvelle option de stockage «Enregistrer les pièces jointes individuelles»; il est obligatoirement restreint au répertoire spécifié dans les paramètres de Thunderbird, qui peut, par défaut, être le dossier du bureau de l'utilisateur !"
+    },
+    "rn1_6_1_New01": {
+        "message": "Option/paramètre ajouté (Enregistrer les pièces jointes individuelles) pour télécharger les fichiers extraits directement sur le système de fichiers; veuillez consulter la mise en garde ci-dessus"
+    },
+    "rn1_6_1_New02": {
+        "message": "Ajout du bouton Afficher les fichiers pour ouvrir les emplacements de sauvegarde après l'extraction"
+    },
+    "rn1_6_1_New03": {
+        "message": "Améliorations du rapport lorsque les opérations de sauvegarde sont annulées par l'utilisateur"
+    },
+    "rn1_6_1_New04": {
+        "message": "Le rapport s'ouvre immédiatement dans un nouvel onglet"
+    },
+    "rn1_6_1_New05": {
+        "message": "Disposition améliorée des options/paramètres"
+    },
+    "rn1_6_1_Fix01": {
+        "message": "Les pièces jointes précédemment supprimées n'étaient pas correctement identifiées"
+    },
+    "saving": {
+        "message": "Sauvegarde"
+    },
+    "attachmentsSaved": {
+        "message": "pièce(s) jointe(s) enregistrée(s)"
+    },
+    "embedsSaved": {
+        "message": "intégration(s) enregistrée(s)"
+    },
+    "packageAttachments": {
+        "message": "Pièces jointes du package (recommandé)"
+    },
+    "packageAttachmentsDesc": {
+        "message": "Stocke les éléments extraits dans des fichiers d'archive (.zip)"
+    },
+    "directSave": {
+        "message": "Enregistrer les pièces jointes individuelles"
+    },
+    "directSaveDesc": {
+        "message": "Les éléments sont enregistrés individuellement dans le dossier* spécifié dans les paramètres de Thunderbird"
+    },
+    "currentSaveDirectory": {
+        "message": "Répertoire de sauvegarde actuel (paramètres Thunderbird)"
+    },
+    "unavailable": {
+        "message": "Indisponible"
+    },
+    "uiMode": {
+        "message": "Mode interface utilisateur"
+    },
+    "discoveryOptions": {
+        "message": "Options de découverte"
+    },
+    "storageOptions": {
+        "message": "Options de stockage"
+    },
+    "showFiles": {
+        "message": "Afficher les fichiers"
+    },
+    "extractedItems": {
+        "message": "Éléments extraits"
+    },
+    "report": {
+        "message": "Rapport"
+    },
+    "saveCanceled": {
+        "message": "Sauvegarde annulée"
+    }
+}

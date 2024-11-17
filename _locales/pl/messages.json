@@ -1,0 +1,587 @@
+{
+    "extensionName": {
+        "message": "Wyodrębnij je!"
+    },
+    "extensionDescription": {
+        "message": "Wyodrębnia załączniki z wiadomości w wybranym folderze lub koncie."
+    },
+    "extractSingleDescription": {
+        "message": "Wyodrębnia załączniki z wybranego folderu, pomijając podfoldery",
+        "description": "Opis działania przycisku wyodrębniania pojedynczego szybkiego menu"
+    },
+    "subfolders": {
+        "message": "podfoldery"
+    },
+    "extractRecursiveDescription": {
+        "message": "Wyodrębnia załączniki z wybranych folderów i podfolderów (rekurencyjnie)",
+        "description": "Opis działania przycisku wyodrębniania rekursywnego szybkiego menu"
+    },
+    "letMeChoose": {
+        "message": "Pozwól mi wybrać",
+        "description": "Etykieta przycisku szybkiego menu wyboru standardowego"
+    },
+    "standardSelectionDescription": {
+        "message": "Umożliwia wybranie określonych folderów lub nawet określonych załączników do odkrycia i wyodrębnienia",
+        "description": "Opis działania przycisku szybkiego menu wyboru standardowego"
+    },
+    "includeEmbeds": {
+        "message": "Uwzględnij elementy osadzone (obrazy dołączone w tekście)"
+    },
+    "useFileTypeFilter": {
+        "message": "Użyj filtra typu pliku"
+    },
+    "fileTypeFilter": {
+        "message": "Filtr typu pliku"
+    },
+    "fileTypeFilterApplied": {
+        "message": "Zastosowano filtr typu pliku"
+    },
+    "alwaysShowQuickmenu": {
+        "message": "Zawsze pokazuj to Szybkie menu",
+        "description": "Etykieta pola wyboru trwałości szybkiego menu"
+    },
+    "noAttachmentsMessage": {
+        "message": "W wybranym folderze nie ma żadnych załączników.",
+        "description": ""
+    },
+    "noMessagesMessage": {
+        "message": "W wybranym folderze nie ma żadnych wiadomości.",
+        "description": ""
+    },
+    "attachmentSummary": {
+        "message": "Podsumowanie załącznika"
+    },
+    "attachmentList": {
+        "message": "Lista załączników"
+    },
+    "folders": {
+        "message": "Lornetka składana"
+    },
+    "messages": {
+        "message": "Wiadomości"
+    },
+    "attachment": {
+        "message": "załącznik"
+    },
+    "attachments": {
+        "message": "Załączniki"
+    },
+    "attachmentsPP": {
+        "message": "załącznik(i)",
+        "description": "PP = liczba mnoga w nawiasie"
+    },
+    "embed": {
+        "message": "osadzać"
+    },
+    "embeds": {
+        "message": "Osadza"
+    },
+    "embedsPP": {
+        "message": "osadzanie"
+    },
+    "selected": {
+        "message": "wybrany"
+    },
+    "count": {
+        "message": "Liczyć"
+    },
+    "processed": {
+        "message": "Obrobiony"
+    },
+    "withAbbrev": {
+        "message": "z/"
+    },
+    "size": {
+        "message": "Rozmiar"
+    },
+    "discoverAttachments": {
+        "message": "Odkryj załączniki",
+        "description": "Etykieta przycisku odkrywania załączników"
+    },
+    "reset": {
+        "message": "Nastawić"
+    },
+    "closeZoomMessage": {
+        "message": "Kliknij obraz, aby zamknąć."
+    },
+    "discovering": {
+        "message": "Odkrywanie"
+    },
+    "discoveryProgressMessage": {
+        "message": "Załączniki o wartości $1 w wiadomościach o wartości $2 z $3",
+        "description": "Załącznik(i) w {# of messages including attachments/embeds)} z {total # of discovered messages}: {# of discovered}"
+    },
+    "discoverySelectionMessage": {
+        "message": "Wybrano załączniki o wartości $1 z $2",
+        "description": "Wybrano {# of selected} z {# of discovered} załączników"
+    },
+    "embedDiscoverySelectionMessage": {
+        "message": "Wybrano osadzenie o wartości $1 z $2",
+        "description": "Wybrano {# of selected} z {# of discovered} osadzonych elementów"
+    },
+    "preparing": {
+        "message": "Przygotowanie",
+        "description": "PRZESTARZAŁY"
+    },
+    "exclusions": {
+        "message": "Wyłączenia"
+    },
+    "alterationsIdentified": {
+        "message": "Zidentyfikowano odłączone/usunięte załączniki",
+        "description": "Dotyczy załączników, które zostały odłączone lub usunięte z (zmienionej) wiadomości źródłowej."
+    },
+    "duplicatesOmitted": {
+        "message": "pominięto duplikaty"
+    },
+    "packaging": {
+        "message": "Opakowanie"
+    },
+    "of": {
+        "message": "z",
+        "description": "Używane w znaczeniu „x pozycji z y wszystkich pozycji”"
+    },
+    "attachmentsPackaged": {
+        "message": "załączniki w opakowaniu"
+    },
+    "embedsPackaged": {
+        "message": "elementy osadzone w pakiecie"
+    },
+    "packageFilesSaved": {
+        "message": "zapisane pliki pakietu"
+    },
+    "errorsEncountered": {
+        "message": "napotkane błędy"
+    },
+    "result": {
+        "message": "Wynik"
+    },
+    "permanentlyDetach": {
+        "message": "Odłącz na stałe"
+    },
+    "imapDetachUnavailable": {
+        "message": "Ta funkcja jest obecnie niedostępna dla kont IMAP."
+    },
+    "close": {
+        "message": "Zamknąć"
+    },
+    "closeAndExit": {
+        "message": "Zamknij i wyjdź"
+    },
+    "viewReport": {
+        "message": "Wygeneruj raport"
+    },
+    "reportSavedTo": {
+        "message": "Raport zapisany w"
+    },
+    "permanentDetachWarning": {
+        "message": "OSTRZEŻENIE: Ta czynność spowoduje trwałe usunięcie wyodrębnionych załączników (i duplikatów) ze źródłowych wiadomości e-mail. Osadzenia są wykluczone."
+    },
+    "proceed": {
+        "message": "Przystępować"
+    },
+    "cancel": {
+        "message": "Anulować"
+    },
+    "detached": {
+        "message": "wolnostojący"
+    },
+    "options": {
+        "message": "Opcje"
+    },
+    "none": {
+        "message": "Nic"
+    },
+    "useInteractiveUi": {
+        "message": "Użyj interaktywnego interfejsu użytkownika",
+        "description": ""
+    },
+    "useInteractiveUiDescription": {
+        "message": "W pełni interaktywny interfejs użytkownika; pozwala na wybór konkretnych załączników do wyodrębnienia",
+        "description": ""
+    },
+    "displayQuickmenu": {
+        "message": "Wyświetl szybkie menu",
+        "description": ""
+    },
+    "displayQuickmenuDescription": {
+        "message": "Wyświetla menu skrótów, gdy Wyodrębnij ich! jest otwarty",
+        "description": ""
+    },
+    "extractImmediate": {
+        "message": "Ekstrakt natychmiastowy",
+        "description": ""
+    },
+    "extractImmediateDescription": {
+        "message": "Zapisuje wszystkie załączniki wiadomości w wybranym folderze przy ograniczonej interwencji użytkownika; wyklucza podfoldery",
+        "description": ""
+    },
+    "alwaysPromptForDownloadLocation": {
+        "message": "Zawsze pytaj o lokalizację zapisu"
+    },
+    "alwaysPromptForDownloadLocationMessage": {
+        "message": "Jeśli zaznaczone, użytkownik jest zawsze proszony o wybranie katalogu zapisu; w przeciwnym razie pliki są zapisywane bezpośrednio w folderze* określonym w ustawieniach Thunderbirda"
+    },
+    "includeSubFolders": {
+        "message": "Uwzględnij podfoldery",
+        "description": ""
+    },
+    "includeSubFoldersDescription": {
+        "message": "Uwzględnia załączniki w podfolderach podczas natychmiastowego wyodrębniania",
+        "description": ""
+    },
+    "useSilentMode": {
+        "message": "Użyj trybu „cichego”.",
+        "description": ""
+    },
+    "useSilentModeDescription": {
+        "message": "Pomija prezentację interfejsu użytkownika, z wyjątkiem monitu o zapisanie",
+        "description": ""
+    },
+    "useFilenamePattern": {
+        "message": "Użyj wzorca nazwy pliku",
+        "description": "Opcja zastąpienia oryginalnej nazwy pliku załącznika nazwą utworzoną na podstawie atrybutów wiadomości"
+    },
+    "useFilenamePatternDescription": {
+        "message": "Zastępuje oryginalną nazwę pliku załącznika nazwą utworzoną na podstawie atrybutów wiadomości"
+    },
+    "edit": {
+        "message": "Redagować"
+    },
+    "pattern": {
+        "message": "Wzór"
+    },
+    "clear": {
+        "message": "Jasne"
+    },
+    "revert": {
+        "message": "Odwracać"
+    },
+    "placeholders": {
+        "message": "Elementy zastępcze"
+    },
+    "from": {
+        "message": "Z"
+    },
+    "sender": {
+        "message": "Nadawca"
+    },
+    "author": {
+        "message": "Autor"
+    },
+    "originalFilename": {
+        "message": "Oryginalna nazwa pliku"
+    },
+    "date": {
+        "message": "Data"
+    },
+    "subject": {
+        "message": "Temat"
+    },
+    "timestamp": {
+        "message": "Znacznik czasu (hhmmss)",
+        "description": "h = godzina, m = minuta, s = sekunda; implikuje format czasu (154230 = 15:42:30)"
+    },
+    "sample": {
+        "message": "Próbka"
+    },
+    "save": {
+        "message": "Ratować"
+    },
+    "includeEmbeddedImages": {
+        "message": "Dołącz osadzone obrazy",
+        "description": ""
+    },
+    "includeEmbeddedImagesDescription": {
+        "message": "Identyfikuje i uwzględnia obrazy osadzone w treści wiadomości (obrazy wbudowane)",
+        "description": ""
+    },
+    "useFileTypeFilterDescription": {
+        "message": "Ogranicza wyniki do wybranych typów plików określonych przez rozszerzenie (.jpg, .mp3, .mov itp.)"
+    },
+    "omitDuplicates": {
+        "message": "Pomiń duplikaty"
+    },
+    "omitDuplicatesDescription": {
+        "message": "Pomija zduplikowane załączniki (identyczna nazwa pliku i rozmiar); nie dotyczy osadzania"
+    },
+    "preserveFolderStructure": {
+        "message": "Zachowaj strukturę folderów",
+        "description": ""
+    },
+    "preserveFolderStructureDescription": {
+        "message": "Przechowuje załączniki w archiwum .zip w tych samych folderach, w których znajdują się w Thunderbirdzie",
+        "description": ""
+    },
+    "useEnhancedLogging": {
+        "message": "Użyj rozszerzonego rejestrowania"
+    },
+    "useEnhancedLoggingDescription": {
+        "message": "Wysyła dodatkowe informacje dotyczące rozwiązywania problemów do konsoli debugera"
+    },
+    "defaultGrouping": {
+        "message": "Domyślne grupowanie",
+        "description": ""
+    },
+    "defaultGroupingByAuthor": {
+        "message": "Według autora",
+        "description": ""
+    },
+    "defaultGroupingByFolder": {
+        "message": "Według folderu",
+        "description": ""
+    },
+    "defaultGroupingByExtension": {
+        "message": "Według rozszerzenia pliku",
+        "description": ""
+    },
+    "defaultGroupingDescription": {
+        "message": "Grupuje elementy na liście załączników według określonego atrybutu",
+        "description": ""
+    },
+    "imagePreview": {
+        "message": "Podgląd obrazu",
+        "description": ""
+    },
+    "imagePreviewSmall": {
+        "message": "Mały",
+        "description": ""
+    },
+    "imagePreviewMedium": {
+        "message": "Średni",
+        "description": ""
+    },
+    "imagePreviewLarge": {
+        "message": "Duży",
+        "description": ""
+    },
+    "imagePreviewDescription": {
+        "message": "Określa rozmiar obrazu podglądu elementów na liście załączników",
+        "description": ""
+    },
+    "extractionReport": {
+        "message": "Raport_wydobycia"
+    },
+    "summaryForDate": {
+        "message": "Podsumowanie dla",
+        "description": "Podsumowanie dla {date}"
+    },
+    "savedAttachments": {
+        "message": "Zapisane załączniki"
+    },
+    "savedEmbeds": {
+        "message": "Zapisane osadzenia"
+    },
+    "packageFileCount": {
+        "message": "Liczba plików pakietu"
+    },
+    "previouslyDetachedDeleted": {
+        "message": "Wcześniej odłączone/usunięte załączniki"
+    },
+    "duplicateAttachments": {
+        "message": "Zduplikowane załączniki"
+    },
+    "duplicateEmbeds": {
+        "message": "Zduplikowane osadzenia"
+    },
+    "omitted": {
+        "message": "Pominięty"
+    },
+    "errors": {
+        "message": "Błędy"
+    },
+    "permanentDetachmentErrors": {
+        "message": "Trwałe błędy odłączania"
+    },
+    "saveComplete": {
+        "message": "Zapisz ukończone!"
+    },
+    "saveFailed": {
+        "message": "Zapis nie powiódł się; nieznany błąd."
+    },
+    "general": {
+        "message": "Ogólny"
+    },
+    "images": {
+        "message": "Obrazy"
+    },
+    "audio": {
+        "message": "Audio"
+    },
+    "video": {
+        "message": "Wideo"
+    },
+    "unknownFileType": {
+        "message": "Nieznany typ pliku"
+    },
+    "unlistedFileTypes": {
+        "message": "Wszystkie typy plików niewymienione powyżej"
+    },
+    "addType": {
+        "message": "Dodaj typ"
+    },
+    "addTypeMessage": {
+        "message": "Wprowadź rozszerzenie pliku o długości 3-5 znaków (txt, csv itp.)."
+    },
+    "bytesLabel": {
+        "message": "bajty"
+    },
+    "kbLabel": {
+        "message": "kB"
+    },
+    "mbLabel": {
+        "message": "MB"
+    },
+    "gbLabel": {
+        "message": "GB"
+    },
+    "error": {
+        "message": "błąd"
+    },
+    "missingAttachment": {
+        "message": "Załącznik nie zawiera danych; przypuszczalnie usunięte/odłączone."
+    },
+    "detachComplete": {
+        "message": "Oderwanie zakończone!"
+    },
+    "detachErrorMessage": {
+        "message": "Nie udało się odłączyć jednego lub większej liczby załączników."
+    },
+    "embedErrorUnableToReadFile": {
+        "message": "Nie można odczytać umieszczonej wiadomości ($1)."
+    },
+    "embedErrorInvalidBase64": {
+        "message": "Nieprawidłowe dane Base64 w osadzeniu $1."
+    },
+    "embedContentTypeMissing": {
+        "message": "Nie znaleziono nagłówka osadzania Content-Type ($1)."
+    },
+    "releaseNotesTitle": {
+        "message": "Informacje o wydaniu dla Extract 'Em!"
+    },
+    "whatsNew": {
+        "message": "Co nowego"
+    },
+    "whatsFixed": {
+        "message": "Co naprawiono"
+    },
+    "rn1_2_1_Notice01": {
+        "message": "UWAGA: Jeśli korzystałeś z wersji 1.1.4 tego rozszerzenia (dostępnej między około 10 kwietnia a 23 kwietnia 2024 r.), wszelkie utworzone przez Ciebie pliki archiwalne prawdopodobnie będą uszkodzone."
+    },
+    "rn1_2_1_Notice02": {
+        "message": "Było to spowodowane niewłaściwą konfiguracją biblioteki kodów innej firmy (zip.js) użytej do wygenerowania archiwum."
+    },
+    "rn1_2_1_Notice03": {
+        "message": "Autor tego rozszerzenia pragnie serdecznie przeprosić wszystkich użytkowników, którzy mogli odczuć niedogodności związane z tym problemem."
+    },
+    "rn1_2_1_New01": {
+        "message": "Dodano opcję wyodrębniania osadzonych (dołączonych) obrazów"
+    },
+    "rn1_2_1_New02": {
+        "message": "Dodano powiadomienie o nowej wersji (automatyczne wyświetlanie informacji o wydaniu) po wydaniu nowej wersji"
+    },
+    "rn1_2_1_New03": {
+        "message": "Dodano opcję trwałego odłączania (wymagana wersja Thunderbirda 123 lub nowsza)"
+    },
+    "rn1_2_1_New04": {
+        "message": "Dodano identyfikację odłączonych i usuniętych załączników"
+    },
+    "rn1_2_1_Fix01": {
+        "message": "Usunięto ekstrakcję rekurencyjną (wyodrębnianie załączników z plików e-mail [.eml], które same w sobie są załącznikami)"
+    },
+    "rn1_2_1_Fix02": {
+        "message": "Przełączono na bibliotekę zip.js (z jszip), aby złagodzić sporadyczne problemy z pamięcią"
+    },
+    "rn1_3_1_New01": {
+        "message": "Dodano możliwość wygenerowania/zapisu raportu ekstrakcji (.html) po wykonaniu"
+    },
+    "rn1_3_1_New02": {
+        "message": "Dodano lokalizację dla języka węgierskiego (dzięki uprzejmości użytkownika Óvári)"
+    },
+    "rn1_4_1_New01": {
+        "message": "Dodano opcję generowania niestandardowych nazw plików wynikowych przy użyciu wzorca nazwy pliku pochodzącego z właściwości wiadomości e-mail"
+    },
+    "rn1_5_1_Notice01": {
+        "message": "UWAGA: Funkcja trwałego odłączania obecnie nie działa/zatrzymuje się, gdy jest używana z kontami IMAP. Aby uzyskać szczegółowe informacje, kliknij poniższy link."
+    },
+    "rn1_5_1_New01": {
+        "message": "Dodano opcję filtrowania według typu pliku (rozszerzenia)"
+    },
+    "rn1_5_1_New02": {
+        "message": "Dodano pole wyboru przełączania wszystkich przy wyborze załączników (Lista załączników)"
+    },
+    "rn1_5_1_New03": {
+        "message": "Dodano opcję ciągłego monitowania o lokalizację zapisu plików pakietu lub bezpośredniego zapisywania w katalogu określonym przez odpowiednie ustawienia Thunderbirda"
+    },
+    "rn1_5_2_New01": {
+        "message": "Przycisk Odłącz na stałe wyłączony dla kont IMAP do odwołania."
+    },
+    "rn1_6_1_Notice01": {
+        "message": "ZALECA SIĘ OSTROŻNOŚĆ podczas korzystania z nowej opcji przechowywania „Zapisz poszczególne załączniki”; jest on obowiązkowo ograniczony do katalogu określonego w ustawieniach Thunderbirda, którym domyślnie może być folder na pulpicie użytkownika!"
+    },
+    "rn1_6_1_New01": {
+        "message": "Dodano opcję/ustawienie (Zapisz pojedyncze załączniki), aby pobrać wyodrębnione pliki bezpośrednio do systemu plików; prosimy o zapoznanie się z powyższą uwagą ostrzegawczą"
+    },
+    "rn1_6_1_New02": {
+        "message": "Dodano przycisk Pokaż pliki umożliwiający otwieranie lokalizacji zapisu po wyodrębnieniu"
+    },
+    "rn1_6_1_New03": {
+        "message": "Zgłoś ulepszenia, gdy operacje zapisywania zostaną anulowane przez użytkownika"
+    },
+    "rn1_6_1_New04": {
+        "message": "Raport otwiera się natychmiast w nowej karcie"
+    },
+    "rn1_6_1_New05": {
+        "message": "Ulepszony układ opcji/ustawień"
+    },
+    "rn1_6_1_Fix01": {
+        "message": "Wcześniej usunięte załączniki nie zostały prawidłowo zidentyfikowane"
+    },
+    "saving": {
+        "message": "Oszczędność"
+    },
+    "attachmentsSaved": {
+        "message": "Załączniki zostały zapisane"
+    },
+    "embedsSaved": {
+        "message": "elementy osadzone zostały zapisane"
+    },
+    "packageAttachments": {
+        "message": "Załączniki do paczek (zalecane)"
+    },
+    "packageAttachmentsDesc": {
+        "message": "Przechowuje wyodrębnione elementy w plikach archiwum (.zip)."
+    },
+    "directSave": {
+        "message": "Zapisuj poszczególne załączniki"
+    },
+    "directSaveDesc": {
+        "message": "Elementy są zapisywane indywidualnie w folderze* określonym w ustawieniach Thunderbirda"
+    },
+    "currentSaveDirectory": {
+        "message": "Bieżący katalog zapisu (ustawienia Thunderbirda)"
+    },
+    "unavailable": {
+        "message": "Nie płynny"
+    },
+    "uiMode": {
+        "message": "Tryb interfejsu użytkownika"
+    },
+    "discoveryOptions": {
+        "message": "Opcje odkrywania"
+    },
+    "storageOptions": {
+        "message": "Opcje przechowywania"
+    },
+    "showFiles": {
+        "message": "Pokaż pliki"
+    },
+    "extractedItems": {
+        "message": "Wyodrębnione przedmioty"
+    },
+    "report": {
+        "message": "Raport"
+    },
+    "saveCanceled": {
+        "message": "Zapisywanie anulowane"
+    }
+}

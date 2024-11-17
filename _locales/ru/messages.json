@@ -1,0 +1,587 @@
+{
+    "extensionName": {
+        "message": "Извлеките их!"
+    },
+    "extensionDescription": {
+        "message": "Извлекает вложения из сообщений в выбранной папке или учетной записи."
+    },
+    "extractSingleDescription": {
+        "message": "Извлекает вложения из выбранной папки, исключая подпапки.",
+        "description": "Описание действия для извлечения одной кнопки быстрого меню"
+    },
+    "subfolders": {
+        "message": "подпапки"
+    },
+    "extractRecursiveDescription": {
+        "message": "Извлекает вложения из выбранных папок и подпапок (рекурсивно)",
+        "description": "Описание действия для извлеченно-рекурсивной кнопки быстрого меню"
+    },
+    "letMeChoose": {
+        "message": "Позвольте мне выбрать",
+        "description": "Ярлык для кнопки быстрого меню стандартного выбора"
+    },
+    "standardSelectionDescription": {
+        "message": "Позволяет выбирать определенные папки или даже определенные вложения для обнаружения и извлечения.",
+        "description": "Описание действия для кнопки быстрого меню стандартного выбора"
+    },
+    "includeEmbeds": {
+        "message": "Включить встраивания (встроенные изображения)"
+    },
+    "useFileTypeFilter": {
+        "message": "Использовать фильтр по типу файла"
+    },
+    "fileTypeFilter": {
+        "message": "Фильтр по типу файла"
+    },
+    "fileTypeFilterApplied": {
+        "message": "Применен фильтр по типу файла"
+    },
+    "alwaysShowQuickmenu": {
+        "message": "Всегда показывать это быстрое меню",
+        "description": "Ярлык для флажка сохранения быстрого меню"
+    },
+    "noAttachmentsMessage": {
+        "message": "В выбранной папке нет вложений.",
+        "description": ""
+    },
+    "noMessagesMessage": {
+        "message": "В выбранной папке нет сообщений.",
+        "description": ""
+    },
+    "attachmentSummary": {
+        "message": "Сводка вложений"
+    },
+    "attachmentList": {
+        "message": "Список вложений"
+    },
+    "folders": {
+        "message": "Папки"
+    },
+    "messages": {
+        "message": "Сообщения"
+    },
+    "attachment": {
+        "message": "вложение"
+    },
+    "attachments": {
+        "message": "Вложения"
+    },
+    "attachmentsPP": {
+        "message": "вложение(я)",
+        "description": "PP = скобки во множественном числе"
+    },
+    "embed": {
+        "message": "вставлять"
+    },
+    "embeds": {
+        "message": "Встраивает"
+    },
+    "embedsPP": {
+        "message": "встроить(я)"
+    },
+    "selected": {
+        "message": "выбрано"
+    },
+    "count": {
+        "message": "Считать"
+    },
+    "processed": {
+        "message": "Обработано"
+    },
+    "withAbbrev": {
+        "message": "с/"
+    },
+    "size": {
+        "message": "Размер"
+    },
+    "discoverAttachments": {
+        "message": "Откройте для себя вложения",
+        "description": "Ярлык для кнопки «Обнаружить вложения»"
+    },
+    "reset": {
+        "message": "Перезагрузить"
+    },
+    "closeZoomMessage": {
+        "message": "Нажмите на изображение, чтобы закрыть."
+    },
+    "discovering": {
+        "message": "Открытие"
+    },
+    "discoveryProgressMessage": {
+        "message": "Вложений: $1 в сообщениях $2 из $3",
+        "description": "Вложений: {# of discovered} в {# of messages including attachments/embeds)} из {total # of discovered messages}"
+    },
+    "discoverySelectionMessage": {
+        "message": "Выбрано вложений: $1 из $2.",
+        "description": "Выбрано {# of selected} из {# of discovered} вложений"
+    },
+    "embedDiscoverySelectionMessage": {
+        "message": "Выбрано $1 из $2 встроек",
+        "description": "Выбрано {# of selected} из {# of discovered} встраиваний"
+    },
+    "preparing": {
+        "message": "Подготовка",
+        "description": "УСТАРЕВШИЙ"
+    },
+    "exclusions": {
+        "message": "Исключения"
+    },
+    "alterationsIdentified": {
+        "message": "идентифицированы отсоединенные/удаленные вложения",
+        "description": "Относится к вложениям, которые были отсоединены или удалены из (измененного) исходного сообщения."
+    },
+    "duplicatesOmitted": {
+        "message": "дубликаты опущены"
+    },
+    "packaging": {
+        "message": "Упаковка"
+    },
+    "of": {
+        "message": "из",
+        "description": "Используется в смысле «x предметов из y общего количества предметов»."
+    },
+    "attachmentsPackaged": {
+        "message": "вложения(я) упакованы"
+    },
+    "embedsPackaged": {
+        "message": "встроить(и) упакованные"
+    },
+    "packageFilesSaved": {
+        "message": "файл(ы) пакета сохранен"
+    },
+    "errorsEncountered": {
+        "message": "обнаружены ошибки"
+    },
+    "result": {
+        "message": "Результат"
+    },
+    "permanentlyDetach": {
+        "message": "Навсегда отсоединиться"
+    },
+    "imapDetachUnavailable": {
+        "message": "Эта функция в настоящее время недоступна для учетных записей IMAP."
+    },
+    "close": {
+        "message": "Закрывать"
+    },
+    "closeAndExit": {
+        "message": "Закрыть и выйти"
+    },
+    "viewReport": {
+        "message": "Создать отчет"
+    },
+    "reportSavedTo": {
+        "message": "Отчет сохранен в"
+    },
+    "permanentDetachWarning": {
+        "message": "ВНИМАНИЕ. Это действие приведет к безвозвратному удалению извлеченных вложений (и дубликатов) из исходных сообщений электронной почты. Вставки исключены."
+    },
+    "proceed": {
+        "message": "Продолжить"
+    },
+    "cancel": {
+        "message": "Отмена"
+    },
+    "detached": {
+        "message": "обособленный"
+    },
+    "options": {
+        "message": "Параметры"
+    },
+    "none": {
+        "message": "Никто"
+    },
+    "useInteractiveUi": {
+        "message": "Используйте интерактивный интерфейс",
+        "description": ""
+    },
+    "useInteractiveUiDescription": {
+        "message": "Полностью интерактивный интерфейс; позволяет выбирать конкретные вложения для извлечения",
+        "description": ""
+    },
+    "displayQuickmenu": {
+        "message": "Отображение быстрого меню",
+        "description": ""
+    },
+    "displayQuickmenuDescription": {
+        "message": "Отображает контекстное меню при извлечении 'Em! открыт",
+        "description": ""
+    },
+    "extractImmediate": {
+        "message": "Извлечь немедленно",
+        "description": ""
+    },
+    "extractImmediateDescription": {
+        "message": "Сохраняет все вложения из сообщений в выбранную папку с ограниченным вмешательством пользователя; исключает подпапки",
+        "description": ""
+    },
+    "alwaysPromptForDownloadLocation": {
+        "message": "Всегда запрашивать место сохранения"
+    },
+    "alwaysPromptForDownloadLocationMessage": {
+        "message": "Если этот флажок установлен, пользователю всегда будет предложено выбрать каталог для сохранения; в противном случае файлы сохраняются напрямую в папку*, указанную в настройках Thunderbird."
+    },
+    "includeSubFolders": {
+        "message": "Включить подпапки",
+        "description": ""
+    },
+    "includeSubFoldersDescription": {
+        "message": "Включает вложения в подпапки во время немедленного извлечения.",
+        "description": ""
+    },
+    "useSilentMode": {
+        "message": "Используйте «беззвучный» режим",
+        "description": ""
+    },
+    "useSilentModeDescription": {
+        "message": "Отсутствует представление пользовательского интерфейса, за исключением запроса на сохранение.",
+        "description": ""
+    },
+    "useFilenamePattern": {
+        "message": "Использовать шаблон имени файла",
+        "description": "Возможность заменить исходное имя файла вложения именем, созданным на основе атрибутов сообщения."
+    },
+    "useFilenamePatternDescription": {
+        "message": "Заменяет исходное имя файла вложения на имя, созданное на основе атрибутов сообщения."
+    },
+    "edit": {
+        "message": "Редактировать"
+    },
+    "pattern": {
+        "message": "Шаблон"
+    },
+    "clear": {
+        "message": "Прозрачный"
+    },
+    "revert": {
+        "message": "Возвращаться"
+    },
+    "placeholders": {
+        "message": "Заполнители"
+    },
+    "from": {
+        "message": "От"
+    },
+    "sender": {
+        "message": "Отправитель"
+    },
+    "author": {
+        "message": "Автор"
+    },
+    "originalFilename": {
+        "message": "Исходное имя файла"
+    },
+    "date": {
+        "message": "Дата"
+    },
+    "subject": {
+        "message": "Предмет"
+    },
+    "timestamp": {
+        "message": "Временная метка (хммсс)",
+        "description": "ч = час, м = минута, с = секунда; подразумевает формат времени (154230 = 15:42:30)"
+    },
+    "sample": {
+        "message": "Образец"
+    },
+    "save": {
+        "message": "Сохранять"
+    },
+    "includeEmbeddedImages": {
+        "message": "Включить встроенные изображения",
+        "description": ""
+    },
+    "includeEmbeddedImagesDescription": {
+        "message": "Идентифицирует и включает изображения, встроенные в тело сообщения (встроенные изображения).",
+        "description": ""
+    },
+    "useFileTypeFilterDescription": {
+        "message": "Ограничивает результаты выбранными типами файлов, указанными расширением (.jpg, .mp3, .mov и т. д.)."
+    },
+    "omitDuplicates": {
+        "message": "Пропустить дубликаты"
+    },
+    "omitDuplicatesDescription": {
+        "message": "Исключает повторяющиеся вложения (с одинаковым именем и размером файла); не относится к встраиваниям"
+    },
+    "preserveFolderStructure": {
+        "message": "Сохранять структуру папок",
+        "description": ""
+    },
+    "preserveFolderStructureDescription": {
+        "message": "Сохраняет вложения в архиве .zip в тех же папках, в которых они находятся в Thunderbird.",
+        "description": ""
+    },
+    "useEnhancedLogging": {
+        "message": "Используйте расширенное ведение журнала"
+    },
+    "useEnhancedLoggingDescription": {
+        "message": "Выводит дополнительную информацию по устранению неполадок на консоль отладчика."
+    },
+    "defaultGrouping": {
+        "message": "Группировка по умолчанию",
+        "description": ""
+    },
+    "defaultGroupingByAuthor": {
+        "message": "Автор",
+        "description": ""
+    },
+    "defaultGroupingByFolder": {
+        "message": "По папке",
+        "description": ""
+    },
+    "defaultGroupingByExtension": {
+        "message": "По расширению файла",
+        "description": ""
+    },
+    "defaultGroupingDescription": {
+        "message": "Группирует элементы в списке вложений в соответствии с указанным атрибутом.",
+        "description": ""
+    },
+    "imagePreview": {
+        "message": "Предварительный просмотр изображения",
+        "description": ""
+    },
+    "imagePreviewSmall": {
+        "message": "Маленький",
+        "description": ""
+    },
+    "imagePreviewMedium": {
+        "message": "Середина",
+        "description": ""
+    },
+    "imagePreviewLarge": {
+        "message": "Большой",
+        "description": ""
+    },
+    "imagePreviewDescription": {
+        "message": "Указывает размер изображения предварительного просмотра для элементов в списке вложений.",
+        "description": ""
+    },
+    "extractionReport": {
+        "message": "Extraction_Report"
+    },
+    "summaryForDate": {
+        "message": "Резюме для",
+        "description": "Сводка по {date}"
+    },
+    "savedAttachments": {
+        "message": "Сохраненные вложения"
+    },
+    "savedEmbeds": {
+        "message": "Сохраненные вставки"
+    },
+    "packageFileCount": {
+        "message": "Количество файлов пакета"
+    },
+    "previouslyDetachedDeleted": {
+        "message": "Ранее отсоединенные/удаленные вложения"
+    },
+    "duplicateAttachments": {
+        "message": "Дублирующиеся вложения"
+    },
+    "duplicateEmbeds": {
+        "message": "Дублирующиеся вставки"
+    },
+    "omitted": {
+        "message": "Опущено"
+    },
+    "errors": {
+        "message": "Ошибки"
+    },
+    "permanentDetachmentErrors": {
+        "message": "Постоянные ошибки отсоединения"
+    },
+    "saveComplete": {
+        "message": "Сохранение завершено!"
+    },
+    "saveFailed": {
+        "message": "Сохранить не удалось; неизвестная ошибка."
+    },
+    "general": {
+        "message": "Общий"
+    },
+    "images": {
+        "message": "Изображения"
+    },
+    "audio": {
+        "message": "Аудио"
+    },
+    "video": {
+        "message": "Видео"
+    },
+    "unknownFileType": {
+        "message": "Неизвестный тип файла"
+    },
+    "unlistedFileTypes": {
+        "message": "Все типы файлов, не перечисленные выше"
+    },
+    "addType": {
+        "message": "Добавить тип"
+    },
+    "addTypeMessage": {
+        "message": "Введите расширение файла из 3–5 символов (txt, csv и т. д.)."
+    },
+    "bytesLabel": {
+        "message": "байты"
+    },
+    "kbLabel": {
+        "message": "КБ"
+    },
+    "mbLabel": {
+        "message": "МБ"
+    },
+    "gbLabel": {
+        "message": "ГБ"
+    },
+    "error": {
+        "message": "ошибка"
+    },
+    "missingAttachment": {
+        "message": "В приложении нет данных; предположительно удален/отсоединен."
+    },
+    "detachComplete": {
+        "message": "Отделение завершено!"
+    },
+    "detachErrorMessage": {
+        "message": "Не удалось отсоединить одно или несколько вложений."
+    },
+    "embedErrorUnableToReadFile": {
+        "message": "Невозможно прочитать сообщение для встраивания ($1)."
+    },
+    "embedErrorInvalidBase64": {
+        "message": "Неверные данные Base64 во вставке $1."
+    },
+    "embedContentTypeMissing": {
+        "message": "Встроить заголовок Content-Type не найден ($1)."
+    },
+    "releaseNotesTitle": {
+        "message": "Примечания к выпуску Extract 'Em!"
+    },
+    "whatsNew": {
+        "message": "Что нового"
+    },
+    "whatsFixed": {
+        "message": "Что исправлено"
+    },
+    "rn1_2_1_Notice01": {
+        "message": "ВНИМАНИЕ. Если вы использовали версию 1.1.4 этого расширения (доступную примерно с 10 по 23 апреля 2024 г.), любые созданные вами архивные файлы, скорее всего, будут повреждены."
+    },
+    "rn1_2_1_Notice02": {
+        "message": "Это произошло из-за неправильной настройки сторонней библиотеки кода (zip.js), используемой для создания архива."
+    },
+    "rn1_2_1_Notice03": {
+        "message": "Автор этого расширения хотел выразить свои искренние извинения всем пользователям, которым эта проблема могла причинить неудобства."
+    },
+    "rn1_2_1_New01": {
+        "message": "Добавлена ​​возможность извлечения встроенных (встроенных) изображений."
+    },
+    "rn1_2_1_New02": {
+        "message": "Добавлено уведомление о новой версии (автоматическое отображение примечаний к выпуску) при выпуске новой версии."
+    },
+    "rn1_2_1_New03": {
+        "message": "Добавлена ​​опция постоянного отсоединения (требуется Thunderbird версии 123 или новее)."
+    },
+    "rn1_2_1_New04": {
+        "message": "Добавлена ​​идентификация отсоединенных и удаленных вложений."
+    },
+    "rn1_2_1_Fix01": {
+        "message": "Удалено рекурсивное извлечение (извлечение вложений из файлов электронной почты [.eml], которые сами по себе являются вложениями)."
+    },
+    "rn1_2_1_Fix02": {
+        "message": "Перешел на библиотеку zip.js (с jszip), чтобы устранить периодически возникающую проблему с памятью."
+    },
+    "rn1_3_1_New01": {
+        "message": "Добавлена ​​возможность создавать/сохранять отчет об извлечении (.html) после выполнения."
+    },
+    "rn1_3_1_New02": {
+        "message": "Добавлена ​​венгерская локализация (любезно предоставлено пользователем Óvári)"
+    },
+    "rn1_4_1_New01": {
+        "message": "Добавлена ​​возможность генерировать собственные имена файлов результатов с использованием шаблона имени файла, полученного на основе свойств электронной почты."
+    },
+    "rn1_5_1_Notice01": {
+        "message": "ВНИМАНИЕ. Функция постоянного отсоединения в настоящее время не работает или останавливается при использовании с учетными записями IMAP. Для получения подробной информации, пожалуйста, нажмите на следующую ссылку."
+    },
+    "rn1_5_1_New01": {
+        "message": "Добавлена ​​возможность фильтрации по типу файла (расширению)."
+    },
+    "rn1_5_1_New02": {
+        "message": "Добавлен флажок «Переключить все» для выбора вложений (Список вложений)."
+    },
+    "rn1_5_1_New03": {
+        "message": "Добавлена ​​возможность всегда запрашивать место для сохранения файлов пакета или напрямую сохранять в каталог, указанный в соответствующей настройке Thunderbird."
+    },
+    "rn1_5_2_New01": {
+        "message": "Кнопка «Навсегда отсоединить» отключена для учетных записей IMAP до дальнейшего уведомления."
+    },
+    "rn1_6_1_Notice01": {
+        "message": "РЕКОМЕНДУЕТСЯ ВНИМАНИЕ при использовании новой опции хранения «Сохранить отдельные вложения»; он обязательно ограничен каталогом, указанным в настройках Thunderbird, который по умолчанию может быть папкой рабочего стола пользователя!"
+    },
+    "rn1_6_1_New01": {
+        "message": "Добавлена ​​опция/настройка (Сохранить отдельные вложения) для загрузки извлеченных файлов непосредственно в файловую систему; пожалуйста, ознакомьтесь с предостережением выше"
+    },
+    "rn1_6_1_New02": {
+        "message": "Добавлена ​​кнопка «Показать файлы» для открытия мест сохранения после извлечения."
+    },
+    "rn1_6_1_New03": {
+        "message": "Сообщайте об улучшениях, когда операции сохранения отменяются пользователем"
+    },
+    "rn1_6_1_New04": {
+        "message": "Отчет открывается сразу в новой вкладке"
+    },
+    "rn1_6_1_New05": {
+        "message": "Улучшено расположение опций/настроек."
+    },
+    "rn1_6_1_Fix01": {
+        "message": "Ранее удаленные вложения не были правильно идентифицированы."
+    },
+    "saving": {
+        "message": "Сохранение"
+    },
+    "attachmentsSaved": {
+        "message": "вложения сохранены"
+    },
+    "embedsSaved": {
+        "message": "вставка(и) сохранена"
+    },
+    "packageAttachments": {
+        "message": "Вложения в пакет (рекомендуется)"
+    },
+    "packageAttachmentsDesc": {
+        "message": "Сохраняет извлеченные элементы в архивных файлах (.zip)."
+    },
+    "directSave": {
+        "message": "Сохранение отдельных вложений"
+    },
+    "directSaveDesc": {
+        "message": "Элементы сохраняются по отдельности в папке*, указанной в настройках Thunderbird."
+    },
+    "currentSaveDirectory": {
+        "message": "Текущая папка сохранения (настройки Thunderbird)"
+    },
+    "unavailable": {
+        "message": "Недоступно"
+    },
+    "uiMode": {
+        "message": "Режим пользовательского интерфейса"
+    },
+    "discoveryOptions": {
+        "message": "Параметры обнаружения"
+    },
+    "storageOptions": {
+        "message": "Варианты хранения"
+    },
+    "showFiles": {
+        "message": "Показать файлы"
+    },
+    "extractedItems": {
+        "message": "Извлеченные предметы"
+    },
+    "report": {
+        "message": "Отчет"
+    },
+    "saveCanceled": {
+        "message": "Сохранение отменено"
+    }
+}

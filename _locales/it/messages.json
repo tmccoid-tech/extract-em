@@ -1,0 +1,587 @@
+{
+    "extensionName": {
+        "message": "Estraili!"
+    },
+    "extensionDescription": {
+        "message": "Estrae gli allegati dai messaggi nella cartella o nell'account selezionato."
+    },
+    "extractSingleDescription": {
+        "message": "Estrae gli allegati dalla cartella selezionata, omettendo le sottocartelle",
+        "description": "Descrizione dell'azione per il pulsante di estrazione singolo del menu rapido"
+    },
+    "subfolders": {
+        "message": "sottocartelle"
+    },
+    "extractRecursiveDescription": {
+        "message": "Estrae gli allegati dalle cartelle e sottocartelle selezionate (ricorsivo)",
+        "description": "Descrizione dell'azione per il pulsante del menu rapido ricorsivo di estrazione"
+    },
+    "letMeChoose": {
+        "message": "Lasciami scegliere",
+        "description": "Etichetta per il pulsante del menu rapido di selezione standard"
+    },
+    "standardSelectionDescription": {
+        "message": "Consente di scegliere cartelle specifiche o anche allegati specifici per il rilevamento e l'estrazione",
+        "description": "Descrizione dell'azione per il pulsante del menu rapido di selezione standard"
+    },
+    "includeEmbeds": {
+        "message": "Includi incorporamenti (immagini allegate in linea)"
+    },
+    "useFileTypeFilter": {
+        "message": "Utilizza il filtro del tipo di file"
+    },
+    "fileTypeFilter": {
+        "message": "Filtro tipo file"
+    },
+    "fileTypeFilterApplied": {
+        "message": "Filtro del tipo di file applicato"
+    },
+    "alwaysShowQuickmenu": {
+        "message": "Mostra sempre questo menu rapido",
+        "description": "Etichetta per la casella di controllo persistenza del menu rapido"
+    },
+    "noAttachmentsMessage": {
+        "message": "Non ci sono allegati nella cartella selezionata.",
+        "description": ""
+    },
+    "noMessagesMessage": {
+        "message": "Non ci sono messaggi nella cartella selezionata.",
+        "description": ""
+    },
+    "attachmentSummary": {
+        "message": "Riepilogo degli allegati"
+    },
+    "attachmentList": {
+        "message": "Elenco allegati"
+    },
+    "folders": {
+        "message": "Cartelle"
+    },
+    "messages": {
+        "message": "Messaggi"
+    },
+    "attachment": {
+        "message": "attaccamento"
+    },
+    "attachments": {
+        "message": "Allegati"
+    },
+    "attachmentsPP": {
+        "message": "allegato/i",
+        "description": "PP = plurale tra parentesi"
+    },
+    "embed": {
+        "message": "incorporare"
+    },
+    "embeds": {
+        "message": "Incorpora"
+    },
+    "embedsPP": {
+        "message": "incorporare(i)"
+    },
+    "selected": {
+        "message": "selezionato"
+    },
+    "count": {
+        "message": "Contare"
+    },
+    "processed": {
+        "message": "Elaborato"
+    },
+    "withAbbrev": {
+        "message": "con/"
+    },
+    "size": {
+        "message": "Misurare"
+    },
+    "discoverAttachments": {
+        "message": "Scopri gli allegati",
+        "description": "Etichetta per il pulsante Scopri-allegati"
+    },
+    "reset": {
+        "message": "Reset"
+    },
+    "closeZoomMessage": {
+        "message": "Clicca sull'immagine per chiudere."
+    },
+    "discovering": {
+        "message": "Scoprire"
+    },
+    "discoveryProgressMessage": {
+        "message": "$1 allegato/i nei messaggi da $2 su $3",
+        "description": "{# of discovered} allegato/i in {# of messages including attachments/embeds)} di {total # of discovered messages}"
+    },
+    "discoverySelectionMessage": {
+        "message": "$1 di $2 allegati selezionati",
+        "description": "{# of selected} di {# of discovered} allegati selezionati"
+    },
+    "embedDiscoverySelectionMessage": {
+        "message": "$1 di $2 incorporati selezionati",
+        "description": "{# of selected} di {# of discovered} incorporamenti selezionati"
+    },
+    "preparing": {
+        "message": "Preparazione",
+        "description": "OBSOLETO"
+    },
+    "exclusions": {
+        "message": "Esclusioni"
+    },
+    "alterationsIdentified": {
+        "message": "identificati allegati staccati/eliminati",
+        "description": "Riguarda gli allegati che sono stati staccati o cancellati dal messaggio di origine (alterato)."
+    },
+    "duplicatesOmitted": {
+        "message": "duplicati omessi"
+    },
+    "packaging": {
+        "message": "Confezione"
+    },
+    "of": {
+        "message": "Di",
+        "description": "Utilizzato nel senso di \"x articoli su y articoli totali\""
+    },
+    "attachmentsPackaged": {
+        "message": "allegati imballati"
+    },
+    "embedsPackaged": {
+        "message": "incorporamenti confezionati"
+    },
+    "packageFilesSaved": {
+        "message": "file del pacchetto salvati"
+    },
+    "errorsEncountered": {
+        "message": "errori riscontrati"
+    },
+    "result": {
+        "message": "Risultato"
+    },
+    "permanentlyDetach": {
+        "message": "Distaccati permanentemente"
+    },
+    "imapDetachUnavailable": {
+        "message": "Questa funzionalità non è attualmente disponibile per gli account IMAP."
+    },
+    "close": {
+        "message": "Vicino"
+    },
+    "closeAndExit": {
+        "message": "Chiudi ed esci"
+    },
+    "viewReport": {
+        "message": "Genera rapporto"
+    },
+    "reportSavedTo": {
+        "message": "Rapporto salvato in"
+    },
+    "permanentDetachWarning": {
+        "message": "ATTENZIONE: questa azione rimuoverà permanentemente gli allegati estratti (e i duplicati) dai relativi messaggi e-mail di origine. Sono esclusi gli incorporamenti."
+    },
+    "proceed": {
+        "message": "Procedere"
+    },
+    "cancel": {
+        "message": "Cancellare"
+    },
+    "detached": {
+        "message": "distaccato"
+    },
+    "options": {
+        "message": "Opzioni"
+    },
+    "none": {
+        "message": "Nessuno"
+    },
+    "useInteractiveUi": {
+        "message": "Utilizza l'interfaccia utente interattiva",
+        "description": ""
+    },
+    "useInteractiveUiDescription": {
+        "message": "Interfaccia utente completamente interattiva; consente la selezione di allegati specifici da estrarre",
+        "description": ""
+    },
+    "displayQuickmenu": {
+        "message": "Visualizza il menu rapido",
+        "description": ""
+    },
+    "displayQuickmenuDescription": {
+        "message": "Visualizza un menu di scelta rapida quando Estrai 'Em! è aperto",
+        "description": ""
+    },
+    "extractImmediate": {
+        "message": "Estratto immediato",
+        "description": ""
+    },
+    "extractImmediateDescription": {
+        "message": "Salva tutti gli allegati dai messaggi nella cartella selezionata con intervento limitato da parte dell'utente; esclude le sottocartelle",
+        "description": ""
+    },
+    "alwaysPromptForDownloadLocation": {
+        "message": "Richiedi sempre la posizione di salvataggio"
+    },
+    "alwaysPromptForDownloadLocationMessage": {
+        "message": "Se selezionato, all'utente viene sempre richiesto di selezionare una directory di salvataggio; in caso contrario, i file vengono salvati direttamente nella cartella* specificata nelle impostazioni di Thunderbird"
+    },
+    "includeSubFolders": {
+        "message": "Includi sottocartelle",
+        "description": ""
+    },
+    "includeSubFoldersDescription": {
+        "message": "Include gli allegati nelle sottocartelle durante l'estrazione immediata",
+        "description": ""
+    },
+    "useSilentMode": {
+        "message": "Utilizza la modalità \"silenzioso\".",
+        "description": ""
+    },
+    "useSilentModeDescription": {
+        "message": "Omette la presentazione dell'interfaccia utente, ad eccezione della richiesta di salvataggio",
+        "description": ""
+    },
+    "useFilenamePattern": {
+        "message": "Utilizza il modello del nome file",
+        "description": "Opzione per sostituire il nome file dell'allegato originale con uno costruito dagli attributi del messaggio"
+    },
+    "useFilenamePatternDescription": {
+        "message": "Sostituisce il nome file dell'allegato originale con uno costruito dagli attributi del messaggio"
+    },
+    "edit": {
+        "message": "Modificare"
+    },
+    "pattern": {
+        "message": "Modello"
+    },
+    "clear": {
+        "message": "Chiaro"
+    },
+    "revert": {
+        "message": "Ripristina"
+    },
+    "placeholders": {
+        "message": "Segnaposto"
+    },
+    "from": {
+        "message": "Da"
+    },
+    "sender": {
+        "message": "Mittente"
+    },
+    "author": {
+        "message": "Autore"
+    },
+    "originalFilename": {
+        "message": "Nome file originale"
+    },
+    "date": {
+        "message": "Data"
+    },
+    "subject": {
+        "message": "Soggetto"
+    },
+    "timestamp": {
+        "message": "Timestamp (hhmmss)",
+        "description": "h = ora, m = minuto, s= secondo; implica un formato orario (154230 = 15:42:30)"
+    },
+    "sample": {
+        "message": "Campione"
+    },
+    "save": {
+        "message": "Salva"
+    },
+    "includeEmbeddedImages": {
+        "message": "Includi immagini incorporate",
+        "description": ""
+    },
+    "includeEmbeddedImagesDescription": {
+        "message": "Identifica e include immagini incorporate nel corpo del messaggio (immagini in linea)",
+        "description": ""
+    },
+    "useFileTypeFilterDescription": {
+        "message": "Limita i risultati ai tipi di file selezionati, specificati dall'estensione (.jpg, .mp3, .mov, ecc.)"
+    },
+    "omitDuplicates": {
+        "message": "Ometti i duplicati"
+    },
+    "omitDuplicatesDescription": {
+        "message": "Omette allegati duplicati (nome file e dimensione identici); non riguarda gli incorporamenti"
+    },
+    "preserveFolderStructure": {
+        "message": "Conserva la struttura delle cartelle",
+        "description": ""
+    },
+    "preserveFolderStructureDescription": {
+        "message": "Memorizza gli allegati nell'archivio .zip nelle stesse cartelle in cui risiedono in Thunderbird",
+        "description": ""
+    },
+    "useEnhancedLogging": {
+        "message": "Utilizza la registrazione avanzata"
+    },
+    "useEnhancedLoggingDescription": {
+        "message": "Restituisce ulteriori informazioni sulla risoluzione dei problemi alla console del debugger"
+    },
+    "defaultGrouping": {
+        "message": "Raggruppamento predefinito",
+        "description": ""
+    },
+    "defaultGroupingByAuthor": {
+        "message": "Per autore",
+        "description": ""
+    },
+    "defaultGroupingByFolder": {
+        "message": "Per cartella",
+        "description": ""
+    },
+    "defaultGroupingByExtension": {
+        "message": "Per estensione del file",
+        "description": ""
+    },
+    "defaultGroupingDescription": {
+        "message": "Raggruppa gli elementi nell'elenco allegati in base all'attributo specificato",
+        "description": ""
+    },
+    "imagePreview": {
+        "message": "Anteprima dell'immagine",
+        "description": ""
+    },
+    "imagePreviewSmall": {
+        "message": "Piccolo",
+        "description": ""
+    },
+    "imagePreviewMedium": {
+        "message": "Medio",
+        "description": ""
+    },
+    "imagePreviewLarge": {
+        "message": "Grande",
+        "description": ""
+    },
+    "imagePreviewDescription": {
+        "message": "Specifica la dimensione dell'immagine di anteprima per gli elementi nell'elenco allegati",
+        "description": ""
+    },
+    "extractionReport": {
+        "message": "Rapporto_estrazione"
+    },
+    "summaryForDate": {
+        "message": "Riepilogo per",
+        "description": "Riepilogo per {date}"
+    },
+    "savedAttachments": {
+        "message": "Allegati salvati"
+    },
+    "savedEmbeds": {
+        "message": "Incorporamenti salvati"
+    },
+    "packageFileCount": {
+        "message": "Conteggio file del pacchetto"
+    },
+    "previouslyDetachedDeleted": {
+        "message": "Allegati precedentemente scollegati/eliminati"
+    },
+    "duplicateAttachments": {
+        "message": "Allegati duplicati"
+    },
+    "duplicateEmbeds": {
+        "message": "Incorporamenti duplicati"
+    },
+    "omitted": {
+        "message": "Omesso"
+    },
+    "errors": {
+        "message": "Errori"
+    },
+    "permanentDetachmentErrors": {
+        "message": "Errori di distacco permanenti"
+    },
+    "saveComplete": {
+        "message": "Salvataggio completato!"
+    },
+    "saveFailed": {
+        "message": "Salvataggio non riuscito; errore sconosciuto."
+    },
+    "general": {
+        "message": "Generale"
+    },
+    "images": {
+        "message": "Immagini"
+    },
+    "audio": {
+        "message": "Audio"
+    },
+    "video": {
+        "message": "Video"
+    },
+    "unknownFileType": {
+        "message": "Tipo di file sconosciuto"
+    },
+    "unlistedFileTypes": {
+        "message": "Tutti i tipi di file non elencati sopra"
+    },
+    "addType": {
+        "message": "Aggiungi tipo"
+    },
+    "addTypeMessage": {
+        "message": "Inserisci un'estensione file di 3-5 caratteri (txt, csv, ecc.)."
+    },
+    "bytesLabel": {
+        "message": "byte"
+    },
+    "kbLabel": {
+        "message": "kB"
+    },
+    "mbLabel": {
+        "message": "MB"
+    },
+    "gbLabel": {
+        "message": "GB"
+    },
+    "error": {
+        "message": "errore"
+    },
+    "missingAttachment": {
+        "message": "L'allegato non contiene dati; presumibilmente cancellato/staccato."
+    },
+    "detachComplete": {
+        "message": "Distacco completato!"
+    },
+    "detachErrorMessage": {
+        "message": "Impossibile scollegare uno o più allegati."
+    },
+    "embedErrorUnableToReadFile": {
+        "message": "Impossibile leggere il messaggio incorporato ($1)."
+    },
+    "embedErrorInvalidBase64": {
+        "message": "Dati Base64 non validi nell'incorpora $1."
+    },
+    "embedContentTypeMissing": {
+        "message": "Incorpora intestazione Content-Type non trovata ($1)."
+    },
+    "releaseNotesTitle": {
+        "message": "Note sulla versione per Extract 'Em!"
+    },
+    "whatsNew": {
+        "message": "Cosa c'è di nuovo"
+    },
+    "whatsFixed": {
+        "message": "Cosa è stato risolto"
+    },
+    "rn1_2_1_Notice01": {
+        "message": "AVVISO: se hai utilizzato la versione 1.1.4 di questa estensione (disponibile approssimativamente tra il 10 aprile e il 23 aprile 2024), è probabile che tutti i file di archivio prodotti siano danneggiati."
+    },
+    "rn1_2_1_Notice02": {
+        "message": "Ciò era dovuto a una configurazione errata della libreria di codici di terze parti (zip.js) utilizzata per generare l'archivio."
+    },
+    "rn1_2_1_Notice03": {
+        "message": "L'autore di questa estensione desidera esprimere le sue più sincere scuse a tutti gli utenti che potrebbero essere stati disturbati da questo problema."
+    },
+    "rn1_2_1_New01": {
+        "message": "Aggiunta un'opzione per estrarre immagini incorporate (allegate in linea)."
+    },
+    "rn1_2_1_New02": {
+        "message": "Aggiunta la notifica della nuova versione (visualizzazione automatica delle note di rilascio) al rilascio della nuova versione"
+    },
+    "rn1_2_1_New03": {
+        "message": "Aggiunta l'opzione di disconnessione permanente (è richiesta la versione Thunderbird 123 o successiva)"
+    },
+    "rn1_2_1_New04": {
+        "message": "Aggiunta l'identificazione degli allegati staccati ed eliminati"
+    },
+    "rn1_2_1_Fix01": {
+        "message": "Rimossa l'estrazione ricorsiva (estrazione degli allegati all'interno dei file di posta elettronica [.eml] che sono essi stessi allegati)"
+    },
+    "rn1_2_1_Fix02": {
+        "message": "Passato alla libreria zip.js (da jszip) per mitigare un problema di memoria intermittente"
+    },
+    "rn1_3_1_New01": {
+        "message": "Aggiunta la possibilità di generare/salvare un report di estrazione (.html) dopo l'esecuzione"
+    },
+    "rn1_3_1_New02": {
+        "message": "Aggiunta localizzazione per l'ungherese (per gentile concessione dell'utente Óvári)"
+    },
+    "rn1_4_1_New01": {
+        "message": "Aggiunta un'opzione per generare nomi di file di risultati personalizzati utilizzando un modello di nome file derivato dalle proprietà dell'e-mail"
+    },
+    "rn1_5_1_Notice01": {
+        "message": "AVVISO: la funzione Disconnetti permanentemente attualmente non funziona/si blocca se utilizzata con account IMAP. Per i dettagli, fare clic sul seguente collegamento."
+    },
+    "rn1_5_1_New01": {
+        "message": "Aggiunta opzione per filtrare per tipo di file (estensione)"
+    },
+    "rn1_5_1_New02": {
+        "message": "Aggiunta casella di controllo attiva/disattiva tutto per la selezione degli allegati (Elenco allegati)"
+    },
+    "rn1_5_1_New03": {
+        "message": "Aggiunta l'opzione per richiedere sempre una posizione di salvataggio per i file del pacchetto o per salvare direttamente nella directory specificata dalla rispettiva impostazione di Thunderbird"
+    },
+    "rn1_5_2_New01": {
+        "message": "Pulsante Scollega permanentemente disabilitato per gli account IMAP fino a nuovo avviso."
+    },
+    "rn1_6_1_Notice01": {
+        "message": "SI CONSIGLIA ATTENZIONE quando si utilizza la nuova opzione di archiviazione \"Salva singoli allegati\"; è obbligatoriamente limitato alla directory specificata nelle impostazioni di Thunderbird, che può, per impostazione predefinita, essere la cartella del desktop dell'utente!"
+    },
+    "rn1_6_1_New01": {
+        "message": "Aggiunta opzione/impostazione (Salva singoli allegati) per scaricare i file estratti direttamente nel file system; si prega di consultare la nota cautelativa sopra"
+    },
+    "rn1_6_1_New02": {
+        "message": "Aggiunto il pulsante Mostra file per aprire le posizioni di salvataggio dopo l'estrazione"
+    },
+    "rn1_6_1_New03": {
+        "message": "Segnala miglioramenti quando le operazioni di salvataggio vengono annullate dall'utente"
+    },
+    "rn1_6_1_New04": {
+        "message": "Il report si apre immediatamente in una nuova scheda"
+    },
+    "rn1_6_1_New05": {
+        "message": "Layout delle opzioni/impostazioni migliorato"
+    },
+    "rn1_6_1_Fix01": {
+        "message": "Gli allegati eliminati in precedenza non venivano identificati correttamente"
+    },
+    "saving": {
+        "message": "Risparmio"
+    },
+    "attachmentsSaved": {
+        "message": "allegati salvati"
+    },
+    "embedsSaved": {
+        "message": "incorporamenti salvati"
+    },
+    "packageAttachments": {
+        "message": "Allegati al pacchetto (consigliati)"
+    },
+    "packageAttachmentsDesc": {
+        "message": "Memorizza gli elementi estratti in file di archivio (.zip)."
+    },
+    "directSave": {
+        "message": "Salva singoli allegati"
+    },
+    "directSaveDesc": {
+        "message": "Gli elementi vengono salvati individualmente nella cartella* specificata nelle impostazioni di Thunderbird"
+    },
+    "currentSaveDirectory": {
+        "message": "Directory di salvataggio corrente (impostazioni Thunderbird)"
+    },
+    "unavailable": {
+        "message": "Non disponibile"
+    },
+    "uiMode": {
+        "message": "Modalità interfaccia utente"
+    },
+    "discoveryOptions": {
+        "message": "Opzioni di rilevamento"
+    },
+    "storageOptions": {
+        "message": "Opzioni di archiviazione"
+    },
+    "showFiles": {
+        "message": "Mostra file"
+    },
+    "extractedItems": {
+        "message": "Elementi estratti"
+    },
+    "report": {
+        "message": "Rapporto"
+    },
+    "saveCanceled": {
+        "message": "Salvataggio annullato"
+    }
+}

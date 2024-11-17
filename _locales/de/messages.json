@@ -1,0 +1,587 @@
+{
+    "extensionName": {
+        "message": "Extrahiert Anhänge!"
+    },
+    "extensionDescription": {
+        "message": "Extrahiert Anhänge aus Nachrichten im ausgewählten Ordner oder Konto."
+    },
+    "extractSingleDescription": {
+        "message": "Extrahiert Anhänge aus dem ausgewählten Ordner und lässt Unterordner aus",
+        "description": "Aktionsbeschreibung für die Schaltfläche „Einzelnes Schnellmenü extrahieren“."
+    },
+    "subfolders": {
+        "message": "Unterordner"
+    },
+    "extractRecursiveDescription": {
+        "message": "Extrahiert Anhänge aus den ausgewählten Ordnern und Unterordnern (rekursiv)",
+        "description": "Aktionsbeschreibung für die Schaltfläche zum Extrahieren des rekursiven Schnellmenüs"
+    },
+    "letMeChoose": {
+        "message": "Lass mich wählen",
+        "description": "Beschriftung für die Schnellmenü-Schaltfläche mit Standardauswahl"
+    },
+    "standardSelectionDescription": {
+        "message": "Ermöglicht Ihnen die Auswahl bestimmter Ordner oder sogar bestimmter Anhänge zur Erkennung und Extraktion",
+        "description": "Aktionsbeschreibung für die Standardauswahl-Schnellmenüschaltfläche"
+    },
+    "includeEmbeds": {
+        "message": "Einbettungen (inline angehängte Bilder) einschließen"
+    },
+    "useFileTypeFilter": {
+        "message": "Dateitypfilter verwenden"
+    },
+    "fileTypeFilter": {
+        "message": "Dateitypfilter"
+    },
+    "fileTypeFilterApplied": {
+        "message": "Dateitypfilter angewendet"
+    },
+    "alwaysShowQuickmenu": {
+        "message": "Dieses Schnellmenü immer anzeigen",
+        "description": "Beschriftung für das Kontrollkästchen „Quickmenu-Persistenz“."
+    },
+    "noAttachmentsMessage": {
+        "message": "Im ausgewählten Ordner sind keine Anhänge vorhanden.",
+        "description": ""
+    },
+    "noMessagesMessage": {
+        "message": "Im ausgewählten Ordner befinden sich keine Nachrichten.",
+        "description": ""
+    },
+    "attachmentSummary": {
+        "message": "Zusammenfassung des Anhangs"
+    },
+    "attachmentList": {
+        "message": "Anhangsliste"
+    },
+    "folders": {
+        "message": "Ordner"
+    },
+    "messages": {
+        "message": "Nachrichten"
+    },
+    "attachment": {
+        "message": "Anhang"
+    },
+    "attachments": {
+        "message": "Anhänge"
+    },
+    "attachmentsPP": {
+        "message": "Anhang(e)",
+        "description": "PP = Klammerplural"
+    },
+    "embed": {
+        "message": "Einbettung"
+    },
+    "embeds": {
+        "message": "Einbettungen"
+    },
+    "embedsPP": {
+        "message": "Einbettung(en)"
+    },
+    "selected": {
+        "message": "ausgewählt"
+    },
+    "count": {
+        "message": "Zählen"
+    },
+    "processed": {
+        "message": "Verarbeitet"
+    },
+    "withAbbrev": {
+        "message": "mit "
+    },
+    "size": {
+        "message": "Größe"
+    },
+    "discoverAttachments": {
+        "message": "Entdecken Anhänge",
+        "description": "Beschriftung für die Schaltfläche „Anhänge entdecken“."
+    },
+    "reset": {
+        "message": "Zurücksetzen"
+    },
+    "closeZoomMessage": {
+        "message": "Zum Schließen auf das Bild klicken."
+    },
+    "discovering": {
+        "message": "Entdecken"
+    },
+    "discoveryProgressMessage": {
+        "message": "$1 Anhang(en) in $2 von $3 Nachricht(en)",
+        "description": "{# of discovered} Anhang(e) in {# of messages including attachments/embeds)} von {total # of discovered messages}"
+    },
+    "discoverySelectionMessage": {
+        "message": "$1 von $2 Anhängen ausgewählt",
+        "description": "{# of selected} von {# of discovered} Anhängen ausgewählt"
+    },
+    "embedDiscoverySelectionMessage": {
+        "message": "$1 von $2 Einbettung(en) ausgewählt",
+        "description": "{# of selected} von {# of discovered} Einbettung(en) ausgewählt"
+    },
+    "preparing": {
+        "message": "Vorbereiten",
+        "description": "VERALTET"
+    },
+    "exclusions": {
+        "message": "Ausschlüsse"
+    },
+    "alterationsIdentified": {
+        "message": "getrennte/gelöschte Anhänge identifiziert",
+        "description": "Berücksichtigt Anhänge, die von der (geänderten) Quellnachricht getrennt oder gelöscht wurden."
+    },
+    "duplicatesOmitted": {
+        "message": "Duplikat(e) weggelassen"
+    },
+    "packaging": {
+        "message": "Verpackung"
+    },
+    "of": {
+        "message": "von",
+        "description": "Wird im Sinne von „x Artikel von y Artikeln insgesamt“ verwendet."
+    },
+    "attachmentsPackaged": {
+        "message": "Anhang(e) verpackt"
+    },
+    "embedsPackaged": {
+        "message": "Einbettung(en) verpackt"
+    },
+    "packageFilesSaved": {
+        "message": "Paketdatei(en) gespeichert"
+    },
+    "errorsEncountered": {
+        "message": "aufgetretene Fehler"
+    },
+    "result": {
+        "message": "Ergebnis"
+    },
+    "permanentlyDetach": {
+        "message": "Dauerhaft trennen"
+    },
+    "imapDetachUnavailable": {
+        "message": "Diese Funktion ist derzeit für IMAP-Konten nicht verfügbar."
+    },
+    "close": {
+        "message": "Schließen"
+    },
+    "closeAndExit": {
+        "message": "Schließen und beenden"
+    },
+    "viewReport": {
+        "message": "Bericht erstellen"
+    },
+    "reportSavedTo": {
+        "message": "Bericht gespeichert unter"
+    },
+    "permanentDetachWarning": {
+        "message": "WARNUNG: Durch diese Aktion werden die extrahierten Anhänge (und Duplikate) dauerhaft aus ihren Quell-E-Mail-Nachrichten entfernt. Einbettungen sind ausgeschlossen."
+    },
+    "proceed": {
+        "message": "Fortfahren"
+    },
+    "cancel": {
+        "message": "Stornieren"
+    },
+    "detached": {
+        "message": "losgelöst"
+    },
+    "options": {
+        "message": "Optionen"
+    },
+    "none": {
+        "message": "Keiner"
+    },
+    "useInteractiveUi": {
+        "message": "Verwenden eine interaktive Benutzeroberfläche",
+        "description": ""
+    },
+    "useInteractiveUiDescription": {
+        "message": "Vollständig interaktive Benutzeroberfläche; ermöglicht die Auswahl spezifischer Anhänge zum Extrahieren",
+        "description": ""
+    },
+    "displayQuickmenu": {
+        "message": "Schnellmenü anzeigen",
+        "description": ""
+    },
+    "displayQuickmenuDescription": {
+        "message": "Zeigt ein Kontextmenü an, wenn Extract 'Em! wird geöffnet",
+        "description": ""
+    },
+    "extractImmediate": {
+        "message": "Sofort extrahieren",
+        "description": ""
+    },
+    "extractImmediateDescription": {
+        "message": "Speichert alle Anhänge von Nachrichten im ausgewählten Ordner mit begrenztem Benutzereingriff; schließt Unterordner aus",
+        "description": ""
+    },
+    "alwaysPromptForDownloadLocation": {
+        "message": "Immer nach dem Speicherort fragen"
+    },
+    "alwaysPromptForDownloadLocationMessage": {
+        "message": "Wenn diese Option aktiviert ist, wird der Benutzer immer aufgefordert, ein Speicherverzeichnis auszuwählen. Andernfalls werden die Dateien direkt in dem in den Thunderbird-Einstellungen angegebenen Ordner* gespeichert"
+    },
+    "includeSubFolders": {
+        "message": "Unterordner einschließen",
+        "description": ""
+    },
+    "includeSubFoldersDescription": {
+        "message": "Fügt Anhänge beim sofortigen Extrahieren in Unterordner ein",
+        "description": ""
+    },
+    "useSilentMode": {
+        "message": "Verwenden den „Silent“-Modus",
+        "description": ""
+    },
+    "useSilentModeDescription": {
+        "message": "Mit Ausnahme der Eingabeaufforderung zum Speichern wird die Darstellung der Benutzeroberfläche weggelassen",
+        "description": ""
+    },
+    "useFilenamePattern": {
+        "message": "Verwenden ein Dateinamenmuster",
+        "description": "Option zum Ersetzen des ursprünglichen Dateinamens des Anhangs durch einen Namen, der aus Nachrichtenattributen erstellt wurde"
+    },
+    "useFilenamePatternDescription": {
+        "message": "Ersetzt den ursprünglichen Dateinamen des Anhangs durch einen Namen, der aus Nachrichtenattributen erstellt wurde"
+    },
+    "edit": {
+        "message": "Bearbeiten"
+    },
+    "pattern": {
+        "message": "Muster"
+    },
+    "clear": {
+        "message": "Freimachen"
+    },
+    "revert": {
+        "message": "Zurücksetzen"
+    },
+    "placeholders": {
+        "message": "Platzhalter"
+    },
+    "from": {
+        "message": "Aus"
+    },
+    "sender": {
+        "message": "Absender"
+    },
+    "author": {
+        "message": "Autor"
+    },
+    "originalFilename": {
+        "message": "Ursprünglicher Dateiname"
+    },
+    "date": {
+        "message": "Datum"
+    },
+    "subject": {
+        "message": "Thema"
+    },
+    "timestamp": {
+        "message": "Zeitstempel (hhmmss)",
+        "description": "h = Stunde, m = Minute, s= Sekunde; impliziert ein Zeitformat (154230 = 15:42:30 Uhr)"
+    },
+    "sample": {
+        "message": "Probe"
+    },
+    "save": {
+        "message": "Speichern"
+    },
+    "includeEmbeddedImages": {
+        "message": "Fügen eingebettete Bilder hinzu",
+        "description": ""
+    },
+    "includeEmbeddedImagesDescription": {
+        "message": "Identifiziert und fügt Bilder ein, die in den Nachrichtentext eingebettet sind (Inline-Bilder)",
+        "description": ""
+    },
+    "useFileTypeFilterDescription": {
+        "message": "Beschränkt die Ergebnisse auf ausgewählte Dateitypen, die durch die Erweiterung angegeben werden (.jpg, .mp3, .mov usw.)"
+    },
+    "omitDuplicates": {
+        "message": "Vermeiden Duplikate"
+    },
+    "omitDuplicatesDescription": {
+        "message": "Doppelte Anhänge (gleicher Dateiname und gleiche Größe) werden weggelassen. Bezieht sich nicht auf Einbettungen"
+    },
+    "preserveFolderStructure": {
+        "message": "Ordnerstruktur beibehalten",
+        "description": ""
+    },
+    "preserveFolderStructureDescription": {
+        "message": "Speichert die Anhänge im .zip-Archiv in denselben Ordnern, in denen sie sich in Thunderbird befinden",
+        "description": ""
+    },
+    "useEnhancedLogging": {
+        "message": "Verwenden Sie die erweiterte Protokollierung"
+    },
+    "useEnhancedLoggingDescription": {
+        "message": "Gibt zusätzliche Informationen zur Fehlerbehebung an die Debugger-Konsole aus"
+    },
+    "defaultGrouping": {
+        "message": "Standardgruppierung",
+        "description": ""
+    },
+    "defaultGroupingByAuthor": {
+        "message": "Vom Autor",
+        "description": ""
+    },
+    "defaultGroupingByFolder": {
+        "message": "Nach Ordner",
+        "description": ""
+    },
+    "defaultGroupingByExtension": {
+        "message": "Nach Dateierweiterung",
+        "description": ""
+    },
+    "defaultGroupingDescription": {
+        "message": "Gruppiert Elemente in der Anhangsliste entsprechend dem angegebenen Attribut",
+        "description": ""
+    },
+    "imagePreview": {
+        "message": "Bildvorschau",
+        "description": ""
+    },
+    "imagePreviewSmall": {
+        "message": "Klein",
+        "description": ""
+    },
+    "imagePreviewMedium": {
+        "message": "Medium",
+        "description": ""
+    },
+    "imagePreviewLarge": {
+        "message": "Groß",
+        "description": ""
+    },
+    "imagePreviewDescription": {
+        "message": "Gibt die Größe des Vorschaubilds für Elemente in der Anhangsliste an",
+        "description": ""
+    },
+    "extractionReport": {
+        "message": "Extraktionsbericht"
+    },
+    "summaryForDate": {
+        "message": "Zusammenfassung für",
+        "description": "Zusammenfassung für {date}"
+    },
+    "savedAttachments": {
+        "message": "Gespeicherte Anhänge"
+    },
+    "savedEmbeds": {
+        "message": "Gespeicherte Einbettungen"
+    },
+    "packageFileCount": {
+        "message": "Anzahl der Paketdateien"
+    },
+    "previouslyDetachedDeleted": {
+        "message": "Zuvor getrennte/gelöschte Anhänge"
+    },
+    "duplicateAttachments": {
+        "message": "Doppelte Anhänge"
+    },
+    "duplicateEmbeds": {
+        "message": "Doppelte Einbettungen"
+    },
+    "omitted": {
+        "message": "Weggelassen"
+    },
+    "errors": {
+        "message": "Fehler"
+    },
+    "permanentDetachmentErrors": {
+        "message": "Permanente Ablösungsfehler"
+    },
+    "saveComplete": {
+        "message": "Speichern abgeschlossen!"
+    },
+    "saveFailed": {
+        "message": "Speichern fehlgeschlagen; unbekannter Fehler."
+    },
+    "general": {
+        "message": "Allgemein"
+    },
+    "images": {
+        "message": "Bilder"
+    },
+    "audio": {
+        "message": "Audio"
+    },
+    "video": {
+        "message": "Video"
+    },
+    "unknownFileType": {
+        "message": "Unbekannter Dateityp"
+    },
+    "unlistedFileTypes": {
+        "message": "Alle oben nicht aufgeführten Dateitypen"
+    },
+    "addType": {
+        "message": "Typ hinzufügen"
+    },
+    "addTypeMessage": {
+        "message": "Geben eine Dateierweiterung mit 3-5 Zeichen ein (txt, csv usw.)."
+    },
+    "bytesLabel": {
+        "message": "Bytes"
+    },
+    "kbLabel": {
+        "message": "kB"
+    },
+    "mbLabel": {
+        "message": "MB"
+    },
+    "gbLabel": {
+        "message": "GB"
+    },
+    "error": {
+        "message": "Fehler"
+    },
+    "missingAttachment": {
+        "message": "Anhang enthält keine Daten; vermutlich gelöscht/abgetrennt."
+    },
+    "detachComplete": {
+        "message": "Ablösung abgeschlossen!"
+    },
+    "detachErrorMessage": {
+        "message": "Mindestens ein Anhang konnte nicht getrennt werden."
+    },
+    "embedErrorUnableToReadFile": {
+        "message": "Einbettungsnachricht ($1) kann nicht gelesen werden."
+    },
+    "embedErrorInvalidBase64": {
+        "message": "Ungültige Base64-Daten in Einbettung $1."
+    },
+    "embedContentTypeMissing": {
+        "message": "Einbettungsinhaltstyp-Header nicht gefunden ($1)."
+    },
+    "releaseNotesTitle": {
+        "message": "Versionshinweise für Extract 'Em!"
+    },
+    "whatsNew": {
+        "message": "Was ist neu"
+    },
+    "whatsFixed": {
+        "message": "Was ist behoben?"
+    },
+    "rn1_2_1_Notice01": {
+        "message": "HINWEIS: Wenn Sie Version 1.1.4 dieser Erweiterung verwendet haben (verfügbar zwischen dem 10. April und dem 23. April 2024), sind alle von Ihnen erstellten Archivdateien wahrscheinlich beschädigt."
+    },
+    "rn1_2_1_Notice02": {
+        "message": "Dies war auf eine fehlerhafte Konfiguration der Codebibliothek eines Drittanbieters (zip.js) zurückzuführen, die zum Generieren des Archivs verwendet wurde."
+    },
+    "rn1_2_1_Notice03": {
+        "message": "Der Autor dieser Erweiterung möchte sich aufrichtig bei allen Benutzern entschuldigen, die durch dieses Problem möglicherweise Unannehmlichkeiten hatten."
+    },
+    "rn1_2_1_New01": {
+        "message": "Option zum Extrahieren eingebetteter (inline angehängter) Bilder hinzugefügt"
+    },
+    "rn1_2_1_New02": {
+        "message": "Benachrichtigung über neue Versionen (automatische Anzeige von Versionshinweisen) bei Veröffentlichung einer neuen Version hinzugefügt"
+    },
+    "rn1_2_1_New03": {
+        "message": "Permanente Trennoption hinzugefügt (Thunderbird Version 123 oder höher erforderlich)"
+    },
+    "rn1_2_1_New04": {
+        "message": "Identifizierung von getrennten und gelöschten Anhängen hinzugefügt"
+    },
+    "rn1_2_1_Fix01": {
+        "message": "Die rekursive Extraktion (Extrahieren von Anhängen in E-Mail-Dateien [.eml], die selbst Anhänge sind) wurde entfernt."
+    },
+    "rn1_2_1_Fix02": {
+        "message": "Auf die Bibliothek zip.js (von jszip) umgestellt, um ein zeitweise auftretendes Speicherproblem zu beheben"
+    },
+    "rn1_3_1_New01": {
+        "message": "Es wurde die Möglichkeit hinzugefügt, nach der Ausführung einen Extraktionsbericht (.html) zu erstellen/speichern"
+    },
+    "rn1_3_1_New02": {
+        "message": "Lokalisierung für Ungarisch hinzugefügt (mit freundlicher Genehmigung von Benutzer Óvári)"
+    },
+    "rn1_4_1_New01": {
+        "message": "Option hinzugefügt, um benutzerdefinierte Ergebnisdateinamen mithilfe eines aus E-Mail-Eigenschaften abgeleiteten Dateinamenmusters zu generieren"
+    },
+    "rn1_5_1_Notice01": {
+        "message": "HINWEIS: Die Funktion „Dauerhafte Trennung“ schlägt derzeit fehl bzw. bleibt stehen, wenn sie mit IMAP-Konten verwendet wird. Für Einzelheiten klicken Sie bitte auf den folgenden Link."
+    },
+    "rn1_5_1_New01": {
+        "message": "Option zum Filtern nach Dateityp (Erweiterung) hinzugefügt"
+    },
+    "rn1_5_1_New02": {
+        "message": "Kontrollkästchen „Alle umschalten“ für die Anhangsauswahl hinzugefügt (Anhangsliste)"
+    },
+    "rn1_5_1_New03": {
+        "message": "Option hinzugefügt, um immer nach einem Speicherort für Paketdateien zu fragen oder direkt in dem Verzeichnis zu speichern, das in der jeweiligen Thunderbird-Einstellung angegeben ist"
+    },
+    "rn1_5_2_New01": {
+        "message": "Die Schaltfläche „Trennen“ ist für IMAP-Konten bis auf Weiteres dauerhaft deaktiviert."
+    },
+    "rn1_6_1_Notice01": {
+        "message": "Bei der Verwendung der neuen Speicheroption „Einzelne Anhänge speichern“ ist Vorsicht geboten; Es ist zwingend auf das in den Thunderbird-Einstellungen angegebene Verzeichnis beschränkt, bei dem es sich standardmäßig um den Desktop-Ordner des Benutzers handeln kann!"
+    },
+    "rn1_6_1_New01": {
+        "message": "Option/Einstellung (Einzelne Anhänge speichern) hinzugefügt, um extrahierte Dateien direkt in das Dateisystem herunterzuladen; Bitte beachten Sie den Warnhinweis oben"
+    },
+    "rn1_6_1_New02": {
+        "message": "Schaltfläche „Dateien anzeigen“ zum Öffnen von Speicherorten nach dem Extrahieren hinzugefügt"
+    },
+    "rn1_6_1_New03": {
+        "message": "Melden Sie Verbesserungen, wenn Speichervorgänge vom Benutzer abgebrochen werden"
+    },
+    "rn1_6_1_New04": {
+        "message": "Der Bericht wird sofort in einem neuen Tab geöffnet"
+    },
+    "rn1_6_1_New05": {
+        "message": "Verbessertes Optionen-/Einstellungslayout"
+    },
+    "rn1_6_1_Fix01": {
+        "message": "Zuvor gelöschte Anhänge wurden nicht ordnungsgemäß identifiziert"
+    },
+    "saving": {
+        "message": "Speichern"
+    },
+    "attachmentsSaved": {
+        "message": "Anhang(e) gespeichert"
+    },
+    "embedsSaved": {
+        "message": "Einbettung(en) gespeichert"
+    },
+    "packageAttachments": {
+        "message": "Paketanhänge (empfohlen)"
+    },
+    "packageAttachmentsDesc": {
+        "message": "Speichert extrahierte Elemente in Archivdateien (.zip)."
+    },
+    "directSave": {
+        "message": "Speichern einzelne Anhänge"
+    },
+    "directSaveDesc": {
+        "message": "Elemente werden einzeln in dem in den Thunderbird-Einstellungen angegebenen Ordner* gespeichert"
+    },
+    "currentSaveDirectory": {
+        "message": "Aktuelles Speicherverzeichnis (Thunderbird-Einstellungen)"
+    },
+    "unavailable": {
+        "message": "Nicht verfügbar"
+    },
+    "uiMode": {
+        "message": "UI-Modus"
+    },
+    "discoveryOptions": {
+        "message": "Erkennungsoptionen"
+    },
+    "storageOptions": {
+        "message": "Speicheroptionen"
+    },
+    "showFiles": {
+        "message": "Dateien anzeigen"
+    },
+    "extractedItems": {
+        "message": "Extrahierte Elemente"
+    },
+    "report": {
+        "message": "Bericht"
+    },
+    "saveCanceled": {
+        "message": "Speichern abgebrochen"
+    }
+}

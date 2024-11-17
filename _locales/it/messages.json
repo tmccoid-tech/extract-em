@@ -137,7 +137,7 @@
         "message": "Confezione"
     },
     "of": {
-        "message": "Di",
+        "message": "di",
         "description": "Utilizzato nel senso di \"x articoli su y articoli totali\""
     },
     "attachmentsPackaged": {

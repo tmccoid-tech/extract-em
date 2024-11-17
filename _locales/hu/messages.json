@@ -31,12 +31,6 @@
         "description": "Action description for standard-selection Quickmenu button"
     },
 
-    "includeEmbeds": { "message": "Include embeds (inline-attached images)" },
-    
-    "useFileTypeFilter": { "message": "Use file type filter" },
-    "fileTypeFilter": { "message": "File Type Filter"},
-    "fileTypeFilterApplied": { "message" : "File type filter applied"},
-
     "alwaysShowQuickmenu": {
         "message": "Mindig jelenítse meg ezt a Gyorsmenüt",
         "description": "Label for Quickmenu persistence checkbox"
@@ -119,7 +113,6 @@
     "result": { "message": "Eredmény" },
 
     "permanentlyDetach": { "message": "Végleges leválás" },
-    "imapDetachUnavailable": { "message": "This feature is currently unavaialble for IMAP accounts." },
 
     "close":{ "message": "Bezárás" },
     "closeAndExit": { "message": "Bezárás és kilépés" },
@@ -164,10 +157,6 @@
         "description": ""
     },
 
-    "alwaysPromptForDownloadLocation": { "message": "Always prompt for download location" },
-    "alwaysPromptForDownloadLocationMessage": { "message":
-        "If checked, the user is always prompted to select a save directory; otherwise, files are directly saved to the folder specified in the Thunderbird settings"
-    },
 
     "includeSubFolders": {
         "message": "Almappák szerepeltetése",
@@ -187,34 +176,6 @@
         "description": ""
     },
 
-    "useFilenamePattern": {
-        "message": "Use filename pattern",
-        "description": "Option to replace the original attachment filename with one constructed from message attributes"
-    },
-
-    "useFilenamePatternDescription": {
-        "message": "Replaces the original attachment filename with one constructed from message attributes"
-    },
-
-    "edit": { "message": "Edit" },
-
-    "pattern": { "message": "Pattern" },
-    "clear": { "message": "Clear" },
-    "revert": { "message": "Revert" },
-    "placeholders": { "message": "Placeholders" },
-    "from": { "message" : "From"},
-    "sender": { "message": "Sender" },
-    "author": { "message": "Author" },
-    "originalFilename": { "message": "Original Filename" },
-    "date": { "message": "Date" },
-    "subject": { "message": "Subject" },
-    "timestamp": {
-        "message": "Timestamp (hhmmss)",
-        "description": "h = hour, m = minute, s= second; implies a time format (154230 = 3:42:30 PM)"
-    },
-    "sample": { "message": "Sample" },
-    "save": { "message": "Save" },
-
     "includeEmbeddedImages": {
         "message": "Beágyazott képek tartalmazása",
         "description": ""
@@ -222,14 +183,6 @@
     "includeEmbeddedImagesDescription": {
         "message": "Az üzenettörzsbe ágyazott képeket azonosít, és belefoglal (beágyazott képek)",
         "description": ""
-    },
-    "useFileTypeFilterDescription": {
-        "message": "Limits results to selected file types, specified by extension (.jpg, .mp3, .mov, etc.)"
-    },
-
-    "omitDuplicates" : { "message": "Omit duplicates" },
-    "omitDuplicatesDescription" : {
-        "message": "Omits duplicate (identical filename and size) attachments; does not pertain to embeds"
     },
     
     "preserveFolderStructure": {
@@ -310,14 +263,6 @@
     "saveComplete": { "message": "Mentés befejeződött!" },
     "saveFailed": { "message": "Mentés nem sikerült; ismeretlen hiba történt." },
 
-    "general": { "message": "General" },
-    "images": { "message": "Images" },
-    "audio": { "message": "Audio" },
-    "video": { "message": "Video" },
-    "unknownFileType": { "message": "Unknown file type" },
-    "unlistedFileTypes": { "message": "All file types not listed above" },
-    "addType": { "message": "Add Type" },
-    "addTypeMessage": { "message": "Enter a 3-5 character file extension (txt, csv, etc)." },
 
     "bytesLabel": { "message": "bájt" },
     "kbLabel": { "message": "kB" },
@@ -378,64 +323,197 @@
     },
     "rn1_3_1_New02": {
         "message" : "Magyar fordítás hozzáadva"
-    },    
-
-    "rn1_4_1_New01": {
-        "message": "Added option to generate custom result filenames using a filename pattern derived from email properties"
     },
-
+    
+    "includeEmbeds": {
+        "message": "Beágyazások (beágyazott képek)"
+    },
+    "useFileTypeFilter": {
+        "message": "Fájltípus szűrő használata"
+    },
+    "fileTypeFilter": {
+        "message": "Fájltípus szűrő"
+    },
+    "fileTypeFilterApplied": {
+        "message": "Fájltípus-szűrő alkalmazva"
+    },
+    "imapDetachUnavailable": {
+        "message": "Ez a funkció jelenleg nem érhető el IMAP-fiókokhoz."
+    },
+    "alwaysPromptForDownloadLocation": {
+        "message": "Mindig kérje a letöltési helyet"
+    },
+    "alwaysPromptForDownloadLocationMessage": {
+        "message": "Ha be van jelölve, a felhasználó mindig felkéri a mentési könyvtár kiválasztására; egyébként a fájlok közvetlenül a Thunderbird beállításaiban megadott mappába kerülnek"
+    },
+    "useFilenamePattern": {
+        "message": "Fájlnévminta használata",
+        "description": "Lehetőség az eredeti mellékletfájlnév lecserélésére egy üzenetattribútumokból összeállítottra"
+    },
+    "useFilenamePatternDescription": {
+        "message": "Lecseréli az eredeti melléklet fájlnevet az üzenetattribútumokból összeállítottra"
+    },
+    "edit": {
+        "message": "Szerkesztés"
+    },
+    "pattern": {
+        "message": "Minta"
+    },
+    "clear": {
+        "message": "Világos"
+    },
+    "revert": {
+        "message": "Vissza"
+    },
+    "placeholders": {
+        "message": "Helyőrzők"
+    },
+    "from": {
+        "message": "Tól"
+    },
+    "sender": {
+        "message": "Feladó"
+    },
+    "author": {
+        "message": "Szerző"
+    },
+    "originalFilename": {
+        "message": "Eredeti fájlnév"
+    },
+    "date": {
+        "message": "Dátum"
+    },
+    "subject": {
+        "message": "Téma"
+    },
+    "timestamp": {
+        "message": "Időbélyeg (óóóóó)",
+        "description": "h = óra, m = perc, s = másodperc; időformátumot jelent (154230 = 15:42:30)"
+    },
+    "sample": {
+        "message": "Minta"
+    },
+    "save": {
+        "message": "Megtakarítás"
+    },
+    "useFileTypeFilterDescription": {
+        "message": "Az eredményeket a kiválasztott fájltípusokra korlátozza, kiterjesztéssel (.jpg, .mp3, .mov stb.)"
+    },
+    "omitDuplicates": {
+        "message": "Az ismétlődések elhagyása"
+    },
+    "omitDuplicatesDescription": {
+        "message": "Kihagyja az ismétlődő (azonos fájlnév és méretű) mellékleteket; nem vonatkozik a beágyazásokra"
+    },
+    "general": {
+        "message": "Általános"
+    },
+    "images": {
+        "message": "Képek"
+    },
+    "audio": {
+        "message": "Hang"
+    },
+    "video": {
+        "message": "Videó"
+    },
+    "unknownFileType": {
+        "message": "Ismeretlen fájltípus"
+    },
+    "unlistedFileTypes": {
+        "message": "A fent felsorolt összes fájltípus"
+    },
+    "addType": {
+        "message": "Típus hozzáadása"
+    },
+    "addTypeMessage": {
+        "message": "Adjon meg egy 3-5 karakteres fájlkiterjesztést (txt, csv stb.)."
+    },
+    "rn1_4_1_New01": {
+        "message": "Hozzáadott lehetőség egyéni eredményfájlnevek generálásához az e-mail tulajdonságaiból származó fájlnév-mintával"
+    },
     "rn1_5_1_Notice01": {
-        "message": "NOTICE: The Permanently Detach feature currently fails/stalls when used with IMAP accounts. For details, please click the following link."
+        "message": "FIGYELMEZTETÉS: A Végleges leválasztás funkció jelenleg meghiúsul/lefagy, ha IMAP-fiókokkal használják. A részletekért kattintson az alábbi linkre."
     },
     "rn1_5_1_New01": {
-        "message": "Added option for filtering by file type (extension)"
+        "message": "Hozzáadott lehetőség a fájltípus szerinti szűréshez (kiterjesztés)"
     },
     "rn1_5_1_New02": {
-        "message": "Added toggle-all checkbox for attachment selection (Attachment List)"
+        "message": "Mindent kapcsoló jelölőnégyzet hozzáadva a melléklet kiválasztásához (mellékletlista)"
     },
     "rn1_5_1_New03": {
-        "message": "Added option for always prompting for a save location for package files, or directly saving to the directory specified by the Thunderbird setting"
+        "message": "Hozzáadott lehetőség a csomagfájlok mentési helyének mindig kérésére, vagy közvetlenül a Thunderbird beállításai által megadott könyvtárba történő mentéshez"
     },
     "rn1_5_2_New01": {
-        "message": "Permanently Detach button disabled for IMAP accounts until further notice."
+        "message": "A Végleges leválasztás gomb további értesítésig le van tiltva az IMAP-fiókoknál."
     },
-
     "rn1_6_1_Notice01": {
-        "message": "CAUTION IS ADVISED when using the new \"Save individual attachments\" storage option; it is mandatorily restricted to the directory specified in the Thunderbird settings, which may, by default, be the user's desktop folder!"
+        "message": "FIGYELMEZTETÉS TANÁCSOLNI az új „Egyes mellékletek mentése” tárolási lehetőség használatakor; kötelezően a Thunderbird beállításaiban megadott könyvtárra korlátozódik, amely alapértelmezés szerint a felhasználó asztali mappája lehet!"
     },
-    "rn1_6_1_New01": { "message": "Added option/setting (Save individual attachments) to download extracted files directly to the file system; please see the cautionary note above" },
-    "rn1_6_1_New02": { "message": "Added Show Files button for opening save locations following extraction" },
-    "rn1_6_1_New03": { "message": "Report improvements when save operations are canceled by the user" },
-    "rn1_6_1_New04": { "message": "Report opens immediately in new tab" },
-    "rn1_6_1_New05": { "message": "Improved options/settings layout" },
-    "rn1_6_1_Fix01": { "message": "Previously deleted attachments were not properly identified" },
-
-    "saving": { "message": "Saving" },
-    "attachmentsSaved": { "message": "attachment(s) saved" },
-    "embedsSaved": { "message": "embed(s) saved" },
-
+    "rn1_6_1_New01": {
+        "message": "Hozzáadott opció/beállítás (Egyedi mellékletek mentése) a kibontott fájlok közvetlenül a fájlrendszerbe való letöltéséhez; kérjük, olvassa el a fenti figyelmeztető megjegyzést"
+    },
+    "rn1_6_1_New02": {
+        "message": "Hozzáadott Fájlok megjelenítése gomb a mentési helyek kibontás utáni megnyitásához"
+    },
+    "rn1_6_1_New03": {
+        "message": "Jelentse a fejlesztéseket, ha a felhasználó törölte a mentési műveleteket"
+    },
+    "rn1_6_1_New04": {
+        "message": "A jelentés azonnal megnyílik új lapon"
+    },
+    "rn1_6_1_New05": {
+        "message": "Továbbfejlesztett opciók/beállítások elrendezése"
+    },
+    "rn1_6_1_Fix01": {
+        "message": "A korábban törölt mellékleteket nem azonosították megfelelően"
+    },
+    "saving": {
+        "message": "Megtakarítás"
+    },
+    "attachmentsSaved": {
+        "message": "melléklet(ek) mentve"
+    },
+    "embedsSaved": {
+        "message": "beágyazás mentve"
+    },
     "packageAttachments": {
-        "message": "Package attachments (recommended)"
+        "message": "Csomag mellékletei (ajánlott)"
     },
     "packageAttachmentsDesc": {
-        "message": "Stores extracted items in archive (.zip) files"
+        "message": "A kibontott elemeket archív (.zip) fájlokban tárolja"
     },
     "directSave": {
-        "message": "Save individual attachments"
+        "message": "Mentse el az egyes mellékleteket"
     },
     "directSaveDesc": {
-        "message": "Items are individually saved to the folder specified in the Thunderbird settings"
+        "message": "Az elemek egyenként a Thunderbird beállításaiban megadott mappába kerülnek"
     },
-    "currentSaveDirectory": { "message": "Current save directory (Thunderbird settings)" },
-    "unavailable": { "message": "Unavailable" },
-
-    "uiMode": { "message": "UI Mode" },
-    "discoveryOptions": { "message": "Discovery Options" },
-    "storageOptions": { "message": "Storage Options" },
-
-    "showFiles": { "message": "Show Files" },
-    "extractedItems": { "message": "Extracted Items" },
-    "report": { "message": "Report" },
-
-    "saveCanceled": { "message": "Save canceled" }
+    "currentSaveDirectory": {
+        "message": "Aktuális mentési könyvtár (Thunderbird beállítások)"
+    },
+    "unavailable": {
+        "message": "Nem elérhető"
+    },
+    "uiMode": {
+        "message": "UI mód"
+    },
+    "discoveryOptions": {
+        "message": "Felfedezési lehetőségek"
+    },
+    "storageOptions": {
+        "message": "Tárolási lehetőségek"
+    },
+    "showFiles": {
+        "message": "Fájlok megjelenítése"
+    },
+    "extractedItems": {
+        "message": "Kivont elemek"
+    },
+    "report": {
+        "message": "Jelentés"
+    },
+    "saveCanceled": {
+        "message": "Mentés törölve"
+    }    
 }

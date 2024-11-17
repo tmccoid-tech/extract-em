@@ -583,5 +583,8 @@
     },
     "saveCanceled": {
         "message": "Guardar cancelado"
+    },
+    "rn1_6_1_New06": {
+        "message":"Soporte de idiomas agregado: francés, alemán, italiano, polaco, ruso, español"
     }
 }

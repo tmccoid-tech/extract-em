@@ -515,5 +515,8 @@
     },
     "saveCanceled": {
         "message": "Mentés törölve"
-    }    
+    },
+    "rn1_6_1_New06": {
+        "message":"Hozzáadott nyelvi támogatás: francia, német, olasz, lengyel, orosz, spanyol"
+    }
 }

@@ -583,5 +583,8 @@
     },
     "saveCanceled": {
         "message": "Speichern abgebrochen"
+    },
+    "rn1_6_1_New06": {
+        "message":"Sprachunterstützung hinzugefügt: Französisch, Deutsch, Italienisch, Polnisch, Russisch, Spanisch"
     }
 }

@@ -583,5 +583,8 @@
     },
     "saveCanceled": {
         "message": "Salvataggio annullato"
+    },
+    "rn1_6_1_New06": {
+        "message":"Aggiunto supporto linguistico: francese, tedesco, italiano, polacco, russo, spagnolo"
     }
 }

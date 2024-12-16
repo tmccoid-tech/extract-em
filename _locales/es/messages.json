@@ -586,5 +586,11 @@
     },
     "rn1_6_1_New06": {
         "message":"Soporte de idiomas agregado: francés, alemán, italiano, polaco, ruso, español"
+    },
+    "rn1_6_2_Fix01": {
+        "message": "Ciertos archivos adjuntos se identificaron incorrectamente como incrustados y, por lo tanto, se omitieron"
+    },
+    "rn1_6_2_Fix02": {
+        "message": "Varias correcciones de traducción al alemán."
     }
 }

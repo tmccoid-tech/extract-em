@@ -411,6 +411,9 @@
     "rn1_6_1_New06": { "message": "Added language support: French, German, Italian, Polish, Russian, Spanish" },
     "rn1_6_1_Fix01": { "message": "Previously deleted attachments were not properly identified" },
 
+    "rn1_6_2_Fix01": { "message": "Certain attachments were incorrectly identified as embeds and thus omitted" },
+    "rn1_6_2_Fix02": { "message": "Various German translation corrections" },
+
     "saving": { "message": "Saving" },
     "attachmentsSaved": { "message": "attachment(s) saved" },
     "embedsSaved": { "message": "embed(s) saved" },

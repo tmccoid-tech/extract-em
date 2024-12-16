@@ -586,5 +586,11 @@
     },
     "rn1_6_1_New06": {
         "message":"Aggiunto supporto linguistico: francese, tedesco, italiano, polacco, russo, spagnolo"
+    },
+    "rn1_6_2_Fix01": {
+        "message": "Alcuni allegati sono stati erroneamente identificati come incorporati e quindi omessi"
+    },
+    "rn1_6_2_Fix02": {
+        "message": "Varie correzioni di traduzione tedesca"
     }
 }

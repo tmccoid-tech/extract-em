@@ -1,12 +1,12 @@
 {
     "extensionName": {
-        "message": "Extrahiert Anhänge!"
+        "message": "Alle Anhänge extrahieren"
     },
     "extensionDescription": {
         "message": "Extrahiert Anhänge aus Nachrichten im ausgewählten Ordner oder Konto."
     },
     "extractSingleDescription": {
-        "message": "Extrahiert Anhänge aus dem ausgewählten Ordner und lässt Unterordner aus",
+        "message": "Extrahiert Anhänge ausschließlich aus dem ausgewählten Ordner ohne Unterordner",
         "description": "Aktionsbeschreibung für die Schaltfläche „Einzelnes Schnellmenü extrahieren“."
     },
     "subfolders": {
@@ -17,7 +17,7 @@
         "description": "Aktionsbeschreibung für die Schaltfläche zum Extrahieren des rekursiven Schnellmenüs"
     },
     "letMeChoose": {
-        "message": "Lass mich wählen",
+        "message": "Benutzerdefiniert",
         "description": "Beschriftung für die Schnellmenü-Schaltfläche mit Standardauswahl"
     },
     "standardSelectionDescription": {
@@ -25,10 +25,10 @@
         "description": "Aktionsbeschreibung für die Standardauswahl-Schnellmenüschaltfläche"
     },
     "includeEmbeds": {
-        "message": "Einbettungen (inline angehängte Bilder) einschließen"
+        "message": "Eingebettete Anhänge bei der Suche einschließen"
     },
     "useFileTypeFilter": {
-        "message": "Dateitypfilter verwenden"
+        "message": "Nach Dateitypen filtern"
     },
     "fileTypeFilter": {
         "message": "Dateitypfilter"
@@ -49,7 +49,7 @@
         "description": ""
     },
     "attachmentSummary": {
-        "message": "Zusammenfassung des Anhangs"
+        "message": "Zusammenfassung"
     },
     "attachmentList": {
         "message": "Anhangsliste"
@@ -67,7 +67,7 @@
         "message": "Anhänge"
     },
     "attachmentsPP": {
-        "message": "Anhang(e)",
+        "message": "Anhäng(e)",
         "description": "PP = Klammerplural"
     },
     "embed": {
@@ -83,7 +83,7 @@
         "message": "ausgewählt"
     },
     "count": {
-        "message": "Zählen"
+        "message": "Anzahl"
     },
     "processed": {
         "message": "Verarbeitet"
@@ -95,7 +95,7 @@
         "message": "Größe"
     },
     "discoverAttachments": {
-        "message": "Entdecken Anhänge",
+        "message": "Suche starten",
         "description": "Beschriftung für die Schaltfläche „Anhänge entdecken“."
     },
     "reset": {
@@ -105,7 +105,7 @@
         "message": "Zum Schließen auf das Bild klicken."
     },
     "discovering": {
-        "message": "Entdecken"
+        "message": "Suche und analysieren"
     },
     "discoveryProgressMessage": {
         "message": "$1 Anhang(en) in $2 von $3 Nachricht(en)",
@@ -124,14 +124,14 @@
         "description": "VERALTET"
     },
     "exclusions": {
-        "message": "Ausschlüsse"
+        "message": "Ausgeschlossen"
     },
     "alterationsIdentified": {
         "message": "getrennte/gelöschte Anhänge identifiziert",
         "description": "Berücksichtigt Anhänge, die von der (geänderten) Quellnachricht getrennt oder gelöscht wurden."
     },
     "duplicatesOmitted": {
-        "message": "Duplikat(e) weggelassen"
+        "message": "Duplikat(e) entfernt"
     },
     "packaging": {
         "message": "Verpackung"
@@ -180,7 +180,7 @@
         "message": "Fortfahren"
     },
     "cancel": {
-        "message": "Stornieren"
+        "message": "Abbrechen"
     },
     "detached": {
         "message": "losgelöst"
@@ -411,16 +411,16 @@
         "message": "Video"
     },
     "unknownFileType": {
-        "message": "Unbekannter Dateityp"
+        "message": "Unbekannte Dateitypen"
     },
     "unlistedFileTypes": {
         "message": "Alle oben nicht aufgeführten Dateitypen"
     },
     "addType": {
-        "message": "Typ hinzufügen"
+        "message": "Neuen Dateityp hinzufügen"
     },
     "addTypeMessage": {
-        "message": "Geben eine Dateierweiterung mit 3-5 Zeichen ein (txt, csv usw.)."
+        "message": "Geben Sie eine Dateierweiterung mit 3-5 Zeichen ein z.B. txt, csv usw."
     },
     "bytesLabel": {
         "message": "Bytes"
@@ -537,13 +537,13 @@
         "message": "Zuvor gelöschte Anhänge wurden nicht ordnungsgemäß identifiziert"
     },
     "saving": {
-        "message": "Speichern"
+        "message": "Extrahieren"
     },
     "attachmentsSaved": {
-        "message": "Anhang(e) gespeichert"
+        "message": "Anhäng(e) extrahiert"
     },
     "embedsSaved": {
-        "message": "Einbettung(en) gespeichert"
+        "message": "Einbettung(en) extrahiert"
     },
     "packageAttachments": {
         "message": "Paketanhänge (empfohlen)"
@@ -586,5 +586,11 @@
     },
     "rn1_6_1_New06": {
         "message":"Sprachunterstützung hinzugefügt: Französisch, Deutsch, Italienisch, Polnisch, Russisch, Spanisch"
+    },
+    "rn1_6_2_Fix01": {
+        "message": "Bestimmte Anhänge wurden fälschlicherweise als Einbettungen identifiziert und daher weggelassen"
+    },
+    "rn1_6_2_Fix02": {
+        "message": "Diverse Korrekturen der deutschen Übersetzung"
     }
 }

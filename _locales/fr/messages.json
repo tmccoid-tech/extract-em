@@ -586,5 +586,11 @@
     },
     "rn1_6_1_New06": {
         "message":"Prise en charge linguistique ajoutée : français, allemand, italien, polonais, russe, espagnol"
-    }    
+    },
+    "rn1_6_2_Fix01": {
+        "message": "Certaines pièces jointes ont été incorrectement identifiées comme intégrées et donc omises"
+    },
+    "rn1_6_2_Fix02": {
+        "message": "Diverses corrections de traduction en allemand"
+    }
 }

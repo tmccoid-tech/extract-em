@@ -518,5 +518,11 @@
     },
     "rn1_6_1_New06": {
         "message":"Hozzáadott nyelvi támogatás: francia, német, olasz, lengyel, orosz, spanyol"
+    },
+    "rn1_6_2_Fix01": {
+        "message": "Egyes mellékletek helytelenül lettek beágyazva, ezért kimaradtak"
+    },
+    "rn1_6_2_Fix02": {
+        "message": "Különféle német fordítási javítások"
     }
 }

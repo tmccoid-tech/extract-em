@@ -365,8 +365,6 @@ export class AttachmentManager {
                         const contentDisposition = attachmentPart.headers["content-disposition"];
                         
                         if(contentDisposition && contentDisposition.length > 0) {
-//                            console.log(contentDisposition[0]);
-
                             if(contentDisposition[0].startsWith("inline")) {
                                 continue;
                             }

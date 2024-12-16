@@ -586,5 +586,11 @@
     },
     "rn1_6_1_New06": {
         "message":"Dodano obsługę języków: francuski, niemiecki, włoski, polski, rosyjski, hiszpański"
+    },
+    "rn1_6_2_Fix01": {
+        "message": "Niektóre załączniki zostały błędnie zidentyfikowane jako osadzone i dlatego pominięte"
+    },
+    "rn1_6_2_Fix02": {
+        "message": "Różne poprawki w tłumaczeniu niemieckim"
     }
 }

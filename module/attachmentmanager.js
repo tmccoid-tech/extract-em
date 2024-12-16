@@ -337,7 +337,41 @@ export class AttachmentManager {
 
                 // If this is an embed, handle in the original manner
                 if(attachment.contentId){
-                    continue;
+                    // Test that this actually IS an embed...
+                    const getPart = (parentPart, partName) => {
+                        let result = null;
+                        
+                        if(parentPart.parts) {
+                            for(const childPart of parentPart.parts) {
+                                if(childPart.partName == partName) {
+                                    result = childPart;
+                                }
+                                else {
+                                    result = getPart(childPart, partName)
+                                }
+
+                                if(result) {
+                                    break;
+                                }
+                            }
+                        }
+
+                        return result;
+                    };
+
+                    const attachmentPart = getPart(fullMessage, attachment.partName);
+
+                    if(attachmentPart && attachmentPart.headers) {
+                        const contentDisposition = attachmentPart.headers["content-disposition"];
+                        
+                        if(contentDisposition && contentDisposition.length > 0) {
+//                            console.log(contentDisposition[0]);
+
+                            if(contentDisposition[0].startsWith("inline")) {
+                                continue;
+                            }
+                        }
+                    }
                 }
 
                 if(alterationMap.has(attachment.partName)) {

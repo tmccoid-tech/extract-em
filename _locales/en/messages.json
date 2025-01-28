@@ -414,7 +414,7 @@
     "rn1_6_2_Fix01": { "message": "Certain attachments were incorrectly identified as embeds and thus omitted" },
     "rn1_6_2_Fix02": { "message": "Various German translation corrections" },
 
-    "rn1_6_3_Fix03": { "message": "Filename pattern date formatting resulted in incorrect date"},
+    "rn1_6_4_Fix01": { "message": "Filename pattern date formatting resulted in incorrect date"},
 
     "saving": { "message": "Saving" },
     "attachmentsSaved": { "message": "attachment(s) saved" },

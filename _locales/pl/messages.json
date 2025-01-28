@@ -592,5 +592,8 @@
     },
     "rn1_6_2_Fix02": {
         "message": "Różne poprawki w tłumaczeniu niemieckim"
-    }
+    },
+    "rn1_6_3_Fix03": { 
+        "message":"Formatowanie daty nazwy pliku spowodowało niepoprawną datę"
+    }    
 }

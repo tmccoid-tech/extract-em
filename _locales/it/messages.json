@@ -592,5 +592,8 @@
     },
     "rn1_6_2_Fix02": {
         "message": "Varie correzioni di traduzione tedesca"
-    }
+    },
+    "rn1_6_3_Fix03": { 
+        "message":"La formattazione della data del modello di fileName ha comportato una data errata"
+    }    
 }

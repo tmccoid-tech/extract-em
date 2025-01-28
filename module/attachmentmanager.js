@@ -1566,8 +1566,8 @@ export class AttachmentManager {
     #getFormattedDate(date, formatString) {
         const dateParts = {
             yyyy: date.getFullYear().toString(),
-            mm: date.getMonth().toString().padStart(2, "0"),
-            dd: date.getDay().toString().padStart(2, "0")
+            mm: (date.getMonth() + 1).toString().padStart(2, "0"),
+            dd: date.getDate().toString().padStart(2, "0")
         }
 
         switch(formatString) {
@@ -1640,7 +1640,9 @@ export class AttachmentManager {
 
         const tokens = fileName.split(".");
 
-        tokens[0] = `${tokens[0]}_${paddedSequenceNumber}`;
+        const targetTokenIndex = (tokens.length == 1) ? 0 : tokens.length - 2;
+
+        tokens[targetTokenIndex] = `${tokens[targetTokenIndex]}_${paddedSequenceNumber}`;
 
         const result = tokens.join(".");
 

@@ -592,5 +592,8 @@
     },
     "rn1_6_2_Fix02": {
         "message": "Varias correcciones de traducción al alemán."
+    },
+    "rn1_6_3_Fix03": {
+        "message":"El formato de fecha del patrón de nombre de archivo dio como resultado una fecha incorrecta"
     }
 }

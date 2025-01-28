@@ -524,5 +524,9 @@
     },
     "rn1_6_2_Fix02": {
         "message": "Különféle német fordítási javítások"
-    }
+    },
+    "rn1_6_3_Fix03":
+    {
+        "message":"A fájlnév mintázatának dátum formázása helytelen dátumot eredményezett"
+    }    
 }

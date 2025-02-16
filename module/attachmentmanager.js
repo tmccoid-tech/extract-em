@@ -1396,6 +1396,8 @@ export class AttachmentManager {
 
         this.#detachmentErrorList = [];
 
+        browser.deleteAttachmentsApi.prepare();
+
         for(const set of deletionSets) {
             for(const item of set) {
                 const { messageId, partName, name, size } = item;
@@ -1407,7 +1409,7 @@ export class AttachmentManager {
                 this.#log(`Begin detach: ${message.author} ~ ${message.date} : ${name}`);
 
                 try {
-                    await messenger.messages.deleteAttachments(messageId, [partName]);
+                    await browser.messages.deleteAttachments(messageId, [partName]);
 
                     this.#log(`End detach: ${message.author} ~ ${message.date} : ${name}`);
 

@@ -1507,7 +1507,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 showFilesButton.value = "*";
             }
 
-            messenger.tabs.create({ url: saveResult.reportFilename });
+            if(CapabilitiesManager.permitReportTab) {
+                messenger.tabs.create({ url: saveResult.reportFilename });
+            }
         }
     }
 

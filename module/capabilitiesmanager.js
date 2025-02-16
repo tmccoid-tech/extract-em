@@ -13,8 +13,11 @@ export class CapabilitiesManager {
                 this.useAdvancedGetRaw = this.#isSufficientVersion(appVersionNumbers, [115, 3, 2]);                                                   //  >= TB 115.3.2
                 this.useMailFolderId = this.#isSufficientVersion(appVersionNumbers, [121]);                                                           //  >= TB 121
 
+                this.permitReportTab = !this.#isSufficientVersion(appVersionNumbers, [134]);                                                          // < TB 134
+                
                 this.preventDetachment = (accountType) => {
-                    return this.permitDetachment && accountType == "imap" && !this.#isSufficientVersion(appVersionNumbers, [133]);                    //  Account type is "imap" and TB < 133
+                    return false;
+//                    return this.permitDetachment && accountType == "imap" && !this.#isSufficientVersion(appVersionNumbers, [136]);                    //  Account type is "imap" and TB < 136
                 };
             });
     }

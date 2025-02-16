@@ -2,12 +2,13 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "author": "tmccoid.tech",
   "browser_specific_settings": {
     "gecko": {
       "id": "extractem@tmccoid.tech",
-      "strict_min_version": "102.0"
+      "strict_min_version": "102.0",
+      "strict_max_version": "137.0"
     }
   },
   "icons": {
@@ -33,5 +34,15 @@
     "downloads.open",
     "messagesModifyPermanent"
   ],
-  "default_locale": "en"
+  "default_locale": "en",
+  "experiment_apis": {
+    "deleteAttachmentsApi": {
+      "schema": "exp/deleteAttachmentsApi/schema.json",
+      "parent": {
+        "scopes": [ "addon_parent" ],
+        "paths": [ [ "deleteAttachmentsApi" ] ],
+        "script": "exp/deleteAttachmentsApi/implementation.js"
+      }
+    }
+  }
 }

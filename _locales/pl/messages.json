@@ -595,5 +595,11 @@
     },
     "rn1_6_4_Fix01": { 
         "message":"Formatowanie daty nazwy pliku spowodowało niepoprawną datę"
-    }    
+    },
+    "rn1_6_5_Notice01": {
+        "message": "Niepowodzenie oddziału może wystąpić dla niektórych kont e -mail IMAP (w tym Gmaila); Wybierz dowolną wiadomość z odpowiednim załącznikiem w panelu wiadomości przed oddziałem, ponieważ wydaje się, że rozwiązuje problem."
+    },
+    "rn1_6_5_Fix01": {
+        "message": "IMAP Permanent Derwiment Resinstated (patrz Uwaga powyżej)"
+    }
 }

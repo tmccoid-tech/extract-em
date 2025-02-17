@@ -528,5 +528,11 @@
     "rn1_6_4_Fix01":
     {
         "message":"A fájlnév mintázatának dátum formázása helytelen dátumot eredményezett"
-    }    
+    },
+    "rn1_6_5_Notice01": {
+        "message": "Bizonyos IMAP e -mail fiókokhoz (beleértve a Gmail -t is) leválasztási hibát jelenthet; Kérjük, válassza ki az üzenet ablaktáblájában lévő kapcsolódó mellékletet, mielőtt ez megoldja a problémát."
+    },
+    "rn1_6_5_Fix01": {
+        "message": "Az IMAP állandó leválódási gyantázott (kérjük, lásd a fenti értesítést)"
+    }
 }

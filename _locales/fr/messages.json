@@ -595,5 +595,12 @@
     },
     "rn1_6_4_Fix01": {
         "message":"Le formatage de date du modèle de nom de fichier a entraîné une date incorrecte"
-    }    
+    },
+    "rn1_6_5_Notice01": {
+        "message": "Une défaillance du détachement peut se produire pour certains comptes de messagerie IMAP (y compris Gmail); Veuillez sélectionner tout message avec une pièce jointe pertinente dans le volet de message avant le détachement, car cela semble résoudre le problème."
+    },
+    "rn1_6_5_Fix01": {
+        "message": "IMAP Détachement permanent Resinstated (veuillez consulter l'avis ci-dessus)"
+    }
+   
 }

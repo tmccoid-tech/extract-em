@@ -595,5 +595,11 @@
     },
     "rn1_6_4_Fix01": { 
         "message":"La formattazione della data del modello di fileName ha comportato una data errata"
-    }    
+    },
+    "rn1_6_5_Notice01": {
+        "message": "Il fallimento del distacco può verificarsi per alcuni account e -mail IMAP (incluso Gmail); Selezionare qualsiasi messaggio con un allegato pertinente nel riquadro del messaggio prima del distacco in quanto ciò sembra risolvere il problema."
+    },
+    "rn1_6_5_Fix01": {
+        "message": "Distacco permanente IMAP Resinstato (consultare l'avviso sopra)"
+    }
 }

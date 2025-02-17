@@ -595,5 +595,11 @@
     },
     "rn1_6_4_Fix01": {
         "message":"El formato de fecha del patrón de nombre de archivo dio como resultado una fecha incorrecta"
-    }
+    },
+    "rn1_6_5_Notice01": {
+        "message":"La falla de desprendimiento puede ocurrir para ciertas cuentas de correo electrónico IMAP (incluido Gmail); Seleccione cualquier mensaje con un archivo adjunto pertinente en el panel de mensajes antes del desapego, ya que esto parece resolver el problema."
+    },
+    "rn1_6_5_Fix01": {
+        "message":"IMAP RESINA DE IMAP RESINATADO (Consulte el aviso anterior)"
+    }    
 }

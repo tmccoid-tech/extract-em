@@ -416,6 +416,10 @@
 
     "rn1_6_4_Fix01": { "message": "Filename pattern date formatting resulted in incorrect date"},
 
+    "rn1_6_5_Notice01": { "message": "Detachment failure can occur for certain IMAP email accounts (including Gmail); please select any message with a pertinent attachment in the message pane prior to detachment as this appears to resolve the issue." },
+
+    "rn1_6_5_Fix01": { "message": "IMAP permanent detachment resinstated (please see notice above)" },
+
     "saving": { "message": "Saving" },
     "attachmentsSaved": { "message": "attachment(s) saved" },
     "embedsSaved": { "message": "embed(s) saved" },

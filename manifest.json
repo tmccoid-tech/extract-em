@@ -7,8 +7,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "extractem@tmccoid.tech",
-      "strict_min_version": "102.0",
-      "strict_max_version": "137.0"
+      "strict_min_version": "102.0"
     }
   },
   "icons": {
@@ -34,15 +33,5 @@
     "downloads.open",
     "messagesModifyPermanent"
   ],
-  "default_locale": "en",
-  "experiment_apis": {
-    "deleteAttachmentsApi": {
-      "schema": "exp/deleteAttachmentsApi/schema.json",
-      "parent": {
-        "scopes": [ "addon_parent" ],
-        "paths": [ [ "deleteAttachmentsApi" ] ],
-        "script": "exp/deleteAttachmentsApi/implementation.js"
-      }
-    }
-  }
+  "default_locale": "en"
 }

@@ -184,6 +184,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const detachErrorCountSpan = elem("detach-error-count-span");
     const detachViewReportButton = elem("detach-view-report-button");
     const detachExitExtensionButton = elem("detach-exit-extension-button");
+    const imapDetachmentNoticePanel = elem("imap-detachment-notice");
 
     const reportStyleTemplate = elem("report-style-template");
     const reportTemplate = elem("report-template");
@@ -219,7 +220,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     var folderSummary;
     var selectedFolders;
     var hasAttachments = false;
-    var preventDetachment = false;
+    var presentImapDetachmentNotice = false;
     let downloadLocations;
 
 //    var capabilities = new Capabilities();
@@ -500,9 +501,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0)) {
             permanentlyDetachButton.classList.add("hidden");
         }
-        else if(preventDetachment) {
-            permanentlyDetachButton.disabled = true;
-            permanentlyDetachButton.title = i18nText.imapDetachUnavailable;
+        else if(presentImapDetachmentNotice) {
+            imapDetachmentNoticePanel.classList.remove("hidden");
         }
 
         saveResultDiv.classList.add("materialize");
@@ -581,7 +581,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const account = await messenger.accounts.get(params.accountId, false);
             document.title = `${i18nText.extensionName} (${account.name})`;
             zipAccountNameLabel.innerHTML = account.name;
-            preventDetachment = CapabilitiesManager.preventDetachment(account.type);
+            presentImapDetachmentNotice = CapabilitiesManager.presentImapDetachmentNotice(account.type);
         }
 
         selectedFolders = params?.selectedFolders;
@@ -1227,6 +1227,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function proceedDetach() {
+        imapDetachmentNoticePanel.classList.add("hidden");
         detachActionButtonsDiv.classList.add("hidden");
         detachOperationRow.classList.add("materialize");
 

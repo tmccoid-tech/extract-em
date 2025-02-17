@@ -595,5 +595,11 @@
     },
     "rn1_6_4_Fix01": {
         "message":"Das Datum des Datenname -Datums der Dateinamen führte zu einem falschen Datum"
+    },
+    "rn1_6_5_Notice01": {
+        "message":"Der Ausfallfehler kann für bestimmte IMAP -E -Mail -Konten (einschließlich Google Mail) auftreten. Bitte wählen Sie eine Meldung mit einem relevanten Anhang im Nachrichtenbereich vor der Ablösung aus, da dies das Problem zu beheben scheint."
+    },
+    "rn1_6_5_Fix01": {
+        "message":"IMAP DERAP DEMALE HELSINSTATIONEN (Siehe Hinweis oben)"
     }
 }

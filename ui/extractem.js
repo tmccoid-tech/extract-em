@@ -182,6 +182,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const detachResultBorderDiv = elem("detach-result-border-div");
     const detachResultLabel = elem("detach-result-label");
     const detachErrorCountSpan = elem("detach-error-count-span");
+    const detachShowFilesButton = elem("detach-show-files-button");
     const detachViewReportButton = elem("detach-view-report-button");
     const detachExitExtensionButton = elem("detach-exit-extension-button");
     const imapDetachmentNoticePanel = elem("imap-detachment-notice");
@@ -481,9 +482,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const [downloadId] = downloadLocations.values();
 
                 showFilesButton.value = downloadId;
+                detachShowFilesButton.value = downloadId;
             }
             else {
                 showFilesButton.value = "*";
+                detachShowFilesButton.value = "*";
             }
 
             downloadFoldersItemContainer.innerHTML = "";
@@ -563,6 +566,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         detachExitExtensionButton.addEventListener("click", (event) => { window.close(); });
 
         showFilesButton.addEventListener("click", showFiles);
+        detachShowFilesButton.addEventListener("click", showFiles);
         closeDownloadFoldersButton.addEventListener("click", closeDownloadFoldersOverlay);
 
         viewReportButton.addEventListener("click", generateReport);
@@ -1506,6 +1510,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 downloadLocations.set(path, saveResult.downloadId);
                 addDownloadFolderItem(path, saveResult.downloadId, i18nText.report);
                 showFilesButton.value = "*";
+                detachShowFilesButton.value = "*";
             }
 
             if(CapabilitiesManager.permitReportTab) {
@@ -1589,6 +1594,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         downloadFoldersItemContainer.innerHTML = "";
         showFilesButton.value = "";
+        detachShowFilesButton.value = "";
 
         showFilesButton.classList.add("hidden");
         viewReportButton.classList.add("hidden");

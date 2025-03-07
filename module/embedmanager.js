@@ -108,35 +108,23 @@ export class EmbedManager {
                                                 if(imageNameTokens.length > 1 && imageNameTokens[0].trim() == "name") {
                                                     const imageName = imageNameTokens[1].replace(quoteReplace, "");
 
-                                                    let extension = "--";
-
-                                                    const segments = imageName.split(".");
-                                    
-                                                    if (segments.length > 1) {
-                                                        if (segments[segments.length - 1].length < 6) {
-                                                            extension = segments.pop().toLowerCase();
-                                                        }
-                                                    }
-
                                                     const embed = {
                                                         messageId: messageId,
-                                                        name: imageName,
-                                                        alternateName: null,
+                                                        originalFilename: imageName,
+                                                        outputFilename: null,
                                                         date: date,
                                                         partName: candidatePart.partName,
                                                         contentTypeBoundary: imageContentType[0],
                                                         boundary: boundary,
                                                         contentType: imageTokens[0],
                                                         size: null,
-                                                        extension: extension,
+                                                        extension: "--",
                                                         isEmbed: true,
                                                         isPreviewable: false,
                                                         isDuplicate: false
                                                     };
 
                                                     embeds.push(embed);
-        
-//                                                    console.log(embed);
                                                 }
                                             }
                                         }

@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const useFilenamePatternCheckbox = elem("use-filename-pattern-checkbox");
     const filenamePatternDisplayTextbox = elem("filename-pattern-display-textbox");
     const filenamePatternEditButton = elem("filename-pattern-edit-button");
+    const maxFilenameSubjectLengthTextbox = elem("max-filename-subject-length-textbox");
     const filenameEditorOverlay = elem("filename-editor-overlay");
 
     const useEnhancedLoggingCheckbox = elem("use-enhanced-logging-checkbox");
@@ -86,6 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(directSaveRadio, onStorageOptionChanged);
         listen(useFilenamePatternCheckbox, onFilenamePatternOptionChanged);
         filenamePatternEditButton.addEventListener("click", (e) => displayFilenamePatternEditor());
+        listen(maxFilenameSubjectLengthTextbox, onMaxFilenamePatternChanged);
 
         packageAttachmentsRadio.checked = extensionOptions.packageAttachments;
         alwaysPromptForDownloadLocationCheckbox.checked = extensionOptions.alwaysPromptForDownloadLocation;
@@ -94,10 +96,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         currentSaveDirectorySpan.innerText = currentSaveDirectory;
         useFilenamePatternCheckbox.checked = extensionOptions.useFilenamePattern;
         filenamePatternDisplayTextbox.value = extensionOptions.filenamePattern;
+        maxFilenameSubjectLengthTextbox.value = extensionOptions.maxFilenameSubjectLength;
 
         alwaysPromptForDownloadLocationCheckbox.disabled = !extensionOptions.packageAttachments;
         preserveFolderStructureCheckbox.disabled = !extensionOptions.packageAttachments;
-        toggleFilenamePatternEditButton(extensionOptions.useFilenamePattern);
+        toggleFilenamePatternChildControls(extensionOptions.useFilenamePattern);
+        maxFilenameSubjectLengthTextbox.disabled = !extensionOptions.useFilenamePattern;
 
         listen(useEnhancedLoggingCheckbox, (e) => setOption(e, (c) => c.checked));
 
@@ -150,12 +154,33 @@ document.addEventListener("DOMContentLoaded", async () => {
                 displayFilenamePatternEditor();
                 return;
             }
+            
+            OptionsManager.setOption("useFilenamePattern", true);
         }
         else {
             OptionsManager.setOption("useFilenamePattern", false);
         }
 
-        toggleFilenamePatternEditButton(useFilenamePatternCheckbox.checked);
+        toggleFilenamePatternChildControls(useFilenamePatternCheckbox.checked);
+    }
+
+    function onMaxFilenamePatternChanged(event) {
+        let isValid = false;
+        
+        let provisionalValue = maxFilenameSubjectLengthTextbox.value;
+        
+        if(/^\d{1,3}$/.test(provisionalValue)) {
+            provisionalValue = Number(provisionalValue);
+
+            if(provisionalValue > 0 && provisionalValue < 201) {
+                OptionsManager.setOption("maxFilenameSubjectLength", provisionalValue);
+                isValid = true;
+            }
+        }
+        
+        if(!isValid) {
+            maxFilenameSubjectLengthTextbox.value = extensionOptions.maxFilenameSubjectLength;
+        }
     }
 
     function onFilenamePatternEditorDismissed(options) {
@@ -167,7 +192,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         filenamePatternDisplayTextbox.value = options.value;
 
-        toggleFilenamePatternEditButton(useFilenamePattern);
+        toggleFilenamePatternChildControls(useFilenamePattern);
 
         useFilenamePatternCheckbox.checked = useFilenamePattern;
         OptionsManager.setOption("useFilenamePattern", useFilenamePattern)
@@ -175,12 +200,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         filenameEditorOverlay.classList.add("hidden");
     }
 
-    function toggleFilenamePatternEditButton(useFilenamePattern) {
+    function toggleFilenamePatternChildControls(useFilenamePattern) {
         if(useFilenamePattern) {
             filenamePatternEditButton.removeAttribute("disabled");
+            maxFilenameSubjectLengthTextbox.removeAttribute("disabled");
         }
         else {
             filenamePatternEditButton.setAttribute("disabled", "disabled");
+            maxFilenameSubjectLengthTextbox.setAttribute("disabled", "disabled");
         }
     }
 

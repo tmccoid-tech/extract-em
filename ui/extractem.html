@@ -277,12 +277,14 @@
         <div id="release-notes-close-panel">
             <button type="button" id="close-release-notes-button">__MSG_close__</button>
             <div class="release-notes-panel hidden" version="1.6">
-                <h4>__MSG_releaseNotesTitle__ 1.6.5</h4>
+                <h4>__MSG_releaseNotesTitle__ 1.6.6</h4>
                 <div class="notice-panel">
                     __MSG_rn1_6_5_Notice01__
+                    <div><a href="https://github.com/tmccoid-tech/extract-em/discussions/24">https://github.com/tmccoid-tech/extract-em/discussions/24</a></div>
                 </div>
                 <h4>__MSG_whatsNew__</h4>
                 <ul>
+                    <li>[1.6.6] __MSG_rn1_6_6_New01__</li>
                     <li>[1.6.1] __MSG_rn1_6_1_New01__</li>
                     <li>[1.6.1] __MSG_rn1_6_1_New02__</li>
                     <li>[1.6.1] __MSG_rn1_6_1_New03__</li>
@@ -292,6 +294,7 @@
                 </ul>
                 <h4>__MSG_whatsFixed__</h4>
                 <ul>
+                    <li>[1.6.6] __MSG_rn1_6_6_Fix01__</li>
                     <li>[1.6.5] __MSG_rn1_6_5_Fix01__</li>
                     <li>[1.6.4] __MSG_rn1_6_4_Fix01__</li>
                     <li>[1.6.2] __MSG_rn1_6_2_Fix01__</li>
@@ -456,12 +459,23 @@
                 grid-area: seq;
             }
 
-            .filename-label {
+            .filename-container {
                 grid-area: filename;
-                font-weight: bold;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+            }
+
+            .output-filename-label {
+                font-weight: bold;
+            }
+
+            .original-filename-label {
+                font-size: smaller;
+            }
+
+            .original-filename-label.hidden {
+                display: none;
             }
 
             .file-size-label {
@@ -581,7 +595,10 @@
     <template id="report-item-template">
         <div class="list-table-item-container">
             <div class="sequence-number"></div>
-            <div class="filename-label"></div>
+            <div class="filename-container">
+                <div class="output-filename-label"></div>
+                <div class="original-filename-label hidden"></div>
+            </div>
             <div class="file-size-label"></div>
 
             <div class="author-label"></div>

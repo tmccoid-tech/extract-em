@@ -27,6 +27,7 @@ export class AttachmentManager {
 
     #useFilenamePattern = false;
     #filenamePattern = "";
+    #maxFilenameSubjectLength = 200;
 
     #omitDuplicates = true;
 
@@ -53,9 +54,12 @@ export class AttachmentManager {
 
     #alterationTracker;
     #packagingTracker;
+    
     #duplicateFileTracker;
     #duplicateFileNameTracker;
     #duplicateEmbedFileTracker;
+    #duplicateEmbedFileNameTracker;
+    
     #packagingErrorList;
     #packagingFilenameList;
 
@@ -123,6 +127,7 @@ export class AttachmentManager {
 
         this.#useFilenamePattern = options.useFilenamePattern && options.filenamePattern.length > 0;
         this.#filenamePattern = options.filenamePattern;
+        this.#maxFilenameSubjectLength = options.maxFilenameSubjectLength;
 
         this.#omitDuplicates = options.omitDuplicates;
 
@@ -380,15 +385,7 @@ export class AttachmentManager {
                     continue;
                 }
 
-                let extension = "--";
-
-                const segments = attachment.name.split(".");
-
-                if (segments.length > 1) {
-                    if (segments[segments.length - 1].length < 6) {
-                        extension = segments.pop().toLowerCase();
-                    }
-                }
+                let { filename, extension } = this.#processFileName(attachment.name);
 
                 if (fileTypeFilter) {
                     if(!(fileTypeFilter.selectedExtensions.has(extension) || (fileTypeFilter.includeUnlisted && !fileTypeFilter.listedExtensions.has(extension)))) {
@@ -396,11 +393,10 @@ export class AttachmentManager {
                     }
                 }
 
-
                 const attachmentInfo = {
                     messageId: message.id,
-                    name: this.#normalizeFileName(attachment.name),
-                    alternateName: null,
+                    originalFilename: attachment.name,
+                    outputFilename: filename,
                     date: message.date,
                     partName: attachment.partName,
                     contentType: attachment.contentType,
@@ -412,7 +408,7 @@ export class AttachmentManager {
     
                 if(attachmentInfo.size < 1 || attachmentInfo.size == 238) {
                     try {
-                        this.#log(`Get attachment file message: ${message.date} - ${message.subject}: name = ${attachmentInfo.name} size = ${attachmentInfo.size}`);
+                        this.#log(`Get attachment file message: ${message.date} - ${message.subject}: original filename = ${attachmentInfo.originalFilename} size = ${attachmentInfo.size}`);
 
                         const attachmentFile = await this.#getAttachmentFile(attachmentInfo.messageId, attachmentInfo.partName);
 
@@ -504,12 +500,16 @@ export class AttachmentManager {
                     }
 
                     for(const embed of embeds) {
+                        let { filename, extension } = this.#processFileName(embed.orignalFilename);
+
+                        embed.outputFilename = filename;
+                        embed.extension = extension;
                         embed.charset = messageCharset;
                     }
 
                     this.attachmentList.push(...embeds);
 
-                    folderStats.lastFileName = embeds[0].name;
+                    folderStats.lastFileName = embeds[0].originalFilename;
 
                     this.#embedCount+= embeds.length;
                     folderStats.embedCount+= embeds.length;
@@ -809,14 +809,13 @@ export class AttachmentManager {
                     }
                 }
                 else {
-                    let fileName = item.name;
+                    const { originalFilename } = item;
 
                     if(useFilenamePattern) {
-                        fileName = this.#generateAlternateFilename(item);
-                        item.alternateFilename = fileName;
+                        item.outputFilename = this.#generateAlternateFilename(item);
                     }
         
-                    const duplicateKey = `${fileName}:${item.size}`;
+                    const duplicateKey = `${originalFilename}:${item.size}`;
 
                     if(!(omitDuplicates && duplicateKeys.has(duplicateKey))) {
                         item.isDeleted = false;
@@ -829,7 +828,7 @@ export class AttachmentManager {
                         cumulativeSize += item.size;
                     }
                     else {
-                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: fileName, size: item.size, isDeleted: false });
+                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: originalFilename, size: item.size, isDeleted: false });
 
                         storageProgressInfo.duplicateCount++;
                         storageProgressInfo.duplicateTotalBytes += item.size;
@@ -944,7 +943,7 @@ export class AttachmentManager {
     
                     errorList.push({
                         messageId: item.messageId,
-                        name: item.name,
+                        name: item.outputFilename,
                         size: item.size,
                         scope: "getFileData",
                         error: e.toString()
@@ -971,20 +970,20 @@ export class AttachmentManager {
                     continue;
                 }
     
-                let fileName = (item.alternateFilename) ? item.alternateFilename : item.name;
+                let { outputFilename } = item;
     
-                storageProgressInfo.lastFileName = fileName;
+                storageProgressInfo.lastFileName = outputFilename;
                 
                 const duplicateFileNameTracker = this.#duplicateFileNameTracker;
     
-                const duplicateKey = fileName.toLowerCase();
+                const duplicateKey = outputFilename.toLowerCase();
     
                 if(duplicateFileNameTracker.has(duplicateKey)) {
                     let sequenceNumber = duplicateFileNameTracker.get(duplicateKey);
     
-                    fileName = this.#sequentializeFileName(fileName, ++sequenceNumber);
+                    outputFilename = this.#sequentializeFileName(outputFilename, ++sequenceNumber);
     
-                    item.alternateFilename = fileName;
+                    item.outputFilename = outputFilename;
     
                     duplicateFileNameTracker.set(duplicateKey, sequenceNumber);
                 }
@@ -994,17 +993,17 @@ export class AttachmentManager {
     
                 if(packageAttachments && packagingTracker.preserveFolderStructure) {
                     const message = this.messageList.get(item.messageId);
-                    fileName = `${message.folderPath.slice(1)}/${fileName}`;
+                    outputFilename = `${message.folderPath.slice(1)}/${outputFilename}`;
                 }
     
                 try {
-                    this.#log(`Packaging - add file to zip buffer: ${item.name}`);
+                    this.#log(`Packaging - add file to zip buffer: ${item.outputFilename}`);
     
                     if(packageAttachments) {
-                        await zipEm.addFile(fileName, attachmentFile, item.date);
+                        await zipEm.addFile(outputFilename, attachmentFile, item.date);
                     }
                     else {
-                        const saveResult = await this.#saveAttachment(attachmentFile, fileName);
+                        const saveResult = await this.#saveAttachment(attachmentFile, item.outputFilename);
 
                         packagingTracker.lastDownloadId = saveResult.downloadId;
                     }
@@ -1019,7 +1018,7 @@ export class AttachmentManager {
     
                     errorList.push({
                         messageId: item.messageId,
-                        name: item.name,
+                        name: item.originalFilename,
                         size: item.size,
                         scope: "addToZip",
                         error: e.toString()
@@ -1174,7 +1173,7 @@ export class AttachmentManager {
 
                     errorList.push({
                         messageId: item.messageId,
-                        name: item.name,
+                        name: item.originalFilename,
                         size: item.size,
                         scope: "extractEmbeds",
                         error: item.error
@@ -1482,7 +1481,7 @@ export class AttachmentManager {
     #generateAlternateFilename(item) {
         let result = this.#filenamePattern;
         
-        let originalFilename = item.name;
+        let { outputFilename } = item;
         const message = this.messageList.get(item.messageId);
 
         // Source
@@ -1522,29 +1521,29 @@ export class AttachmentManager {
         }
 
         if(result.indexOf("{subject}") > -1) {
-            result = result.replace("{subject}", message.subject);
+            result = result.replace("{subject}", message.subject.substring(0, this.#maxFilenameSubjectLength));
         }
 
         if(result.indexOf("{filename}") > -1) {
             let extension = "";
 
-            const segments = originalFilename.split(".");
+            const segments = outputFilename.split(".");
 
             if (segments.length > 1) {
                 if (segments[segments.length - 1].length < 6) {
                     extension = "." + segments.pop();
-                    originalFilename = segments.join('.');
+                    outputFilename = segments.join('.');
                 }
             }
 
-            result = result.replace("{filename}", originalFilename) + extension;
+            result = result.replace("{filename}", outputFilename) + extension;
         }
 
         if(result != this.#filenamePattern) {
             result = this.#normalizeFileName(result);
         }
         else {
-            result = item.name;
+            result = outputFilename;
         }
 
         return result;
@@ -1604,10 +1603,34 @@ export class AttachmentManager {
         return `${formatTimeElement(date.getHours())}${formatTimeElement(date.getMinutes())}${formatTimeElement(date.getSeconds())}`;
     }
 
+    #processFileName(originalFilename) {
+        const result = {
+            filename: this.#normalizeFileName(originalFilename),
+            extension: "--"
+        };
+
+        const segments = result.filename.split(".");
+
+        if (segments.length > 1) {
+            if (segments[segments.length - 1].length < 6) {
+                result.extension = segments.pop().toLowerCase();
+            }
+        }
+
+        return result;
+    }
+
     #normalizeFileName(originalFileName) {
         const windowsForbiddenCharacterRegex = /[<>:"|?*\/\\]/g;
+        const trailingDataDelimiterRegex = /.+?(?=;(?!.*\.+)|$)/;
 
-        let result = originalFileName.trim().split(";")[0];
+        let result = originalFileName.trim();
+
+        const trailingDataFilter = result.match(trailingDataDelimiterRegex);
+
+        if(trailingDataFilter.length > 0) {
+            result = trailingDataFilter[0];
+        }
 
         switch (this.#platformOs) {
             case "win":

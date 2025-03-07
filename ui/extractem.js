@@ -653,6 +653,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 useFilenamePattern: extensionOptions.useFilenamePattern,
                 filenamePattern: extensionOptions.filenamePattern,
+                maxFilenameSubjectLength: extensionOptions.maxFilenameSubjectLength,
 
                 omitDuplicates: extensionOptions.omitDuplicates,
 

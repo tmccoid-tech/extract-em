@@ -1,0 +1,24 @@
+// DELETED
+if(att.contentType == "text/x-moz-deleted") {
+	...
+}
+
+// DETACHED
+else if(att.headers["x-mozilla-altered][0].startsWith("AttachmentDetached") {
+	...
+}
+
+// EXTERNAL
+else if(att.headers["x-mozilla-external-attachment-url"]) {
+	...
+}
+
+// INLINE
+else if(att.contentDisposition == "inline") {
+	...
+}
+
+// ATTACHMENT (standard)
+else {
+	...
+}

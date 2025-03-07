@@ -83,8 +83,16 @@ export class ReportManager {
             reportItem.querySelector(".author-label").textContent = messageInfo.author;
             reportItem.querySelector(".message-date-label").textContent = date.toDateString();
             reportItem.querySelector(".message-time-label").textContent = `${formatTimeElement(date.getHours())}:${formatTimeElement(date.getMinutes())}:${formatTimeElement(date.getSeconds())}`;
-            reportItem.querySelector(".filename-label").textContent =  (item.alternateFilename) ? item.alternateFilename : item.name;
+            reportItem.querySelector(".output-filename-label").textContent =  item.outputFilename;
             reportItem.querySelector(".file-size-label").textContent = abbreviateFileSize(item.size);
+
+            if(item.outputFilename !== item.originalFilename) {
+                const originalFilenameLabel = reportItem.querySelector(".original-filename-label");
+
+                originalFilenameLabel.textContent = item.originalFilename;
+                originalFilenameLabel.classList.remove("hidden");
+            }
+
 
             if(specialMessage) {
                 const specialMessageLabel = reportItem.querySelector(".special-message-label");

@@ -53,6 +53,7 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
 
             useFilenamePattern: extensionOptions.useFilenamePattern,
             filenamePattern: extensionOptions.filenamePattern,
+            maxFilenameSubjectLength: extensionOptions.maxFilenameSubjectLength,
 
             omitDuplicates: extensionOptions.omitDuplicates,
 

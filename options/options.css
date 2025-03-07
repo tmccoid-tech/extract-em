@@ -39,6 +39,10 @@ dd {
     width: 360px;
 }
 
+#max-filename-subject-length-textbox {
+    width: 54px;
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;

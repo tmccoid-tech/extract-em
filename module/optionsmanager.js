@@ -29,6 +29,7 @@ export class OptionsManager {
         preserveFolderStructure: false,
         useFilenamePattern: false,
         filenamePattern: "",
+        maxFilenameSubjectLength: 200,
         
         useEnhancedLogging: false,
 

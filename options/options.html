@@ -130,7 +130,11 @@
             <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> __MSG_useFilenamePattern__</label></dt>
             <dd>
                 <input type="text" id="filename-pattern-display-textbox" disabled="disabled"><button type="button" id="filename-pattern-edit-button" class="options-control" disabled="disabled">__MSG_edit__</button><br/>
-                __MSG_useFilenamePatternDescription__
+                __MSG_useFilenamePatternDescription__<br/>
+                <dl>
+                    <dt><label>__MSG_subjectFieldCharacterLimit__</label> <input id="max-filename-subject-length-textbox" type="number" min="1" max="200" maxlength="3" disabled="disabled"/></dt>
+                    <dd>__MSG_subjectFieldCharacterLimitDescription__</dd>
+                </dl>
             </dd>
         </dl>
 

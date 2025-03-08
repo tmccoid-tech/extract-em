@@ -1,8 +1,2 @@
 {
-    "subjectFieldCharacterLimit": { "message": "Subject field character limit" },
-    "subjectFieldCharacterLimitDescription": {
-        "message": "When applicable, limits the number of characters supplied by the subject field, preventing excessive filename length issues"
-    },
-    "rn1_6_6_New01": { "message": "Added character limit for the subject component of pattern-based filenames" },
-    "rn1_6_6_Fix01": { "message": "Improper truncation of filenames containing semicolons" }
 }

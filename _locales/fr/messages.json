@@ -601,6 +601,17 @@
     },
     "rn1_6_5_Fix01": {
         "message": "IMAP Détachement permanent Resinstated (veuillez consulter l'avis ci-dessus)"
+    },
+    "subjectFieldCharacterLimit": {
+        "message": "Limite de caractères du champ d’objet"
+    },
+    "subjectFieldCharacterLimitDescription": {
+        "message": "Le cas échéant, limite le nombre de caractères fournis par le champ d’objet, ce qui permet d’éviter les problèmes de longueur excessive des noms de fichiers"
+    },
+    "rn1_6_6_New01": {
+        "message": "Ajout d’une limite de caractères pour le composant sujet des noms de fichiers basés sur des motifs"
+    },
+    "rn1_6_6_Fix01": {
+        "message": "Troncature incorrecte des noms de fichiers contenant des points-virgules"
     }
-   
 }

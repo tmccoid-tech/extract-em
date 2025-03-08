@@ -601,5 +601,17 @@
     },
     "rn1_6_5_Fix01": {
         "message":"IMAP DERAP DEMALE HELSINSTATIONEN (Siehe Hinweis oben)"
+    },
+    "subjectFieldCharacterLimit": {
+        "message": "Zeichenbeschränkung für das Betrefffeld"
+    },
+    "subjectFieldCharacterLimitDescription": {
+        "message": "Begrenzt gegebenenfalls die Anzahl der vom Betrefffeld bereitgestellten Zeichen, um Probleme mit der Länge übermäßiger Dateinamen zu vermeiden"
+    },
+    "rn1_6_6_New01": {
+        "message": "Zeichenbeschränkung für die Betreffkomponente von musterbasierten Dateinamen hinzugefügt"
+    },
+    "rn1_6_6_Fix01": {
+        "message": "Unsachgemäßes Abschneiden von Dateinamen, die Semikolons enthalten"
     }
 }

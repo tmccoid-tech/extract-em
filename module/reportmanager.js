@@ -204,7 +204,8 @@ export class ReportManager {
                     for(const sizeEntry of filenameEntry[1].sizes.entries()) {
                         for(const checksumEntry of sizeEntry[1].entries()) {
                             for(const messageId of checksumEntry[1]) {
-                                currentTable.append(generateReportLineItem(reportItemContent, { name: filenameEntry[0], size: sizeEntry[0] }, messageList.get(messageId), ++sequenceNumber));
+                                const item =  { originalFilename: filenameEntry[0], outputFilename: filenameEntry[0], size: sizeEntry[0] };
+                                currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(messageId), ++sequenceNumber));
                             }
                         }
                     }

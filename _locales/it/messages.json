@@ -601,5 +601,17 @@
     },
     "rn1_6_5_Fix01": {
         "message": "Distacco permanente IMAP Resinstato (consultare l'avviso sopra)"
+    },
+    "subjectFieldCharacterLimit": {
+        "message": "Limite del carattere del campo soggetto"
+    },
+    "subjectFieldCharacterLimitDescription": {
+        "message": "Se applicabile, limita il numero di caratteri forniti dal campo del soggetto, prevenendo problemi di lunghezza del nome eccessivi"
+    },
+    "rn1_6_6_New01": {
+        "message": "Aggiunto limite di caratteri per il componente soggetto dei file di file basati su pattern"
+    },
+    "rn1_6_6_Fix01": {
+        "message": "Truncamento improprio di nomi di file contenenti punti e virgola"
     }
 }

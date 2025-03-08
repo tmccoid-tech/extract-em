@@ -601,5 +601,17 @@
     },
     "rn1_6_5_Fix01": {
         "message": "IMAP Permanent Derwiment Resinstated (patrz Uwaga powyżej)"
+    },
+    "subjectFieldCharacterLimit": {
+        "message": "Limit znaków pola przedmiotu"
+    },
+    "subjectFieldCharacterLimitDescription": {
+        "message": "W stosownych przypadkach ogranicza liczbę znaków dostarczanych przez przedmiot, zapobieganie nadmiernym problemom długości nazwy pliku"
+    },
+    "rn1_6_6_New01": {
+        "message": "Dodano limit znaków dla elementu podmiotu opartych na wzorach nazwy plików"
+    },
+    "rn1_6_6_Fix01": {
+        "message": "Niewłaściwe obcięcie nazw plików zawierających półkolony"
     }
 }

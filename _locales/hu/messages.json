@@ -534,5 +534,17 @@
     },
     "rn1_6_5_Fix01": {
         "message": "Az IMAP állandó leválódási gyantázott (kérjük, lásd a fenti értesítést)"
+    },
+    "subjectFieldCharacterLimit": {
+        "message": "Tárgy mező karakterhatár"
+    },
+    "subjectFieldCharacterLimitDescription": {
+        "message": "Adott esetben korlátozza a tárgymező által szolgáltatott karakterek számát, megakadályozva a túlzott fájlnév hosszát"
+    },
+    "rn1_6_6_New01": {
+        "message": "Hozzáadott karakterkorlát a minta-alapú fájlnevek alanykomponenséhez"
+    },
+    "rn1_6_6_Fix01": {
+        "message": "A pontosvesszőben szereplő fájlnevek nem megfelelő csonkolása"
     }
 }

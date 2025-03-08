@@ -601,5 +601,17 @@
     },
     "rn1_6_5_Fix01": {
         "message":"IMAP RESINA DE IMAP RESINATADO (Consulte el aviso anterior)"
-    }    
+    },
+    "subjectFieldCharacterLimit": {
+        "message": "Límite de caracteres de campo sujeto"
+    },
+    "subjectFieldCharacterLimitDescription": {
+        "message": "Cuando corresponde, limita el número de caracteres suministrados por el campo del sujeto, evitando problemas excesivos de la longitud del nombre de archivo"
+    },
+    "rn1_6_6_New01": {
+        "message": "Límite de caracteres agregado para el componente sujeto de los nombres de archivos basados ​​en patrones"
+    },
+    "rn1_6_6_Fix01": {
+        "message": "Truncamiento inadecuado de nombres de archivo que contienen semicolones"
+    }
 }

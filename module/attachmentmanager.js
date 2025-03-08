@@ -56,9 +56,10 @@ export class AttachmentManager {
     #packagingTracker;
     
     #duplicateFileTracker;
-    #duplicateFileNameTracker;
+    #sequentialFilenameTracker; 
+
     #duplicateEmbedFileTracker;
-    #duplicateEmbedFileNameTracker;
+    #sequentialEmbedFilenameTracker;
     
     #packagingErrorList;
     #packagingFilenameList;
@@ -420,7 +421,8 @@ export class AttachmentManager {
                     }
                     catch(e) {
                         alterationMap.set(attachmentInfo.partName, {
-                            name: attachment.name,
+                            originalFilename: attachmentInfo.originalFilename,
+                            outputFilename: attachmentInfo.outputFilename,
                             alteration: "missing",
                             author: message.author,
                             subject: message.subject,
@@ -500,7 +502,7 @@ export class AttachmentManager {
                     }
 
                     for(const embed of embeds) {
-                        let { filename, extension } = this.#processFileName(embed.orignalFilename);
+                        let { filename, extension } = this.#processFileName(embed.originalFilename);
 
                         embed.outputFilename = filename;
                         embed.extension = extension;
@@ -587,12 +589,13 @@ export class AttachmentManager {
         for(const part of parts) {
             this.#log(`Alteration map gen: ${part.partName}`);
 
+            let alteration = null;
+            let timestamp = null;
+            let fileUrl = null;
+
             if(part.headers && part.headers["x-mozilla-altered"]) {
                 const alterationTokens = part.headers["x-mozilla-altered"][0].split(";");
-                
-                let alteration = "unknown";
-                let timestamp = null;
-                let fileUrl = null;
+                alteration = "unknown";
 
                 try {
                     // Example: 'AttachmentDetached; date="Sun Oct 10 11:34:37 2010"'
@@ -605,31 +608,27 @@ export class AttachmentManager {
                 catch(e) {
                     this.#log(e, true);
                 }
+              
+            }
+            else if(part.contentType == "text/x-moz-deleted") {
+                alteration = "deleted";
+            }
 
-                alterationMap.set(part.partName, {
-                    name: part.partName,
+            if(alteration) {
+                const alterationEntry = {
+                    originalFilename: part.name,
+                    outputFilename: part.name,
                     alteration: alteration,
                     author: message.author,
                     subject: message.subject,
                     date: message.date,
                     timestamp: timestamp,
                     fileUrl: fileUrl
-                });
-            }
-            else if(part.contentType == "text/x-moz-deleted") {
-                const deletionEntry = {
-                    name: part.partName,
-                    alteration: "deleted",
-                    author: message.author,
-                    subject: message.subject,
-                    date: message.date,
-                    timestamp: null,
-                    fileUrl: null
                 };
 
-                alterationMap.set(part.partName, deletionEntry);
+                alterationMap.set(part.partName, alterationEntry);
 
-                this.#log(deletionEntry);
+                this.#log(alterationEntry);
             }
 
             if(part.parts) {
@@ -666,8 +665,9 @@ export class AttachmentManager {
         this.#alterationTracker = null;
         this.#packagingTracker = null;
         this.#duplicateFileTracker = null;
-        this.#duplicateFileNameTracker = null;
+        this.#sequentialFilenameTracker = null;
         this.#duplicateEmbedFileTracker = null;
+        this.#sequentialEmbedFilenameTracker = null;
         this.#packagingErrorList = null;
         this.#packagingFilenameList = null;
 
@@ -776,7 +776,6 @@ export class AttachmentManager {
             extractionSubsets: [],
             currentPackageIndex: 0,
             embedItems: [],
-//            currentEmbedMessageIndex: 0,
             totalEmbedMessageCount: 0,
             preserveFolderStructure: preserveFolderStructure,
             lastDownloadId: null,
@@ -798,7 +797,6 @@ export class AttachmentManager {
 
         // Segregate embedded/inline imags, determine selected items and identify/isolate attachment duplicates
 
-        const useFilenamePattern = this.#useFilenamePattern;
         const omitDuplicates = this.#omitDuplicates;
 
         for(const item of this.attachmentList) {
@@ -811,13 +809,24 @@ export class AttachmentManager {
                 else {
                     const { originalFilename } = item;
 
-                    if(useFilenamePattern) {
-                        item.outputFilename = this.#generateAlternateFilename(item);
-                    }
-        
                     const duplicateKey = `${originalFilename}:${item.size}`;
 
-                    if(!(omitDuplicates && duplicateKeys.has(duplicateKey))) {
+                    if(omitDuplicates && duplicateKeys.has(duplicateKey)) {
+                        this.#duplicateFileTracker.push({
+                            messageId: item.messageId,
+                            partName: item.partName,
+                            originalFilename: originalFilename,
+                            outputFilename: item.outputFilename,
+                            size: item.size,
+                            isDeleted: false
+                        });
+
+                        storageProgressInfo.duplicateCount++;
+                        storageProgressInfo.duplicateTotalBytes += item.size;
+
+                        this.#reportStorageProgress(storageProgressInfo);
+                    }
+                    else {
                         item.isDeleted = false;
                         items.push(item);
                         
@@ -826,14 +835,6 @@ export class AttachmentManager {
                         }
                         
                         cumulativeSize += item.size;
-                    }
-                    else {
-                        this.#duplicateFileTracker.push({ messageId: item.messageId, partName: item.partName, name: originalFilename, size: item.size, isDeleted: false });
-
-                        storageProgressInfo.duplicateCount++;
-                        storageProgressInfo.duplicateTotalBytes += item.size;
-
-                        this.#reportStorageProgress(storageProgressInfo);
                     }
                 }
             }
@@ -888,7 +889,7 @@ export class AttachmentManager {
 
         this.#packagingErrorList = [];
 
-        this.#duplicateFileNameTracker = new Map();
+        this.#sequentialFilenameTracker = new Map();
 
         let extractionCompleted = true;
 
@@ -898,6 +899,7 @@ export class AttachmentManager {
 
         if(embedItems.length > 0 && extractionCompleted) {
             this.#duplicateEmbedFileTracker = new Map();
+            this.#sequentialEmbedFilenameTracker = new Map();
 
             await this.#extractEmbeds(storageProgressInfo);
         }
@@ -943,7 +945,8 @@ export class AttachmentManager {
     
                     errorList.push({
                         messageId: item.messageId,
-                        name: item.outputFilename,
+                        originalFilename: item.originalFilename,
+                        outputFilename: item.outputFilename,
                         size: item.size,
                         scope: "getFileData",
                         error: e.toString()
@@ -971,31 +974,25 @@ export class AttachmentManager {
                 }
     
                 let { outputFilename } = item;
-    
-                storageProgressInfo.lastFileName = outputFilename;
-                
-                const duplicateFileNameTracker = this.#duplicateFileNameTracker;
-    
-                const duplicateKey = outputFilename.toLowerCase();
-    
-                if(duplicateFileNameTracker.has(duplicateKey)) {
-                    let sequenceNumber = duplicateFileNameTracker.get(duplicateKey);
-    
-                    outputFilename = this.#sequentializeFileName(outputFilename, ++sequenceNumber);
-    
+
+                if(this.#useFilenamePattern && this.#filenamePattern) {
+                    outputFilename = this.#generateAlternateFilename(item)
                     item.outputFilename = outputFilename;
-    
-                    duplicateFileNameTracker.set(duplicateKey, sequenceNumber);
-                }
-                else {
-                    duplicateFileNameTracker.set(duplicateKey, 1);
                 }
     
+                // Sequentialize the output filename, if necessary
+                outputFilename = this.#sequentializeFilename(this.#sequentialFilenameTracker, outputFilename);
+                item.outputFilename = outputFilename;
+
+                storageProgressInfo.lastFileName = outputFilename;
+
+                // Add the path (TB folder hierarchy) if that option is selected
                 if(packageAttachments && packagingTracker.preserveFolderStructure) {
                     const message = this.messageList.get(item.messageId);
                     outputFilename = `${message.folderPath.slice(1)}/${outputFilename}`;
                 }
     
+                // Attempt to save/package the attachment
                 try {
                     this.#log(`Packaging - add file to zip buffer: ${item.outputFilename}`);
     
@@ -1018,7 +1015,8 @@ export class AttachmentManager {
     
                     errorList.push({
                         messageId: item.messageId,
-                        name: item.originalFilename,
+                        originalFilename: item.originalFilename,
+                        outputFilename: item.outputFilename,
                         size: item.size,
                         scope: "addToZip",
                         error: e.toString()
@@ -1173,7 +1171,8 @@ export class AttachmentManager {
 
                     errorList.push({
                         messageId: item.messageId,
-                        name: item.originalFilename,
+                        originalFilename: item.originalFilename,
+                        outputFilename: item.outputFilename,
                         size: item.size,
                         scope: "extractEmbeds",
                         error: item.error
@@ -1189,17 +1188,21 @@ export class AttachmentManager {
                     continue;
                 }
 
-                let fileName = item.name;
+                let { originalFilename, outputFilename } = item;
 
                 const decodeData = item.decodeData;
 
-                if(duplicateEmbedFileTracker.has(fileName)) {
-                    let sequenceNumber = 0;
-                    const nameDuplicate = duplicateEmbedFileTracker.get(fileName);
+                // Omit duplicate files (exact original filename, size, and checksum comparison)
 
+                // Matching original filename
+                if(duplicateEmbedFileTracker.has(originalFilename)) {
+                    const nameDuplicate = duplicateEmbedFileTracker.get(originalFilename);
+
+                    // Matching file size
                     if(nameDuplicate.sizes.has(item.size)) {
                         const sizeDuplicate = nameDuplicate.sizes.get(item.size);
 
+                        // Matching checksum; skip this item (duplicate)
                         if(sizeDuplicate.has(decodeData.checksum)) {
                             const checksumDuplicate = sizeDuplicate.get(decodeData.checksum);
 
@@ -1212,50 +1215,46 @@ export class AttachmentManager {
                             this.#reportStorageProgress(storageProgressInfo);
                             continue;
                         }
+                        // Different checksum
                         else {
-                            sequenceNumber = nameDuplicate.count++;
                             sizeDuplicate.set(decodeData.checksum, []);
                         }
                     }
+                    // Different size
                     else {
-                        sequenceNumber = nameDuplicate.count++;
                         nameDuplicate.sizes.set(item.size, new Map([[decodeData.checksum, []]]));
                     }
-
-                    if(this.#useFilenamePattern) {
-                        fileName = this.#generateAlternateFilename(item);
-                        item.alternateFilename = fileName;
-                    }
-
-                    if(sequenceNumber > 0) {
-                        fileName = this.#sequentializeFileName(fileName, sequenceNumber);
-
-                        item.alternateFilename = fileName;
-                    }
                 }
+                // Unregistered original filename
                 else {
                     const checksumEntry = new Map([[decodeData.checksum, []]]);
-                    duplicateEmbedFileTracker.set(fileName, { count: 1, sizes: new Map([[item.size, checksumEntry]]) });
-
-                    if(this.#useFilenamePattern) {
-                        fileName = this.#generateAlternateFilename(item);
-                        item.alternateFilename = fileName;
-                    }
+                    duplicateEmbedFileTracker.set(originalFilename, { count: 1, sizes: new Map([[item.size, checksumEntry]]) });
                 }
 
-                storageProgressInfo.lastFileName = fileName;
+                // Modify the output filename if a pattern has been assigned
+                if(this.#useFilenamePattern && this.#filenamePattern) {
+                    outputFilename = this.#generateAlternateFilename(item);
+                    item.outputFilename = outputFilename;
+                }
+
+                // Sequentialize the filename, if necessary
+                outputFilename = this.#sequentializeFilename(this.#sequentialEmbedFilenameTracker, outputFilename);
+                item.outputFilename = outputFilename;
+
+
+                storageProgressInfo.lastFileName = outputFilename;
     
                 if(packageAttachments && packagingTracker.preserveFolderStructure) {
                     const message = this.messageList.get(item.messageId);
-                    fileName = `${message.folderPath.slice(1)}/${fileName}`;
+                    outputFilename = `${message.folderPath.slice(1)}/${outputFilename}`;
                 }
 
                 try {
                     if(packageAttachments) {
-                        await zipEm.addFile(fileName, new Blob([decodeData.data]), item.date);
+                        await zipEm.addFile(outputFilename, new Blob([decodeData.data]), item.date);
                     }
                     else {
-                        const saveResult = await this.#saveAttachment(new Blob([decodeData.data]), fileName);
+                        const saveResult = await this.#saveAttachment(new Blob([decodeData.data]), outputFilename);
 
                         packagingTracker.lastDownloadId = saveResult.downloadId;
                     }
@@ -1270,7 +1269,8 @@ export class AttachmentManager {
 
                     errorList.push({
                         messageId: item.messageId,
-                        name: item.name,
+                        originalFilename: item.originalFilename,
+                        outputFilename: item.outputFilename,
                         size: item.size,
                         scope: "packageEmbeds",
                         error: `${e}`
@@ -1407,7 +1407,7 @@ export class AttachmentManager {
 
         for(let [messageId, items] of attachmentGroupings) {
 
-            info.lastFileName = items[0].name;
+            info.lastFileName = items[0].originalFilename;
             const partNames = items.map((item => item.partName));
             const cumulativeSize = items.reduce((cs, i) => cs + i.size, 0);
 
@@ -1429,7 +1429,8 @@ export class AttachmentManager {
             catch(e) {
                 this.#detachmentErrorList.push({
                     messageId: messageId,
-                    name: info.lastFileName,
+                    originalFilename: info.lastFileName,
+                    outputFilename: info.lastFileName,
                     size: cumulativeSize,
                     scope: "detach",
                     error: e.toString()
@@ -1620,11 +1621,11 @@ export class AttachmentManager {
         return result;
     }
 
-    #normalizeFileName(originalFileName) {
+    #normalizeFileName(filename) {
         const windowsForbiddenCharacterRegex = /[<>:"|?*\/\\]/g;
         const trailingDataDelimiterRegex = /.+?(?=;(?!.*\.+)|$)/;
 
-        let result = originalFileName.trim();
+        let result = filename.trim();
 
         const trailingDataFilter = result.match(trailingDataDelimiterRegex);
 
@@ -1670,16 +1671,27 @@ export class AttachmentManager {
         return result;
     }
 
-    #sequentializeFileName(fileName, sequenceNumber) {
-        const paddedSequenceNumber = sequenceNumber.toString().padStart(3, "0");
+    #sequentializeFilename(tracker, outputFilename) {
+        let result = outputFilename;
+        
+        let sequenceNumber = 1;
+        const duplicateKey = outputFilename.toLowerCase();
 
-        const tokens = fileName.split(".");
+        if(tracker.has(duplicateKey)) {
+            sequenceNumber = tracker.get(duplicateKey) + 1;
 
-        const targetTokenIndex = (tokens.length == 1) ? 0 : tokens.length - 2;
+            const paddedSequenceNumber = sequenceNumber.toString().padStart(3, "0");
 
-        tokens[targetTokenIndex] = `${tokens[targetTokenIndex]}_${paddedSequenceNumber}`;
+            const tokens = result.split(".");
+    
+            const targetTokenIndex = (tokens.length == 1) ? 0 : tokens.length - 2;
+    
+            tokens[targetTokenIndex] = `${tokens[targetTokenIndex]}_${paddedSequenceNumber}`;
+    
+            result = tokens.join(".");
+        }
 
-        const result = tokens.join(".");
+        tracker.set(duplicateKey, sequenceNumber)
 
         return result;
     }

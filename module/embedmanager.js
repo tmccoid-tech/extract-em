@@ -82,7 +82,7 @@ export class EmbedManager {
         const quoteReplace = /["']/g;
 
         for (const part of parts) {
-            if(part.contentType == "multipart/related") {
+            if(part.contentType == "multipart/related" /* || part.contentType == "multipart/mixed" */) {
                 const contentType = part.headers["content-type"];
 
                 if(contentType && contentType.length > 0) {
@@ -96,8 +96,13 @@ export class EmbedManager {
 
                             if(part.parts) {
                                 for(const candidatePart of part.parts) {
-                                    if(candidatePart.contentType.startsWith("image")) {
-                                        const imageContentType = candidatePart.headers["content-type"];
+                                    const { headers } = candidatePart;
+
+                                    const isImage = candidatePart.contentType.startsWith("image");
+//                                    const isInline = (headers && headers["content-disposition"] && headers["content-disposition"].length > 0 && headers["content-disposition"][0].startsWith("inline"));
+
+                                    if(isImage /* || isInline */) {
+                                        const imageContentType = headers["content-type"];
 
                                         if(imageContentType && imageContentType.length > 0) {
                                             const imageTokens = imageContentType[0].split(";");
@@ -107,6 +112,16 @@ export class EmbedManager {
                         
                                                 if(imageNameTokens.length > 1 && imageNameTokens[0].trim() == "name") {
                                                     const imageName = imageNameTokens[1].replace(quoteReplace, "");
+
+                                                    if(!isImage) {
+                                                        console.log(imageContentType);
+
+                                                        if(headers["content-transfer-encoding"] && headers["content-transfer-encoding"].length > 0) {
+                                                            if(headers["content-transfer-encoding"][0].toLowerCase() !== "base64") {
+                                                                continue;
+                                                            }
+                                                        }
+                                                    }
 
                                                     const embed = {
                                                         messageId: messageId,
@@ -243,7 +258,7 @@ export class EmbedManager {
                         embed.size = embed.decodeData.data.length;
                     }
                     else {
-                        embed.error = messenger.i18n.getMessage("embedErrorInvalidBase64", [embed.name]);
+                        embed.error = messenger.i18n.getMessage("embedErrorInvalidBase64", [embed.originalFilename]);
                     }
 
                     lastEndIndex = endIndex;
@@ -253,10 +268,10 @@ export class EmbedManager {
 //                }
             }
             else {
-                embed.error = messenger.i18n.getMessage("embedContentTypeMissing", [embed.name]);
+                embed.error = messenger.i18n.getMessage("embedContentTypeMissing", [embed.originalFilename]);
             }
 
-            lastFileName = embed.name;
+            lastFileName = embed.originalFilename;
         }       
     }
 

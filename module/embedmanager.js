@@ -78,83 +78,114 @@ export class EmbedManager {
         return checksum;
     }
 
-    static identifyEmbeds(messageId, date, parts, embeds = []) {
-        const quoteReplace = /["']/g;
+    static #getHeader(part, headerName) {
+        const { headers } = part;
 
-        for (const part of parts) {
-            if(part.contentType == "multipart/related" /* || part.contentType == "multipart/mixed" */) {
-                const contentType = part.headers["content-type"];
+        if(headers && headers.hasOwnProperty(headerName)) {
+            const [ header ] = headers[headerName];
 
-                if(contentType && contentType.length > 0) {
-                    const tokens = contentType[0].split(";");
+            if(header && header.length > 0) {
+                return header;
+            }
+        }
 
-                    if(tokens.length > 1) {
-                        const boundaryToken = tokens[1].trim();
+        return undefined;
+    }
 
-                        if(boundaryToken.startsWith("boundary=")) {
-                            const boundary = boundaryToken.substring(9).replace(quoteReplace, "");
+    static identifyEmbeds(messageId, date, container, omissionSet, embeds = []) {
+        for (const part of container.parts) {
 
-                            if(part.parts) {
-                                for(const candidatePart of part.parts) {
-                                    const { headers } = candidatePart;
+            // If this part is itself a container, investigate child parts
+            if(part.parts) {
+                this.identifyEmbeds(messageId, date, part, omissionSet, embeds);
+            }
+            else {
 
-                                    const isImage = candidatePart.contentType.startsWith("image");
-//                                    const isInline = (headers && headers["content-disposition"] && headers["content-disposition"].length > 0 && headers["content-disposition"][0].startsWith("inline"));
+                // Prevent duplication of files across attachments and embeds
+                if(omissionSet.has(part.partName)) {
+                    continue;
+                }
 
-                                    if(isImage /* || isInline */) {
-                                        const imageContentType = headers["content-type"];
+                const itemContentTypeHeader = this.#getHeader(part, "content-type")
 
-                                        if(imageContentType && imageContentType.length > 0) {
-                                            const imageTokens = imageContentType[0].split(";");
+                if(itemContentTypeHeader) {
+                    const isImage = itemContentTypeHeader.startsWith("image");
 
-                                            if(imageTokens.length > 1) {
-                                                const imageNameTokens = imageTokens[1].split("=");
+                    const contentDispositionHeader = this.#getHeader(part, "content-disposition");
+                    const isInline = (contentDispositionHeader && contentDispositionHeader.startsWith("inline"));
+        
+                    const encodingHeader = this.#getHeader(part, "content-transfer-encoding");
+                    const isBase64 = (encodingHeader && encodingHeader.toLowerCase() == "base64");
+
+                    if(isImage || isInline || isBase64) {
+
+                        // Verify that the encoding is base64 (a "true" inline attachment file versus text)                            
+                        if(!isImage && !isBase64) {
+                            continue;
+                        }
+       
+                        const contentTypeTokens = itemContentTypeHeader.split(";");
+        
+                        if(contentTypeTokens.length > 1) {
+                            const itemContentType = contentTypeTokens[0];
+
+                            let filenameIndex = 0;
+
+                            // Attempt to locate the filename entry; in most cases this is the 2nd item (index == 1), but, alas, not all...
+                            for (let i = 1; i < contentTypeTokens.length; i++) {
+                                if(contentTypeTokens[i].trim().startsWith("name")) {
+                                    filenameIndex = i;
+                                    break;
+                                }
+                            }
+
+                            if(filenameIndex > 0) {
+                                const itemNameTokens = contentTypeTokens[filenameIndex].split("=");
+            
+                                if(itemNameTokens.length > 1 && itemNameTokens[0].trim() == "name") {
+
+                                    const itemName = itemNameTokens[1].replace(/["']/g, "");
+            
+                                    // Determine the boundary for the embed
+
+                                    const containerContentTypeHeader = this.#getHeader(container, "content-type");
+
+                                    if(containerContentTypeHeader) {
+                                        const tokens = containerContentTypeHeader.split(";");
+
+                                        for(let j = 1; j < tokens.length; j++) {
+                                            const boundaryToken = tokens[j].trim();
+
+                                            if(boundaryToken.startsWith("boundary=")) {
+                                                const boundary = boundaryToken.substring(9).replace(/["']/g, "");
+
+                                                const embed = {
+                                                    messageId: messageId,
+                                                    originalFilename: itemName,
+                                                    outputFilename: null,
+                                                    date: date,
+                                                    partName: part.partName,
+                                                    contentTypeBoundary: itemContentTypeHeader,
+                                                    boundary: boundary,
+                                                    contentType: itemContentType,
+                                                    size: null,
+                                                    extension: "--",
+                                                    isEmbed: true,
+                                                    isPreviewable: false,
+                                                    isDuplicate: false
+                                                };
                         
-                                                if(imageNameTokens.length > 1 && imageNameTokens[0].trim() == "name") {
-                                                    const imageName = imageNameTokens[1].replace(quoteReplace, "");
+                                                embeds.push(embed);
 
-                                                    if(!isImage) {
-                                                        console.log(imageContentType);
-
-                                                        if(headers["content-transfer-encoding"] && headers["content-transfer-encoding"].length > 0) {
-                                                            if(headers["content-transfer-encoding"][0].toLowerCase() !== "base64") {
-                                                                continue;
-                                                            }
-                                                        }
-                                                    }
-
-                                                    const embed = {
-                                                        messageId: messageId,
-                                                        originalFilename: imageName,
-                                                        outputFilename: null,
-                                                        date: date,
-                                                        partName: candidatePart.partName,
-                                                        contentTypeBoundary: imageContentType[0],
-                                                        boundary: boundary,
-                                                        contentType: imageTokens[0],
-                                                        size: null,
-                                                        extension: "--",
-                                                        isEmbed: true,
-                                                        isPreviewable: false,
-                                                        isDuplicate: false
-                                                    };
-
-                                                    embeds.push(embed);
-                                                }
+                                                break;
                                             }
                                         }
-                                    }
-                                    else if(candidatePart.parts) {
-                                        this.identifyEmbeds(messageId, date, candidatePart.parts, embeds);
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-            else if(part.parts) {
-                this.identifyEmbeds(messageId, date, part.parts, embeds);
             }
         }
 
@@ -233,8 +264,10 @@ export class EmbedManager {
             }
 
             const contentTypeHeaderRegexString = `Content-Type: ${embed.contentTypeBoundary}`
+                // Replace reserved regex characters: . * + ? ^ $ { } ( ) | [ ] \
                 .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-                .replace(/;.s*/, ";\\s*")
+                // Replace whitespace characters with generic whitespace token
+                .replace(/;.s*/g, ";\\s*")
             ;
 
             startIndex = text.substring(lastEndIndex).search(new RegExp(contentTypeHeaderRegexString));
@@ -248,24 +281,19 @@ export class EmbedManager {
                     endIndex = text.length;
                 }
 
-//                if(endIndex > -1) {
-                    let lines = text.substring(startIndex, endIndex).split("\r\n");
+                let lines = text.substring(startIndex, endIndex).split("\r\n");
 
-                    const extractResult = this.extractBase64(lines);
+                const extractResult = this.extractBase64(lines);
 
-                    if(extractResult.success) {
-                        embed.decodeData = this.decodeBase64(extractResult.value, extractResult.padCount, this.decodeChecksum);
-                        embed.size = embed.decodeData.data.length;
-                    }
-                    else {
-                        embed.error = messenger.i18n.getMessage("embedErrorInvalidBase64", [embed.originalFilename]);
-                    }
+                if(extractResult.success) {
+                    embed.decodeData = this.decodeBase64(extractResult.value, extractResult.padCount, this.decodeChecksum);
+                    embed.size = embed.decodeData.data.length;
+                }
+                else {
+                    embed.error = messenger.i18n.getMessage("embedErrorInvalidBase64", [embed.originalFilename]);
+                }
 
-                    lastEndIndex = endIndex;
-//                }
-//                else {
-//                    embed.error = messenger.i18n.getMessage("embedErrorLowerBoundaryMissing", [embed.name]);
-//                }
+                lastEndIndex = endIndex;
             }
             else {
                 embed.error = messenger.i18n.getMessage("embedContentTypeMissing", [embed.originalFilename]);

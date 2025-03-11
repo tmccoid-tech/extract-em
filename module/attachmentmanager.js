@@ -297,7 +297,8 @@ export class AttachmentManager {
     async #identifyAttachments(message, folderStats) {
         const result = {
             hasAttachments: false,
-            fullMessage: null
+            fullMessage: null,
+            omissionSet: new Set()
         };
 
         let messageAttachmentList = [];
@@ -382,11 +383,12 @@ export class AttachmentManager {
                     const alterationEntry = alterationMap.get(attachment.partName);
 
                     alterationEntry.name = attachment.name;
+                    result.omissionSet.add(attachment.partName);
 
                     continue;
                 }
 
-                let { filename, extension } = this.#processFileName(attachment.name);
+                let { filename, extension } = this.#processFileName(attachment.name, attachment.contentType);
 
                 if (fileTypeFilter) {
                     if(!(fileTypeFilter.selectedExtensions.has(extension) || (fileTypeFilter.includeUnlisted && !fileTypeFilter.listedExtensions.has(extension)))) {
@@ -407,6 +409,8 @@ export class AttachmentManager {
                     isPreviewable: this.#previewSet.has(extension)
                 };
     
+                result.omissionSet.add(attachment.partName);
+
                 if(attachmentInfo.size < 1 || attachmentInfo.size == 238) {
                     try {
                         this.#log(`Get attachment file message: ${message.date} - ${message.subject}: original filename = ${attachmentInfo.originalFilename} size = ${attachmentInfo.size}`);
@@ -482,7 +486,8 @@ export class AttachmentManager {
         if(this.#includeEmbeds) {
             let {
                 hasAttachments,
-                fullMessage
+                fullMessage,
+                omissionSet
             } = identifyAttachmentsResult;
 
             if(!fullMessage) {
@@ -490,7 +495,7 @@ export class AttachmentManager {
             }
 
             if(fullMessage.parts) {
-                const embeds = EmbedManager.identifyEmbeds(message.id, message.date, fullMessage.parts);
+                const embeds = EmbedManager.identifyEmbeds(message.id, message.date, fullMessage, omissionSet);
 
                 if(embeds.length > 0) {
                     let messageCharset = null;
@@ -502,7 +507,7 @@ export class AttachmentManager {
                     }
 
                     for(const embed of embeds) {
-                        let { filename, extension } = this.#processFileName(embed.originalFilename);
+                        let { filename, extension } = this.#processFileName(embed.originalFilename, embed.contentType);
 
                         embed.outputFilename = filename;
                         embed.extension = extension;
@@ -1604,7 +1609,7 @@ export class AttachmentManager {
         return `${formatTimeElement(date.getHours())}${formatTimeElement(date.getMinutes())}${formatTimeElement(date.getSeconds())}`;
     }
 
-    #processFileName(originalFilename) {
+    #processFileName(originalFilename, contentType) {
         const result = {
             filename: this.#normalizeFileName(originalFilename),
             extension: "--"
@@ -1612,9 +1617,22 @@ export class AttachmentManager {
 
         const segments = result.filename.split(".");
 
-        if (segments.length > 1) {
-            if (segments[segments.length - 1].length < 6) {
+        // If the filename extension can be directly determined...
+        if (segments.length > 1 && segments[segments.length - 1].length < 6) {
                 result.extension = segments.pop().toLowerCase();
+        }
+        
+        // Otherwise, attempt to infer the extension from the content type value
+        else {
+            switch(contentType) {
+                case "image/jpeg":
+                    result.filename += ".jpg";
+                    result.extension = "jpg";
+                    break;
+                case "image/gif":
+                    result.filename += ".gif";
+                    result.extension = "gif";
+                    break;
             }
         }
 

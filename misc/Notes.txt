@@ -134,7 +134,15 @@ XXX [NOT POSSIBLE - message count not known in advance] Do not display Extract I
 
 Images HUGE in preview (beta; only happens with large number of files???)
 
-Open report in TB window?
+XXX Open report in TB window? -- removed in TB 136 due to security restriction
+
+Differential extractions
+
+Apply filtering to embeds
+
+Inferred file Extension
+
+
 
 
 LQ

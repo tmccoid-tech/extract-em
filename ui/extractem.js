@@ -1015,7 +1015,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             attachmentCheckbox.setAttribute("grouping-key", groupingKey);
         }
 
-        attachmentPanel.querySelector(".file-name-label").textContent = attachment.name;
+        attachmentPanel.querySelector(".file-name-label").textContent = attachment.originalFilename;
         attachmentPanel.querySelector(".extension-label").textContent = attachment.extension;
         attachmentPanel.querySelector(".file-size-label").textContent = (attachment.size === null) ? "???" : abbreviateFileSize(attachment.size);
         attachmentPanel.querySelector(".author-label").textContent = message.author;

@@ -362,9 +362,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 includeEmbedsCheckbox.disabled = false;
             }
 
-            filterElements.secondaryCheckbox.disabled = true;
-            filterElements.secondaryEditButton.disabled = true;
-
             resetSummaryButton.disabled = false;
 
             logoImage.classList.remove("rotating");
@@ -914,6 +911,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         resetSummaryButton.disabled = true;
 
         includeEmbedsCheckbox.disabled = true;
+
+        filterElements.secondaryCheckbox.disabled = true;
+        filterElements.secondaryEditButton.disabled = true;
 
         const selectionCounts = determineSelectionCounts();
         discoverAttachmentsProgress.setAttribute("max", selectionCounts.selectedMessageCount);

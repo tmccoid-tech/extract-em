@@ -136,12 +136,13 @@ Images HUGE in preview (beta; only happens with large number of files???)
 
 XXX Open report in TB window? -- removed in TB 136 due to security restriction
 
+XXX Apply filtering to embeds
+
+XXX Test inferred file Extension
+
+XXX Test inferred file extension + filename pattern
+
 Differential extractions
-
-Apply filtering to embeds
-
-Inferred file Extension
-
 
 
 

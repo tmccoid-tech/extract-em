@@ -506,20 +506,28 @@ export class AttachmentManager {
                         messageCharset = identifyMessageCharsetResult.charset;
                     }
 
+                    const fileTypeFilter = this.#fileTypeFilter;
+
                     for(const embed of embeds) {
                         let { filename, extension } = this.#processFileName(embed.originalFilename, embed.contentType);
 
+                        if (fileTypeFilter) {
+                            if(!(fileTypeFilter.selectedExtensions.has(extension) || (fileTypeFilter.includeUnlisted && !fileTypeFilter.listedExtensions.has(extension)))) {
+                                continue;
+                            }
+                        }
+        
                         embed.outputFilename = filename;
                         embed.extension = extension;
                         embed.charset = messageCharset;
+
+                        this.attachmentList.push(embed);
+
+                        folderStats.lastFileName = embed.originalFilename;
+    
+                        this.#embedCount++;
+                        folderStats.embedCount++;
                     }
-
-                    this.attachmentList.push(...embeds);
-
-                    folderStats.lastFileName = embeds[0].originalFilename;
-
-                    this.#embedCount+= embeds.length;
-                    folderStats.embedCount+= embeds.length;
 
                     if(!hasAttachments) {
                         this.#attachmentMessageCount++;

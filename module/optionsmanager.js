@@ -20,6 +20,10 @@ export class OptionsManager {
             ["~vid", new Set()]
         ]),
         omitDuplicates: true,
+        
+        enableMessageTagging: false,
+        tagMessages: false,
+        
         defaultGrouping: "None",
         defaultImagePreview: "None",
 

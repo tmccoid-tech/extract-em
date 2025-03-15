@@ -2,6 +2,7 @@ import { CapabilitiesManager } from "/module/capabilitiesmanager.js";
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
+import { TagManager } from "/module/tagmanager.js";
 
     const documentTitle = messenger.i18n.getMessage("extensionName");
 
@@ -39,7 +40,8 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
                     {
                         preserveFolderStructure: params.preserveFolderStructure,
                         includeEmbeds: extensionOptions.includeEmbeds,
-                        packageAttachments: extensionOptions.packageAttachments
+                        packageAttachments: extensionOptions.packageAttachments,
+                        tagMessages: extensionOptions.tagMessages
                     }
                   );
             },
@@ -57,6 +59,8 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
 
             omitDuplicates: extensionOptions.omitDuplicates,
 
+            tagMessagesEnabled: extensionOptions.enableMessageTagging,
+
             useMailFolderId: CapabilitiesManager.useMailFolderId
         });
 
@@ -66,14 +70,19 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
             ? FilterManager.assembleFileTypeFilter(extensionOptions)
             : null
 
-        attachmentManager.discoverAttachments(new Set(selectedFolderPaths), extensionOptions.includeEmbeds, fileTypeFilter);
+        const discoveryOptions = {
+            selectedFolderPaths: new Set(selectedFolderPaths),
+            includeEmbeds: extensionOptions.includeEmbeds,
+            fileTypeFilter: fileTypeFilter
+        };
+    
+        attachmentManager.discoverAttachments(discoveryOptions);
     }
 
     function assembleFolderPaths(folder) {
         var result = [folder.path];
 
-        folder.subFolders.forEach((item, i) =>
-        {
+        folder.subFolders.forEach((item, i) => {
             result.push(...assembleFolderPaths(item));
         });
 
@@ -87,7 +96,6 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
             messenger.menus.update(menuId, { enabled: true });
         }
     }
-
 
     messenger.runtime.onMessage.addListener((request, sender, respond) => {
         if(request && request.action) {
@@ -131,6 +139,8 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
 
                 if (selectedFolders.length > 0) {
                     const extensionOptions = await OptionsManager.retrieve();
+
+                    await TagManager.initializeGlobalTag();
 
                     params = {
                         accountId: accountId,

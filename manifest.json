@@ -25,13 +25,16 @@
   },
   "permissions": [
     "messagesRead",
+    "messagesUpdate",
     "accountsRead",
     "menus",
     "menus.overrideContext",
     "storage",
     "downloads",
     "downloads.open",
-    "messagesModifyPermanent"
+    "messagesModifyPermanent",
+    "messagesTags",
+    "messagesTagsList"
   ],
   "default_locale": "en"
 }

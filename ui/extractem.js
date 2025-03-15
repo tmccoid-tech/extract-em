@@ -223,6 +223,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     var hasAttachments = false;
     var presentImapDetachmentNotice = false;
     let downloadLocations;
+    let tagMessages = false;
 
 //    var capabilities = new Capabilities();
     
@@ -431,20 +432,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 break;
 
             case "prepackaging":
-//                packagingTotalSpan.innerText = info.totalItems.toString();
-//                embedPackagingTotalSpan.innerText = info.totalEmbedItems.toString();
                 savingProgress.setAttribute("max", info.totalItems + info.totalEmbedItems);
                 savingProgress.value = 0;
     
                 break;
 
             default: // "packaging"
-//                packagingFileTotalSpan.innerText = info.fileCount.toString();
 
                 savingCurrentSpan.innerText = info.includedCount.toString();
                 embedSavingCurrentSpan.innerText = info.includedEmbedCount.toString();
                 
-//                packagingFileCurrentSpan.innerText = info.filesCreated.toString();
                 preparationAlterationsSpan.innerText = info.alterationCount.toString();
                 packagingErrorCountSpan.innerText = info.errorCount.toString();        
                 
@@ -461,8 +458,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 break;
         }
     };
-
-    // TODO: Relocate
 
     const updateSaveResult = async (info) =>
     {
@@ -656,6 +651,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 maxFilenameSubjectLength: extensionOptions.maxFilenameSubjectLength,
 
                 omitDuplicates: extensionOptions.omitDuplicates,
+                tagMessagesEnabled: extensionOptions.enableMessageTagging,
 
                 useMailFolderId: CapabilitiesManager.useMailFolderId
             });
@@ -760,6 +756,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             packagingProgressRow.classList.toggle("hidden", !extensionOptions.packageAttachments);
             savingProgessRow.classList.toggle("hidden", extensionOptions.packageAttachments);
 
+            const discoveryOptions = {
+                selectedFolderPaths: new Set(selectedFolderPaths),
+                includeEmbeds: extensionOptions.includeEmbeds,
+                fileTypeFilter: fileTypeFilter
+            };
+    
             attachmentManager.discoverAttachments(new Set(selectedFolderPaths), extensionOptions.includeEmbeds, fileTypeFilter);
 
             zipLogoImage.classList.add("rotating");
@@ -945,7 +947,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             fileTypeFilter = FilterManager.assembleFileTypeFilter();
         }
 
-        attachmentManager.discoverAttachments(selectedFolderPaths, extensionOptions.includeEmbeds, fileTypeFilter);
+        const discoveryOptions = {
+            selectedFolderPaths: selectedFolderPaths,
+            includeEmbeds: extensionOptions.includeEmbeds,
+            fileTypeFilter: fileTypeFilter
+        };
+
+        attachmentManager.discoverAttachments(discoveryOptions);
     }
 
     async function generateAttachmentPanels() {
@@ -1155,7 +1163,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         attachmentManager.extract(list, getInfo, {
             packageAttachments: extensionOptions.packageAttachments,
             preserveFolderStructure: extensionOptions.preserveFolderStructure,
-            includeEmbeds: includeEmbeds
+            includeEmbeds: includeEmbeds,
+            tagMessages: tagMessages
         });
     }
 

@@ -2,6 +2,7 @@ import { ZipEm } from "/module/zipem.js";
 import { EmbedManager } from "/module/embedmanager.js";
 import { SaveManager } from "/module/savemanager.js";
 import { i18nText } from "/module/i18nText.js";
+import { TagManager } from "/module/tagmanager.js";
 
 export class AttachmentManager {
     #platformOs;
@@ -30,6 +31,9 @@ export class AttachmentManager {
     #maxFilenameSubjectLength = 200;
 
     #omitDuplicates = true;
+
+    #tagMessagesEnabled = false;
+    #tagMessages = false;
 
     #useMailFolderId = false;
 
@@ -132,6 +136,8 @@ export class AttachmentManager {
 
         this.#omitDuplicates = options.omitDuplicates;
 
+        this.#tagMessagesEnabled = options.tagMessagesEnabled;
+
         this.#useMailFolderId = options.useMailFolderId;
     }
 
@@ -192,10 +198,13 @@ export class AttachmentManager {
         return result;
     }
 
-    async discoverAttachments(selectedFolderPaths, includeEmbeds = false, fileTypeFilter = null) {
+    async discoverAttachments(discoveryOptions) {
+        const { selectedFolderPaths, includeEmbeds, fileTypeFilter, tagMessagesEnabled } = discoveryOptions;
+
         this.#selectedFolderPaths = selectedFolderPaths;
         this.#includeEmbeds = includeEmbeds;
         this.#fileTypeFilter = fileTypeFilter;
+        this.#tagMessagesEnabled = tagMessagesEnabled;
 
         this.#alterationTracker = [];
 
@@ -259,7 +268,9 @@ export class AttachmentManager {
     async #processPage(page, folderStats) {
         for (const message of page.messages) {
 
-            await this.#processMessage(message, folderStats);
+            if(!this.#tagMessagesEnabled && !TagManager.isTagged(message.tags)) {
+                await this.#processMessage(message, folderStats);
+            }
 
             this.#processedMessageCount++;
             folderStats.processedMessageCount++;
@@ -738,7 +749,10 @@ export class AttachmentManager {
             preserveFolderStructure,
             includeEmbeds,
             packageAttachments,
+            tagMessages
         } = extractOptions;
+
+        this.#tagMessages = this.#tagMessagesEnabled && tagMessages;
 
         const storageProgressInfo = {
             status: "started",
@@ -1008,6 +1022,10 @@ export class AttachmentManager {
                         const saveResult = await this.#saveAttachment(attachmentFile, item.outputFilename);
 
                         packagingTracker.lastDownloadId = saveResult.downloadId;
+
+//                        if(this.#tagMessages) {
+//                            TagManager.tag(item.messageId);
+//                        }
                     }
     
                     storageProgressInfo.includedCount++;

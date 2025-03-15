@@ -138,9 +138,15 @@ XXX Open report in TB window? -- removed in TB 136 due to security restriction
 
 Differential extractions
 
-Apply filtering to embeds
+	Enable message tagging
+	Manage
+		Clear
 
-Inferred file Extension
+	Tag messages
+
+XXX Apply filtering to embeds
+
+XXX Inferred file Extension
 
 
 

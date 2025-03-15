@@ -91,7 +91,7 @@ body {
     justify-content: space-evenly;
 }
 
-#quickmenu-section div:not(:last-child) {
+#quickmenu-section > div:not(:last-child) {
     display: flex;
     flex-direction: row;
     align-items: center;

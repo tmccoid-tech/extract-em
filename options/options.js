@@ -1,7 +1,13 @@
+// Classes
 import { OptionsManager } from "/module/optionsmanager.js";
-import { initializeEditor } from "/options/filename-pattern.js"
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { SaveManager } from "/module/savemanager.js";
+import { TagManager } from "/module/tagmanager.js";
+import { i18nText } from "/module/i18nText.js";
+
+// Methods
+import { initializeEditor } from "/options/filename-pattern.js"
+
 
 document.addEventListener("DOMContentLoaded", async () => {
     const elem = (id) => document.getElementById(id);
@@ -26,6 +32,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         secondaryFileTypeList: null
     };
     const omitDuplicatesCheckbox = elem("omit-duplicates-checkbox");
+    const enableMessageTaggingCheckbox= elem("enable-message-tagging-checkbox");
+    const resetMessageTagsButton = elem("reset-message-tags-button");
     const defaultGroupingSelect = elem("default-grouping-select");
     const imagePreviewSelect = elem("image-preview-select");
 
@@ -72,11 +80,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Discovery Options
         listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(omitDuplicatesCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(enableMessageTaggingCheckbox, onEnableMessageTaggingOptionChanged);
         listen(defaultGroupingSelect, (e) => setOption(e));
         listen(imagePreviewSelect, (e) => setOption(e));
+        resetMessageTagsButton.addEventListener("click", resetExtractedTag);
 
         includeEmbedsCheckbox.checked = extensionOptions.includeEmbeds;
         omitDuplicatesCheckbox.checked = extensionOptions.omitDuplicates;
+        enableMessageTaggingCheckbox.checked = extensionOptions.enableMessageTagging;
+        resetMessageTagsButton.disabled = !extensionOptions.enableMessageTagging;
         defaultGroupingSelect.value = extensionOptions.defaultGrouping;
         imagePreviewSelect.value = extensionOptions.defaultImagePreview;
 
@@ -208,6 +220,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         else {
             filenamePatternEditButton.setAttribute("disabled", "disabled");
             maxFilenameSubjectLengthTextbox.setAttribute("disabled", "disabled");
+        }
+    }
+
+    function onEnableMessageTaggingOptionChanged() {
+        const isChecked = enableMessageTaggingCheckbox.checked;
+        OptionsManager.setOption("enableMessageTagging", isChecked);
+        resetMessageTagsButton.disabled = !isChecked;
+    }
+
+    async function resetExtractedTag() {
+        const confirmed = confirm(i18nText.resetMessageTagsConfirmationText);
+        
+        if(confirmed) {
+            await TagManager.resetExtractedTag();
         }
     }
 

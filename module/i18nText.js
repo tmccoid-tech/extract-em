@@ -18,6 +18,7 @@ export class i18nText {
         "noAttachmentsMessage",
         "noMessagesMessage",
         "report",
+        "resetMessageTagsConfirmationText",
         "saveCanceled",
         "saveComplete",
         "saveFailed"

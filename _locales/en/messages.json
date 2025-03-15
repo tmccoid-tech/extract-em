@@ -455,5 +455,21 @@
     "subjectFieldCharacterLimit": { "message": "Subject field character limit" },
     "subjectFieldCharacterLimitDescription": {
         "message": "When applicable, limits the number of characters supplied by the subject field, preventing excessive filename length issues"
+    },
+
+    "enableMessageTagging": {
+        "message": "Enable message tagging"
+    },
+    "enableMessageTaggingDescription": {
+        "message": "When enabled, presents an option to assign a special tag to messages containing extracted attachments, omitting those attachments from subsequent extractions"
+    },
+    "resetMessageTagsConfirmationText": {
+        "message": "The extracted tag will be removed from all pertinent messages. Continue?"
+    },
+    "tagMessages": {
+        "message": "Tag messages"
+    },
+    "tagMessagesDescription": {
+        "message": "Pertinent messages are tagged after extraction completes; attachments are subsequently omitted from later extractions"
     }
 }

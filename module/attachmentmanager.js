@@ -2,7 +2,7 @@ import { ZipEm } from "/module/zipem.js";
 import { EmbedManager } from "/module/embedmanager.js";
 import { SaveManager } from "/module/savemanager.js";
 import { i18nText } from "/module/i18nText.js";
-import { TagManager } from "/module/tagmanager.js";
+import { OptionsManager } from "/module/optionsmanager.js";
 
 export class AttachmentManager {
     #platformOs;
@@ -199,12 +199,11 @@ export class AttachmentManager {
     }
 
     async discoverAttachments(discoveryOptions) {
-        const { selectedFolderPaths, includeEmbeds, fileTypeFilter, tagMessagesEnabled } = discoveryOptions;
+        const { selectedFolderPaths, includeEmbeds, fileTypeFilter } = discoveryOptions;
 
         this.#selectedFolderPaths = selectedFolderPaths;
         this.#includeEmbeds = includeEmbeds;
         this.#fileTypeFilter = fileTypeFilter;
-        this.#tagMessagesEnabled = tagMessagesEnabled;
 
         this.#alterationTracker = [];
 
@@ -268,7 +267,7 @@ export class AttachmentManager {
     async #processPage(page, folderStats) {
         for (const message of page.messages) {
 
-            if(!this.#tagMessagesEnabled && !TagManager.isTagged(message.tags)) {
+            if(!(this.#tagMessagesEnabled && OptionsManager.tagging.isTagged(message.tags))) {
                 await this.#processMessage(message, folderStats);
             }
 
@@ -943,6 +942,8 @@ export class AttachmentManager {
                 zipEm = new ZipEm();
             }
 
+            let packagedMessageIds = new Set();
+
             for(let i = currentItemIndex; i < subsetBoundary; i++) {
                 const item = packagingTracker.items[i];
 
@@ -1017,15 +1018,15 @@ export class AttachmentManager {
     
                     if(packageAttachments) {
                         await zipEm.addFile(outputFilename, attachmentFile, item.date);
+
+                        packagedMessageIds.add(item.messageId);
                     }
                     else {
                         const saveResult = await this.#saveAttachment(attachmentFile, item.outputFilename);
 
                         packagingTracker.lastDownloadId = saveResult.downloadId;
 
-//                        if(this.#tagMessages) {
-//                            TagManager.tag(item.messageId);
-//                        }
+                        this.tagMessages([item.messageId]);
                     }
     
                     storageProgressInfo.includedCount++;
@@ -1078,6 +1079,9 @@ export class AttachmentManager {
 
                         this.#reportSaveResult(saveResult);
                     }
+
+                    this.tagMessages(packagedMessageIds);
+                    packagedMessageIds = new Set();
                 }
                 else {
                     saveResult.downloadLocations = packagingTracker.downloadLocations;
@@ -1148,6 +1152,8 @@ export class AttachmentManager {
             zipEm = new ZipEm();
         }
 
+        let packagedMessageIds = new Set();
+
         storageProgressInfo.status = "packaging";
 
         for(let i = 0; i < groupedEmbedItems.length; i++) {
@@ -1173,6 +1179,9 @@ export class AttachmentManager {
                     this.#reportStorageProgress(storageProgressInfo);
 
                     await this.#updateDownloadLocations(saveResult.downloadId);
+
+                    this.tagMessages(packagedMessageIds);
+                    packagedMessageIds = new Set();
 
                     zipEm = new ZipEm();
                     currentSize = 0;
@@ -1275,11 +1284,15 @@ export class AttachmentManager {
                 try {
                     if(packageAttachments) {
                         await zipEm.addFile(outputFilename, new Blob([decodeData.data]), item.date);
+
+                        packagedMessageIds.add(item.messageId);
                     }
                     else {
                         const saveResult = await this.#saveAttachment(new Blob([decodeData.data]), outputFilename);
 
                         packagingTracker.lastDownloadId = saveResult.downloadId;
+
+                        this.tagMessages([item.messageId]);
                     }
 
                     storageProgressInfo.totalEmbedBytes += decodeData.data.length;
@@ -1323,6 +1336,8 @@ export class AttachmentManager {
                 this.#reportStorageProgress(storageProgressInfo);
 
                 await this.#updateDownloadLocations(saveResult.downloadId);
+
+                this.tagMessages(packagedMessageIds);
 
                 saveResult.attachmentCount = packagingTracker.items.length;
                 saveResult.downloadLocations = packagingTracker.downloadLocations;
@@ -1397,6 +1412,15 @@ export class AttachmentManager {
         }
     }
 
+    async tagMessages(messageIds) {
+        if(this.#tagMessages) {
+            for(let messageId of messageIds) {
+                //TagManager.tag(messageId);
+
+                OptionsManager.tagging.tagMessage(messageId);
+            }
+        }
+    }
 
     async deleteAttachments() {
         const packagedItems = this.#packagingTracker.items.filter((item) => !item.hasError);
@@ -1651,6 +1675,9 @@ export class AttachmentManager {
                     result.filename += ".gif";
                     result.extension = "gif";
                     break;
+                case "image/png":
+                    result.filename += ".png";
+                    result.extension = "png";
             }
         }
 

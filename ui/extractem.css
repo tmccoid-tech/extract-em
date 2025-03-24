@@ -123,7 +123,8 @@ body {
     margin-left: 24px;
 }
 
-#quickmenu-file-type-filter-list-div {
+#quickmenu-file-type-filter-list-div,
+#quickmenu-tag-messages-description-div {
     padding-left: 26px;
 }
 
@@ -215,7 +216,8 @@ section {
     border: none;
 }
 
-#use-file-type-filter-link-div {
+#use-file-type-filter-link-div,
+#tag-messages-container:not(.hidden) {
     display: flex;
 }
 

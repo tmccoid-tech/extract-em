@@ -2,7 +2,6 @@ import { CapabilitiesManager } from "/module/capabilitiesmanager.js";
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
-import { TagManager } from "/module/tagmanager.js";
 
     const documentTitle = messenger.i18n.getMessage("extensionName");
 
@@ -140,7 +139,9 @@ import { TagManager } from "/module/tagmanager.js";
                 if (selectedFolders.length > 0) {
                     const extensionOptions = await OptionsManager.retrieve();
 
-                    await TagManager.initializeGlobalTag();
+                    //await TagManager.initializeGlobalTag();
+
+                    await OptionsManager.tagging.initializeGlobalTag();
 
                     params = {
                         accountId: accountId,

@@ -2,7 +2,6 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { SaveManager } from "/module/savemanager.js";
-import { TagManager } from "/module/tagmanager.js";
 import { i18nText } from "/module/i18nText.js";
 
 // Methods
@@ -79,8 +78,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Discovery Options
         listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
-        listen(omitDuplicatesCheckbox, (e) => setOption(e, (c) => c.checked));
-        listen(enableMessageTaggingCheckbox, onEnableMessageTaggingOptionChanged);
+        listen(omitDuplicatesCheckbox, (e) => onOmitDuplicateOrEnableMessageTaggingOptionChanged(e));
+        listen(enableMessageTaggingCheckbox, (e) => onOmitDuplicateOrEnableMessageTaggingOptionChanged(e));
         listen(defaultGroupingSelect, (e) => setOption(e));
         listen(imagePreviewSelect, (e) => setOption(e));
         resetMessageTagsButton.addEventListener("click", resetExtractedTag);
@@ -131,6 +130,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const element = event.srcElement;
         const optionName = element.getAttribute("option-name");
         OptionsManager.setOption(optionName, getValue(element));
+        return { element: element, optionName: optionName };
     }
 
     function onUserInteractionOptionChanged(event) {
@@ -223,17 +223,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    function onEnableMessageTaggingOptionChanged() {
-        const isChecked = enableMessageTaggingCheckbox.checked;
-        OptionsManager.setOption("enableMessageTagging", isChecked);
-        resetMessageTagsButton.disabled = !isChecked;
+    function onOmitDuplicateOrEnableMessageTaggingOptionChanged(event) {
+        const { element, optionName } = setOption(event, (c) => c.checked);
+
+        const contraElement = (optionName == "omitDuplicates")
+            ? enableMessageTaggingCheckbox
+            : omitDuplicatesCheckbox;
+
+        const contraOptionName = contraElement.getAttribute("option-name");
+
+        if(element.checked) {
+            OptionsManager.setOption(contraOptionName, false);
+            contraElement.checked = false;
+        }
+
+        resetMessageTagsButton.disabled = !enableMessageTaggingCheckbox.checked;
     }
 
     async function resetExtractedTag() {
         const confirmed = confirm(i18nText.resetMessageTagsConfirmationText);
         
         if(confirmed) {
-            await TagManager.resetExtractedTag();
+            await OptionsManager.tagging.clearGlobalTag();
         }
     }
 

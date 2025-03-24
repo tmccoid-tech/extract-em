@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const quickmenuOptionLabel = elem("quickmenu-option-label");
     const alwaysShowQuickmenuCheckbox = elem("always-show-quickmenu-checkbox");
     const quickmenuIncludeEmbedsCheckbox = elem("quickmenu-include-embeds-checkbox");
-
+    const quickmenuTagMessagesCheckbox = elem("quickmenu-tag-messages-checkbox");
 
     const statsTable = elem("stats-table");
     const statsSummaryTBody = elem("stats-summary-tbody");
@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const summaryEmbedCountSpan = elem("summary-embed-count-span");
 
     const includeEmbedsCheckbox = elem("include-embeds-checkbox");
+    const tagMessagesCheckbox = elem("tag-messages-checkbox");
 
     // Displayed in Attachment List
     const toggleSelectedAttachmentsCheckbox = elem("toggle-selected-attachments-checkbox");
@@ -622,6 +623,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                 statsTable.classList.remove("omit-embeds");
             }
 
+            if(extensionOptions.enableMessageTagging) {
+                for(let container of document.querySelectorAll(".tag-messages-container")) {
+                    container.classList.remove("hidden");
+                }
+
+                quickmenuTagMessagesCheckbox.addEventListener("change", onTagMessagesCheckboxChecked);
+                tagMessagesCheckbox.addEventListener("change", onTagMessagesCheckboxChecked);
+
+                if(extensionOptions.tagMessages) {
+                    quickmenuTagMessagesCheckbox.checked = true;
+                    tagMessagesCheckbox.checked = true;
+                }
+            }
+
             attachmentManager = new AttachmentManager({
                 folders: selectedFolders,
                 silentModeInvoked: false,
@@ -762,7 +777,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 fileTypeFilter: fileTypeFilter
             };
     
-            attachmentManager.discoverAttachments(new Set(selectedFolderPaths), extensionOptions.includeEmbeds, fileTypeFilter);
+            attachmentManager.discoverAttachments(discoveryOptions);
 
             zipLogoImage.classList.add("rotating");
         }
@@ -906,6 +921,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         OptionsManager.setOption("includeEmbeds", includeEmbeds);
         extensionOptions.includeEmbeds = includeEmbeds;
+    }
+
+    function onTagMessagesCheckboxChecked(event) {
+        const { checked } = event.srcElement;
+
+        quickmenuTagMessagesCheckbox.checked = checked;
+        tagMessagesCheckbox.checked = checked;
+
+        OptionsManager.setOption("tagMessages", checked);
+        extensionOptions.tagMessages = checked;
     }
 
     function discoverAttachments() {
@@ -1164,7 +1189,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             packageAttachments: extensionOptions.packageAttachments,
             preserveFolderStructure: extensionOptions.preserveFolderStructure,
             includeEmbeds: includeEmbeds,
-            tagMessages: tagMessages
+            tagMessages: extensionOptions.tagMessages
         });
     }
 

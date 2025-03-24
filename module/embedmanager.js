@@ -48,7 +48,7 @@ export class EmbedManager {
 
             checksum = (0b10100000 | ((buffer.length - padCount) & 0x0F)) << 24;
 
-        const primeTable = EmbedManager.primeTable;
+        const { primeTable } = EmbedManager;
 
         for (i = 0; i < source.length; i += 4) {
             e2 = source[i + 1];
@@ -92,6 +92,38 @@ export class EmbedManager {
         return undefined;
     }
 
+    static #parseContentType(contentTypeHeader, contentDispositionHeader) {
+        let result = {
+            itemContentType: null,
+            itemFilename: null
+        };
+
+        const itemContentType = /^(?<ct>[^;]*)(?:;.*)?/m
+            .exec(contentTypeHeader)?.groups?.ct;
+
+        if(itemContentType) {
+            result.itemContentType = itemContentType;
+
+            let itemFilename;
+
+            if(contentDispositionHeader) {
+                itemFilename = /;\s*filename\*?=(?<fn>"[^"]*"|'[^']*'|[^;'"]*)/mi
+                    .exec(contentDispositionHeader)?.groups?.fn;
+            }
+    
+            if(!itemFilename) {
+                itemFilename = /;\s*name\*?=(?<fn>"[^"]*"|'[^']*'|[^;'"]*)/mi
+                    .exec(contentTypeHeader)?.groups?.fn;
+            }
+    
+            if(itemFilename) {
+                result.itemFilename = itemFilename.replace(/["']/g, "");
+            }    
+        }
+
+        return result;
+    }
+
     static identifyEmbeds(messageId, date, container, omissionSet, embeds = []) {
         for (const part of container.parts) {
 
@@ -124,62 +156,41 @@ export class EmbedManager {
                             continue;
                         }
        
-                        const contentTypeTokens = itemContentTypeHeader.split(";");
-        
-                        if(contentTypeTokens.length > 1) {
-                            const itemContentType = contentTypeTokens[0];
+                        const { itemContentType, itemFilename } = this.#parseContentType(itemContentTypeHeader, contentDispositionHeader);
 
-                            let filenameIndex = 0;
+                        if(itemFilename) {
+                            // Determine the boundary for the embed
 
-                            // Attempt to locate the filename entry; in most cases this is the 2nd item (index == 1), but, alas, not all...
-                            for (let i = 1; i < contentTypeTokens.length; i++) {
-                                if(contentTypeTokens[i].trim().startsWith("name")) {
-                                    filenameIndex = i;
-                                    break;
-                                }
-                            }
+                            const containerContentTypeHeader = this.#getHeader(container, "content-type");
 
-                            if(filenameIndex > 0) {
-                                const itemNameTokens = contentTypeTokens[filenameIndex].split("=");
-            
-                                if(itemNameTokens.length > 1 && itemNameTokens[0].trim() == "name") {
+                            if(containerContentTypeHeader) {
+                                const tokens = containerContentTypeHeader.split(";");
 
-                                    const itemName = itemNameTokens[1].replace(/["']/g, "");
-            
-                                    // Determine the boundary for the embed
+                                for(let j = 1; j < tokens.length; j++) {
+                                    const boundaryToken = tokens[j].trim();
 
-                                    const containerContentTypeHeader = this.#getHeader(container, "content-type");
+                                    if(boundaryToken.startsWith("boundary=")) {
+                                        const boundary = boundaryToken.substring(9).replace(/["']/g, "");
 
-                                    if(containerContentTypeHeader) {
-                                        const tokens = containerContentTypeHeader.split(";");
+                                        const embed = {
+                                            messageId: messageId,
+                                            originalFilename: itemFilename,
+                                            outputFilename: null,
+                                            date: date,
+                                            partName: part.partName,
+                                            contentTypeBoundary: itemContentTypeHeader,
+                                            boundary: boundary,
+                                            contentType: itemContentType,
+                                            size: null,
+                                            extension: "--",
+                                            isEmbed: true,
+                                            isPreviewable: false,
+                                            isDuplicate: false
+                                        };
+                
+                                        embeds.push(embed);
 
-                                        for(let j = 1; j < tokens.length; j++) {
-                                            const boundaryToken = tokens[j].trim();
-
-                                            if(boundaryToken.startsWith("boundary=")) {
-                                                const boundary = boundaryToken.substring(9).replace(/["']/g, "");
-
-                                                const embed = {
-                                                    messageId: messageId,
-                                                    originalFilename: itemName,
-                                                    outputFilename: null,
-                                                    date: date,
-                                                    partName: part.partName,
-                                                    contentTypeBoundary: itemContentTypeHeader,
-                                                    boundary: boundary,
-                                                    contentType: itemContentType,
-                                                    size: null,
-                                                    extension: "--",
-                                                    isEmbed: true,
-                                                    isPreviewable: false,
-                                                    isDuplicate: false
-                                                };
-                        
-                                                embeds.push(embed);
-
-                                                break;
-                                            }
-                                        }
+                                        break;
                                     }
                                 }
                             }

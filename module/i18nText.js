@@ -8,6 +8,7 @@ export class i18nText {
         "embeds",
         "error",
         "extensionName",
+        "extracted",
         "extractedItems",
         "extractionReport",
         "gbLabel",

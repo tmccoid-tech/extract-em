@@ -136,19 +136,19 @@ Images HUGE in preview (beta; only happens with large number of files???)
 
 XXX Open report in TB window? -- removed in TB 136 due to security restriction
 
-Differential extractions
-
-	Enable message tagging
-	Manage
-		Clear
-
-	Tag messages
-
 XXX Apply filtering to embeds
 
 XXX Inferred file Extension
 
+Differential extractions
 
+	Enable message tagging
+	
+	Reset
+
+	Tag messages
+
+	Omit duplicates mutually exclusive
 
 
 LQ

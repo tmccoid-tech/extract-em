@@ -13,5 +13,11 @@
     },
     "tagMessagesDescription": {
         "message": "Pertinent messages are tagged after extraction completes; attachments are subsequently omitted from later extractions"
+    },
+    "mutuallyExclusiveDescription": {
+        "message": "Note: the following two options are mutually exclusive."
+    },
+    "extracted": {
+        "message": "Extracted"
     }
 }

@@ -28,9 +28,9 @@
                 <div><label><input type="checkbox" id="quickmenu-include-embeds-checkbox"> __MSG_includeEmbeds__</label></div>
                 <div><label><input type="checkbox" id="quickmenu-use-file-type-filter-checkbox"> __MSG_useFileTypeFilter__</label><button type="button" id="quickmenu-edit-file-type-filter-button" disabled="disabled">__MSG_edit__</button></div>
                 <div id="quickmenu-file-type-filter-list-div" class="filter-list-div ghost">...</div>
-                <div id="quickmenu-tag-messages-div" class="hidden">
-                    <label><input type="checkbox" id="quickmenu-perform-differential-extraction-checkbox"> __MSG_tagMessages__</label>
-                    <div>__MSG_tagMessagesDescription__</div>
+                <div class="tag-messages-container hidden">
+                    <label><input type="checkbox" id="quickmenu-tag-messages-checkbox"> __MSG_tagMessages__</label>
+                    <div id="quickmenu-tag-messages-description-div">__MSG_tagMessagesDescription__</div>
                 </div>
                 <div><label id="quickmenu-option-label" class="invisible"><input type="checkbox" id="always-show-quickmenu-checkbox"/> __MSG_alwaysShowQuickmenu__</label></div>
             </div>            
@@ -110,6 +110,11 @@
                     <div id="use-file-type-filter-link-div" title="...">
                         <input type="checkbox" id="use-file-type-filter-checkbox">
                         <button type="button" id="use-file-type-filter-link-button" class="link-button" disabled="disabled"> __MSG_useFileTypeFilter__</button>
+                    </div>
+                    <hr/>
+                    <div id="tag-messages-container" class="tag-messages-container hidden">
+                        <input type="checkbox" id="tag-messages-checkbox">
+                        <span>__MSG_tagMessages__</span>
                     </div>
                     <hr/>
                     <button type="button" id="extract-all-button" class="summary-button" disabled="disabled">__MSG_extensionName__</button>

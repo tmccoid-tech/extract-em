@@ -1,23 +1,2 @@
 {
-    "enableMessageTagging": {
-        "message": "Enable message tagging"
-    },
-    "enableMessageTaggingDescription": {
-        "message": "When enabled, presents an option to assign a special tag to messages containing extracted attachments, omitting those attachments from subsequent extractions"
-    },
-    "resetMessageTagsConfirmationText": {
-        "message": "The extracted tag will be removed from all pertinent messages. Continue?"
-    },
-    "tagMessages": {
-        "message": "Tag messages"
-    },
-    "tagMessagesDescription": {
-        "message": "Pertinent messages are tagged after extraction completes; attachments are subsequently omitted from later extractions"
-    },
-    "mutuallyExclusiveDescription": {
-        "message": "Note: the following two options are mutually exclusive."
-    },
-    "extracted": {
-        "message": "Extracted"
-    }
 }

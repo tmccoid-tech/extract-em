@@ -613,5 +613,41 @@
     },
     "rn1_6_6_Fix01": {
         "message": "Truncamento improprio di nomi di file contenenti punti e virgola"
+    },
+    "enableMessageTagging": {
+        "message": "Abilita tagging dei messaggi"
+    },
+    "enableMessageTaggingDescription": {
+        "message": "Se abilitato, presenta un'opzione per assegnare un tag speciale ai messaggi contenenti allegati estratti, omettendo tali allegati dalle estrazioni successive; non si applica agli incorporati"
+    },
+    "resetMessageTagsConfirmationText": {
+        "message": "Il tag estratto verrà rimosso da tutti i messaggi pertinenti. Continuare?"
+    },
+    "tagMessages": {
+        "message": "Tag messaggi"
+    },
+    "tagMessagesDescription": {
+        "message": "I messaggi pertinenti vengono contrassegnati dopo il completamento dell'estrazione; Gli allegati vengono successivamente omessi dalle estrazioni successive"
+    },
+    "mutuallyExclusiveDescription": {
+        "message": "Nota: le seguenti due opzioni si escludono a vicenda."
+    },
+    "extracted": {
+        "message": "Estratto"
+    },
+    "rn1_7_1_Notice01": {
+        "message": "Questa sarà l'ultima versione di questa estensione; Le versioni future saranno limitate alle correzioni"
+    },
+    "rn1_7_1_Notice02": {
+        "message": "Se si riscontra un problema, si prega di presentare un rapporto di bug sulla pagina GitHub dell'estensione o contattare lo sviluppatore via e -mail invece di ricorrere immediatamente alla pubblicazione di una revisione negativa"
+    },
+    "rn1_7_1_New01": {
+        "message": "Aggiunta funzionalità di etichettatura opzionale (richiede abilitazione); Ai messaggi contenenti allegati estratti viene assegnato un tag speciale, prevenendo le successive estrazioni di tali allegati"
+    },
+    "rn1_7_1_New02": {
+        "message": "Aggiunta inferenza di estensione del file; L'estensione del file appropriata (come .jpg) verrà aggiunta al nome file quando si può dedurre se il tipo di file può essere dedotto (solo JPG, GIF e PNG)"
+    },
+    "rn1_7_1_Fixed01": {
+        "message": "I file non immaginati in linea non vengono scoperti in alcune versioni di Thunderbird (128 - 136); Questi saranno rilevati come incorpori"
     }
 }

@@ -613,5 +613,41 @@
     },
     "rn1_6_6_Fix01": {
         "message": "Truncamiento inadecuado de nombres de archivo que contienen semicolones"
+    },
+    "enableMessageTagging": {
+        "message": "Habilitar etiquetado de mensajes"
+    },
+    "enableMessageTaggingDescription": {
+        "message": "Cuando está habilitado, presenta una opción para asignar una etiqueta especial a los mensajes que contienen archivos adjuntos extraídos, omitiendo esos archivos adjuntos de extracciones posteriores; no se aplica a las incrustaciones"
+    },
+    "resetMessageTagsConfirmationText": {
+        "message": "La etiqueta extraída se eliminará de todos los mensajes pertinentes. ¿Continuar?"
+    },
+    "tagMessages": {
+        "message": "Mensajes de etiqueta"
+    },
+    "tagMessagesDescription": {
+        "message": "Los mensajes pertinentes se etiquetan después de que se complete la extracción; Los archivos adjuntos se omiten posteriormente de extracciones posteriores"
+    },
+    "mutuallyExclusiveDescription": {
+        "message": "Nota: Las siguientes dos opciones son mutuamente excluyentes."
+    },
+    "extracted": {
+        "message": "Extraído"
+    },
+    "rn1_7_1_Notice01": {
+        "message": "Este será el último lanzamiento de esta extensión; Las versiones futuras se limitarán a las soluciones"
+    },
+    "rn1_7_1_Notice02": {
+        "message": "Si experimenta un problema, presente un informe de errores en la página GitHub de la extensión o comuníquese con el desarrollador por correo electrónico en lugar de recurrir inmediatamente a publicar una revisión negativa"
+    },
+    "rn1_7_1_New01": {
+        "message": "Se agregó la función de etiquetado opcional (requiere habilitación); Los mensajes que contienen archivos adjuntos extraídos se les asigna una etiqueta especial, evitando las extracciones posteriores de esos archivos adjuntos"
+    },
+    "rn1_7_1_New02": {
+        "message": "Inferencia de extensión de archivo agregada; La extensión del archivo apropiada (como .jpg) se agregará al nombre de archivo cuando se pierda si solo se puede inferir el tipo de archivo (JPG, GIF y PNG)"
+    },
+    "rn1_7_1_Fixed01": {
+        "message": "Los archivos sin imagen adjuntos en línea no se descubren en algunas versiones de Thunderbird (128 - 136); estos serán detectados como incrustaciones"
     }
 }

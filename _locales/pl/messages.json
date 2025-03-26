@@ -613,5 +613,41 @@
     },
     "rn1_6_6_Fix01": {
         "message": "Niewłaściwe obcięcie nazw plików zawierających półkolony"
+    },
+    "enableMessageTagging": {
+        "message": "Włącz oznaczenie wiadomości"
+    },
+    "enableMessageTaggingDescription": {
+        "message": "Po włączeniu przedstawia opcję przypisania specjalnego znacznika do komunikatów zawierających wyodrębnione załączniki, pomijając te załączniki z kolejnych ekstrakcji; nie dotyczy osadzania"
+    },
+    "resetMessageTagsConfirmationText": {
+        "message": "Wyodrębniony znacznik zostanie usunięty ze wszystkich odpowiednich wiadomości. Kontynuować?"
+    },
+    "tagMessages": {
+        "message": "Tag wiadomości"
+    },
+    "tagMessagesDescription": {
+        "message": "Odpowiednie wiadomości są oznaczone po zakończeniu ekstrakcji; Załączniki są następnie pomijane z późniejszych ekstrakcji"
+    },
+    "mutuallyExclusiveDescription": {
+        "message": "Uwaga: Poniższe dwie opcje wykluczają się wzajemnie."
+    },
+    "extracted": {
+        "message": "Wytłoczony"
+    },
+    "rn1_7_1_Notice01": {
+        "message": "Będzie to ostatnia wersja tego rozszerzenia; Przyszłe wersje będą ograniczone do poprawek"
+    },
+    "rn1_7_1_Notice02": {
+        "message": "Jeśli masz problem, złożysz raport błędu na stronie GitHub rozszerzenia lub skontaktuj się z programistą za pośrednictwem poczty elektronicznej, zamiast od razu uciekać się do opublikowania negatywnej recenzji"
+    },
+    "rn1_7_1_New01": {
+        "message": "Dodano opcjonalną funkcję tagowania (wymaga włączenia); Wiadomości zawierające wyodrębnione załączniki są przypisane specjalnym znaczniku, zapobiegając kolejnym ekstrakcjom tych załączników"
+    },
+    "rn1_7_1_New02": {
+        "message": "Dodano wnioskowanie o rozszerzeniu pliku; Odpowiednie rozszerzenie pliku (takie jak .jpg) zostanie dołączone do nazwy pliku w razie braku, jeśli można wywnioskować typ pliku (tylko JPG, GIF i PNG)"
+    },
+    "rn1_7_1_Fixed01": {
+        "message": "W niektórych wersjach Thunderbird (128–136) nie odkryto plików nie -obrazowych (128–136); zostaną one wykryte jako osadzanie"
     }
 }

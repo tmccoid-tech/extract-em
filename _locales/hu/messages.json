@@ -546,5 +546,41 @@
     },
     "rn1_6_6_Fix01": {
         "message": "A pontosvesszőben szereplő fájlnevek nem megfelelő csonkolása"
+    },
+    "enableMessageTagging": {
+        "message": "Engedélyezze az üzenet címkézését"
+    },
+    "enableMessageTaggingDescription": {
+        "message": "Ha engedélyezve van, bemutatja egy lehetőséget, hogy egy speciális címkét hozzárendeljen az extrahált mellékleteket tartalmazó üzenetekhez, és hagyja ki ezeket a mellékleteket a későbbi extrakciókból; nem vonatkozik a beágyazásokra"
+    },
+    "resetMessageTagsConfirmationText": {
+        "message": "Az extrahált címke eltávolításra kerül az összes vonatkozó üzenetből. Folytassa?"
+    },
+    "tagMessages": {
+        "message": "Tag üzenetek"
+    },
+    "tagMessagesDescription": {
+        "message": "A releváns üzeneteket az extrahálás befejezése után címkézik; A mellékleteket később kihagyják a későbbi extrakciókból"
+    },
+    "mutuallyExclusiveDescription": {
+        "message": "Megjegyzés: A következő két lehetőség kölcsönösen kizárja."
+    },
+    "extracted": {
+        "message": "Kivont"
+    },
+    "rn1_7_1_Notice01": {
+        "message": "Ez lesz a kiterjesztés utolsó szolgáltatáskibocsátása; A jövőbeli verziók a javításokra korlátozódnak"
+    },
+    "rn1_7_1_Notice02": {
+        "message": "Ha problémát tapasztal, kérjük, nyilatkozzon be egy hibajelentést a kiterjesztés GitHub oldalán, vagy vegye fel a kapcsolatot a fejlesztővel e -mailben, ahelyett, hogy azonnal negatív véleményt küldjön a negatív áttekintés közzétételére"
+    },
+    "rn1_7_1_New01": {
+        "message": "Hozzáadott opcionális címkézési szolgáltatás (engedélyezésre van szükség); Az extrahált mellékleteket tartalmazó üzenetek egy speciális címkét hozzanak létre, megakadályozva a mellékletek későbbi extrahálását"
+    },
+    "rn1_7_1_New02": {
+        "message": "Hozzáadott fájlbővítés következtetése; A megfelelő fájlbővítést (például .jpg) csatoljuk a fájlnévhez, ha hiányzik, ha a fájltípus következtethető (JPG, GIF és PNG)"
+    },
+    "rn1_7_1_Fixed01": {
+        "message": "Az inline nem rögzített képeket nem fedezik fel a Thunderbird egyes verzióiban (128 - 136); Ezeket beágyazásként észlelik"
     }
 }

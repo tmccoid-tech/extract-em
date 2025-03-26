@@ -613,5 +613,41 @@
     },
     "rn1_6_6_Fix01": {
         "message": "Unsachgemäßes Abschneiden von Dateinamen, die Semikolons enthalten"
+    },
+    "enableMessageTagging": {
+        "message": "Aktivieren Sie das Meldungs ​​-Tagging"
+    },
+    "enableMessageTaggingDescription": {
+        "message": "In der Aktivierung der Meldungen, die extrahierte Anhänge enthält, geben Sie eine Option zum Zuweisen eines speziellen Tags zu, wodurch diese Anhänge aus nachfolgenden Extraktionen weggelassen werden. gilt nicht für Einbettungen"
+    },
+    "resetMessageTagsConfirmationText": {
+        "message": "Das extrahierte Tag wird aus allen relevanten Nachrichten entfernt. Weitermachen?"
+    },
+    "tagMessages": {
+        "message": "Tag -Nachrichten"
+    },
+    "tagMessagesDescription": {
+        "message": "Relevante Nachrichten werden nach Abschluss der Extraktion markiert. Anhänge werden anschließend in späteren Extraktionen weggelassen"
+    },
+    "mutuallyExclusiveDescription": {
+        "message": "HINWEIS: Die folgenden beiden Optionen sind gegenseitig ausschließlich."
+    },
+    "extracted": {
+        "message": "Extrahiert"
+    },
+    "rn1_7_1_Notice01": {
+        "message": "Dies wird die letzte Funktion dieser Erweiterung sein. Zukünftige Versionen werden auf Korrekturen beschränkt sein"
+    },
+    "rn1_7_1_Notice02": {
+        "message": "Wenn Sie ein Problem haben, stellen Sie bitte einen Fehlerbericht auf der GitHub -Seite der Erweiterung ein oder wenden Sie sich an den Entwickler per E -Mail an, anstatt sofort auf eine negative Überprüfung zurückzuführen"
+    },
+    "rn1_7_1_New01": {
+        "message": "Optionale Tagging -Funktion hinzugefügt (erfordert Aktivierung); Nachrichten, die extrahierte Anhänge enthalten"
+    },
+    "rn1_7_1_New02": {
+        "message": "Dateierweiterung Inferenz hinzugefügt; Die entsprechende Dateierweiterung (z. B. .JPG) wird beim Fehlen an den Dateinamen beigefügt, wenn der Dateityp abgeleitet werden kann (JPG, GIF und nur PNG)."
+    },
+    "rn1_7_1_Fixed01": {
+        "message": "In einigen Versionen von Thunderbird (128 - 136) werden nicht -image -Dateien nicht entdeckt. Diese werden als Einbettungen erkannt"
     }
 }

@@ -461,7 +461,7 @@
         "message": "Enable message tagging"
     },
     "enableMessageTaggingDescription": {
-        "message": "When enabled, presents an option to assign a special tag to messages containing extracted attachments, omitting those attachments from subsequent extractions"
+        "message": "When enabled, presents an option to assign a special tag to messages containing extracted attachments, omitting those attachments from subsequent extractions; does not apply to embeds"
     },
     "resetMessageTagsConfirmationText": {
         "message": "The extracted tag will be removed from all pertinent messages. Continue?"
@@ -477,5 +477,20 @@
     },
     "extracted": {
         "message": "Extracted"
+    },
+    "rn1_7_1_Notice01": {
+        "message": "This will be the last feature release of this extension; future versions will be limited to fixes"
+    },
+    "rn1_7_1_Notice02": {
+        "message": "If you experience an issue, please file a bug report on the extension's GitHub page or contact the developer via email instead of immediately resorting to posting a negative review"
+    },
+    "rn1_7_1_New01": {
+        "message": "Added optional tagging feature (requires enablement); messages containing extracted attachments are assigned a special tag, preventing subsequent extractions of those attachments"
+    },
+    "rn1_7_1_New02": {
+        "message": "Added file extension inference; the appropriate file extension (such as .jpg) will be appended to the filename when missing if file type can be inferred (jpg, gif, and png only)"
+    },
+    "rn1_7_1_Fixed01": {
+        "message":  "Non-image files attached inline are not discovered in some versions of Thunderbird (128 - 136); these will be detected as embeds" 
     }
 }

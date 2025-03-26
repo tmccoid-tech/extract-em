@@ -1128,8 +1128,7 @@ export class AttachmentManager {
             if(groupedEmbedItems.has(messageId)) {
                 groupedEmbedItems.get(messageId).push(item);
             }
-            else
-            {
+            else {
                 groupedEmbedItems.set(messageId, [item]);
             }
         }
@@ -1152,7 +1151,7 @@ export class AttachmentManager {
             zipEm = new ZipEm();
         }
 
-        let packagedMessageIds = new Set();
+//        let packagedMessageIds = new Set();
 
         storageProgressInfo.status = "packaging";
 
@@ -1180,8 +1179,8 @@ export class AttachmentManager {
 
                     await this.#updateDownloadLocations(saveResult.downloadId);
 
-                    this.tagMessages(packagedMessageIds);
-                    packagedMessageIds = new Set();
+//                    this.tagMessages(packagedMessageIds);
+//                    packagedMessageIds = new Set();
 
                     zipEm = new ZipEm();
                     currentSize = 0;
@@ -1285,14 +1284,14 @@ export class AttachmentManager {
                     if(packageAttachments) {
                         await zipEm.addFile(outputFilename, new Blob([decodeData.data]), item.date);
 
-                        packagedMessageIds.add(item.messageId);
+//                        packagedMessageIds.add(item.messageId);
                     }
                     else {
                         const saveResult = await this.#saveAttachment(new Blob([decodeData.data]), outputFilename);
 
                         packagingTracker.lastDownloadId = saveResult.downloadId;
 
-                        this.tagMessages([item.messageId]);
+//                        this.tagMessages([item.messageId]);
                     }
 
                     storageProgressInfo.totalEmbedBytes += decodeData.data.length;
@@ -1337,7 +1336,7 @@ export class AttachmentManager {
 
                 await this.#updateDownloadLocations(saveResult.downloadId);
 
-                this.tagMessages(packagedMessageIds);
+//                this.tagMessages(packagedMessageIds);
 
                 saveResult.attachmentCount = packagingTracker.items.length;
                 saveResult.downloadLocations = packagingTracker.downloadLocations;
@@ -1415,8 +1414,6 @@ export class AttachmentManager {
     async tagMessages(messageIds) {
         if(this.#tagMessages) {
             for(let messageId of messageIds) {
-                //TagManager.tag(messageId);
-
                 OptionsManager.tagging.tagMessage(messageId);
             }
         }

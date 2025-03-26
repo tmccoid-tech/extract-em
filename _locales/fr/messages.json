@@ -613,5 +613,41 @@
     },
     "rn1_6_6_Fix01": {
         "message": "Troncature incorrecte des noms de fichiers contenant des points-virgules"
+    },
+    "enableMessageTagging": {
+        "message": "Activer le marquage du message"
+    },
+    "enableMessageTaggingDescription": {
+        "message": "Lorsqu'il est activé, présente une option pour attribuer une balise spéciale aux messages contenant des pièces jointes extraites, en omettant ces pièces jointes à partir d'extractions ultérieures; ne s'applique pas aux intégres"
+    },
+    "resetMessageTagsConfirmationText": {
+        "message": "La balise extraite sera supprimée de tous les messages pertinents. Continuer?"
+    },
+    "tagMessages": {
+        "message": "Tag des messages"
+    },
+    "tagMessagesDescription": {
+        "message": "Les messages pertinents sont étiquetés une fois l'extraction terminée; Les pièces jointes sont ensuite omises à partir d'extractions ultérieures"
+    },
+    "mutuallyExclusiveDescription": {
+        "message": "Remarque: Les deux options suivantes s'excluent mutuellement."
+    },
+    "extracted": {
+        "message": "Extrait"
+    },
+    "rn1_7_1_Notice01": {
+        "message": "Ce sera la dernière version de fonctionnalité de cette extension; Les versions futures seront limitées aux correctifs"
+    },
+    "rn1_7_1_Notice02": {
+        "message": "Si vous rencontrez un problème, veuillez déposer un rapport de bogue sur la page GitHub de l'extension ou contacter le développeur par e-mail au lieu de recourir immédiatement à la publication d'un avis négatif"
+    },
+    "rn1_7_1_New01": {
+        "message": "Ajout de la fonction de balise facultative (nécessite une activité); Les messages contenant des pièces jointes extraites se voient attribuer une étiquette spéciale, empêchant les extractions ultérieures de ces pièces jointes"
+    },
+    "rn1_7_1_New02": {
+        "message": "Ajout de l'inférence d'extension de fichier; L'extension de fichier appropriée (telle que .jpg) sera annexée au nom de fichier lorsqu'il manque si le type de fichier peut être déduit (JPG, GIF et PNG uniquement)"
+    },
+    "rn1_7_1_Fixed01": {
+        "message": "Les fichiers non d'image joints en ligne ne sont pas découverts dans certaines versions de Thunderbird (128 - 136); Ceux-ci seront détectés comme des intégres"
     }
 }

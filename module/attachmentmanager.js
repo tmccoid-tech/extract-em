@@ -178,13 +178,20 @@ export class AttachmentManager {
 
         const folderInfo = await messenger.folders.getFolderInfo(folderParam);
 
-        this.#folderCounts.set(folder.path, folderInfo.totalMessageCount);
+        let { totalMessageCount } = folderInfo;
 
-        summary.messageCount += folderInfo.totalMessageCount;
+        if(folder.isVirtual && totalMessageCount == 0) {
+            totalMessageCount = await this.#getVirtualFolderMessageCount(folder);
+        }
+
+        this.#folderCounts.set(folder.path, totalMessageCount);
+
+        summary.messageCount += totalMessageCount;
 
         const result = {
             path: folder.path,
-            messageCount: folderInfo.totalMessageCount,
+            messageCount: totalMessageCount,
+            isVirtual: folder.isVirtual,
             subFolders: []
         };
 
@@ -193,6 +200,26 @@ export class AttachmentManager {
                 const subFolderSummaryInfo = await this.#queryFolder(subFolder, true, summary);
                 result.subFolders.push(subFolderSummaryInfo);
             }
+        }
+
+        return result;
+    }
+
+    async #getVirtualFolderMessageCount(folder) {
+        let result = 0;
+
+        const folderParam = this.#useMailFolderId
+            ? (folder.id) ? folder.id : folder.path             // folder.path in the case of virtual (Saved Search) folders
+            : folder;
+
+        let listResult = await messenger.messages.list(folderParam);
+
+        result += listResult.messages.length;
+
+        while(result.id) {
+            listResult = await messenger.messages.list(folderParam);
+
+            result += listResult.messages.length;
         }
 
         return result;
@@ -237,7 +264,9 @@ export class AttachmentManager {
     }
 
     async #processPages(folder) {
-        const folderParam = this.#useMailFolderId ? folder.id : folder;
+        const folderParam = this.#useMailFolderId
+            ? (folder.id) ? folder.id : folder.path             // folder.path in the case of virtual (Saved Search) folders
+            : folder;
 
         let page = await messenger.messages.list(folderParam);
 

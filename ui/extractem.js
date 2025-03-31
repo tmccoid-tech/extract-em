@@ -322,6 +322,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const updateProcessingComplete = async () => {
         if(useImmediateMode) {
+
+            // This is a hack for TB 115, in which messages.list() does not return any items for virtual (Saved Search) folders
+            if(immediateDiscoveryProgress.getAttribute("max") !== immediateDiscoveryProgress.value) {
+                immediateDiscoveryProgress.value = immediateDiscoveryProgress.getAttribute("max");
+            }
+            
             if(hasAttachments) {
                 extractImmediate();
             }
@@ -358,6 +364,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 selectedAttachmentSizeSpan.innerText = abbreviateFileSize(countInfo.selectedAttachmentSize);
                 attachmentListNavButton.disabled = false;
                 attachmentListNavButton.classList.remove("transparent");
+            }
+
+            // This is a hack for TB 115, in which messages.list() does not return any items for virtual (Saved Search) folders
+            if(discoverAttachmentsProgress.getAttribute("max") !== discoverAttachmentsProgress.value) {
+                discoverAttachmentsProgress.value = discoverAttachmentsProgress.getAttribute("max");
             }
 
             if(includeEmbedsCheckbox.checked) {
@@ -856,10 +867,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (parentPath) {
                 pathText = pathText.slice(parentPath.length);
-                spacer = ("&nbsp;&nbsp;&nbsp;&nbsp;").repeat(level);
+                spacer = ("\u00A0").repeat(level * 4);
             }
 
-            templateNode.querySelector(".spacer").innerHTML = spacer;
+            templateNode.querySelector(".spacer").textContent = spacer;
+
+            if(folder.isVirtual) {
+                const folderTd = templateNode.querySelector(".folder-td");
+                folderTd.classList.add("virtual");
+            }
 
             const folderSelectorButton = templateNode.querySelector(".folder-selector-button");
             folderSelectorButton.innerHTML = pathText;

@@ -649,5 +649,8 @@
     },
     "rn1_7_1_Fixed01": {
         "message": "I file non immaginati in linea non vengono scoperti in alcune versioni di Thunderbird (128 - 136); Questi saranno rilevati come incorpori"
+    },
+    "rn1_7_2_Fixed01": {
+        "message": "Cartelle di ricerca salvate escluse in modo improprio a causa di un numero errato di messaggi zero"
     }
 }

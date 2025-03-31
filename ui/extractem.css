@@ -277,6 +277,9 @@ td.summary-header {
 #stats-table tbody .folder-td {
     text-align: left;
 }
+#stats-table tbody .folder-td.virtual {
+    background-color: rgba(247, 202, 217, 0.651);
+}
 
 .processed-message-count-td.queued {
     background-color: rgba(147, 112, 219, 0.18);

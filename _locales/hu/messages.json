@@ -582,5 +582,8 @@
     },
     "rn1_7_1_Fixed01": {
         "message": "Az inline nem rögzített képeket nem fedezik fel a Thunderbird egyes verzióiban (128 - 136); Ezeket beágyazásként észlelik"
+    },
+    "rn1_7_2_Fixed01": {
+        "message": "A mentett keresési mappák helytelenül kizárva a helytelen nulla üzenetszám miatt"
     }
 }

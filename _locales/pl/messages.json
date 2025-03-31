@@ -649,5 +649,8 @@
     },
     "rn1_7_1_Fixed01": {
         "message": "W niektórych wersjach Thunderbird (128–136) nie odkryto plików nie -obrazowych (128–136); zostaną one wykryte jako osadzanie"
+    },
+    "rn1_7_2_Fixed01": {
+        "message": "Zapisane foldery wyszukiwania niewłaściwie wykluczone z powodu niepoprawnej zerowej liczby wiadomości"
     }
 }

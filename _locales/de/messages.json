@@ -649,5 +649,8 @@
     },
     "rn1_7_1_Fixed01": {
         "message": "In einigen Versionen von Thunderbird (128 - 136) werden nicht -image -Dateien nicht entdeckt. Diese werden als Einbettungen erkannt"
+    },
+    "rn1_7_2_Fixed01": {
+        "message": "Speicherte Suchordner aufgrund einer falschen Null -Nachrichtenanzahl unsachgemäß ausgeschlossen"
     }
 }

@@ -649,5 +649,8 @@
     },
     "rn1_7_1_Fixed01": {
         "message": "Los archivos sin imagen adjuntos en línea no se descubren en algunas versiones de Thunderbird (128 - 136); estos serán detectados como incrustaciones"
+    },
+    "rn1_7_2_Fixed01": {
+        "message": "Carpetas de búsqueda guardadas excluidas incorrectamente debido al recuento de mensajes cero incorrectos"
     }
 }

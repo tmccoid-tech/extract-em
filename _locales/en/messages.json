@@ -492,5 +492,8 @@
     },
     "rn1_7_1_Fixed01": {
         "message":  "Non-image files attached inline are not discovered in some versions of Thunderbird (128 - 136); these will be detected as embeds" 
+    },
+    "rn1_7_2_Fixed01": {
+        "message": "Saved Search folders improperly excluded due to incorrect zero message count"
     }
 }

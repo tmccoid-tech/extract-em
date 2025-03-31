@@ -80,12 +80,26 @@ export class OptionsManager {
         const message = `${context}: ${JSON.stringify(this.#options)}`;
     }
 
+    static #listTags;
+    static #createTag;
+    static #deleteTag;
+
+    static {
+        const { messages } = messenger;
+        const { tags } = messages;
+
+        this.#listTags = (tags) ? tags.list : messages.listTags;
+        this.#createTag = (tags) ? tags.create : messages.createTag;
+        this.#deleteTag = (tags) ? tags.delete : messages.deleteTag;
+    }
+
+    
     // Tagging management
 
     static tagging = {
         retrieveGlobalTag: async () => {
             const { title } = this.#globalTag;
-            const globalTagList = await messenger.messages.tags.list();
+            const globalTagList = await this.#listTags();
             
             const result = globalTagList.find((t) => t.tag == title);
 
@@ -111,7 +125,7 @@ export class OptionsManager {
 
                 tagKey = `ee~${uid}`;
 
-                await messenger.messages.tags.create(tagKey, title, color);
+                await this.#createTag(tagKey, title, color);
             }
 
             this.setOption("tagKey", tagKey);
@@ -121,7 +135,7 @@ export class OptionsManager {
             const globalTag = await this.tagging.retrieveGlobalTag();
             
             if(globalTag) {
-                await messenger.messages.tags.delete(globalTag.key);
+                await this.#deleteTag(globalTag.key);
             }
 
             this.setOption("tagKey", null);

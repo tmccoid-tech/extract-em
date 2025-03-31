@@ -649,5 +649,8 @@
     },
     "rn1_7_1_Fixed01": {
         "message": "Les fichiers non d'image joints en ligne ne sont pas découverts dans certaines versions de Thunderbird (128 - 136); Ceux-ci seront détectés comme des intégres"
+    },
+    "rn1_7_2_Fixed01": {
+        "message": "Enregistré les dossiers de recherche mal exclus en raison du nombre de messages zéro incorrect"
     }
 }

@@ -495,5 +495,8 @@
     },
     "rn1_7_2_Fixed01": {
         "message": "Saved Search folders improperly excluded due to incorrect zero message count"
+    },
+    "rn1_7_3_Fixed01": {
+        "message": "Improved folder structure preservation when Saved Search folders involved"
     }
 }

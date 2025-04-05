@@ -652,5 +652,8 @@
     },
     "rn1_7_2_Fixed01": {
         "message": "Zapisane foldery wyszukiwania niewłaściwie wykluczone z powodu niepoprawnej zerowej liczby wiadomości"
+    },
+    "rn1_7_3_Fixed01": {
+        "message": "Ulepszone zachowanie struktury folderów po zapisywaniu folderów wyszukiwania"
     }
 }

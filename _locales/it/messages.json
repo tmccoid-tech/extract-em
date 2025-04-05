@@ -652,5 +652,8 @@
     },
     "rn1_7_2_Fixed01": {
         "message": "Cartelle di ricerca salvate escluse in modo improprio a causa di un numero errato di messaggi zero"
+    },
+    "rn1_7_3_Fixed01": {
+        "message": "Preservazione della struttura delle cartelle migliorate quando sono coinvolte le cartelle di ricerca salvate"
     }
 }

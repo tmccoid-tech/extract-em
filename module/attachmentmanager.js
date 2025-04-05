@@ -372,7 +372,7 @@ export class AttachmentManager {
             const fullMessage = result.fullMessage;
 
             this.#log(`Generate alteration map: ${message.date} - ${message.subject}`);
-            const alterationMap = this.#generateAlterationMap(fullMessage.parts, message);
+            const alterationMap = this.#generateAlterationMap(fullMessage.parts, message, folderStats.folderPath);
 
             const fileTypeFilter = this.#fileTypeFilter;
 
@@ -437,6 +437,7 @@ export class AttachmentManager {
 
                 const attachmentInfo = {
                     messageId: message.id,
+                    folderPath: folderStats.folderPath,
                     originalFilename: attachment.name,
                     outputFilename: filename,
                     date: message.date,
@@ -464,6 +465,7 @@ export class AttachmentManager {
                     }
                     catch(e) {
                         alterationMap.set(attachmentInfo.partName, {
+                            folderPath: folderStats.folderPath,
                             originalFilename: attachmentInfo.originalFilename,
                             outputFilename: attachmentInfo.outputFilename,
                             alteration: "missing",
@@ -548,6 +550,7 @@ export class AttachmentManager {
                     for(const embed of embeds) {
                         let { filename, extension } = this.#processFileName(embed.originalFilename, embed.contentType);
 
+                        embed.folderPath = folderStats.folderPath;
                         embed.outputFilename = filename;
                         embed.extension = extension;
                         embed.charset = messageCharset;
@@ -629,7 +632,7 @@ export class AttachmentManager {
         };
     }
 
-    #generateAlterationMap(parts, message, alterationMap = new Map()) {
+    #generateAlterationMap(parts, message, folderPath, alterationMap = new Map()) {
         for(const part of parts) {
             this.#log(`Alteration map gen: ${part.partName}`);
 
@@ -660,6 +663,7 @@ export class AttachmentManager {
 
             if(alteration) {
                 const alterationEntry = {
+                    folderPath: folderPath,
                     originalFilename: part.name,
                     outputFilename: part.name,
                     alteration: alteration,
@@ -676,7 +680,7 @@ export class AttachmentManager {
             }
 
             if(part.parts) {
-                this.#generateAlterationMap(part.parts, message, alterationMap);
+                this.#generateAlterationMap(part.parts, message, folderPath, alterationMap);
             }
         }
 
@@ -862,6 +866,7 @@ export class AttachmentManager {
                         this.#duplicateFileTracker.push({
                             messageId: item.messageId,
                             partName: item.partName,
+                            folderPath: item.folderPath,
                             originalFilename: originalFilename,
                             outputFilename: item.outputFilename,
                             size: item.size,
@@ -994,6 +999,7 @@ export class AttachmentManager {
     
                     errorList.push({
                         messageId: item.messageId,
+                        folderPath: item.folderPath,
                         originalFilename: item.originalFilename,
                         outputFilename: item.outputFilename,
                         size: item.size,
@@ -1010,7 +1016,7 @@ export class AttachmentManager {
                     const errorInfo = { 
                         source: "#processMessage / browser.messages.getAttachmentFile",
                         rootMessageId: item.messageId,
-                        folder: rootMessage.folderPath,
+                        folder: item.folderPath,
                         author: rootMessage.author,
                         date: rootMessage.date,
                         subject: rootMessage.subject,
@@ -1022,25 +1028,10 @@ export class AttachmentManager {
                     continue;
                 }
     
-                let { outputFilename } = item;
+                const includeFolderPath = (packageAttachments && packagingTracker.preserveFolderStructure);
 
-                if(this.#useFilenamePattern && this.#filenamePattern) {
-                    outputFilename = this.#generateAlternateFilename(item)
-                    item.outputFilename = outputFilename;
-                }
-    
-                // Sequentialize the output filename, if necessary
-                outputFilename = this.#sequentializeFilename(this.#sequentialFilenameTracker, outputFilename);
-                item.outputFilename = outputFilename;
+                const outputFilename = this.#generateFinalOutputFilename(item, includeFolderPath, this.#sequentialFilenameTracker, storageProgressInfo);
 
-                storageProgressInfo.lastFileName = outputFilename;
-
-                // Add the path (TB folder hierarchy) if that option is selected
-                if(packageAttachments && packagingTracker.preserveFolderStructure) {
-                    const message = this.messageList.get(item.messageId);
-                    outputFilename = `${message.folderPath.slice(1)}/${outputFilename}`;
-                }
-    
                 // Attempt to save/package the attachment
                 try {
                     this.#log(`Packaging - add file to zip buffer: ${item.outputFilename}`);
@@ -1068,6 +1059,7 @@ export class AttachmentManager {
     
                     errorList.push({
                         messageId: item.messageId,
+                        folderPath: item.folderPath,
                         originalFilename: item.originalFilename,
                         outputFilename: item.outputFilename,
                         size: item.size,
@@ -1231,6 +1223,7 @@ export class AttachmentManager {
 
                     errorList.push({
                         messageId: item.messageId,
+                        folderPath: item.folderPath,
                         originalFilename: item.originalFilename,
                         outputFilename: item.outputFilename,
                         size: item.size,
@@ -1240,7 +1233,7 @@ export class AttachmentManager {
 
                     const message = this.messageList.get(item.messageId);
 
-                    this.#log(`Embed error: ${message.author} ${message.folderPath} - ${item.date} :${item.error}`, true);
+                    this.#log(`Embed error: ${message.author} ${item.folderPath} - ${item.date} :${item.error}`, true);
 
                     storageProgressInfo.errorCount = errorList.length;
 
@@ -1248,7 +1241,7 @@ export class AttachmentManager {
                     continue;
                 }
 
-                let { originalFilename, outputFilename } = item;
+                let { originalFilename } = item;
 
                 const decodeData = item.decodeData;
 
@@ -1288,26 +1281,12 @@ export class AttachmentManager {
                 // Unregistered original filename
                 else {
                     const checksumEntry = new Map([[decodeData.checksum, []]]);
-                    duplicateEmbedFileTracker.set(originalFilename, { count: 1, sizes: new Map([[item.size, checksumEntry]]) });
+                    duplicateEmbedFileTracker.set(originalFilename, { count: 1, folderPath: item.folderPath, sizes: new Map([[item.size, checksumEntry]]) });
                 }
 
-                // Modify the output filename if a pattern has been assigned
-                if(this.#useFilenamePattern && this.#filenamePattern) {
-                    outputFilename = this.#generateAlternateFilename(item);
-                    item.outputFilename = outputFilename;
-                }
+                const includeFolderPath = (packageAttachments && packagingTracker.preserveFolderStructure);
 
-                // Sequentialize the filename, if necessary
-                outputFilename = this.#sequentializeFilename(this.#sequentialEmbedFilenameTracker, outputFilename);
-                item.outputFilename = outputFilename;
-
-
-                storageProgressInfo.lastFileName = outputFilename;
-    
-                if(packageAttachments && packagingTracker.preserveFolderStructure) {
-                    const message = this.messageList.get(item.messageId);
-                    outputFilename = `${message.folderPath.slice(1)}/${outputFilename}`;
-                }
+                const outputFilename = this.#generateFinalOutputFilename(item, includeFolderPath, this.#sequentialEmbedFilenameTracker, storageProgressInfo);
 
                 try {
                     if(packageAttachments) {
@@ -1333,6 +1312,7 @@ export class AttachmentManager {
 
                     errorList.push({
                         messageId: item.messageId,
+                        folderPath: item.folderPath,
                         originalFilename: item.originalFilename,
                         outputFilename: item.outputFilename,
                         size: item.size,
@@ -1348,8 +1328,6 @@ export class AttachmentManager {
             }
 
             this.#reportStorageProgress(storageProgressInfo);
-
-//            packagingTracker.currentEmbedMessageIndex = i + 1;
         }
 
         if(packageAttachments) {
@@ -1502,6 +1480,7 @@ export class AttachmentManager {
             catch(e) {
                 this.#detachmentErrorList.push({
                     messageId: messageId,
+                    folderPath: items[0].folderPath,
                     originalFilename: info.lastFileName,
                     outputFilename: info.lastFileName,
                     size: cumulativeSize,
@@ -1550,6 +1529,28 @@ export class AttachmentManager {
         const attachmentFile = await browser.messages.getAttachmentFile(messageId, partName);
 
         return attachmentFile;
+    }
+
+    #generateFinalOutputFilename(item, includeFolderPath, sequentializationTracker, storageProgressInfo) {
+        let { outputFilename: result } = item;
+
+        if(this.#useFilenamePattern && this.#filenamePattern) {
+            result = this.#generateAlternateFilename(item)
+        }
+
+        // Add the path (TB folder hierarchy) if that option is selected
+        const folderPath = (includeFolderPath) ? item.folderPath.slice(1) + "/" : "";
+
+        // Sequentialize the output filename, if necessary
+        result = this.#sequentializeFilename(sequentializationTracker, result, folderPath);
+
+        item.outputFilename = result;
+
+        storageProgressInfo.lastFileName = result;
+
+        result = folderPath + result;
+
+        return result;
     }
 
     #generateAlternateFilename(item) {
@@ -1760,11 +1761,13 @@ export class AttachmentManager {
         return result;
     }
 
-    #sequentializeFilename(tracker, outputFilename) {
+    #sequentializeFilename(tracker, outputFilename, folderPath) {
         let result = outputFilename;
+
+        const outputFilepath = folderPath + outputFilename;
         
         let sequenceNumber = 1;
-        const duplicateKey = outputFilename.toLowerCase();
+        const duplicateKey = outputFilepath.toLowerCase();
 
         if(tracker.has(duplicateKey)) {
             sequenceNumber = tracker.get(duplicateKey) + 1;

@@ -652,5 +652,8 @@
     },
     "rn1_7_2_Fixed01": {
         "message": "Speicherte Suchordner aufgrund einer falschen Null -Nachrichtenanzahl unsachgemäß ausgeschlossen"
+    },
+    "rn1_7_3_Fixed01": {
+        "message": "Verbesserte Ordnerstruktur Erhaltung bei gespeicherten Suchordnern"
     }
 }

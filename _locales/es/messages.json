@@ -652,5 +652,8 @@
     },
     "rn1_7_2_Fixed01": {
         "message": "Carpetas de búsqueda guardadas excluidas incorrectamente debido al recuento de mensajes cero incorrectos"
+    },
+    "rn1_7_3_Fixed01": {
+        "message": "Preservación de la estructura de carpeta mejorada cuando se involucran carpetas de búsqueda involucradas"
     }
 }

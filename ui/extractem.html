@@ -286,7 +286,7 @@
         <div id="release-notes-close-panel">
             <button type="button" id="close-release-notes-button">__MSG_close__</button>
             <div class="release-notes-panel hidden" version="1.7">
-                <h4>__MSG_releaseNotesTitle__ 1.7.2</h4>
+                <h4>__MSG_releaseNotesTitle__ 1.7.3</h4>
                 <div class="notice-panel">
                     <ul>
                         <li>__MSG_rn1_7_1_Notice01__</li>
@@ -303,6 +303,7 @@
                 </ul>
                 <h4>__MSG_whatsFixed__</h4>
                 <ul>
+                    <li>[1.7.3] __MSG_rn1_7_3_Fixed01__</li>
                     <li>[1.7.2] __MSG_rn1_7_2_Fixed01__</li>
                     <li>[1.7.1] __MSG_rn1_7_1_Fixed01__</li>
                 </ul>
@@ -478,6 +479,7 @@
                 grid-template-columns: 48px 1fr 160px;
                 grid-template-areas:
                     "seq filename   filesize"
+                    "seq filepath   filepath"
                     "seq author     date"
                     "seq subject    time"
                     "seq special    special"
@@ -501,8 +503,19 @@
                 font-weight: bold;
             }
 
-            .original-filename-label {
+            .filepath-container {
+                grid-area: filepath;
+            }
+
+            .folder-path-label {
                 font-size: smaller;
+            }
+
+            .original-filename-label {
+                float: right;
+                font-size: smaller;
+                font-weight: bold;
+                color: red;
             }
 
             .original-filename-label.hidden {
@@ -628,8 +641,10 @@
             <div class="sequence-number"></div>
             <div class="filename-container">
                 <div class="output-filename-label"></div>
-                <div class="original-filename-label hidden"></div>
             </div>
+            <div class="filepath-container">
+                <span class="folder-path-label"></span>
+                <span class="original-filename-label hidden"></span></div>
             <div class="file-size-label"></div>
 
             <div class="author-label"></div>

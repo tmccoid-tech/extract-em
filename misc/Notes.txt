@@ -140,15 +140,17 @@ XXX Apply filtering to embeds
 
 XXX Inferred file Extension
 
-Differential extractions
+XXX Differential extractions
 
-	Enable message tagging
+	XXX Enable message tagging
 	
-	Reset
+	XXX Reset
 
-	Tag messages
+	XXX Tag messages
 
-	Omit duplicates mutually exclusive
+	XXX Omit duplicates mutually exclusive
+
+
 
 
 LQ

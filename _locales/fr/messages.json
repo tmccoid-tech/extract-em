@@ -652,5 +652,8 @@
     },
     "rn1_7_2_Fixed01": {
         "message": "Enregistré les dossiers de recherche mal exclus en raison du nombre de messages zéro incorrect"
+    },
+    "rn1_7_3_Fixed01": {
+        "message": "Amélioration de la conservation de la structure des dossiers lors de l'enregistrement des dossiers de recherche impliqués"
     }
 }

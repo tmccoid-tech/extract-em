@@ -85,6 +85,10 @@ export class ReportManager {
             reportItem.querySelector(".message-time-label").textContent = `${formatTimeElement(date.getHours())}:${formatTimeElement(date.getMinutes())}:${formatTimeElement(date.getSeconds())}`;
             reportItem.querySelector(".output-filename-label").textContent =  item.outputFilename;
             reportItem.querySelector(".file-size-label").textContent = abbreviateFileSize(item.size);
+            
+            if(item.folderPath) {
+                reportItem.querySelector(".folder-path-label").textContent = item.folderPath.slice(1);
+            }
 
             if(item.outputFilename !== item.originalFilename) {
                 const originalFilenameLabel = reportItem.querySelector(".original-filename-label");
@@ -200,11 +204,11 @@ export class ReportManager {
         if(duplicateEmbedFileTracker && duplicateEmbedFileTracker.size > 0) {
             let sequenceNumber = 0;
             generateSection(".duplicate-embed-table", (currentTable) => {
-                for(const filenameEntry of duplicateEmbedFileTracker.entries()) {
-                    for(const sizeEntry of filenameEntry[1].sizes.entries()) {
-                        for(const checksumEntry of sizeEntry[1].entries()) {
-                            for(const messageId of checksumEntry[1]) {
-                                const item =  { originalFilename: filenameEntry[0], outputFilename: filenameEntry[0], size: sizeEntry[0] };
+                for(const [filename, filenameEntry] of duplicateEmbedFileTracker.entries()) {
+                    for(const [size, sizeEntry] of filenameEntry.sizes.entries()) {
+                        for(const checksumEntry of sizeEntry.values()) {
+                            for(const messageId of checksumEntry) {
+                                const item =  { folderPath: filenameEntry.folderPath, originalFilename: filename, outputFilename: filename, size: size };
                                 currentTable.append(generateReportLineItem(reportItemContent, item, messageList.get(messageId), ++sequenceNumber));
                             }
                         }

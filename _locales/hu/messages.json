@@ -585,5 +585,8 @@
     },
     "rn1_7_2_Fixed01": {
         "message": "A mentett keresési mappák helytelenül kizárva a helytelen nulla üzenetszám miatt"
+    },
+    "rn1_7_3_Fixed01": {
+        "message": "Javított mappaszerkezet -megőrzés, ha mentett keresési mappákat"
     }
 }

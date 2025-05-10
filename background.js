@@ -1,17 +1,19 @@
-import { CapabilitiesManager } from "/module/capabilitiesmanager.js";
+import { CapabilitiesManager, selectionContexts } from "/module/capabilitiesmanager.js";
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
+import { i18nText } from "/module/i18nText.js";
 
-    const documentTitle = messenger.i18n.getMessage("extensionName");
+    const documentTitle = i18nText.extensionName;
 
-    let menuId = messenger.menus.create({
-        title: documentTitle,
-        contexts: [
-            "folder_pane",
-            "message_list"
-        ]
-    });
+    const { create } = messenger.menus;
+
+    const menuItems = new Map([
+        [ await create({ title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
+        [ await create({ title: i18nText.thisMessage, contexts: ["message_list"] }), selectionContexts.message ],
+        [ await create({ title: i18nText.selectedMessages, contexts: ["message_list"] }), selectionContexts.selected ],
+        [ await create({ title: i18nText.listedMessages, contexts: ["message_list"] }), selectionContexts.listed ]
+    ]);
 
     let params = null;
 
@@ -29,20 +31,18 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
             reportProcessingComplete: () =>
             {
                 attachmentManager.extract(attachmentManager.attachmentList,
-                    (attachment) => {
-                      return {
-                          messageId: attachment.messageId,
-                          partName: attachment.partName,
-                          timestamp: attachment.date
-                      };
-                    },
+                    (attachment) => ({
+                        messageId: attachment.messageId,
+                        partName: attachment.partName,
+                        timestamp: attachment.date
+                    }),
                     {
                         preserveFolderStructure: params.preserveFolderStructure,
                         includeEmbeds: extensionOptions.includeEmbeds,
                         packageAttachments: extensionOptions.packageAttachments,
                         tagMessages: extensionOptions.tagMessages
                     }
-                  );
+                );
             },
             
             reportSaveResult: updateSaveResult,
@@ -72,7 +72,10 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
         const discoveryOptions = {
             selectedFolderPaths: new Set(selectedFolderPaths),
             includeEmbeds: extensionOptions.includeEmbeds,
-            fileTypeFilter: fileTypeFilter
+            fileTypeFilter: fileTypeFilter,
+            selectionContext: params.selectionContext,
+            tabId: params.tabId,
+            selectedMessages: params.selectedMessages
         };
     
         attachmentManager.discoverAttachments(discoveryOptions);
@@ -91,8 +94,15 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
     function updateSaveResult (info)
     {
         if(info.status != "started") {
-            console.log(info.message);
-            messenger.menus.update(menuId, { enabled: true });
+            params = null;
+
+            toggleMenuEnablement(true);
+        }
+    }
+
+    function toggleMenuEnablement(enable) {
+        for(let menuId of menuItems.keys()) {
+            messenger.menus.update(menuId, { enabled: enable });
         }
     }
 
@@ -110,53 +120,79 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
         }
     });
 
-    messenger.menus.onClicked.addListener(async (info, tab) => {
-        if (info.menuItemId == menuId) {
-            if (!popupId) {
-                let accountId = null;
-                let selectedFolders = [];
-                let selectionContext = null;    // Possibly unnecessary
 
-                // If an account node has been selected...
-                if (info.selectedAccount) {
-                    accountId = info.selectedAccount.id;
-                    selectedFolders.push(...info.selectedAccount.folders);
-                    selectionContext = "account";
+    messenger.menus.onClicked.addListener(async (info, tab) => {
+        if(menuItems.has(info.menuItemId)) {
+            if (!popupId) {
+
+                const selectionContext = menuItems.get(info.menuItemId);
+
+                let accountId = null;
+                const selectedFolders = [];
+                let tabId;
+                let selectedMessages;
+
+                if(selectionContext == selectionContexts.folder) {
+
+                    // If an account node has been selected...
+                    if (info.selectedAccount) {
+                        accountId = info.selectedAccount.id;
+                        selectedFolders.push(...info.selectedAccount.folders);
+                        selectionContext = selectionContexts.account;
+                    }
+                    // If a folder node has been selected...
+                    else if (info.selectedFolder) {
+                        accountId = info.selectedFolder.accountId;
+                        selectedFolders.push(info.selectedFolder);
+                    }
                 }
-                // If a folder node has been selected...
-                else if (info.selectedFolder) {
-                    accountId = info.selectedFolder.accountId;
-                    selectedFolders.push(info.selectedFolder);
-                    selectionContext = "folder";
-                }
-                // If a message has been selected...
-                else if (info.displayedFolder) {
+                else {
                     accountId = info.displayedFolder.accountId;
                     selectedFolders.push(info.displayedFolder);
-                    selectionContext = "message";
+
+                    switch(selectionContext) {
+                        case selectionContexts.message:
+                            selectedMessages = info.selectedMessages.messages;
+                            break;
+    
+                        case selectionContexts.selected:
+                            tabId = tab.id;
+                            break;
+    
+                        case selectionContexts.listed:
+                            if(CapabilitiesManager.useGetListedMessages) {
+                                tabId = tab.id;
+                            }
+                            else {
+                                selectionContext = selectionContexts.folder;
+                            }
+
+                            break;
+                    }
                 }
 
-                if (selectedFolders.length > 0) {
-                    const extensionOptions = await OptionsManager.retrieve();
 
-                    //await TagManager.initializeGlobalTag();
+                if (selectedFolders.length > 0 || getMessages) {
+                    const extensionOptions = await OptionsManager.retrieve();
 
                     await OptionsManager.tagging.initializeGlobalTag();
 
                     params = {
                         accountId: accountId,
-                        selectedFolders: selectedFolders,
                         selectionContext: selectionContext,
+                        selectedFolders: selectedFolders,
+                        tabId: tabId,
+                        selectedMessages: selectedMessages,
                         preserveFolderStructure: extensionOptions.preserveFolderStructure,
-                        allowExtractImmediate: 
-                            extensionOptions.extractImmediate &&
-                            selectedFolders.length == 1 &&
-                            (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders)
+                        allowExtractImmediate: !!tabId || !!selectedMessages ||
+                            (extensionOptions.extractImmediate && (
+                                (selectionContext = menuTypes.main && selectedFolders.length == 1 && (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders))
+                            ))
                     };
 
-                    messenger.menus.update(menuId, { enabled: false });
+                    toggleMenuEnablement(false);
 
-                    if(extensionOptions.useSilentMode && params.allowExtractImmediate) {
+                    if(selectionContext == selectionContexts.message || (extensionOptions.useSilentMode && params.allowExtractImmediate)) {
                         params.extensionOptions = extensionOptions;
 
                         extractSilently(params);
@@ -181,6 +217,6 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
             params = null;
             popupId = null;
 
-            messenger.menus.update(menuId, { enabled: true });
+            toggleMenuEnablement(true);
         }
     });

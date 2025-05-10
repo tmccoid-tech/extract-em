@@ -1,2 +1,12 @@
 {
+    "thisMessage": {
+        "message": "This Message"
+    },
+    "selectedMessages": {
+        "message": "Selected Messages"
+    },
+    "listedMessages": {
+        "message": "Listed Messages"
+    }
+
 }

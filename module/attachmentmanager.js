@@ -3,6 +3,8 @@ import { EmbedManager } from "/module/embedmanager.js";
 import { SaveManager } from "/module/savemanager.js";
 import { i18nText } from "/module/i18nText.js";
 import { OptionsManager } from "/module/optionsmanager.js";
+import { selectionContexts } from "/module/capabilitiesmanager.js";
+
 
 export class AttachmentManager {
     #platformOs;
@@ -226,7 +228,8 @@ export class AttachmentManager {
     }
 
     async discoverAttachments(discoveryOptions) {
-        const { selectedFolderPaths, includeEmbeds, fileTypeFilter } = discoveryOptions;
+        const { selectedFolderPaths, includeEmbeds, fileTypeFilter,
+            selectionContext, tabId, selectedMessages } = discoveryOptions;
 
         this.#selectedFolderPaths = selectedFolderPaths;
         this.#includeEmbeds = includeEmbeds;
@@ -240,17 +243,35 @@ export class AttachmentManager {
             this.#processFolder(folder, selectedFolders);
         }
 
-        const queue = ((this.#silentModeInvoked)
-            ? selectedFolders
-            : selectedFolders.sort((a,b) => this.#folderCounts.get(a.path) - this.#folderCounts.get(b.path))
-        )
-        .values();
+        switch(selectionContext) {
+            case selectionContexts.message:
+                await this.#processPages(selectedFolders[0], () => ({ messages: selectedMessages }));
+                break;
+            case selectionContexts.selected:
+                await this.#processPages(selectedFolders[0], () => messenger.mailTabs.getSelectedMessages(tabId));
+                break;
+            case selectionContexts.listed:
+                await this.#processPages(selectedFolders[0], () => messenger.mailTabs.getListedMessages(tabId));
+                break;
+            default:
+                const folderQueue = ((this.#silentModeInvoked)
+                    ? selectedFolders
+                    : selectedFolders.sort((a,b) => this.#folderCounts.get(a.path) - this.#folderCounts.get(b.path))
+                )
+                .values();
 
-        Array(10).fill().forEach(async () => {
-            for(let item of queue) {
-                await this.#processPages(item);
-            }
-        });
+                Array(10).fill().forEach(async () => {
+                    for(let folder of folderQueue) {
+                        const folderParam = this.#useMailFolderId
+                            ? (folder.id) ? folder.id : folder.path             // folder.path in the case of virtual (Saved Search) folders
+                            : folder;
+
+                        await this.#processPages(folder, () => messenger.messages.list(folderParam));
+                    }
+                });
+    
+                break;
+        }
     }
 
     #processFolder(folder, selectedFolders) {
@@ -263,12 +284,8 @@ export class AttachmentManager {
         }
     }
 
-    async #processPages(folder) {
-        const folderParam = this.#useMailFolderId
-            ? (folder.id) ? folder.id : folder.path             // folder.path in the case of virtual (Saved Search) folders
-            : folder;
-
-        let page = await messenger.messages.list(folderParam);
+    async #processPages(folder, getPage) {
+        let page = await getPage();
 
         const folderStats = {
             folderPath: folder.path,

@@ -14,6 +14,7 @@ export class i18nText {
         "gbLabel",
         "imapDetachUnavailable",
         "kbLabel",
+        "listedMessages",
         "mbLabel",
         "missingAttachment",
         "noAttachmentsMessage",
@@ -22,7 +23,9 @@ export class i18nText {
         "resetMessageTagsConfirmationText",
         "saveCanceled",
         "saveComplete",
-        "saveFailed"
+        "saveFailed",
+        "selectedMessages",
+        "thisMessage"
     ];
 
     static {

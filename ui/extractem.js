@@ -1,4 +1,4 @@
-import { CapabilitiesManager } from "/module/capabilitiesmanager.js";
+import { CapabilitiesManager, selectionContexts } from "/module/capabilitiesmanager.js";
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { ReportManager } from "/module/reportmanager.js";
@@ -608,12 +608,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             i18n.updateDocument();
 
-            let displayQuickmenu = extensionOptions.displayQuickmenu && selectedFolders.length == 1;
+            const { selectionContext } = params;
+
+            let displayQuickmenu = extensionOptions.displayQuickmenu && selectedFolders.length == 1 && !(selectionContext == selectionContexts.selected || selectionContext == selectionContexts.listed);
             const extractImmediate = params.allowExtractImmediate;
 
-            const selectionContext = params.selectionContext;
 
-            if(selectionContext != "account" && !extensionOptions.isInitialized) {
+            if(!(selectionContext == selectionContexts.account || selectionContext == selectionContexts.selected || selectionContext == selectionContexts.listed) && !extensionOptions.isInitialized) {
                 quickmenuOptionLabel.classList.remove("invisible");
                 alwaysShowQuickmenuCheckbox.checked = extensionOptions.displayQuickmenu;
 
@@ -699,7 +700,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             else if(extractImmediate) {
                 const includeSubfolders = extensionOptions.includeSubfolders && selectedFolders[0].subFolders.length > 0;
-                invokeExtractImmediate({ includeSubfolders: includeSubfolders, hideCloseButton: true });
+                invokeExtractImmediate({
+                    includeSubfolders: includeSubfolders,
+                    hideCloseButton: true,
+                    selectionContext: selectionContext,
+                    tabId: params.tabId,
+                    selectedMessages: params.selectedMessages
+                });
             }
             else {
                 invokeStandardMode();
@@ -785,7 +792,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             const discoveryOptions = {
                 selectedFolderPaths: new Set(selectedFolderPaths),
                 includeEmbeds: extensionOptions.includeEmbeds,
-                fileTypeFilter: fileTypeFilter
+                fileTypeFilter: fileTypeFilter,
+                selectionContext: extractOptions.selectionContext,
+                tabId: extractOptions.tabId,
+                selectedMessages: extractOptions.selectedMessages,
             };
     
             attachmentManager.discoverAttachments(discoveryOptions);

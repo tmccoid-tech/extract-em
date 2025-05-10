@@ -18,6 +18,8 @@ export class CapabilitiesManager {
                 this.presentImapDetachmentNotice = (accountType) => {
                     return this.permitDetachment && accountType == "imap" && !this.#isSufficientVersion(appVersionNumbers, [136]);                    //  Account type is "imap" and TB < 136
                 };
+
+                this.useGetListedMessages = this.#isSufficientVersion(appVersionNumbers, [121]);                                                      //  >= TB 121
             });
     }
 
@@ -35,3 +37,12 @@ export class CapabilitiesManager {
         return true;
     }
 }
+
+export const selectionContexts = {
+    account: "account",
+    folder: " folder",
+    message: "message",
+    selected: "selected",
+    listed: "listed"
+};
+

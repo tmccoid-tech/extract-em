@@ -50,7 +50,7 @@ export class AttachmentManager {
     #reportMessageStats = async (folderStats) => {};
     #reportAttachmentStats = async (folderStats) => {};
     #reportFolderProcessed = async (folderPath) => {};
-    #reportProcessingComplete = async () => {};
+    #reportProcessingComplete = async (info) => {};
 
     #reportStorageProgress = async (info) => {};
     #reportSaveResult = async (info) => {};
@@ -147,7 +147,7 @@ export class AttachmentManager {
         this.#reportFolderProcessed({ folderPath: folderPath, processedFolderCount: ++this.#processedFolderCount });
 
         if (this.#processedFolderCount == this.#selectedFolderPaths.size) {
-            this.#reportProcessingComplete();
+            this.#reportProcessingComplete({ attachmentCount: this.#attachmentCount });
         }
     }
 

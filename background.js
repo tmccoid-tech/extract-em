@@ -8,9 +8,11 @@ import { i18nText } from "/module/i18nText.js";
 
     const { create } = messenger.menus;
 
+    const thisMessageMenuId = await create({ title: i18nText.thisMessage, contexts: ["message_list"] });
+
     const menuItems = new Map([
         [ await create({ title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
-        [ await create({ title: i18nText.thisMessage, contexts: ["message_list"] }), selectionContexts.message ],
+        [ thisMessageMenuId, selectionContexts.message ],
         [ await create({ title: i18nText.selectedMessages, contexts: ["message_list"] }), selectionContexts.selected ],
         [ await create({ title: i18nText.listedMessages, contexts: ["message_list"] }), selectionContexts.listed ]
     ]);
@@ -28,21 +30,34 @@ import { i18nText } from "/module/i18nText.js";
             folders: params.selectedFolders,
             silentModeInvoked: true,
 
-            reportProcessingComplete: () =>
+            reportProcessingComplete: (info) =>
             {
-                attachmentManager.extract(attachmentManager.attachmentList,
-                    (attachment) => ({
-                        messageId: attachment.messageId,
-                        partName: attachment.partName,
-                        timestamp: attachment.date
-                    }),
-                    {
-                        preserveFolderStructure: params.preserveFolderStructure,
-                        includeEmbeds: extensionOptions.includeEmbeds,
-                        packageAttachments: extensionOptions.packageAttachments,
-                        tagMessages: extensionOptions.tagMessages
-                    }
-                );
+                if(info.attachmentCount > 0) {
+                    attachmentManager.extract(attachmentManager.attachmentList,
+                        (attachment) => ({
+                            messageId: attachment.messageId,
+                            partName: attachment.partName,
+                            timestamp: attachment.date
+                        }),
+                        {
+                            preserveFolderStructure: params.preserveFolderStructure,
+                            includeEmbeds: extensionOptions.includeEmbeds,
+                            packageAttachments: extensionOptions.packageAttachments,
+                            tagMessages: extensionOptions.tagMessages
+                        }
+                    );
+                }
+                else {
+                    browser.windows.create({
+                        type: "popup",
+                        url: "/ui/prompt.html?messageKey=noAttachments",
+                        allowScriptsToClose: true,
+                        height: 300,
+                        width: 500
+                    });
+
+                    toggleMenuEnablement(true);
+                }
             },
             
             reportSaveResult: updateSaveResult,
@@ -91,7 +106,7 @@ import { i18nText } from "/module/i18nText.js";
         return result;
     }
 
-    function updateSaveResult (info)
+    function updateSaveResult(info)
     {
         if(info.status != "started") {
             params = null;
@@ -120,12 +135,21 @@ import { i18nText } from "/module/i18nText.js";
         }
     });
 
+    messenger.menus.onShown.addListener(async (info, tab) => {
+        if(!popupId && info.contexts.includes("message_list")) {
+            if(info.selectedMessages && info.selectedMessages.messages) {
+                await messenger.menus.update(thisMessageMenuId, { enabled: info.selectedMessages.messages.length == 1 });
+                messenger.menus.refresh();
+            }
+        }
+    });
+
 
     messenger.menus.onClicked.addListener(async (info, tab) => {
         if(menuItems.has(info.menuItemId)) {
             if (!popupId) {
 
-                const selectionContext = menuItems.get(info.menuItemId);
+                let selectionContext = menuItems.get(info.menuItemId);
 
                 let accountId = null;
                 const selectedFolders = [];
@@ -192,7 +216,7 @@ import { i18nText } from "/module/i18nText.js";
 
                     toggleMenuEnablement(false);
 
-                    if(selectionContext == selectionContexts.message || (extensionOptions.useSilentMode && params.allowExtractImmediate)) {
+                    if(extensionOptions.useSilentMode && params.allowExtractImmediate) {
                         params.extensionOptions = extensionOptions;
 
                         extractSilently(params);

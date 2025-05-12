@@ -150,7 +150,9 @@ XXX Differential extractions
 
 	XXX Omit duplicates mutually exclusive
 
+Context-menu invocation revision
 
+	Prevent (or alter) display of Release Notes when extract immediate invoked
 
 
 LQ

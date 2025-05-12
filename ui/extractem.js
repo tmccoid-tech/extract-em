@@ -320,7 +320,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    const updateProcessingComplete = async () => {
+    const updateProcessingComplete = async (info) => {
         if(useImmediateMode) {
 
             // This is a hack for TB 115, in which messages.list() does not return any items for virtual (Saved Search) folders
@@ -610,7 +610,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const { selectionContext } = params;
 
-            let displayQuickmenu = extensionOptions.displayQuickmenu && selectedFolders.length == 1 && !(selectionContext == selectionContexts.selected || selectionContext == selectionContexts.listed);
+            let displayQuickmenu = extensionOptions.displayQuickmenu && selectedFolders.length == 1 && !(selectionContext == selectionContexts.message || selectionContext == selectionContexts.selected || selectionContext == selectionContexts.listed);
             const extractImmediate = params.allowExtractImmediate;
 
 
@@ -683,7 +683,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 useMailFolderId: CapabilitiesManager.useMailFolderId
             });
 
-            if(CapabilitiesManager.extensionVersion !== extensionOptions.lastLoadedVersion) {
+            if(CapabilitiesManager.extensionVersion !== extensionOptions.lastLoadedVersion && !extractImmediate) {
                 closeReleaseNotesButton.addEventListener("click", closeReleaseNotes);
                 const releaseNotesPanel = document.querySelector(`.release-notes-panel[version^='${CapabilitiesManager.featureVersion}']`);
 

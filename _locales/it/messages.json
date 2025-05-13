@@ -41,7 +41,7 @@
         "description": "Etichetta per la casella di controllo persistenza del menu rapido"
     },
     "noAttachmentsMessage": {
-        "message": "Non ci sono allegati nella cartella selezionata.",
+        "message": "Non ci sono allegati nella cartella o nei messaggi selezionati.",
         "description": ""
     },
     "noMessagesMessage": {
@@ -655,5 +655,21 @@
     },
     "rn1_7_3_Fixed01": {
         "message": "Preservazione della struttura delle cartelle migliorate quando sono coinvolte le cartelle di ricerca salvate"
+    },
+
+    "thisMessage": {
+        "message": "Questo messaggio"
+    },
+    "selectedMessages": {
+        "message": "Messaggi selezionati"
+    },
+    "listedMessages": {
+        "message": "Messaggi elencati"
+    },
+    "rn1_8_1_Notice01": {
+        "message": "Le versioni di Thunderbird al di sotto di 115 non saranno più supportate."
+    },
+    "rn1_8_1_New01": {
+        "message": "L'apertura dell'estensione dall'elenco dei messaggi ora presenta le opzioni per l'estrazione da un singolo messaggio, messaggi selezionati o messaggi elencati. Si prega di rivedere la seguente discussione per i dettagli."
     }
 }

@@ -41,7 +41,7 @@
         "description": "Etiqueta para la casilla de verificación de persistencia del menú rápido"
     },
     "noAttachmentsMessage": {
-        "message": "No hay archivos adjuntos en la carpeta seleccionada.",
+        "message": "No hay archivos adjuntos en la carpeta o mensaje seleccionado.",
         "description": ""
     },
     "noMessagesMessage": {
@@ -655,5 +655,21 @@
     },
     "rn1_7_3_Fixed01": {
         "message": "Preservación de la estructura de carpeta mejorada cuando se involucran carpetas de búsqueda involucradas"
-    }
+    },
+
+    "thisMessage": {
+        "message": "Este mensaje"
+    },
+    "selectedMessages": {
+        "message": "Mensajes seleccionados"
+    },
+    "listedMessages": {
+        "message": "Mensajes listados"
+    },
+    "rn1_8_1_Notice01": {
+        "message": "Las versiones de Thunderbird por debajo de 115 ya no serán compatibles."
+    },
+    "rn1_8_1_New01": {
+        "message": "Abrir la extensión de la lista de mensajes ahora presenta opciones de extracción de un solo mensaje, mensajes seleccionados o mensajes enumerados. Revise la siguiente discusión para obtener más detalles."
+    }    
 }

@@ -41,7 +41,7 @@
         "description": "Etykieta pola wyboru trwałości szybkiego menu"
     },
     "noAttachmentsMessage": {
-        "message": "W wybranym folderze nie ma żadnych załączników.",
+        "message": "Nie ma załączników w wybranym folderze lub wiadomości.",
         "description": ""
     },
     "noMessagesMessage": {
@@ -655,5 +655,21 @@
     },
     "rn1_7_3_Fixed01": {
         "message": "Ulepszone zachowanie struktury folderów po zapisywaniu folderów wyszukiwania"
+    },
+
+    "thisMessage": {
+        "message": "Ta wiadomość"
+    },
+    "selectedMessages": {
+        "message": "Wybrane wiadomości"
+    },
+    "listedMessages": {
+        "message": "Wymienione wiadomości"
+    },
+    "rn1_8_1_Notice01": {
+        "message": "Wersje Thunderbird poniżej 115 nie będą już obsługiwane."
+    },
+    "rn1_8_1_New01": {
+        "message": "Otwarcie rozszerzenia z listy wiadomości przedstawia teraz opcje ekstrakcji z jednej wiadomości, wybranych wiadomości lub wymienionych wiadomości. Szczegółowe informacje należy przejrzeć następującą dyskusję."
     }
 }

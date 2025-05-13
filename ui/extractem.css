@@ -699,3 +699,11 @@ td.summary-header {
     border: solid 1px red;
     padding: 4px;
 }
+
+#flex-container.prompt {
+    justify-content: center;
+}
+
+.prompt-message-item {
+    text-align: center;
+}

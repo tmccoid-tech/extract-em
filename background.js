@@ -78,7 +78,9 @@ import { i18nText } from "/module/i18nText.js";
             useMailFolderId: CapabilitiesManager.useMailFolderId
         });
 
-        const selectedFolderPaths = assembleFolderPaths(params.selectedFolders[0]);
+        const selectedFolderPaths = (params.selectionContext == selectionContexts.folder && extensionOptions.includeSubfolders)
+            ? assembleFolderPaths(params.selectedFolders[0])
+            : [params.selectedFolders[0].path];
 
         const fileTypeFilter = (extensionOptions.useFileTypeFilter)
             ? FilterManager.assembleFileTypeFilter(extensionOptions)
@@ -208,15 +210,15 @@ import { i18nText } from "/module/i18nText.js";
                         tabId: tabId,
                         selectedMessages: selectedMessages,
                         preserveFolderStructure: extensionOptions.preserveFolderStructure,
-                        allowExtractImmediate: !!tabId || !!selectedMessages ||
-                            (extensionOptions.extractImmediate && (
-                                (selectionContext = menuTypes.main && selectedFolders.length == 1 && (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders))
-                            ))
+                        allowExtractImmediate: selectionContext !== selectionContexts.account && (
+                            selectionContext !== selectionContexts.folder ||
+                            (extensionOptions.extractImmediate && selectedFolders.length == 1 && (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders))
+                        )
                     };
 
                     toggleMenuEnablement(false);
 
-                    if(extensionOptions.useSilentMode && params.allowExtractImmediate) {
+                    if(extensionOptions.extractImmediate && extensionOptions.useSilentMode && params.allowExtractImmediate) {
                         params.extensionOptions = extensionOptions;
 
                         extractSilently(params);

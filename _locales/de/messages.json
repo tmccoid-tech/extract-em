@@ -41,7 +41,7 @@
         "description": "Beschriftung für das Kontrollkästchen „Quickmenu-Persistenz“."
     },
     "noAttachmentsMessage": {
-        "message": "Im ausgewählten Ordner sind keine Anhänge vorhanden.",
+        "message": "Es gibt keine Anhänge im ausgewählten Ordner oder die Nachricht(en).",
         "description": ""
     },
     "noMessagesMessage": {
@@ -655,5 +655,20 @@
     },
     "rn1_7_3_Fixed01": {
         "message": "Verbesserte Ordnerstruktur Erhaltung bei gespeicherten Suchordnern"
+    },
+    "thisMessage": {
+        "message": "Diese Nachricht"
+    },
+    "selectedMessages": {
+        "message": "Ausgewählte Nachrichten"
+    },
+    "listedMessages": {
+        "message": "Listete Nachrichten"
+    },
+    "rn1_8_1_Notice01": {
+        "message": "Thunderbird -Versionen unter 115 werden nicht mehr unterstützt."
+    },
+    "rn1_8_1_New01": {
+        "message": "Das Öffnen der Erweiterung aus der Nachrichtenliste zeigt jetzt Optionen für die Extraktion aus einer einzigen Nachricht, ausgewählten Nachrichten oder aufgelisteten Nachrichten. Bitte überprüfen Sie die folgende Diskussion für Einzelheiten."
     }
 }

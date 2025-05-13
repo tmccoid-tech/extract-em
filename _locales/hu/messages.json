@@ -37,7 +37,7 @@
     },
 
     "noAttachmentsMessage": {
-        "message": "Nincsenek mellékletek a kijelölt mappában.",
+        "message": "Nincsenek mellékletek a kiválasztott mappában vagy üzenet(ek).",
         "description": ""
     },
 
@@ -588,5 +588,21 @@
     },
     "rn1_7_3_Fixed01": {
         "message": "Javított mappaszerkezet -megőrzés, ha mentett keresési mappákat"
-    }
+    },
+
+    "thisMessage": {
+        "message": "Ez az üzenet"
+    },
+    "selectedMessages": {
+        "message": "Kiválasztott üzenetek"
+    },
+    "listedMessages": {
+        "message": "Felsorolt ​​üzenetek"
+    },
+    "rn1_8_1_Notice01": {
+        "message": "A 115 alatti Thunderbird verziókat már nem támogatják."
+    },
+    "rn1_8_1_New01": {
+        "message": "A kiterjesztés megnyitása az üzenetlistából most bemutatja az egyetlen üzenetből, kiválasztott üzenetből vagy a felsorolt ​​üzenetekből történő kinyerési lehetőségeket. Kérjük, olvassa el a részletekért a következő vitát."
+    }    
 }

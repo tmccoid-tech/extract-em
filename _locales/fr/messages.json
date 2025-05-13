@@ -40,8 +40,8 @@
         "message": "Toujours afficher ce menu rapide",
         "description": "Étiquette pour la case à cocher de persistance du menu rapide"
     },
-    "noAttachmentsMessage": {
-        "message": "Il n'y a aucune pièce jointe dans le dossier sélectionné.",
+"noAttachmentsMessage": {
+        "message": "Il n'y a pas de pièces jointes dans le dossier ou les messages sélectionnés.",
         "description": ""
     },
     "noMessagesMessage": {
@@ -655,5 +655,21 @@
     },
     "rn1_7_3_Fixed01": {
         "message": "Amélioration de la conservation de la structure des dossiers lors de l'enregistrement des dossiers de recherche impliqués"
-    }
+    },
+
+    "thisMessage": {
+        "message": "Ce message"
+    },
+    "selectedMessages": {
+        "message": "Messages sélectionnés"
+    },
+    "listedMessages": {
+        "message": "Messages répertoriés"
+    },
+    "rn1_8_1_Notice01": {
+        "message": "Les versions Thunderbird en dessous de 115 ne seront plus prises en charge."
+    },
+    "rn1_8_1_New01": {
+        "message": "L'ouverture de l'extension de la liste de messages présente désormais des options d'extraction à partir d'un seul message, de messages sélectionnés ou de messages répertoriés. Veuillez consulter la discussion suivante pour plus de détails."
+    }    
 }

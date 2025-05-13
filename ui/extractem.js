@@ -614,7 +614,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const extractImmediate = params.allowExtractImmediate;
 
 
-            if(!(selectionContext == selectionContexts.account || selectionContext == selectionContexts.selected || selectionContext == selectionContexts.listed) && !extensionOptions.isInitialized) {
+            if(selectionContext == selectionContexts.folder && !extensionOptions.isInitialized) {
                 quickmenuOptionLabel.classList.remove("invisible");
                 alwaysShowQuickmenuCheckbox.checked = extensionOptions.displayQuickmenu;
 

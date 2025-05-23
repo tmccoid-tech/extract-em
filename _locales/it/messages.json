@@ -671,5 +671,9 @@
     },
     "rn1_8_1_New01": {
         "message": "L'apertura dell'estensione dall'elenco dei messaggi ora presenta le opzioni per l'estrazione da un singolo messaggio, messaggi selezionati o messaggi elencati. Si prega di rivedere la seguente discussione per i dettagli."
+    },
+    
+    "rn1_8_2_Fixed01": {
+        "message": "Aggiunta graziosa gestione del fallimento permanente di distacco per i conti IMAP"
     }
 }

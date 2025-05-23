@@ -671,5 +671,9 @@
     },
     "rn1_8_1_New01": {
         "message": "L'ouverture de l'extension de la liste de messages présente désormais des options d'extraction à partir d'un seul message, de messages sélectionnés ou de messages répertoriés. Veuillez consulter la discussion suivante pour plus de détails."
-    }    
+    },
+
+    "rn1_8_2_Fixed01": {
+        "message": "Ajout d'une manipulation gracieuse de l'échec permanent des détachages pour les comptes IMAP"
+    }
 }

@@ -671,5 +671,9 @@
     },
     "rn1_8_1_New01": {
         "message": "Abrir la extensión de la lista de mensajes ahora presenta opciones de extracción de un solo mensaje, mensajes seleccionados o mensajes enumerados. Revise la siguiente discusión para obtener más detalles."
-    }    
+    },
+    
+    "rn1_8_2_Fixed01": {
+        "message": "Se agregó un manejo elegante de fallas permanentes para separar las cuentas IMAP"
+    }
 }

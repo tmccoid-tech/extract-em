@@ -604,5 +604,9 @@
     },
     "rn1_8_1_New01": {
         "message": "A kiterjesztés megnyitása az üzenetlistából most bemutatja az egyetlen üzenetből, kiválasztott üzenetből vagy a felsorolt ​​üzenetekből történő kinyerési lehetőségeket. Kérjük, olvassa el a részletekért a következő vitát."
-    }    
+    },
+    
+    "rn1_8_2_Fixed01": {
+        "message": "Hozzáadott kecses kezelhetőség az állandó leválasztási kudarchoz az IMAP -fiókokhoz"
+    }
 }

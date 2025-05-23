@@ -514,5 +514,9 @@
     },
     "rn1_8_1_New01" : {
         "message": "Opening the extension from the message list now presents options for extraction from a single message, selected messages, or listed messages. Please review the following discussion for details."
+    },
+
+    "rn1_8_2_Fixed01": {
+        "message": "Added graceful handling of Permanent Detach failure for IMAP accounts"
     }
 }

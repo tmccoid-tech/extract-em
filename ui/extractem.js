@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     var folderSummary;
     var selectedFolders;
     var hasAttachments = false;
-    var presentImapDetachmentNotice = false;
+    var useSpecialImapDetachmentHandling = false;
     let downloadLocations;
     let tagMessages = false;
 
@@ -511,7 +511,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0)) {
             permanentlyDetachButton.classList.add("hidden");
         }
-        else if(presentImapDetachmentNotice) {
+        else if(useSpecialImapDetachmentHandling) {
             imapDetachmentNoticePanel.classList.remove("hidden");
         }
 
@@ -525,7 +525,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const updateDetachProgress = async (info) => {
         if(info.status == "started") {
             detachmentProgress.setAttribute("max", info.totalItems);
-            permanentDetachTotalSpan.innerText = info.totalItems.toString();            
+            permanentDetachTotalSpan.innerText = info.totalItems.toString();
+            zipLogoImage.classList.add("rotating");
         }
         else {
             permanentDetachCurrentSpan.innerText = info.processedCount.toString();
@@ -535,11 +536,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     const updateDetachResult = async (info) => {
-        const success = (info.errorCount == 0);
-
+        zipLogoImage.classList.remove("rotating");
         lastFileNameDiv.innerText = "...";
-
         detachResultDiv.classList.add("materialize");
+
+        let success = info.errorCount == 0 ;
+
+        if(info.status == "failed") {
+            success = false;
+            info.errorCount = "1+";
+        }
 
         if(success) {
             detachResultLabel.innerHTML = i18nText.detachComplete;
@@ -592,7 +598,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const account = await messenger.accounts.get(params.accountId, false);
             document.title = `${i18nText.extensionName} (${account.name})`;
             zipAccountNameLabel.innerHTML = account.name;
-            presentImapDetachmentNotice = CapabilitiesManager.presentImapDetachmentNotice(account.type);
+            useSpecialImapDetachmentHandling = CapabilitiesManager.useSpecialImapDetachmentHandling(account.type);
         }
 
         selectedFolders = params?.selectedFolders;
@@ -680,7 +686,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 omitDuplicates: extensionOptions.omitDuplicates,
                 tagMessagesEnabled: extensionOptions.enableMessageTagging,
 
-                useMailFolderId: CapabilitiesManager.useMailFolderId
+                useMailFolderId: CapabilitiesManager.useMailFolderId,
+                useSpecialImapDetachmentHandling: useSpecialImapDetachmentHandling
             });
 
             if(CapabilitiesManager.extensionVersion !== extensionOptions.lastLoadedVersion && !extractImmediate) {

@@ -15,7 +15,7 @@ export class CapabilitiesManager {
 
                 this.permitReportTab = !this.#isSufficientVersion(appVersionNumbers, [134]);                                                          // < TB 134
                 
-                this.presentImapDetachmentNotice = (accountType) => {
+                this.useSpecialImapDetachmentHandling = (accountType) => {
                     return this.permitDetachment && accountType == "imap" && !this.#isSufficientVersion(appVersionNumbers, [136]);                    //  Account type is "imap" and TB < 136
                 };
 

@@ -68,7 +68,7 @@ var i18n = {
         }
 
         // If the target member is a property...
-        if(ownerElement[target] !== undefined) {
+        if(typeof ownerElement[target] !== undefined) {
           ownerElement[target] = value;
         }
         // Otherwise, assume it is an attribute

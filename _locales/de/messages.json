@@ -670,5 +670,9 @@
     },
     "rn1_8_1_New01": {
         "message": "Das Öffnen der Erweiterung aus der Nachrichtenliste zeigt jetzt Optionen für die Extraktion aus einer einzigen Nachricht, ausgewählten Nachrichten oder aufgelisteten Nachrichten. Bitte überprüfen Sie die folgende Diskussion für Einzelheiten."
+    },
+    
+    "rn1_8_2_Fixed01": {
+        "message": "Hinzugeschlagen"
     }
 }

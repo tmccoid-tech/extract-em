@@ -38,6 +38,7 @@ export class AttachmentManager {
     #tagMessages = false;
 
     #useMailFolderId = false;
+    #useSpecialImapDetachmentHandling = false;
 
     #fileTypeFilter = null;
 
@@ -141,6 +142,7 @@ export class AttachmentManager {
         this.#tagMessagesEnabled = options.tagMessagesEnabled;
 
         this.#useMailFolderId = options.useMailFolderId;
+        this.#useSpecialImapDetachmentHandling = options.useSpecialImapDetachmentHandling;
     }
 
     #onFolderProcessed(folderPath) {
@@ -1484,7 +1486,34 @@ export class AttachmentManager {
             this.#log(`Begin detach: ${message.author} ~ ${message.date} : ${info.lastFileName}`);
 
             try {
-                await messenger.messages.deleteAttachments(messageId, partNames);
+                if(this.#useSpecialImapDetachmentHandling) {
+                    const deleteSuccess = await Promise.race([
+                        (async () => {
+                            await messenger.messages.deleteAttachments(messageId, partNames);
+                            return true;
+                        })(),
+                        
+                        new Promise((resolve) => {
+                            setTimeout(() => {
+                                return resolve(false);
+                            }, 30000);
+                        })
+                    ])
+                    .then((success) =>
+                    {
+                        console.log(`Delete operation succeeded: ${success}`);
+
+                        return success;
+                    });
+
+                    if(!deleteSuccess) {
+                        info.status = "failed";
+                        break;
+                    }
+                }
+                else {
+                    await messenger.messages.deleteAttachments(messageId, partNames);
+                }
 
                 this.#log(`End detach: ${message.author} ~ ${message.date} : ${info.lastFileName}`);
 

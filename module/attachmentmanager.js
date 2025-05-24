@@ -1475,6 +1475,8 @@ export class AttachmentManager {
 
         this.#detachmentErrorList = [];
 
+        const { deleteAttachments } = messenger.messages;
+
         for(let [messageId, items] of attachmentGroupings) {
 
             info.lastFileName = items[0].originalFilename;
@@ -1488,23 +1490,11 @@ export class AttachmentManager {
             try {
                 if(this.#useSpecialImapDetachmentHandling) {
                     const deleteSuccess = await Promise.race([
-                        (async () => {
-                            await messenger.messages.deleteAttachments(messageId, partNames);
-                            return true;
-                        })(),
+                        deleteAttachments(messageId, partNames).then(() => true),
                         
-                        new Promise((resolve) => {
-                            setTimeout(() => {
-                                return resolve(false);
-                            }, 30000);
-                        })
+                        new Promise((resolve) => setTimeout(() => resolve(false), 30000))
                     ])
-                    .then((success) =>
-                    {
-                        console.log(`Delete operation succeeded: ${success}`);
-
-                        return success;
-                    });
+                    .then((success) => success);
 
                     if(!deleteSuccess) {
                         info.status = "failed";
@@ -1512,7 +1502,7 @@ export class AttachmentManager {
                     }
                 }
                 else {
-                    await messenger.messages.deleteAttachments(messageId, partNames);
+                    await deleteAttachments(messageId, partNames);
                 }
 
                 this.#log(`End detach: ${message.author} ~ ${message.date} : ${info.lastFileName}`);

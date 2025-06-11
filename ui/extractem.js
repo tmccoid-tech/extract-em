@@ -508,7 +508,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             viewReportButton.classList.remove("hidden");
         }
 
-        if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0)) {
+        if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0 && info.detachableCount > 0)) {
             permanentlyDetachButton.classList.add("hidden");
         }
         else if(useSpecialImapDetachmentHandling) {

@@ -1,2 +1,5 @@
 {
+    "encryptionExclusion": {
+        "message": "NOTE: Attachments from encrypted messages are excluded."
+    }
 }

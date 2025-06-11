@@ -525,6 +525,9 @@
     },
     "rn1_8_3_Fixed01": {
         "message": "Prevent deletion of encrypted email content during detachment"
-    }
+    },
 
+    "encryptionExclusion": {
+        "message": "NOTE: Attachments from encrypted messages are excluded."
+    }
 }

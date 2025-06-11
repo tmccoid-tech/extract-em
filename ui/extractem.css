@@ -687,7 +687,7 @@ td.summary-header {
 }
 
 #download-folders-item-container > div {
-    margin-top: 12px;
+    margin-top: 8px;
 }
 
 #close-release-notes-button, #close-download-folders-button {
@@ -698,6 +698,10 @@ td.summary-header {
     background-color: #ca444469;
     border: solid 1px red;
     padding: 4px;
+}
+
+#imap-detachment-notice {
+    margin-top: 8px;
 }
 
 #flex-container.prompt {

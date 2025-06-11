@@ -859,6 +859,7 @@ export class AttachmentManager {
             currentPackageIndex: 0,
             embedItems: [],
             totalEmbedMessageCount: 0,
+            detachableCount: 0,
             preserveFolderStructure: preserveFolderStructure,
             lastDownloadId: null,
             downloadLocations: new Map()
@@ -1012,6 +1013,8 @@ export class AttachmentManager {
             for(let i = currentItemIndex; i < subsetBoundary; i++) {
                 const item = packagingTracker.items[i];
 
+                const message = this.messageList.get(item.messageId);
+
                 item.hasError = false;
     
                 let attachmentFile;
@@ -1042,15 +1045,13 @@ export class AttachmentManager {
     
                     this.#reportStorageProgress(storageProgressInfo);
     
-                    const rootMessage = this.messageList.get(item.messageId);
-    
                     const errorInfo = { 
                         source: "#processMessage / browser.messages.getAttachmentFile",
                         rootMessageId: item.messageId,
                         folder: item.folderPath,
-                        author: rootMessage.author,
-                        date: rootMessage.date,
-                        subject: rootMessage.subject,
+                        author: message.author,
+                        date: message.date,
+                        subject: message.subject,
                         error: `${e}`
                     };
     
@@ -1082,6 +1083,10 @@ export class AttachmentManager {
     
                     storageProgressInfo.includedCount++;
                     storageProgressInfo.totalBytes += item.size;
+
+                    if(!message.isEncrypted) {
+                        packagingTracker.detachableCount++;
+                    }
     
                     item.packagingFilenameIndex = this.#packagingFilenameList.length;
                 }
@@ -1127,6 +1132,7 @@ export class AttachmentManager {
 
                     if(isFinal && !hasEmbeds) {
                         saveResult.attachmentCount = packagingTracker.items.length;
+                        saveResult.detachableCount = packagingTracker.detachableCount;
                         saveResult.downloadLocations = packagingTracker.downloadLocations;
 
                         this.#reportSaveResult(saveResult);
@@ -1156,6 +1162,7 @@ export class AttachmentManager {
                     status: "success",
                     message: i18nText.saveComplete,
                     attachmentCount: packagingTracker.items.length,
+                    detachableCount: packagingTracker.detachableCount,
                     downloadLocations: packagingTracker.downloadLocations                    
                 });
             }

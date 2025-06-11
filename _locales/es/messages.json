@@ -675,5 +675,12 @@
     
     "rn1_8_2_Fixed01": {
         "message": "Se agregó un manejo elegante de fallas permanentes para separar las cuentas IMAP"
+    },
+
+    "rn1_8_3_Notice01": {
+        "message": "Los archivos adjuntos incluidos en los correos electrónicos cifrados no son desmontables. En algunos casos, el contenido encriptado es tratado como un archivo adjunto por Thunderbird, lo que resulta en una eliminación no deseada de ese contenido; Esto ahora se evita."
+    },
+    "rn1_8_3_Fixed01": {
+        "message": "Evite la eliminación del contenido de correo electrónico cifrado durante el destacamento"
     }
 }

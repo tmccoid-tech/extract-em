@@ -340,7 +340,8 @@ export class AttachmentManager {
             folderPath: folderStats.folderPath,
             author: message.author,
             date: message.date,
-            subject: message.subject
+            subject: message.subject,
+            isEncrypted: false
         };
 
         const identifyAttachmentsResult = await this.#identifyAttachments(message, folderStats);
@@ -348,6 +349,8 @@ export class AttachmentManager {
         const hasEmbeds = await this.#identifyEmbeds(message, folderStats, identifyAttachmentsResult);
 
         if(identifyAttachmentsResult.hasAttachments || hasEmbeds) {
+            messageInfo.isEncrypted = identifyAttachmentsResult.isEncrypted;
+
             this.messageList.set(message.id, messageInfo);
         }
     }
@@ -356,7 +359,8 @@ export class AttachmentManager {
         const result = {
             hasAttachments: false,
             fullMessage: null,
-            omissionSet: new Set()
+            omissionSet: new Set(),
+            isEncrypted: false
         };
 
         let messageAttachmentList = [];
@@ -390,6 +394,9 @@ export class AttachmentManager {
             result.fullMessage = await messenger.messages.getFull(message.id);
             const fullMessage = result.fullMessage;
 
+            const { decryptionStatus } = fullMessage;
+            result.isEncrypted = (decryptionStatus && decryptionStatus !== "none");
+
             this.#log(`Generate alteration map: ${message.date} - ${message.subject}`);
             const alterationMap = this.#generateAlterationMap(fullMessage.parts, message, folderStats.folderPath);
 
@@ -401,7 +408,7 @@ export class AttachmentManager {
                 }
 
                 // If this is an embed, handle in the original manner
-                if(attachment.contentId){
+                if(attachment.contentId || result.isEncrypted) {
                     // Test that this actually IS an embed...
                     const getPart = (parentPart, partName) => {
                         let result = null;
@@ -426,12 +433,17 @@ export class AttachmentManager {
 
                     const attachmentPart = getPart(fullMessage, attachment.partName);
 
-                    if(attachmentPart && attachmentPart.headers) {
-                        const contentDisposition = attachmentPart.headers["content-disposition"];
-                        
-                        if(contentDisposition && contentDisposition.length > 0) {
-                            if(contentDisposition[0].startsWith("inline")) {
-                                continue;
+                    if(attachmentPart) {
+                        if(attachmentPart.contentType == "application/pgp-keys") {
+                            continue;
+                        }
+                        else if (attachmentPart.headers) {
+                            const contentDisposition = attachmentPart.headers["content-disposition"];
+                            
+                            if(contentDisposition && contentDisposition.length > 0) {
+                                if(contentDisposition[0].startsWith("inline")) {
+                                    continue;
+                                }
                             }
                         }
                     }
@@ -1449,9 +1461,30 @@ export class AttachmentManager {
         const packagedItems = this.#packagingTracker.items.filter((item) => !item.hasError);
         const duplicateItems = this.#duplicateFileTracker;
 
+        const attachmentGroupings = new Map();
+
+        let itemCount = 0;
+
+        for (let item of [...packagedItems, ...duplicateItems]) {
+            const { messageId } = item;           
+            const message = this.messageList.get(messageId);
+
+            if(!message.isEncrypted) {
+                if(attachmentGroupings.has(messageId)) {
+                    const items = attachmentGroupings.get(messageId);
+                    items.push(item);
+                }
+                else {
+                    attachmentGroupings.set(messageId, [item]);
+                }
+
+                itemCount++;
+            }
+        }
+
         const info = {
             status: "started",
-            totalItems: packagedItems.length + duplicateItems.length,
+            totalItems: itemCount,
             processedCount: 0,
             errorCount: 0,
             lastFileName: "..."
@@ -1460,18 +1493,6 @@ export class AttachmentManager {
         this.#reportDetachProgress(info);
 
         info.status = "executing";
-
-        const attachmentGroupings = new Map();
-
-        for (let item of [...packagedItems, ...duplicateItems]) {
-            if(attachmentGroupings.has(item.messageId)) {
-                const items = attachmentGroupings.get(item.messageId);
-                items.push(item);
-            }
-            else {
-                attachmentGroupings.set(item.messageId, [item]);
-            }
-        }
 
         this.#detachmentErrorList = [];
 

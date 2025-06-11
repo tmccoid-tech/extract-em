@@ -518,5 +518,13 @@
 
     "rn1_8_2_Fixed01": {
         "message": "Added graceful handling of Permanent Detach failure for IMAP accounts"
+    },
+
+    "rn1_8_3_Notice01": {
+        "message": "Attachments included in encrypted emails are not detachable. In some instances, encrypted content is treated as an attachment by Thunderbird, resulting in undesired deletion of that content; this is now prevented."
+    },
+    "rn1_8_3_Fixed01": {
+        "message": "Prevent deletion of encrypted email content during detachment"
     }
+
 }

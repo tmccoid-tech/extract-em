@@ -674,5 +674,12 @@
     
     "rn1_8_2_Fixed01": {
         "message": "Hinzugeschlagen"
+    },
+
+    "rn1_8_3_Notice01": {
+        "message": "In verschlüsselte E -Mails enthaltene Anhänge sind nicht abnehmbar. In einigen Fällen wird verschlüsselter Inhalte von Thunderbird als Anhang behandelt, was zu einer unerwünschten Löschung dieses Inhalts führt. Dies wird jetzt verhindert."
+    },
+    "rn1_8_3_Fixed01": {
+        "message": "Verhindern Sie die Löschung verschlüsselter E -Mail -Inhalte während der Ablösung"
     }
 }

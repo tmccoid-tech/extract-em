@@ -675,5 +675,12 @@
     
     "rn1_8_2_Fixed01": {
         "message": "Aggiunta graziosa gestione del fallimento permanente di distacco per i conti IMAP"
+    },
+
+    "rn1_8_3_Notice01": {
+        "message": "Gli allegati inclusi nelle e -mail crittografate non sono ridotti. In alcuni casi, il contenuto crittografato viene trattato come un allegato da Thunderbird, con conseguente cancellazione indesiderata di quel contenuto; Questo ora è prevenuto."
+    },
+    "rn1_8_3_Fixed01": {
+        "message": "Prevenire la cancellazione del contenuto e -mail crittografato durante il distacco"
     }
 }

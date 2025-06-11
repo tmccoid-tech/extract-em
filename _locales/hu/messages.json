@@ -608,5 +608,12 @@
     
     "rn1_8_2_Fixed01": {
         "message": "Hozzáadott kecses kezelhetőség az állandó leválasztási kudarchoz az IMAP -fiókokhoz"
+    },
+
+    "rn1_8_3_Notice01": {
+        "message": "A titkosított e -mailekben szereplő mellékletek nem leszerelhetők le. Egyes esetekben a titkosított tartalmat a Thunderbird mellékleteként kezelik, ami ennek a tartalomnak a nem kívánt törlését eredményezi; Ezt most megakadályozzák."
+    },
+    "rn1_8_3_Fixed01": {
+        "message": "A titkosított e -mail tartalom törlésének megakadályozása a leválasztás során"
     }
 }

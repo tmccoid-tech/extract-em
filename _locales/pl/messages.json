@@ -675,5 +675,12 @@
     
     "rn1_8_2_Fixed01": {
         "message": "Dodano pełne wdzięku obsługę stałej awarii odłączania rachunków IMAP"
+    },
+
+    "rn1_8_3_Notice01": {
+        "message": "Załączniki zawarte w zaszyfrowanych wiadomościach e -mail nie są odłączane. W niektórych przypadkach zaszyfrowana treść jest traktowana jako przywiązanie przez Thunderbird, co powoduje niepożądane usunięcie tej treści; To teraz zapobiega."
+    },
+    "rn1_8_3_Fixed01": {
+        "message": "Zapobiegaj usunięciu zaszyfrowanej treści e -mail podczas oddziału"
     }
 }

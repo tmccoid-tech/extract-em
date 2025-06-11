@@ -675,5 +675,12 @@
 
     "rn1_8_2_Fixed01": {
         "message": "Ajout d'une manipulation gracieuse de l'échec permanent des détachages pour les comptes IMAP"
+    },
+
+    "rn1_8_3_Notice01": {
+        "message": "Les pièces jointes incluses dans les e-mails cryptées ne sont pas détachables. Dans certains cas, le contenu chiffré est traité comme une attachement par Thunderbird, entraînant une suppression indésirable de ce contenu; Ceci est maintenant empêché."
+    },
+    "rn1_8_3_Fixed01": {
+        "message": "Empêcher la suppression du contenu des e-mails cryptés pendant le détachement"
     }
 }

@@ -43,7 +43,7 @@ import { i18nText } from "/module/i18nText.js";
                             preserveFolderStructure: params.preserveFolderStructure,
                             includeEmbeds: extensionOptions.includeEmbeds,
                             packageAttachments: extensionOptions.packageAttachments,
-                            tagMessages: extensionOptions.tagMessages
+                            tagMessages: extensionOptions.enableMessageTagging                  // Tag if enabled as .tagMessages not assignable in this context
                         }
                     );
                 }

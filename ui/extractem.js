@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     var hasAttachments = false;
     var useSpecialImapDetachmentHandling = false;
     let downloadLocations;
-    let tagMessages = false;
+    let isMessageListContext = false;
 
 //    var capabilities = new Capabilities();
     
@@ -616,7 +616,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const { selectionContext } = params;
 
-            let displayQuickmenu = extensionOptions.displayQuickmenu && selectedFolders.length == 1 && !(selectionContext == selectionContexts.message || selectionContext == selectionContexts.selected || selectionContext == selectionContexts.listed);
+            isMessageListContext = (selectionContext == selectionContexts.message || selectionContext == selectionContexts.selected || selectionContext == selectionContexts.listed);
+
+            let displayQuickmenu = extensionOptions.displayQuickmenu && selectedFolders.length == 1 && !isMessageListContext;
             const extractImmediate = params.allowExtractImmediate;
 
 
@@ -1222,7 +1224,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             packageAttachments: extensionOptions.packageAttachments,
             preserveFolderStructure: extensionOptions.preserveFolderStructure,
             includeEmbeds: includeEmbeds,
-            tagMessages: extensionOptions.tagMessages
+            tagMessages: extensionOptions.tagMessages || (extensionOptions.enableMessageTagging && isMessageListContext)
         });
     }
 

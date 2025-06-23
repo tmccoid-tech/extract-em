@@ -682,5 +682,9 @@
     },
     "rn1_8_3_Fixed01": {
         "message": "Zapobiegaj usunięciu zaszyfrowanej treści e -mail podczas oddziału"
+    },
+
+    "rn1_8_4_Fixed01": {
+        "message": "Znakowanie komunikatów prawidłowo zastosowane, gdy ekstrakcja wywołana z listy wiadomości"
     }
 }

@@ -681,5 +681,9 @@
     },
     "rn1_8_3_Fixed01": {
         "message": "Verhindern Sie die Löschung verschlüsselter E -Mail -Inhalte während der Ablösung"
+    },
+
+    "rn1_8_4_Fixed01": {
+        "message": "Ordnungsgemäß angewendetes Nachrichten -Tagging, wenn die Extraktion aus der Nachrichtenliste aufgerufen wird"
     }
 }

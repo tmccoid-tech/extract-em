@@ -682,5 +682,9 @@
     },
     "rn1_8_3_Fixed01": {
         "message": "Prevenire la cancellazione del contenuto e -mail crittografato durante il distacco"
+    },
+
+    "rn1_8_4_Fixed01": {
+        "message": "Tagging dei messaggi applicato correttamente quando l'estrazione è stata invocata dall'elenco dei messaggi"
     }
 }

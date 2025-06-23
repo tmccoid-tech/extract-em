@@ -529,5 +529,9 @@
 
     "encryptionExclusion": {
         "message": "NOTE: Attachments from encrypted messages are excluded."
+    },
+
+    "rn1_8_4_Fixed01": {
+        "message": "Message tagging properly applied when extraction invoked from the Message List"
     }
 }

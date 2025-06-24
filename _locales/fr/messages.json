@@ -686,5 +686,9 @@
 
     "rn1_8_4_Fixed01": {
         "message": "Le marquage de messages correctement appliqué lors de l'extraction invoquée à partir de la liste des messages"
+    },
+
+    "rn1_8_5_Fixed01": {
+        "message": "Prévention du calage lors de la découverte d'attachement dans certains contextes"
     }
 }

@@ -619,5 +619,9 @@
 
     "rn1_8_4_Fixed01": {
         "message": "Üzenet címkézés megfelelően alkalmazva, amikor az extrahálást az üzenetlistából meghívják"
+    },
+
+    "rn1_8_5_Fixed01": {
+        "message": "A ragaszkodás során az elakadás megelőzése bizonyos összefüggésekben"
     }
 }

@@ -685,5 +685,9 @@
 
     "rn1_8_4_Fixed01": {
         "message": "Ordnungsgemäß angewendetes Nachrichten -Tagging, wenn die Extraktion aus der Nachrichtenliste aufgerufen wird"
+    },
+
+    "rn1_8_5_Fixed01": {
+        "message": "Verhinderung des Stalls während der Entdeckung der Bindungen in bestimmten Kontexten"
     }
 }

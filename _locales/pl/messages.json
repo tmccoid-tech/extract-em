@@ -686,5 +686,9 @@
 
     "rn1_8_4_Fixed01": {
         "message": "Znakowanie komunikatów prawidłowo zastosowane, gdy ekstrakcja wywołana z listy wiadomości"
+    },
+
+    "rn1_8_5_Fixed01": {
+        "message": "Zapobieganie przeciągnięciu podczas odkrywania przywiązania w niektórych kontekstach"
     }
 }

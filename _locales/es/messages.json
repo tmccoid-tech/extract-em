@@ -690,5 +690,9 @@
 
     "rn1_8_5_Fixed01": {
         "message": "Prevención del estancamiento durante el descubrimiento de apego en ciertos contextos"
+    },
+
+    "rn1_8_6_Fixed01": {
+        "message": "La capacidad restaurada para separar permanentemente (accesorios estándar) cuando se selecciona la opción de inclusión de incrustaciones"
     }
 }

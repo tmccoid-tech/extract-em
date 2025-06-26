@@ -623,5 +623,9 @@
 
     "rn1_8_5_Fixed01": {
         "message": "A ragaszkodás során az elakadás megelőzése bizonyos összefüggésekben"
+    },
+
+    "rn1_8_6_Fixed01": {
+        "message": "Helyreállított képesség, hogy véglegesen leváljon (szabványos mellékletek), ha a beágyazás beágyazása van kiválasztva"
     }
 }

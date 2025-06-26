@@ -1384,6 +1384,7 @@ export class AttachmentManager {
 //                this.tagMessages(packagedMessageIds);
 
                 saveResult.attachmentCount = packagingTracker.items.length;
+                saveResult.detachableCount = packagingTracker.detachableCount;
                 saveResult.downloadLocations = packagingTracker.downloadLocations;
             }
 
@@ -1401,6 +1402,7 @@ export class AttachmentManager {
                 status: "success",
                 message: i18nText.saveComplete,
                 attachmentCount: packagingTracker.items.length,
+                detachableCount: packagingTracker.detachableCount,
                 downloadLocations: packagingTracker.downloadLocations
             });
         }

@@ -387,7 +387,7 @@ export class FilterManager {
             this.#dismissAddFileType(event);
         }
         else if(key == "Enter") {
-            if(value.length > 2) {
+            if(value.length > 1) {
                 const targetCategoryId = this.#elements.saveNewFileTypeButton.value;
                 this.#saveNewFileType(targetCategoryId);
             }
@@ -398,7 +398,7 @@ export class FilterManager {
         const { saveNewFileTypeButton } = this.#elements;
         const { value } = event.target;
 
-        saveNewFileTypeButton.disabled = (value.length < 3);
+        saveNewFileTypeButton.disabled = (value.length < 2);
     }
 
     static #onSaveNewFileTypeButtonClicked(event) {

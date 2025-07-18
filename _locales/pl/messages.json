@@ -420,7 +420,7 @@
         "message": "Dodaj typ"
     },
     "addTypeMessage": {
-        "message": "Wprowadź rozszerzenie pliku o długości 3-5 znaków (txt, csv itp.)."
+        "message": "Wprowadź rozszerzenie pliku o długości 2-5 znaków (txt, csv itp.)."
     },
     "bytesLabel": {
         "message": "bajty"

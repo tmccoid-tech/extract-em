@@ -427,7 +427,7 @@
         "message": "Típus hozzáadása"
     },
     "addTypeMessage": {
-        "message": "Adjon meg egy 3-5 karakteres fájlkiterjesztést (txt, csv stb.)."
+        "message": "Adjon meg egy 2-5 karakteres fájlkiterjesztést (txt, csv stb.)."
     },
     "rn1_4_1_New01": {
         "message": "Hozzáadott lehetőség egyéni eredményfájlnevek generálásához az e-mail tulajdonságaiból származó fájlnév-mintával"

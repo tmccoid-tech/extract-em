@@ -420,7 +420,7 @@
         "message": "Aggiungi tipo"
     },
     "addTypeMessage": {
-        "message": "Inserisci un'estensione file di 3-5 caratteri (txt, csv, ecc.)."
+        "message": "Inserisci un'estensione file di 2-5 caratteri (txt, csv, ecc.)."
     },
     "bytesLabel": {
         "message": "byte"

@@ -420,7 +420,7 @@
         "message": "Neuen Dateityp hinzufügen"
     },
     "addTypeMessage": {
-        "message": "Geben Sie eine Dateierweiterung mit 3-5 Zeichen ein z.B. txt, csv usw."
+        "message": "Geben Sie eine Dateierweiterung mit 2-5 Zeichen ein z.B. txt, csv usw."
     },
     "bytesLabel": {
         "message": "Bytes"

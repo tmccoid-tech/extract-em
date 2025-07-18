@@ -317,7 +317,7 @@
     "unknownFileType": { "message": "Unknown file type" },
     "unlistedFileTypes": { "message": "All file types not listed above" },
     "addType": { "message": "Add Type" },
-    "addTypeMessage": { "message": "Enter a 3-5 character file extension (txt, csv, etc)." },
+    "addTypeMessage": { "message": "Enter a 2-5 character file extension (txt, csv, etc)." },
 
     "bytesLabel": { "message": "bytes" },
     "kbLabel": { "message": "kB" },

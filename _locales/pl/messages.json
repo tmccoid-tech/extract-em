@@ -694,5 +694,18 @@
 
     "rn1_8_6_Fixed01": {
         "message": "Przywrócona zdolność do trwałego odłączania (standardowe załączniki), gdy wybrana jest opcja uwzględnienia opcji osadzania"
-    }
+    },
+
+    "enableExtractOnReceive": {
+        "message": "Włącz ekstrakt na odbiorcy"
+    },
+    "enableExtractOnReceiveDescription": {
+        "message": "Po otrzymaniu wiadomości załączniki są cicho wyodrębnione do bieżącego katalogu zapisu (patrz poniżej)"
+    },
+    "rn1_8_7_New01": {
+        "message": "Filtrowanie typu plików pozwala teraz na rozszerzenia plików na dwóch znakach (np. .GZ)"
+    },
+    "rn1_8_7_New02": {
+        "message": "Opcja/ustawienie Dodano, aby włączyć automatyczne ekstrakcję po otrzymaniu wiadomości"
+    }    
 }

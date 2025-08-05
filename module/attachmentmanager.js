@@ -4,6 +4,7 @@ import { SaveManager } from "/module/savemanager.js";
 import { i18nText } from "/module/i18nText.js";
 import { OptionsManager } from "/module/optionsmanager.js";
 import { selectionContexts } from "/module/capabilitiesmanager.js";
+import { api } from "/module/api.js";
 
 
 export class AttachmentManager {
@@ -154,7 +155,7 @@ export class AttachmentManager {
     }
 
     async getFolderSummary(includeSubfolders = true) {
-        const platformInfo = await messenger.runtime.getPlatformInfo();
+        const platformInfo = await api.getPlatformInfo();    // messenger.runtime.getPlatformInfo();
 
         this.#platformOs = platformInfo.os;
 
@@ -180,7 +181,7 @@ export class AttachmentManager {
 
         const folderParam = this.#useMailFolderId ? folder.id : folder;
 
-        const folderInfo = await messenger.folders.getFolderInfo(folderParam);
+        const folderInfo = await api.getFolderInfo(folderParam);     // messenger.folders.getFolderInfo(folderParam);
 
         let { totalMessageCount } = folderInfo;
 
@@ -213,15 +214,15 @@ export class AttachmentManager {
         let result = 0;
 
         const folderParam = this.#useMailFolderId
-            ? (folder.id) ? folder.id : folder.path             // folder.path in the case of virtual (Saved Search) folders
+            ? (folder.id) ? folder.id : folder.path               // folder.path in the case of virtual (Saved Search) folders
             : folder;
 
-        let listResult = await messenger.messages.list(folderParam);
+        let listResult = await api.listMessages(folderParam);    // messenger.messages.list(folderParam);
 
         result += listResult.messages.length;
 
         while(result.id) {
-            listResult = await messenger.messages.list(folderParam);
+            listResult = await api.listMessages(folderParam);    // messenger.messages.list(folderParam);
 
             result += listResult.messages.length;
         }
@@ -250,10 +251,10 @@ export class AttachmentManager {
                 await this.#processPages(selectedFolders[0], () => ({ messages: selectedMessages }));
                 break;
             case selectionContexts.selected:
-                await this.#processPages(selectedFolders[0], () => messenger.mailTabs.getSelectedMessages(tabId));
+                await this.#processPages(selectedFolders[0], () => api.getSelectedMessages(tabId));         //messenger.mailTabs.getSelectedMessages(tabId)
                 break;
             case selectionContexts.listed:
-                await this.#processPages(selectedFolders[0], () => messenger.mailTabs.getListedMessages(tabId));
+                await this.#processPages(selectedFolders[0], () => api.getListedMessages(tabId));           // messenger.mailTabs.getListedMessages(tabId)
                 break;
             default:
                 const folderQueue = ((this.#silentModeInvoked)
@@ -268,7 +269,7 @@ export class AttachmentManager {
                             ? (folder.id) ? folder.id : folder.path             // folder.path in the case of virtual (Saved Search) folders
                             : folder;
 
-                        await this.#processPages(folder, () => messenger.messages.list(folderParam));
+                        await this.#processPages(folder, () => api.listMessages(folderParam));              //messenger.messages.list(folderParam)
                     }
                 });
     
@@ -304,7 +305,7 @@ export class AttachmentManager {
         await this.#processPage(page, folderStats, true);
 
         while (page.id) {
-            page = await messenger.messages.continueList(page.id);
+            page = await api.continueList(page.id);    // messenger.messages.continueList(page.id);
 
             await this.#processPage(page, folderStats, false);
         }
@@ -364,15 +365,15 @@ export class AttachmentManager {
         };
 
         let messageAttachmentList = [];
-        
+
         try {
             this.#log(`List message attachments: ${message.date} - ${message.subject}`);
 
-            messageAttachmentList = await messenger.messages.listAttachments(message.id);
+            messageAttachmentList = await api.listAttachments(message.id);   // this.#execAsync(() => messenger.messages.listAttachments(message.id), 15000);
         }
         catch(e) {
             const errorInfo = { 
-                source: "#processMessage / messenger.messages.listAttachments",
+                source: "#identifyAttachments / messenger.messages.listAttachments",
                 messageId: message.id,
                 folder: folderStats.folderPath,
                 author: message.author,
@@ -391,7 +392,7 @@ export class AttachmentManager {
         if (messageAttachmentList.length > 0) {
             this.#log(`Get full message: ${message.date} - ${message.subject}`);
 
-            result.fullMessage = await messenger.messages.getFull(message.id);
+            result.fullMessage = await api.getFullMessage(message.id);  // this.#execAsync(() => messenger.messages.getFull(message.id), 15000);
             const fullMessage = result.fullMessage;
 
             const { decryptionStatus } = fullMessage;
@@ -466,6 +467,14 @@ export class AttachmentManager {
                     }
                 }
 
+                let charset = null;
+                // Test for non-standard charset for text/plain files
+                if(attachment.headers && attachment.contentType.startsWith("text/plain")) {
+                    let [contentTypeText] = attachment.headers["content-type"];
+
+                    charset = (/charset=[\"']?(?<charset>[A-Za-z0-9\-_:]+)/.exec(contentTypeText))?.groups?.charset;
+                }
+
                 const attachmentInfo = {
                     messageId: message.id,
                     folderPath: folderStats.folderPath,
@@ -474,6 +483,7 @@ export class AttachmentManager {
                     date: message.date,
                     partName: attachment.partName,
                     contentType: attachment.contentType,
+                    charset: charset,
                     size: attachment.size,
                     extension: extension,
                     isEmbed: false,
@@ -563,7 +573,7 @@ export class AttachmentManager {
             } = identifyAttachmentsResult;
 
             if(!fullMessage) {
-                fullMessage = await messenger.messages.getFull(message.id);
+                fullMessage = await api.getFullMessage(message.id);      // this.#execAsync(() => messenger.messages.getFull(message.id), 15000);
             }
 
             if(fullMessage.parts) {
@@ -1020,7 +1030,7 @@ export class AttachmentManager {
                 let attachmentFile;
     
                 try {
-                    this.#log(`Packaging - get attachment file: ${item.name}`);
+                    this.#log(`Packaging - get attachment file: ${item.originalFilename}`);
     
                     attachmentFile = await this.#getAttachmentFile(item.messageId, item.partName);
     
@@ -1063,7 +1073,14 @@ export class AttachmentManager {
                 const includeFolderPath = (packageAttachments && packagingTracker.preserveFolderStructure);
 
                 const outputFilename = this.#generateFinalOutputFilename(item, includeFolderPath, this.#sequentialFilenameTracker, storageProgressInfo);
-
+/*
+                if(item.charset) {
+                    attachmentFile = new File([ await attachmentFile.arrayBuffer() ], attachmentFile.name, {
+                        type: `text/plain;charset=${item.charset}`,
+                        lastModified: attachmentFile.lastModified
+                    });
+                }
+*/
                 // Attempt to save/package the attachment
                 try {
                     this.#log(`Packaging - add file to zip buffer: ${item.outputFilename}`);
@@ -1592,7 +1609,7 @@ export class AttachmentManager {
     }
 
     async #getAttachmentFile(messageId, partName) {
-        const attachmentFile = await browser.messages.getAttachmentFile(messageId, partName);
+        const attachmentFile = await api.getAttachmentFile(messageId, partName);   // browser.messages.getAttachmentFile(messageId, partName);
 
         return attachmentFile;
     }
@@ -1859,4 +1876,23 @@ export class AttachmentManager {
             console.log(message);
         }
     }
+/*
+    // Sets a timeout for async API functions which may not return in a timely fashion
+    #execAsync(execute, timeout = 30000) {
+        let timer;
+
+        const result = Promise.race([
+            execute(),
+            new Promise((_, abandon) => { timer = setTimeout(
+                () => abandon(`Operation abondoned after ${timeout} ms.`),
+                timeout
+            ); })
+        ])
+        .catch((error) => { throw new Error(error); })
+        .finally(() => clearTimeout(timer));
+
+        return result;
+    }
+
+*/
 }

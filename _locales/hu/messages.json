@@ -627,5 +627,18 @@
 
     "rn1_8_6_Fixed01": {
         "message": "Helyreállított képesség, hogy véglegesen leváljon (szabványos mellékletek), ha a beágyazás beágyazása van kiválasztva"
-    }
+    },
+
+    "enableExtractOnReceive": {
+        "message": "Engedélyezze a kivonatot a fogadáson"
+    },
+    "enableExtractOnReceiveDescription": {
+        "message": "Az üzenet átvétele után a mellékleteket csendben kinyerik az aktuális mentési könyvtárba (lásd alább)"
+    },
+    "rn1_8_7_New01": {
+        "message": "A fájl típusú szűrés most lehetővé teszi a két karakteres fájlkiterjesztéseket (például .gz)"
+    },
+    "rn1_8_7_New02": {
+        "message": "Opció/beállítás Hozzáadva az automatikus kinyerés engedélyezéséhez az üzenet átvételekor"
+    }    
 }

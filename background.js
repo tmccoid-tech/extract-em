@@ -3,18 +3,17 @@ import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { i18nText } from "/module/i18nText.js";
+import { api } from "/module/api.js";
 
     const documentTitle = i18nText.extensionName;
 
-    const { create } = messenger.menus;
-
-    const thisMessageMenuId = await create({ title: i18nText.thisMessage, contexts: ["message_list"] });
+    const thisMessageMenuId = await api.createMenu({ title: i18nText.thisMessage, contexts: ["message_list"] });
 
     const menuItems = new Map([
-        [ await create({ title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
+        [ await api.createMenu({ title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
         [ thisMessageMenuId, selectionContexts.message ],
-        [ await create({ title: i18nText.selectedMessages, contexts: ["message_list"] }), selectionContexts.selected ],
-        [ await create({ title: i18nText.listedMessages, contexts: ["message_list"] }), selectionContexts.listed ]
+        [ await api.createMenu({ title: i18nText.selectedMessages, contexts: ["message_list"] }), selectionContexts.selected ],
+        [ await api.createMenu({ title: i18nText.listedMessages, contexts: ["message_list"] }), selectionContexts.listed ]
     ]);
 
     let params = null;
@@ -32,7 +31,7 @@ import { i18nText } from "/module/i18nText.js";
 
             reportProcessingComplete: (info) =>
             {
-                if(info.attachmentCount > 0) {
+                if(info.attachmentCount > 0  && params.showZeroAttachmentsMessage) {
                     attachmentManager.extract(attachmentManager.attachmentList,
                         (attachment) => ({
                             messageId: attachment.messageId,
@@ -119,9 +118,31 @@ import { i18nText } from "/module/i18nText.js";
 
     function toggleMenuEnablement(enable) {
         for(let menuId of menuItems.keys()) {
-            messenger.menus.update(menuId, { enabled: enable });
+            api.updateMenu(menuId, { enabled: enable });
         }
     }
+
+    messenger.messages.onNewMailReceived.addListener(async (folder, messages) => {
+        const extensionOptions = await OptionsManager.retrieve();
+
+        if(extensionOptions.extractOnReceiveEnabled) {
+            extensionOptions.packageAttachments = false;
+            folder.subFolders = [];
+
+            params = {
+                accountId: folder.accountId,
+                selectionContext: selectionContexts.message,
+                selectedFolders: [folder],
+                tabId: null,
+                selectedMessages: messages.messages,
+                preserveFolderStructure: extensionOptions.preserveFolderStructure,
+                allowExtractImmediate: true,
+                extensionOptions: extensionOptions
+            };
+
+            extractSilently(params);
+        }
+    });
 
     messenger.runtime.onMessage.addListener((request, sender, respond) => {
         if(request && request.action) {
@@ -140,7 +161,7 @@ import { i18nText } from "/module/i18nText.js";
     messenger.menus.onShown.addListener(async (info, tab) => {
         if(!popupId && info.contexts.includes("message_list")) {
             if(info.selectedMessages && info.selectedMessages.messages) {
-                await messenger.menus.update(thisMessageMenuId, { enabled: info.selectedMessages.messages.length == 1 });
+                await api.updateMenu(thisMessageMenuId, { enabled: info.selectedMessages.messages.length == 1 });
                 messenger.menus.refresh();
             }
         }
@@ -203,6 +224,10 @@ import { i18nText } from "/module/i18nText.js";
 
                     await OptionsManager.tagging.initializeGlobalTag();
 
+                    if(selectionContext == selectionContexts.message) {
+                        extensionOptions.packageAttachments = false;
+                    }
+
                     params = {
                         accountId: accountId,
                         selectionContext: selectionContext,
@@ -220,6 +245,7 @@ import { i18nText } from "/module/i18nText.js";
 
                     if(extensionOptions.extractImmediate && extensionOptions.useSilentMode && params.allowExtractImmediate) {
                         params.extensionOptions = extensionOptions;
+                        params.showZeroAttachmentsMessage = true;
 
                         extractSilently(params);
                     }

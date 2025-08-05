@@ -693,5 +693,18 @@
 
     "rn1_8_6_Fixed01": {
         "message": "Wiederhergestellte Fähigkeit zur dauerhaften Ablösung (Standardanhänge), wenn die Option Einhöre eingeht, wird ausgewählt"
-    }
+    },
+
+    "enableExtractOnReceive": {
+        "message": "Aktivieren Sie den Extrakt auf Empfang"
+    },
+    "enableExtractOnReceiveDescription": {
+        "message": "Nach dem Eingang der Nachrichten werden Anhänge still an das aktuelle Save -Verzeichnis extrahiert (siehe unten)"
+    },
+    "rn1_8_7_New01": {
+        "message": "Die Filterung vom Typ Datei ermöglicht nun zwei-Charakter-Dateiverlängerungen (z. B. .gz)"
+    },
+    "rn1_8_7_New02": {
+        "message": "Option/Einstellung hinzugefügt, um die automatische Extraktion nach der Nachrichteneingang zu aktivieren"
+    }    
 }

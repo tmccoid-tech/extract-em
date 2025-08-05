@@ -1,4 +1,5 @@
 import { i18nText } from "/module/i18nText.js";
+import { api } from "/module/api.js";
 
 export class OptionsManager {
     static #defaultOptions = {
@@ -9,6 +10,7 @@ export class OptionsManager {
         extractImmediate: false,
         includeSubfolders: false,
         useSilentMode: false,
+        extractOnReceiveEnabled: false,
         
         // Discovery Options
         includeEmbeds: false,
@@ -146,14 +148,14 @@ export class OptionsManager {
         },
 
         tagMessage: async (messageId) => {
-            const message = await messenger.messages.get(messageId);
+            const message = await api.getMessage(messageId);  // messenger.messages.get(messageId);
 
             const { id, tags } = message;
     
             if(!this.tagging.isTagged(tags)) {
                 tags.push(this.#options.tagKey);
    
-                await messenger.messages.update(id, { tags: tags });
+                await api.updateMessage(id, { tags: tags });   // messenger.messages.update(id, { tags: tags });
             }
          }
     };

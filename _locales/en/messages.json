@@ -541,5 +541,18 @@
 
      "rn1_8_6_Fixed01": {
         "message": "Restored ability to Permanently Detach (standard attachments) when Include Embeds option is selected"
+    },
+
+    "enableExtractOnReceive": {
+        "message": "Enable extract on receive"
+    },
+    "enableExtractOnReceiveDescription": {
+        "message": "Upon message receipt, attachments are silently extracted to the current save directory (see below)"
+    },
+    "rn1_8_7_New01": {
+        "message": "File-type filtering now permits two-character file extensions (e.g., .gz)"
+    },
+    "rn1_8_7_New02": {
+        "message": "Option/setting added to enable automatic extraction upon message receipt"
     }
 }

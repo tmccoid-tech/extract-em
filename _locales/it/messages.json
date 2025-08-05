@@ -694,5 +694,18 @@
 
     "rn1_8_6_Fixed01": {
         "message": "La capacità ripristinata di staccare permanentemente (allegati standard) quando viene selezionata l'opzione Include Embeds"
-    }
+    },
+
+    "enableExtractOnReceive": {
+        "message": "Abilita estratto su ricezione"
+    },
+    "enableExtractOnReceiveDescription": {
+        "message": "Al momento della ricevuta del messaggio, gli allegati vengono estratti silenziosamente nella directory di salvataggio corrente (vedi sotto)"
+    },
+    "rn1_8_7_New01": {
+        "message": "Il filtraggio di tipo file ora consente estensioni di file a due caratteri (ad esempio, .gz)"
+    },
+    "rn1_8_7_New02": {
+        "message": "Opzione/Impostazione aggiunta per abilitare l'estrazione automatica al momento della ricevuta del messaggio"
+    }    
 }

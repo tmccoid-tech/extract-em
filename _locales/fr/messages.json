@@ -694,5 +694,18 @@
 
     "rn1_8_6_Fixed01": {
         "message": "Capacité restaurée à se détacher de façon permanente (pièces jointes standard) lorsque l'option d'inclusion d'inclusion est sélectionnée"
-    }
+    },
+
+    "enableExtractOnReceive": {
+        "message": "Activer l'extrait de réception"
+    },
+    "enableExtractOnReceiveDescription": {
+        "message": "Lors de la réception des messages, les pièces jointes sont extraites silencieusement dans le répertoire de sauvegarde actuel (voir ci-dessous)"
+    },
+    "rn1_8_7_New01": {
+        "message": "Le filtrage de type fichier permet désormais les extensions de fichiers à deux caractères (par exemple, .gz)"
+    },
+    "rn1_8_7_New02": {
+        "message": "Option / réglage ajouté pour activer l'extraction automatique lors de la réception des messages"
+    }    
 }

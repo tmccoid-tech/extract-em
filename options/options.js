@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const extractImmediateSubfoldersCheckbox = elem("extract-immediate-subfolders-checkbox");
     const useSilentModeCheckbox = elem("use-silent-mode-checkbox");
     const standardUiModeCheckbox = elem("standard-ui-mode-checkbox");
+    const enableExtractOnReceiveCheckbox = elem("enable-extract-on-receive-checkbox");
 
     // Discovery Options
     const includeEmbedsCheckbox = elem("include-embeds-checkbox");
@@ -66,12 +67,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(extractImmediateSubfoldersCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(useSilentModeCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
+        listen(enableExtractOnReceiveCheckbox, (e) => setOption(e, (c) => c.checked));
 
         displayQuickmenuCheckbox.checked = extensionOptions.displayQuickmenu;
         extractImmediateCheckbox.checked = extensionOptions.extractImmediate;
         extractImmediateSubfoldersCheckbox.checked = extensionOptions.includeSubfolders;
         useSilentModeCheckbox.checked = extensionOptions.useSilentMode;
         standardUiModeCheckbox.checked = !(extensionOptions.displayQuickmenu || extensionOptions.extractImmediate);
+        enableExtractOnReceiveCheckbox.checked = extensionOptions.extractOnReceiveEnabled;
 
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;

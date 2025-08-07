@@ -206,7 +206,7 @@ export class EmbedManager {
     }
 
     static async getFileText(messageId) {
-        const file = await api.getRawFile(messageId);  // messenger.messages.getRaw(messageId, { "data_format": "File" });
+        const file = await api.getRawMessageFile(messageId);  // messenger.messages.getRaw(messageId, { "data_format": "File" });
         const result = await file.text();
 
         return result;
@@ -218,7 +218,7 @@ export class EmbedManager {
             text: null
         };
 
-        const rawFile = await api.getRaw(messageId);  // messenger.messages.getRaw(messageId);
+        const rawFile = await api.getRawMessage(messageId);  // messenger.messages.getRaw(messageId);
 
         const buffer = new Uint8Array(rawFile.length);
 

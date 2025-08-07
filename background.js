@@ -3,17 +3,19 @@ import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { i18nText } from "/module/i18nText.js";
-import { api } from "/module/api.js";
+
 
     const documentTitle = i18nText.extensionName;
 
-    const thisMessageMenuId = await api.createMenu({ title: i18nText.thisMessage, contexts: ["message_list"] });
+    const { create } = messenger.menus;
+
+    const thisMessageMenuId = await create({ title: i18nText.thisMessage, contexts: ["message_list"] });
 
     const menuItems = new Map([
-        [ await api.createMenu({ title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
+        [ await create({ title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
         [ thisMessageMenuId, selectionContexts.message ],
-        [ await api.createMenu({ title: i18nText.selectedMessages, contexts: ["message_list"] }), selectionContexts.selected ],
-        [ await api.createMenu({ title: i18nText.listedMessages, contexts: ["message_list"] }), selectionContexts.listed ]
+        [ await create({ title: i18nText.selectedMessages, contexts: ["message_list"] }), selectionContexts.selected ],
+        [ await create({ title: i18nText.listedMessages, contexts: ["message_list"] }), selectionContexts.listed ]
     ]);
 
     let params = null;
@@ -31,7 +33,7 @@ import { api } from "/module/api.js";
 
             reportProcessingComplete: (info) =>
             {
-                if(info.attachmentCount > 0  && params.showZeroAttachmentsMessage) {
+                if(info.attachmentCount > 0) {
                     attachmentManager.extract(attachmentManager.attachmentList,
                         (attachment) => ({
                             messageId: attachment.messageId,
@@ -46,7 +48,7 @@ import { api } from "/module/api.js";
                         }
                     );
                 }
-                else {
+                else if(params.showZeroAttachmentsMessage) {
                     browser.windows.create({
                         type: "popup",
                         url: "/ui/prompt.html?messageKey=noAttachments",
@@ -118,7 +120,7 @@ import { api } from "/module/api.js";
 
     function toggleMenuEnablement(enable) {
         for(let menuId of menuItems.keys()) {
-            api.updateMenu(menuId, { enabled: enable });
+            messenger.menus.update(menuId, { enabled: enable });
         }
     }
 
@@ -161,7 +163,7 @@ import { api } from "/module/api.js";
     messenger.menus.onShown.addListener(async (info, tab) => {
         if(!popupId && info.contexts.includes("message_list")) {
             if(info.selectedMessages && info.selectedMessages.messages) {
-                await api.updateMenu(thisMessageMenuId, { enabled: info.selectedMessages.messages.length == 1 });
+                await messenger.menus.update(thisMessageMenuId, { enabled: info.selectedMessages.messages.length == 1 });
                 messenger.menus.refresh();
             }
         }

@@ -155,7 +155,7 @@ export class AttachmentManager {
     }
 
     async getFolderSummary(includeSubfolders = true) {
-        const platformInfo = await api.getPlatformInfo();    // messenger.runtime.getPlatformInfo();
+        const platformInfo = await messenger.runtime.getPlatformInfo();
 
         this.#platformOs = platformInfo.os;
 
@@ -181,7 +181,16 @@ export class AttachmentManager {
 
         const folderParam = this.#useMailFolderId ? folder.id : folder;
 
-        const folderInfo = await api.getFolderInfo(folderParam);     // messenger.folders.getFolderInfo(folderParam);
+        let folderInfo;
+
+        try {
+            folderInfo = await messenger.folders.getFolderInfo(folderParam);
+        }
+        catch {
+            folderInfo = { totalMessageCount: 0 };
+
+            console.log(`Error reading folder info: ${folderParam}`);
+        }
 
         let { totalMessageCount } = folderInfo;
 
@@ -214,18 +223,12 @@ export class AttachmentManager {
         let result = 0;
 
         const folderParam = this.#useMailFolderId
-            ? (folder.id) ? folder.id : folder.path               // folder.path in the case of virtual (Saved Search) folders
+            ? (folder.id) ? folder.id : folder.path                         // folder.path in the case of virtual (Saved Search) folders
             : folder;
 
-        let listResult = await api.listMessages(folderParam);    // messenger.messages.list(folderParam);
+        const { messages } = await api.getFolderMessages(folderParam);      // messenger.messages.list(folderParam);
 
-        result += listResult.messages.length;
-
-        while(result.id) {
-            listResult = await api.listMessages(folderParam);    // messenger.messages.list(folderParam);
-
-            result += listResult.messages.length;
-        }
+        result = messages.length;
 
         return result;
     }
@@ -269,7 +272,7 @@ export class AttachmentManager {
                             ? (folder.id) ? folder.id : folder.path             // folder.path in the case of virtual (Saved Search) folders
                             : folder;
 
-                        await this.#processPages(folder, () => api.listMessages(folderParam));              //messenger.messages.list(folderParam)
+                        await this.#processPages(folder, () => api.getFolderMessages(folderParam));              //messenger.messages.list(folderParam)
                     }
                 });
     
@@ -392,8 +395,28 @@ export class AttachmentManager {
         if (messageAttachmentList.length > 0) {
             this.#log(`Get full message: ${message.date} - ${message.subject}`);
 
-            result.fullMessage = await api.getFullMessage(message.id);  // this.#execAsync(() => messenger.messages.getFull(message.id), 15000);
-            const fullMessage = result.fullMessage;
+            try {
+                result.fullMessage = await api.getFullMessage(message.id);              // this.#execAsync(() => messenger.messages.getFull(message.id), 15000);
+            }
+            catch(e) {
+                const errorInfo = { 
+                    source: "#identifyAttachments / messenger.messages.getFull",
+                    messageId: message.id,
+                    folder: folderStats.folderPath,
+                    author: message.author,
+                    date: message.date,
+                    subject: message.subject,
+                    error: `${e}`
+                };
+
+                this.#log(errorInfo, true);
+
+                this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
+
+                return result;
+            }
+
+            const { fullMessage }  = result;
 
             const { decryptionStatus } = fullMessage;
             result.isEncrypted = (decryptionStatus && decryptionStatus !== "none");
@@ -573,7 +596,26 @@ export class AttachmentManager {
             } = identifyAttachmentsResult;
 
             if(!fullMessage) {
-                fullMessage = await api.getFullMessage(message.id);      // this.#execAsync(() => messenger.messages.getFull(message.id), 15000);
+                try {
+                    fullMessage = await api.getFullMessage(message.id);      // this.#execAsync(() => messenger.messages.getFull(message.id), 15000);
+                }
+                catch(e) {
+                    const errorInfo = { 
+                        source: "#identifyEmbeds / messenger.messages.getFull",
+                        messageId: message.id,
+                        folder: folderStats.folderPath,
+                        author: message.author,
+                        date: message.date,
+                        subject: message.subject,
+                        error: `${e}`
+                    };
+
+                    this.#log(errorInfo, true);
+
+                    this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
+
+                    return result;
+                }
             }
 
             if(fullMessage.parts) {

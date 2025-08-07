@@ -1,7 +1,7 @@
 export const api = (() =>
 {
     const {
-        menus, runtime,  folders, messages, mailTabs
+       messages, mailTabs
     } = messenger;
 
     // Sets a timeout for async API functions which may not return in a timely fashion
@@ -22,19 +22,10 @@ export const api = (() =>
     };
 
     return {
-        createMenu: (options) =>
-            execAsync(() => menus.create(options)),
 
-        updateMenu: (menuId, options) =>
-            execAsync(() => menus.update(menuId, options)),
+        // Message listing
 
-        getPlatformInfo: () =>
-            execAsync(runtime.getPlatformInfo),
-
-        getFolderInfo: (folderParam) =>
-            execAsync(() => folders.getFolderInfo(folderParam), 10000),
-
-        listMessages: (folderParam) =>
+        getFolderMessages: (folderParam) =>
             execAsync(() => messages.list(folderParam), 20000),
 
         getSelectedMessages: (tabId) =>
@@ -46,8 +37,7 @@ export const api = (() =>
         continueList: (pageId) =>
             execAsync(() => messages.continueList(pageId), 20000),
 
-        listAttachments: (messageId) =>
-            execAsync(() => messages.listAttachments(messageId), 10000),
+        // Individual message operations
 
         getMessage: (messageId) =>
             execAsync(() => messages.get(messageId), 10000),
@@ -55,16 +45,22 @@ export const api = (() =>
         getFullMessage: (messageId) =>
             execAsync(() => messages.getFull(messageId), 10000),
 
-        getRaw: (messageId) =>
+        getRawMessage: (messageId) =>
             execAsync(() => messages.getRaw(messageId), 15000),
 
-        getRawFile: (messageId) =>
+        getRawMessageFile: (messageId) =>
             execAsync(() => messages.getRaw(messageId, { "data_format": "File" }), 15000),
 
         updateMessage: (messageId, options) => 
             execAsync(() => messages.update(messageId, options)),
 
+        // Attachment operations
+
+        listAttachments: (messageId) =>
+            execAsync(() => messages.listAttachments(messageId), 10000),
+
         getAttachmentFile: (messageId, partName) =>
             execAsync(() => browser.messages.getAttachmentFile(messageId, partName), 15000)
+        
     };    
 })();

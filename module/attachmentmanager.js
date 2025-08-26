@@ -971,7 +971,8 @@ export class AttachmentManager {
                             originalFilename: originalFilename,
                             outputFilename: item.outputFilename,
                             size: item.size,
-                            isDeleted: false
+                            isDeleted: false,
+                            isInline: item.isInline
                         });
 
                         storageProgressInfo.duplicateCount++;

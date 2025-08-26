@@ -187,6 +187,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const detachShowFilesButton = elem("detach-show-files-button");
     const detachViewReportButton = elem("detach-view-report-button");
     const detachExitExtensionButton = elem("detach-exit-extension-button");
+
+    const detachNoticesDiv = elem("detach-notices-div");
     const imapDetachmentNoticePanel = elem("imap-detachment-notice");
     const detachIncludeInlineNoticePanel = elem("detach-include-inline-notice");
 
@@ -1328,7 +1330,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function proceedDetach(includeInline) {
-        imapDetachmentNoticePanel.classList.add("hidden");
+//        imapDetachmentNoticePanel.classList.add("hidden");
+        detachNoticesDiv.classList.add("hidden");
         detachActionButtonsDiv.classList.add("hidden");
         detachOperationRow.classList.add("materialize");
 
@@ -1707,6 +1710,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         showFilesButton.classList.add("hidden");
         viewReportButton.classList.add("hidden");
+
+        detachNoticesDiv.classList.remove("hidden");
 
         document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = true; });            
     }

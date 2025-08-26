@@ -186,6 +186,7 @@ export class EmbedManager {
                                             size: null,
                                             extension: "--",
                                             isEmbed: true,
+                                            isInline: true,
                                             isPreviewable: false,
                                             isDuplicate: false
                                         };

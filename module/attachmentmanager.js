@@ -41,6 +41,8 @@ export class AttachmentManager {
     #useMailFolderId = false;
     #useSpecialImapDetachmentHandling = false;
 
+    #useLegacyEmbedIdentification = false;
+
     #fileTypeFilter = null;
 
     messageList = new Map();
@@ -144,6 +146,8 @@ export class AttachmentManager {
 
         this.#useMailFolderId = options.useMailFolderId;
         this.#useSpecialImapDetachmentHandling = options.useSpecialImapDetachmentHandling;
+
+        this.#useLegacyEmbedIdentification = options.useLegacyEmbedIdentification;
     }
 
     #onFolderProcessed(folderPath) {
@@ -431,7 +435,9 @@ export class AttachmentManager {
                     continue;
                 }
 
-                // If this is an embed, handle in the original manner
+                let isInline = false;
+
+                // If this is an embed, handle in the original manner (if pre-TB 140)
                 if(attachment.contentId || result.isEncrypted) {
                     // Test that this actually IS an embed...
                     const getPart = (parentPart, partName) => {
@@ -466,7 +472,10 @@ export class AttachmentManager {
                             
                             if(contentDisposition && contentDisposition.length > 0) {
                                 if(contentDisposition[0].startsWith("inline")) {
-                                    continue;
+                                    if(this.#useLegacyEmbedIdentification)
+                                        continue;
+
+                                    isInline = true;
                                 }
                             }
                         }
@@ -510,6 +519,7 @@ export class AttachmentManager {
                     size: attachment.size,
                     extension: extension,
                     isEmbed: false,
+                    isInline: isInline,
                     isPreviewable: this.#previewSet.has(extension)
                 };
     
@@ -930,11 +940,18 @@ export class AttachmentManager {
 
         let cumulativeSize = 0;
 
-        // Segregate embedded/inline imags, determine selected items and identify/isolate attachment duplicates
+        // Segregate embedded/inline images, determine selected items and identify/isolate attachment duplicates
 
         const omitDuplicates = this.#omitDuplicates;
 
-        for(const item of this.attachmentList) {
+        let { attachmentList } = this;
+        
+        if(!this.#useLegacyEmbedIdentification) {
+            // Sort by by isInline, preferring standard attachments (isInline == false)
+            attachmentList.sort((a, b) => Number(a.isInline) - Number(b.isInline));
+        }
+
+        for(const item of attachmentList) {
             if(selectedItemKeys.has(`${item.messageId}:${item.partName}`)) {
                 if(item.isEmbed) {
                     if(includeEmbeds) {
@@ -1525,9 +1542,19 @@ export class AttachmentManager {
         }
     }
 
-    async deleteAttachments() {
-        const packagedItems = this.#packagingTracker.items.filter((item) => !item.hasError);
-        const duplicateItems = this.#duplicateFileTracker;
+    async deleteAttachments(includeInline) {
+        const filter = (includeInline)
+            ? (item) => !item.hasError
+            : (item) => !(item.isInline || item.hasError)
+        ;
+        
+        const packagedItems = this.#packagingTracker.items.filter(filter);
+        
+        let duplicateItems = this.#duplicateFileTracker;
+        
+        if(!includeInline) {
+            duplicateItems = duplicateItems.filter((item) => !item.isInline);
+        }
 
         const attachmentGroupings = new Map();
 
@@ -1918,23 +1945,4 @@ export class AttachmentManager {
             console.log(message);
         }
     }
-/*
-    // Sets a timeout for async API functions which may not return in a timely fashion
-    #execAsync(execute, timeout = 30000) {
-        let timer;
-
-        const result = Promise.race([
-            execute(),
-            new Promise((_, abandon) => { timer = setTimeout(
-                () => abandon(`Operation abondoned after ${timeout} ms.`),
-                timeout
-            ); })
-        ])
-        .catch((error) => { throw new Error(error); })
-        .finally(() => clearTimeout(timer));
-
-        return result;
-    }
-
-*/
 }

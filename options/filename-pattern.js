@@ -1,14 +1,15 @@
 export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
 
-(function() {
+(function(document) {
     document.addEventListener("DOMContentLoaded", async () => {
         const validCharRegex = /^[\w- ]{1}$/i;
         const tokenRegex = /\{(sender|author|mm-dd-yyyy|dd-mm-yyyy|yyyy-mm-dd|dd.mm.yyyy|yyyy.mm.dd|yyyymmdd|timestamp|filename|subject)\}/gi;
         const sourceTokenRegex = /\{(sender|author)\}/gi;
         const dateFormatTokenRegex = /\{(mm-dd-yyyy|dd-mm-yyyy|yyyy-mm-dd|dd.mm.yyyy|yyyy.mm.dd|yyyymmdd)\}/gi;
 
-        const elem = (id) => { return document.getElementById(id) };
+        const domParser = new DOMParser();
 
+        const elem = (id) => { return document.getElementById(id) };
 
         const fpTextbox = elem("fp-textbox");
 
@@ -169,7 +170,13 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
                 .replace(subjectCheckbox.value, subjectSampleText)
             ;
 
-            sampleResultPanel.innerHTML = (sampleLabelText) ? `${sampleLabelText}.ext` : "--";
+//            sampleResultPanel.innerHTML = (sampleLabelText) ? `${sampleLabelText}.ext` : "--";
+
+//            const sampleText = `<div>${(sampleLabelText) ? `${sampleLabelText}.ext` : "--"}</div>`;
+//            sampleResultPanel.replaceChild(document.createRange().createContextualFragment(sampleText), sampleResultPanel.firstElementChild);
+
+            const sampleText = `<html><body><div>${(sampleLabelText) ? `${sampleLabelText}.ext` : "--"}</div></body></html>`;
+            sampleResultPanel.replaceChild(domParser.parseFromString(sampleText, "text/html").body.firstElementChild, sampleResultPanel.firstElementChild);
         }
 
         function onTextChanged(event) {
@@ -423,4 +430,4 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
             return false;
         }
     });
-})();
+})(document);

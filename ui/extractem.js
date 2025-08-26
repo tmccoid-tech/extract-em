@@ -175,6 +175,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const detachTable = elem("detach-table");
     const detachActionButtonsDiv = elem("detach-action-buttons-div");
     const proceedDetachButton = elem("proceed-detach-button");
+    const proceedDetachIncludeInlineButton = elem("proceed-detach-include-inline-button");
     const cancelDetachButton = elem("cancel-detach-button");
     const permanentDetachCurrentSpan = elem("permanent-detach-current-span");
     const permanentDetachTotalSpan = elem("permanent-detach-total-span");
@@ -187,6 +188,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const detachViewReportButton = elem("detach-view-report-button");
     const detachExitExtensionButton = elem("detach-exit-extension-button");
     const imapDetachmentNoticePanel = elem("imap-detachment-notice");
+    const detachIncludeInlineNoticePanel = elem("detach-include-inline-notice");
 
     const reportStyleTemplate = elem("report-style-template");
     const reportTemplate = elem("report-template");
@@ -478,8 +480,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         zipLogoImage.classList.remove("rotating");
 
-        saveResultLabel.innerHTML = info.message;
-        lastFileNameDiv.innerText = "...";
+        // saveResultLabel.innerHTML = info.message;        
+        saveResultLabel.textContent = info.message;
+        lastFileNameDiv.textContent = "...";
 
         document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });
 
@@ -497,7 +500,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 detachShowFilesButton.value = "*";
             }
 
-            downloadFoldersItemContainer.innerHTML = "";
+            // downloadFoldersItemContainer.innerHTML = "";
+            clearElementChildren(downloadFoldersItemContainer);
 
             const extractedItemsText = i18nText.extractedItems;
     
@@ -549,10 +553,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         if(success) {
-            detachResultLabel.innerHTML = i18nText.detachComplete;
+            // detachResultLabel.innerHTML = i18nText.detachComplete;
+            detachResultLabel.textContent = i18nText.detachComplete;
         }
         else {
-            detachResultLabel.innerHTML =i18nText.detachErrorMessage;
+            // detachResultLabel.innerHTML =i18nText.detachErrorMessage;
+            detachResultLabel.textContent = i18nText.detachErrorMessage;
             detachErrorCountSpan.innerText = info.errorCount.toString();
         }
 
@@ -562,9 +568,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     function updateDiscoveryProgressMessage(attachmentCount = 0, attachmentMessageCount = 0 , messageCount = 0, cumulativeAttachmentSize = 0, embedCount = 0) {
-        immediateDiscoveryProgressMessageDiv.innerHTML = messenger.i18n.getMessage("discoveryProgressMessage", [attachmentCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
+        // immediateDiscoveryProgressMessageDiv.innerHTML = messenger.i18n.getMessage("discoveryProgressMessage", [attachmentCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
+        immediateDiscoveryProgressMessageDiv.textContent = messenger.i18n.getMessage("discoveryProgressMessage", [attachmentCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
         immediateDiscoveredEmbedsSpan.innerText = embedCount.toString();
-        discoverySizeLabel.innerHTML = abbreviateFileSize(cumulativeAttachmentSize);
+        // discoverySizeLabel.innerHTML = abbreviateFileSize(cumulativeAttachmentSize);
+        discoverySizeLabel.textContent = abbreviateFileSize(cumulativeAttachmentSize);
     }
 
     
@@ -575,7 +583,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         exitExtensionButton.addEventListener("click", (event) => { window.close(); });
         
         permanentlyDetachButton.addEventListener("click", displayPermanentDetachPanel);
-        proceedDetachButton.addEventListener("click", proceedDetach);
+        proceedDetachButton.addEventListener("click", () => proceedDetach(false));
+        proceedDetachIncludeInlineButton.addEventListener("click", () => proceedDetach(true));
         cancelDetachButton.addEventListener("click", cancelDetach);
         detachExitExtensionButton.addEventListener("click", (event) => { window.close(); });
 
@@ -598,7 +607,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(params?.accountId) {
             const account = await messenger.accounts.get(params.accountId, false);
             document.title = `${i18nText.extensionName} (${account.name})`;
-            zipAccountNameLabel.innerHTML = account.name;
+            // zipAccountNameLabel.innerHTML = account.name;
+            zipAccountNameLabel.textContent = account.name;
             useSpecialImapDetachmentHandling = CapabilitiesManager.useSpecialImapDetachmentHandling(account.type);
         }
 
@@ -636,6 +646,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if(CapabilitiesManager.permitDetachment) {
                 detachOperationRow.classList.remove("hidden");
+            }
+
+            if(!CapabilitiesManager.useLegacyEmbedIdentification) {
+                proceedDetachIncludeInlineButton.classList.remove("hidden");
+                detachIncludeInlineNoticePanel.classList.remove("hidden");
             }
 
             if(extensionOptions.includeEmbeds) {
@@ -690,7 +705,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 tagMessagesEnabled: extensionOptions.enableMessageTagging,
 
                 useMailFolderId: CapabilitiesManager.useMailFolderId,
-                useSpecialImapDetachmentHandling: useSpecialImapDetachmentHandling
+                useSpecialImapDetachmentHandling: useSpecialImapDetachmentHandling,
+
+                useLegacyEmbedIdentification: CapabilitiesManager.useLegacyEmbedIdentification
             });
 
             if(CapabilitiesManager.extensionVersion !== extensionOptions.lastLoadedVersion && !extractImmediate) {
@@ -901,7 +918,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             const folderSelectorButton = templateNode.querySelector(".folder-selector-button");
-            folderSelectorButton.innerHTML = pathText;
+            // folderSelectorButton.innerHTML = pathText;
+            folderSelectorButton.textContent = pathText;
             folderSelectorButton.value = folder.path;
             folderSelectorButton.addEventListener("click", onFolderSelectorButtonClick);
 
@@ -1125,7 +1143,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             else if(attachment.isEmbed) {
                 previewWrapper.classList.add(defaultImagePreview);
-                previewWrapper.innerHTML = "embed";
+                // previewWrapper.innerHTML = "embed";
+                previewWrapper.textContent = "embed";
             }
             else {
                 previewWrapper.classList.add("none");
@@ -1285,9 +1304,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     function updateZipDiscoveryInfo(selectedAttachmentCount, selectedAttachmentSize, selectedEmbedCount) {
         immediateDiscoveryProgress.value = 1;
         const attachmentCounts = attachmentManager.getAttachmentCounts();
-        discoverySelectionMessageDiv.innerHTML = messenger.i18n.getMessage("discoverySelectionMessage", [selectedAttachmentCount.toString(), attachmentCounts.attachmentCount.toString()]);
-        embedDiscoverySelectionMessageDiv.innerHTML =  messenger.i18n.getMessage("embedDiscoverySelectionMessage", [selectedEmbedCount.toString(), attachmentCounts.embedCount.toString()]);
-        discoverySizeLabel.innerHTML = abbreviateFileSize(selectedAttachmentSize);
+        // discoverySelectionMessageDiv.innerHTML = messenger.i18n.getMessage("discoverySelectionMessage", [selectedAttachmentCount.toString(), attachmentCounts.attachmentCount.toString()]);
+        // embedDiscoverySelectionMessageDiv.innerHTML =  messenger.i18n.getMessage("embedDiscoverySelectionMessage", [selectedEmbedCount.toString(), attachmentCounts.embedCount.toString()]);
+        // discoverySizeLabel.innerHTML = abbreviateFileSize(selectedAttachmentSize);
+        discoverySelectionMessageDiv.textContent = messenger.i18n.getMessage("discoverySelectionMessage", [selectedAttachmentCount.toString(), attachmentCounts.attachmentCount.toString()]);
+        embedDiscoverySelectionMessageDiv.textContent =  messenger.i18n.getMessage("embedDiscoverySelectionMessage", [selectedEmbedCount.toString(), attachmentCounts.embedCount.toString()]);
+        discoverySizeLabel.textContent = abbreviateFileSize(selectedAttachmentSize);
+
     }
 
     function displayPermanentDetachPanel() {
@@ -1304,12 +1327,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         saveResultDiv.classList.remove("hidden");
     }
 
-    function proceedDetach() {
+    function proceedDetach(includeInline) {
         imapDetachmentNoticePanel.classList.add("hidden");
         detachActionButtonsDiv.classList.add("hidden");
         detachOperationRow.classList.add("materialize");
 
-        attachmentManager.deleteAttachments();
+        attachmentManager.deleteAttachments(includeInline);
     }
 
     function resetProgressElement(element) {
@@ -1325,7 +1348,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             selectionInvoked = false;
             attachmentListNavButton.classList.add("transparent");
             attachmentListNavButton.disabled = true;
-            attachmentListDiv.innerHTML = "";
+            // attachmentListDiv.innerHTML = "";
+            clearElementChildren(attachmentListDiv);
             selectedAttachmentCountSpan.innerText = "0";
             selectedAttachmentSizeSpan.innerText = abbreviateFileSize();
             includeEmbedsCheckbox.disabled = false;
@@ -1342,7 +1366,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         summaryAttachmentSizeSpan.innerText = abbreviateFileSize();
         summaryEmbedCountSpan.innerText = "0";
 
-        statsSummaryTBody.innerHTML = "";
+        // statsSummaryTBody.innerHTML = "";
+        clearElementChildren(statsSummaryTBody);
 
         folderRowSet.clear();
 
@@ -1565,6 +1590,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         downloadFoldersItemContainer.appendChild(downloadFolderItem);
     }
+    
+    function clearElementChildren(parentElement) {
+        while (parentElement.hasChildNodes()) {
+            parentElement.removeChild(parentElement.firstChild);
+        }
+
+        parentElement.textContent = "";
+    }
 
     async function generateReport(event) {
         const saveResult = await ReportManager.generateReport(attachmentManager, {
@@ -1666,7 +1699,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         detachResultLabel.innerText = "";
         detachErrorCountSpan.innerText = "0";
 
-        downloadFoldersItemContainer.innerHTML = "";
+        // downloadFoldersItemContainer.innerHTML = "";
+        clearElementChildren(downloadFoldersItemContainer);
+
         showFilesButton.value = "";
         detachShowFilesButton.value = "";
 

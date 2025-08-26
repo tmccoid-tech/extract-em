@@ -155,6 +155,14 @@ Context-menu invocation revision
 	Prevent (or alter) display of Release Notes when extract immediate invoked
 
 
+1.8.8 changes
+
+-- Embeds now considered attachments for TB 140+
+-- Embeds now detachable for TB 140+
+-- Adjusted position of filename pattern editor (options)
+
+
+
 LQ
 
 XXX where

@@ -78,12 +78,11 @@ export class FilterManager {
             elements.secondaryEditButton.addEventListener("click", (e) => this.#displayEditor(e));
         }
 
-        const templatesContainer = document.createElement("template");
+        const templateSource = new DOMParser().parseFromString(await (await fetch("/module/filtering/filtertemplate.html")).text(), "text/html").body;
 
-        templatesContainer.innerHTML = await (await fetch("/module/filtering/filtertemplate.html")).text();
+        const mainTemplate = templateSource.querySelector("#filter-file-type-editor-template");
 
-        const mainTemplate = templatesContainer.content.getElementById("filter-file-type-editor-template");
-        this.#fileTypeControlTemplate = templatesContainer.content.getElementById("file-type-control-template");
+        this.#fileTypeControlTemplate = templateSource.querySelector("#file-type-control-template");
 
         const editorPanel = mainTemplate.content.cloneNode(true);
 
@@ -308,7 +307,7 @@ export class FilterManager {
 
         const fileTypeList = this.assembleFileTypeList();
 
-        menuFileTypeList.innerHTML = fileTypeList;
+        menuFileTypeList.textContent = fileTypeList;
         if(this.#hasSecondaryControls) {
             secondaryFileTypeList.title = fileTypeList;
         }

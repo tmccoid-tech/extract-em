@@ -69,6 +69,8 @@ hr {
 }
 
 #filename-editor-div {
+    position: fixed;
+    bottom: 24px;
     display: grid;
     min-width: 620px;
     max-width: 800px;

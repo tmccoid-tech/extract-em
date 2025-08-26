@@ -554,5 +554,18 @@
     },
     "rn1_8_7_New02": {
         "message": "Option/setting added to enable automatic extraction upon message receipt"
+    },
+
+    "includeInline": {
+        "message": "include inline"
+    },
+    "includeInlineNotice": {
+        "message": "NOTE: As of Thunderbird 140, most inline-attached items are detachable; use the \"include inline\" option below to include them in the detachment process."
+    },
+    "rn1_8_8_New01": {
+        "message": "Most inline images will now be recognized as attachments rather than \"embeds\" (Thunderbird 140+ only)"
+    },
+    "rn1_8_8_New02": {
+        "message": "Inline images recognized as attachments will be available for permanent detachment (Thunderbird 140+ only)"
     }
 }

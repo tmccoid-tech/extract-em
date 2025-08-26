@@ -648,7 +648,7 @@ td.summary-header {
 
 .close-button {
     height: 40px;
-    width: 100px;
+    min-width: 100px;
     margin: 8px;
 }
 
@@ -666,6 +666,10 @@ td.summary-header {
 
 #permanently-detach-button {
     width: 146px;
+}
+
+#detach-action-buttons-div {
+    display: flex;
 }
 
 .hazard-image {
@@ -700,7 +704,8 @@ td.summary-header {
     padding: 4px;
 }
 
-#imap-detachment-notice {
+#imap-detachment-notice,
+#detach-include-inline-notice {
     margin-top: 8px;
 }
 

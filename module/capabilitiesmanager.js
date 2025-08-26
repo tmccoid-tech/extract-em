@@ -14,6 +14,8 @@ export class CapabilitiesManager {
                 this.useMailFolderId = this.#isSufficientVersion(appVersionNumbers, [121]);                                                           //  >= TB 121
 
                 this.permitReportTab = !this.#isSufficientVersion(appVersionNumbers, [134]);                                                          // < TB 134
+
+                this.useLegacyEmbedIdentification = !this.#isSufficientVersion(appVersionNumbers, [140]);                                             // < TB 140
                 
                 this.useSpecialImapDetachmentHandling = (accountType) => {
                     return this.permitDetachment && accountType == "imap" && !this.#isSufficientVersion(appVersionNumbers, [136]);                    //  Account type is "imap" and TB < 136

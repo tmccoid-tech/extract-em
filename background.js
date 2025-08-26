@@ -4,8 +4,11 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { i18nText } from "/module/i18nText.js";
 
+(async (document) => {
 
     const documentTitle = i18nText.extensionName;
+
+    document.addEventListener("DOMContentLoaded", () => { document.title = documentTitle; });    
 
     const { create } = messenger.menus;
 
@@ -22,11 +25,7 @@ import { i18nText } from "/module/i18nText.js";
 
     let popupId = null;
 
-    document.addEventListener("DOMContentLoaded", () => { document.title = documentTitle; });
-
-    async function extractSilently(params) {
-        const { extensionOptions } = params;
-
+    const extractSilently = async(extensionOptions) => {
         const attachmentManager = new AttachmentManager({
             folders: params.selectedFolders,
             silentModeInvoked: true,
@@ -41,7 +40,7 @@ import { i18nText } from "/module/i18nText.js";
                             timestamp: attachment.date
                         }),
                         {
-                            preserveFolderStructure: params.preserveFolderStructure,
+                            preserveFolderStructure: extensionOptions.preserveFolderStructure,
                             includeEmbeds: extensionOptions.includeEmbeds,
                             packageAttachments: extensionOptions.packageAttachments,
                             tagMessages: extensionOptions.enableMessageTagging                  // Tag if enabled as .tagMessages not assignable in this context
@@ -76,7 +75,8 @@ import { i18nText } from "/module/i18nText.js";
 
             tagMessagesEnabled: extensionOptions.enableMessageTagging,
 
-            useMailFolderId: CapabilitiesManager.useMailFolderId
+            useMailFolderId: CapabilitiesManager.useMailFolderId,
+            useLegacyEmbedIdentification: CapabilitiesManager.useLegacyEmbedIdentification
         });
 
         const selectedFolderPaths = (params.selectionContext == selectionContexts.folder && extensionOptions.includeSubfolders)
@@ -99,7 +99,7 @@ import { i18nText } from "/module/i18nText.js";
         attachmentManager.discoverAttachments(discoveryOptions);
     }
 
-    function assembleFolderPaths(folder) {
+    const assembleFolderPaths = (folder) => {
         var result = [folder.path];
 
         folder.subFolders.forEach((item, i) => {
@@ -109,8 +109,7 @@ import { i18nText } from "/module/i18nText.js";
         return result;
     }
 
-    function updateSaveResult(info)
-    {
+    const updateSaveResult = (info) => {
         if(info.status != "started") {
             params = null;
 
@@ -118,12 +117,15 @@ import { i18nText } from "/module/i18nText.js";
         }
     }
 
-    function toggleMenuEnablement(enable) {
+    const toggleMenuEnablement = (enable) => {
         for(let menuId of menuItems.keys()) {
             messenger.menus.update(menuId, { enabled: enable });
         }
     }
 
+
+    // Event handlers
+    
     messenger.messages.onNewMailReceived.addListener(async (folder, messages) => {
         const extensionOptions = await OptionsManager.retrieve();
 
@@ -138,11 +140,10 @@ import { i18nText } from "/module/i18nText.js";
                 tabId: null,
                 selectedMessages: messages.messages,
                 preserveFolderStructure: extensionOptions.preserveFolderStructure,
-                allowExtractImmediate: true,
-                extensionOptions: extensionOptions
+                allowExtractImmediate: true
             };
 
-            extractSilently(params);
+            extractSilently(extensionOptions);
         }
     });
 
@@ -178,7 +179,7 @@ import { i18nText } from "/module/i18nText.js";
 
                 let accountId = null;
                 const selectedFolders = [];
-                let tabId;
+                let tabId = null;
                 let selectedMessages;
 
                 if(selectionContext == selectionContexts.folder) {
@@ -221,7 +222,7 @@ import { i18nText } from "/module/i18nText.js";
                 }
 
 
-                if (selectedFolders.length > 0 || getMessages) {
+                if (selectedFolders.length > 0) {
                     const extensionOptions = await OptionsManager.retrieve();
 
                     await OptionsManager.tagging.initializeGlobalTag();
@@ -232,11 +233,10 @@ import { i18nText } from "/module/i18nText.js";
 
                     params = {
                         accountId: accountId,
+                        tabId: tabId,
                         selectionContext: selectionContext,
                         selectedFolders: selectedFolders,
-                        tabId: tabId,
                         selectedMessages: selectedMessages,
-                        preserveFolderStructure: extensionOptions.preserveFolderStructure,
                         allowExtractImmediate: selectionContext !== selectionContexts.account && (
                             selectionContext !== selectionContexts.folder ||
                             (extensionOptions.extractImmediate && selectedFolders.length == 1 && (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders))
@@ -246,10 +246,9 @@ import { i18nText } from "/module/i18nText.js";
                     toggleMenuEnablement(false);
 
                     if(extensionOptions.extractImmediate && extensionOptions.useSilentMode && params.allowExtractImmediate) {
-                        params.extensionOptions = extensionOptions;
                         params.showZeroAttachmentsMessage = true;
 
-                        extractSilently(params);
+                        extractSilently(extensionOptions);
                     }
                     else {
     
@@ -274,3 +273,4 @@ import { i18nText } from "/module/i18nText.js";
             toggleMenuEnablement(true);
         }
     });
+})(document);

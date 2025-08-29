@@ -4,6 +4,7 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
 import { ReportManager } from "/module/reportmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { SaveManager } from "/module/savemanager.js";
+import { i18n } from "/module/i18n.js";
 import { i18nText } from "/module/i18nText.js";
 
 const _filterSelect = function* (test, select) {

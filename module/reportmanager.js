@@ -1,4 +1,5 @@
 import { SaveManager } from "/module/savemanager.js";
+import { i18n } from "/module/i18n.js";
 import { i18nText } from "/module/i18nText.js";
 
 export class ReportManager {

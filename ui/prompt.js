@@ -1,3 +1,5 @@
+import { i18n } from "/module/i18n.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
     i18n.updateDocument();
 

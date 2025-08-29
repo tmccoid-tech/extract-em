@@ -1133,24 +1133,20 @@ export class AttachmentManager {
                 const includeFolderPath = (packageAttachments && packagingTracker.preserveFolderStructure);
 
                 const outputFilename = this.#generateFinalOutputFilename(item, includeFolderPath, this.#sequentialFilenameTracker, storageProgressInfo);
-/*
-                if(item.charset) {
-                    attachmentFile = new File([ await attachmentFile.arrayBuffer() ], attachmentFile.name, {
-                        type: `text/plain;charset=${item.charset}`,
-                        lastModified: attachmentFile.lastModified
-                    });
-                }
-*/
+
                 // Attempt to save/package the attachment
                 try {
-                    this.#log(`Packaging - add file to zip buffer: ${item.outputFilename}`);
-    
                     if(packageAttachments) {
+
+                        this.#log(`Packaging - add file to zip buffer: ${item.outputFilename}`);
+
                         await zipEm.addFile(outputFilename, attachmentFile, item.date);
 
                         packagedMessageIds.add(item.messageId);
                     }
                     else {
+                        this.#log(`Packaging - save individual file: ${item.outputFilename}`);
+
                         const saveResult = await this.#saveAttachment(attachmentFile, item.outputFilename);
 
                         packagingTracker.lastDownloadId = saveResult.downloadId;
@@ -1531,6 +1527,8 @@ export class AttachmentManager {
         const path = await SaveManager.getFolderByDownloadId(downloadId);
 
         if(!downloadLocations.has(path)) {
+            this.#log(`Download location: ${path}`, this.#useEnhancedLogging);
+
             downloadLocations.set(path, downloadId);
         }
     }
@@ -1544,26 +1542,23 @@ export class AttachmentManager {
     }
 
     async deleteAttachments(includeInline) {
+        const packagedItems = this.#packagingTracker.items;
+        const duplicateItems = this.#duplicateFileTracker;
+        
         const filter = (includeInline)
             ? (item) => !item.hasError
             : (item) => !(item.isInline || item.hasError)
         ;
-        
-        const packagedItems = this.#packagingTracker.items.filter(filter);
-        
-        let duplicateItems = this.#duplicateFileTracker;
-        
-        if(!includeInline) {
-            duplicateItems = duplicateItems.filter((item) => !item.isInline);
-        }
+
+        const { messageList } = this;
 
         const attachmentGroupings = new Map();
 
         let itemCount = 0;
 
-        for (let item of [...packagedItems, ...duplicateItems]) {
+        for (let item of [...packagedItems.filter(filter), ...duplicateItems.filter(filter)]) {
             const { messageId } = item;           
-            const message = this.messageList.get(messageId);
+            const message = messageList.get(messageId);
 
             if(!message.isEncrypted) {
                 if(attachmentGroupings.has(messageId)) {

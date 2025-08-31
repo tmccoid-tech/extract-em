@@ -9,163 +9,142 @@
 </head>
 <body id="body">
     <div>
-        <h4>__MSG_uiMode__</h4>    
+        <h4 data-i18n-textContent="uiMode"></h4>    
         <dl>
             <dt>
-                <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> <span data-i18n-textcontent="__MSG_displayQuickmenu__"></span></label></dt>
-            <dd>
-                __MSG_displayQuickmenuDescription__
-            </dd>
+                <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> <span data-i18n-textContent="displayQuickmenu"></span></label></dt>
+            <dd data-i18n-textContent="displayQuickmenuDescription"></dd>
 
             <dt>
-                <label><input type="radio" name="user-interaction-option" id="extract-immediate-checkbox" value="immediate"/> <span data-i18n-textcontent="xxx"></span>__MSG_extractImmediate__</label>
+                <label><input type="radio" name="user-interaction-option" id="extract-immediate-checkbox" value="immediate"/> <span data-i18n-textContent="extractImmediate"></span></label>
             </dt>
             <dd>
-                __MSG_extractImmediateDescription__
+                <span data-i18n-textContent="extractImmediateDescription"></span>
                 <dl>
-                    <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" option-name="includeSubfolders" disabled="disabled"/> __MSG_includeSubFolders__</label></dt>
-                    <dd>__MSG_includeSubFoldersDescription__</dd>
+                    <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" option-name="includeSubfolders" disabled="disabled"/> <span data-i18n-textContent="includeSubFolders"></span></label></dt>
+                    <dd data-i18n-textContent="includeSubFoldersDescription"></dd>
 
                     <dt>
-                        <label><input type="checkbox" id="use-silent-mode-checkbox" option-name="useSilentMode" disabled="disabled"/> __MSG_useSilentMode__</label>
+                        <label><input type="checkbox" id="use-silent-mode-checkbox" option-name="useSilentMode" disabled="disabled"/> <span data-i18n-textContent="useSilentMode"></span></label>
                     </dt>
-                    <dd>__MSG_useSilentModeDescription__</dd>
+                    <dd data-i18n-textContent="useSilentModeDescription"></dd>
                 </dl>
             </dd>
 
             <dt>
-                <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> __MSG_letMeChoose__</label>
+                <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> <span data-i18n-textContent="letMeChoose"></span></label>
             </dt>
-            <dd>
-                __MSG_useInteractiveUiDescription__
-            </dd>
+            <dd data-i18n-textContent="useInteractiveUiDescription"></dd>
 
             <dt>
-                <label><input type="checkbox" id="enable-extract-on-receive-checkbox" option-name="extractOnReceiveEnabled" /> __MSG_enableExtractOnReceive__</label>
+                <label><input type="checkbox" id="enable-extract-on-receive-checkbox" option-name="extractOnReceiveEnabled" /> <span data-i18n-textContent="enableExtractOnReceive"></span></label>
             </dt>
-            <dd>__MSG_enableExtractOnReceiveDescription__</dd>
+            <dd data-i18n-textContent="enableExtractOnReceiveDescription"></dd>
         </dl>
 
-        <h4>__MSG_discoveryOptions__</h4>
+        <h4 data-i18n-textContent="discoveryOptions"></h4>
         <dl>
             <dt>
-                <label><input type="checkbox" id="include-embeds-checkbox" option-name="includeEmbeds" /> __MSG_includeEmbeddedImages__</label>
+                <label><input type="checkbox" id="include-embeds-checkbox" option-name="includeEmbeds" /> <span data-i18n-textContent="includeEmbeddedImages"></span></label>
             </dt>
-            <dd>
-                __MSG_includeEmbeddedImagesDescription__
-            </dd>
+            <dd data-i18n-textContent="includeEmbeddedImagesDescription"></dd>
 
             <dt>
-                <label><input type="checkbox" id="use-file-type-filter-checkbox" option-name="useFileTypeFilter" /> __MSG_useFileTypeFilter__</label><button type="button" id="edit-file-type-filter-button" class="options-control" disabled="disabled">__MSG_edit__</button>
+                <label><input type="checkbox" id="use-file-type-filter-checkbox" option-name="useFileTypeFilter" /> <span data-i18n-textContent="useFileTypeFilter"></span></label>
+                <button type="button" id="edit-file-type-filter-button" class="options-control" disabled="disabled" data-i18n-textContent="edit"></button>
             </dt>
             <dd>
                 <div id="file-type-filter-list-div" class="filter-list-div ghost">...</div>
-                __MSG_useFileTypeFilterDescription__
+                <span data-i18n-textContent="useFileTypeFilterDescription"></span>
             </dd>
 
             <dt>
                 <hr>
-                <em>__MSG_mutuallyExclusiveDescription__</em>
+                <em data-i18n-textContent="mutuallyExclusiveDescription"></em>
             </dt>
             <dd>
             </dd>
 
             <dt>
-                <label><input type="checkbox" id="omit-duplicates-checkbox" option-name="omitDuplicates" /> __MSG_omitDuplicates__</label>
+                <label><input type="checkbox" id="omit-duplicates-checkbox" option-name="omitDuplicates" /> <span data-i18n-textContent="omitDuplicates"></span></label>
             </dt>
-            <dd>
-                __MSG_omitDuplicatesDescription__
-            </dd>
+            <dd data-i18n-textContent="omitDuplicatesDescription"></dd>
 
             <dt>
-                <label><input type="checkbox" id="enable-message-tagging-checkbox" option-name="enableMessageTagging" /> __MSG_enableMessageTagging__</label>
-                <button type="button" id="reset-message-tags-button" class="options-control" disabled="disabled">__MSG_reset__</button>
+                <label><input type="checkbox" id="enable-message-tagging-checkbox" option-name="enableMessageTagging" /> <span data-i18n-textContent="enableMessageTagging"></span></label>
+                <button type="button" id="reset-message-tags-button" class="options-control" disabled="disabled" data-i18n-textContent="reset"></button>
             </dt>
-            <dd>
-                __MSG_enableMessageTaggingDescription__
-            </dd>
+            <dd data-i18n-textContent="enableMessageTaggingDescription"></dd>
 
             <dt>
                 <hr>
-                <label>__MSG_attachmentList__ - __MSG_defaultGrouping__: <select id="default-grouping-select" class="options-control" option-name="defaultGrouping">
-                    <option value="None" selected>__MSG_none__</option>
-                    <option value="Author">__MSG_defaultGroupingByAuthor__</option>
-                    <option value="Folder">__MSG_defaultGroupingByFolder__</option>
-                    <option value="Extension">__MSG_defaultGroupingByExtension__</option>
+                <label><span data-i18n-textContent="attachmentList"></span> - <span data-i18n-textContent="defaultGrouping"></span>: <select id="default-grouping-select" class="options-control" option-name="defaultGrouping">
+                    <option value="None" selected data-i18n-textContent="none"></option>
+                    <option value="Author" data-i18n-textContent="defaultGroupingByAuthor"></option>
+                    <option value="Folder" data-i18n-textContent="defaultGroupingByFolder"></option>
+                    <option value="Extension" data-i18n-textContent="defaultGroupingByExtension"></option>
                 </select></label>
             </dt>
-            <dd>
-                __MSG_defaultGroupingDescription__
-            </dd>
+            <dd data-i18n-textContent="defaultGroupingDescription"></dd>
 
             <dt>
-                <label>__MSG_attachmentList__ - __MSG_imagePreview__: <select id="image-preview-select" class="options-control" option-name="defaultImagePreview">
-                    <option value="None" selected>__MSG_none__</option>
-                    <option value="sm">__MSG_imagePreviewSmall__</option>
-                    <option value="md">__MSG_imagePreviewMedium__</option>
-                    <option value="lg">__MSG_imagePreviewLarge__</option>
+                <label><span data-i18n-textContent="attachmentList"></span> - <span data-i18n-textContent="imagePreview"></span>: <select id="image-preview-select" class="options-control" option-name="defaultImagePreview">
+                    <option value="None" selected data-i18n-textContent="none"></option>
+                    <option value="sm" data-i18n-textContent="imagePreviewSmall"></option>
+                    <option value="md" data-i18n-textContent="imagePreviewMedium"></option>
+                    <option value="lg" data-i18n-textContent="imagePreviewLarge"></option>
                 </select></label>
             </dt>
-            <dd>
-                __MSG_imagePreviewDescription__
-            </dd>
+            <dd data-i18n-textContent="imagePreviewDescription"></dd>
         </dl>
 
-        <h4>__MSG_storageOptions__</h4>    
+        <h4 data-i18n-textContent="storageOptions"></h4>    
         <dl>
             <dt>
-                <label><input type="radio" name="storage-option" id="package-attachments-radio" value="true"> __MSG_packageAttachments__</label>
+                <label><input type="radio" name="storage-option" id="package-attachments-radio" value="true"> <span data-i18n-textContent="packageAttachments"></span></label>
             </dt>
             <dd>
-                __MSG_packageAttachmentsDesc__
+                <span data-i18n-textContent="packageAttachmentsDesc"></span>
                 <dl>
                     <dt>
-                        <label><input type="checkbox" id="always-prompt-for-donwload-location-checkbox" option-name="alwaysPromptForDownloadLocation" /> __MSG_alwaysPromptForDownloadLocation__</label>
+                        <label><input type="checkbox" id="always-prompt-for-donwload-location-checkbox" option-name="alwaysPromptForDownloadLocation" /> <span data-i18n-textContent="alwaysPromptForDownloadLocation"></span></label>
                     </dt>
-                    <dd>
-                        __MSG_alwaysPromptForDownloadLocationMessage__
-                    </dd>
+                    <dd data-i18n-textContent="alwaysPromptForDownloadLocationMessage"></dd>
 
                     <dt>
-                        <label><input type="checkbox" id="preserve-folder-structure-checkbox" option-name="preserveFolderStructure" /> __MSG_preserveFolderStructure__</label>
+                        <label><input type="checkbox" id="preserve-folder-structure-checkbox" option-name="preserveFolderStructure" /> <span data-i18n-textContent="preserveFolderStructure"></span></label>
                     </dt>
-                    <dd>
-                        __MSG_preserveFolderStructureDescription__
-                    </dd>
+                    <dd data-i18n-textContent="preserveFolderStructureDescription"></dd>
                 </dl>
             </dd>
 
             <dt>
-                <label><input type="radio" name="storage-option" id="direct-save-radio" value="false"> __MSG_directSave__</label>
+                <label><input type="radio" name="storage-option" id="direct-save-radio" value="false"> <span data-i18n-textContent="directSave"></span></label>
             </dt>
-            <dd>
-                __MSG_directSaveDesc__
-            </dd>
+            <dd data-i18n-textContent="directSaveDesc"></dd>
 
             <dt>
-                * __MSG_currentSaveDirectory__:
+                * <span data-i18n-textContent="currentSaveDirectory"></span>:
             </dt>
             <dd>
-                <span id="current-save-directory-span">__MSG_unavailable__</span>
+                <span id="current-save-directory-span" data-i18n-textContent="unavailable"></span>
             </dd>
-            <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> __MSG_useFilenamePattern__</label></dt>
+            <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> <span data-i18n-textContent="useFilenamePattern"></span></label></dt>
             <dd>
-                <input type="text" id="filename-pattern-display-textbox" disabled="disabled"><button type="button" id="filename-pattern-edit-button" class="options-control" disabled="disabled">__MSG_edit__</button><br/>
-                __MSG_useFilenamePatternDescription__<br/>
+                <input type="text" id="filename-pattern-display-textbox" disabled="disabled"><button type="button" id="filename-pattern-edit-button" class="options-control" disabled="disabled" data-i18n-textContent="edit"></button><br/>
+                <span data-i18n-textContent="useFilenamePatternDescription"></span><br/>
                 <dl>
-                    <dt><label>__MSG_subjectFieldCharacterLimit__</label> <input id="max-filename-subject-length-textbox" type="number" min="1" max="200" maxlength="3" disabled="disabled"/></dt>
-                    <dd>__MSG_subjectFieldCharacterLimitDescription__</dd>
+                    <dt><label data-i18n-textContent="subjectFieldCharacterLimit"></label> <input id="max-filename-subject-length-textbox" type="number" min="1" max="200" maxlength="3" disabled="disabled"/></dt>
+                    <dd data-i18n-textContent="subjectFieldCharacterLimitDescription"></dd>
                 </dl>
             </dd>
         </dl>
 
         <dl>
             <dt>
-                <label><input type="checkbox" id="use-enhanced-logging-checkbox" option-name="useEnhancedLogging" /> __MSG_useEnhancedLogging__</label>
+                <label><input type="checkbox" id="use-enhanced-logging-checkbox" option-name="useEnhancedLogging" /> <span data-i18n-textContent="useEnhancedLogging"></span></label>
             </dt>
-            <dd>
-                __MSG_useEnhancedLoggingDescription__
-            </dd>
+            <dd data-i18n-textContent="useEnhancedLoggingDescription"></dd>
         </dl>
     </div>
 

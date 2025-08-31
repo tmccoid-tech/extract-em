@@ -2,7 +2,7 @@
 import { OptionsManager } from "/module/optionsmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { SaveManager } from "/module/savemanager.js";
-import { i18n } from "/module/i18n.js";
+import { i18n } from "/module/i18n.mjs";
 import { i18nText } from "/module/i18nText.js";
 
 // Methods

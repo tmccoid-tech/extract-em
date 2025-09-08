@@ -707,5 +707,18 @@
     },
     "rn1_8_7_New02": {
         "message": "Opzione/Impostazione aggiunta per abilitare l'estrazione automatica al momento della ricevuta del messaggio"
-    }    
+    },
+
+    "includeInline": {
+        "message": "includere in linea"
+    },
+    "includeInlineNotice": {
+        "message": "Nota: da Thunderbird 140, la maggior parte degli articoli in linea sono ridotti; Utilizzare l'opzione \"Includi inline\" di seguito per includerli nel processo di distacco."
+    },
+    "rn1_8_8_New01": {
+        "message": "La maggior parte delle immagini in linea verrà ora riconosciuta come allegati anziché \"incorporati\" (solo Thunderbird 140+)"
+    },
+    "rn1_8_8_New02": {
+        "message": "Le immagini in linea riconosciute come allegate saranno disponibili per il distacco permanente (solo Thunderbird 140+)"
+    }
 }

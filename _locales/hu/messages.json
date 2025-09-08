@@ -640,5 +640,18 @@
     },
     "rn1_8_7_New02": {
         "message": "Opció/beállítás Hozzáadva az automatikus kinyerés engedélyezéséhez az üzenet átvételekor"
+    },
+
+    "includeInline": {
+        "message": "tartalmazza az inline -t"
+    },
+    "includeInlineNotice": {
+        "message": "MEGJEGYZÉS: A Thunderbird 140-től a legtöbb beépített elem leszerelhető; Használja az alábbi \"Inding Inline\" opciót, hogy beépítse azokat a leválasztási folyamatba."
+    },
+    "rn1_8_8_New01": {
+        "message": "A legtöbb inline képet most a mellékletekként, mint a \"beágyazás\" -ként fogják elismerni (csak a Thunderbird 140+)"
+    },
+    "rn1_8_8_New02": {
+        "message": "A mellékletként elismert inline képek állandó leválasztáshoz rendelkezésre állnak (csak a Thunderbird 140+)"
     }    
 }

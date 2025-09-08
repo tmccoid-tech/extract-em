@@ -707,5 +707,18 @@
     },
     "rn1_8_7_New02": {
         "message": "Opción/configuración agregada para habilitar la extracción automática tras el recibo de mensajes"
+    },
+
+    "includeInline": {
+        "message": "incluir en línea"
+    },
+    "includeInlineNotice": {
+        "message": "Nota: A partir de Thunderbird 140, la mayoría de los artículos en línea son desmontables; Use la opción \"Incluir en línea\" a continuación para incluirlos en el proceso de desapego."
+    },
+    "rn1_8_8_New01": {
+        "message": "La mayoría de las imágenes en línea ahora serán reconocidas como archivos adjuntos en lugar de \"incrustaciones\" (Thunderbird 140+ solo)"
+    },
+    "rn1_8_8_New02": {
+        "message": "Las imágenes en línea reconocidas como archivos adjuntos estarán disponibles para destacamento permanente (solo Thunderbird 140+)"
     }
 }

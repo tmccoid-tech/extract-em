@@ -706,5 +706,18 @@
     },
     "rn1_8_7_New02": {
         "message": "Option/Einstellung hinzugefügt, um die automatische Extraktion nach der Nachrichteneingang zu aktivieren"
-    }    
+    },
+    
+    "includeInline": {
+        "message": "Inline einbeziehen"
+    },
+    "includeInlineNotice": {
+        "message": "Hinweis: Ab Thunderbird 140 sind die meisten inline-angehenden Artikel abnehmbar. Verwenden Sie unten die Option \"Inline integrieren\", um sie in den Ablagerungsprozess aufzunehmen."
+    },
+    "rn1_8_8_New01": {
+        "message": "Die meisten Inline -Bilder werden nun eher als Anhänge als als \"Einbettungen\" erkannt (nur Thunderbird 140+)"
+    },
+    "rn1_8_8_New02": {
+        "message": "Inline -Bilder, die als Anhänge erkannt werden, stehen für eine dauerhafte Ablösung zur Verfügung (nur Thunderbird 140+)."
+    }
 }

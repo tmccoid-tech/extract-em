@@ -707,5 +707,18 @@
     },
     "rn1_8_7_New02": {
         "message": "Option / réglage ajouté pour activer l'extraction automatique lors de la réception des messages"
-    }    
+    },
+
+    "includeInline": {
+        "message": "Inclure en ligne"
+    },
+    "includeInlineNotice": {
+        "message": "Remarque: à partir de Thunderbird 140, la plupart des articles attachés en ligne sont détachables; Utilisez l'option \"Inclure en ligne\" ci-dessous pour les inclure dans le processus de détachement."
+    },
+    "rn1_8_8_New01": {
+        "message": "La plupart des images en ligne seront désormais reconnues comme des pièces jointes plutôt que des \"intégres\" (Thunderbird 140+ seulement)"
+    },
+    "rn1_8_8_New02": {
+        "message": "Les images en ligne reconnus comme des pièces jointes seront disponibles pour le détachement permanent (Thunderbird 140+ seulement)"
+    }
 }

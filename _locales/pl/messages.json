@@ -707,5 +707,18 @@
     },
     "rn1_8_7_New02": {
         "message": "Opcja/ustawienie Dodano, aby włączyć automatyczne ekstrakcję po otrzymaniu wiadomości"
+    },
+
+    "includeInline": {
+        "message": "Uwzględnij Inline"
+    },
+    "includeInlineNotice": {
+        "message": "Uwaga: Od Thunderbird 140 większość elementów przywiązanych do linii jest odłączona; Użyj poniższej opcji „Dołącz inline”, aby uwzględnić je w procesie oddziału."
+    },
+    "rn1_8_8_New01": {
+        "message": "Większość obrazów wbudowanych zostanie teraz rozpoznawana jako załączniki, a nie „osadzania” (tylko Thunderbird 140+)"
+    },
+    "rn1_8_8_New02": {
+        "message": "Obrazy wbudowane rozpoznane jako załączniki będą dostępne dla stałego oddziału (tylko Thunderbird 140+)"
     }    
 }

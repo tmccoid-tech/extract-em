@@ -275,9 +275,7 @@ export class ReportManager {
 
         i18n.updateAnyDocument(reportDocument);
 
-        const fileText = `<!DOCTYPE html>${element.outerHTML}`;
-
-        const reportFileData = new Blob([fileText], { type: "text/html" });
+        const reportFileData = new Blob([`<!DOCTYPE html>${element.outerHTML}`], { type: "text/html" });
 
         let reportFilename = null;
 

@@ -720,5 +720,9 @@
     },
     "rn1_8_8_New02": {
         "message": "Les images en ligne reconnus comme des pièces jointes seront disponibles pour le détachement permanent (Thunderbird 140+ seulement)"
-    }
+    },
+
+    "rn1_8_9_New01": {
+        "message": "Ajout d'un bouton d'extraction à la barre d'outils d'affichage des messages ; s'applique uniquement à un seul message sélectionné."
+    }    
 }

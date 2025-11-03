@@ -720,5 +720,9 @@
     },
     "rn1_8_8_New02": {
         "message": "Le immagini in linea riconosciute come allegate saranno disponibili per il distacco permanente (solo Thunderbird 140+)"
-    }
+    },
+
+    "rn1_8_9_New01": {
+        "message": "Aggiunto pulsante di estrazione alla barra degli strumenti Visualizzazione messaggi; si applica solo al singolo messaggio selezionato."
+    }    
 }

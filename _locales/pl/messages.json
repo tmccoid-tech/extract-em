@@ -720,5 +720,9 @@
     },
     "rn1_8_8_New02": {
         "message": "Obrazy wbudowane rozpoznane jako załączniki będą dostępne dla stałego oddziału (tylko Thunderbird 140+)"
+    },
+
+    "rn1_8_9_New01": {
+        "message": "Dodano przycisk wyodrębniania do paska narzędzi Wyświetlania wiadomości; dotyczy tylko pojedynczej wybranej wiadomości."
     }    
 }

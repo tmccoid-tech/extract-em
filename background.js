@@ -25,6 +25,94 @@ import { i18nText } from "/module/i18nText.js";
 
     let popupId = null;
 
+    const handleAction = async (info, tab, selectionContext) => {
+        if (!popupId) {
+            let accountId = null;
+            const selectedFolders = [];
+            let tabId = null;
+            let selectedMessages;
+
+            if(selectionContext == selectionContexts.folder) {
+
+                // If an account node has been selected...
+                if (info.selectedAccount) {
+                    accountId = info.selectedAccount.id;
+                    selectedFolders.push(...info.selectedAccount.folders);
+                    selectionContext = selectionContexts.account;
+                }
+                // If a folder node has been selected...
+                else if (info.selectedFolder) {
+                    accountId = info.selectedFolder.accountId;
+                    selectedFolders.push(info.selectedFolder);
+                }
+            }
+            else {
+                accountId = info.displayedFolder.accountId;
+                selectedFolders.push(info.displayedFolder);
+
+                switch(selectionContext) {
+                    case selectionContexts.message:
+                        selectedMessages = info.selectedMessages.messages;
+                        break;
+
+                    case selectionContexts.selected:
+                        tabId = tab.id;
+                        break;
+
+                    case selectionContexts.listed:
+                        if(CapabilitiesManager.useGetListedMessages) {
+                            tabId = tab.id;
+                        }
+                        else {
+                            selectionContext = selectionContexts.folder;
+                        }
+
+                        break;
+                }
+            }
+
+            if (selectedFolders.length > 0) {
+                const extensionOptions = await OptionsManager.retrieve();
+
+                await OptionsManager.tagging.initializeGlobalTag();
+
+                if(selectionContext == selectionContexts.message) {
+                    extensionOptions.packageAttachments = false;
+                }
+
+                params = {
+                    accountId: accountId,
+                    tabId: tabId,
+                    selectionContext: selectionContext,
+                    selectedFolders: selectedFolders,
+                    selectedMessages: selectedMessages,
+                    allowExtractImmediate: selectionContext !== selectionContexts.account && (
+                        selectionContext !== selectionContexts.folder ||
+                        (extensionOptions.extractImmediate && selectedFolders.length == 1 && (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders))
+                    )
+                };
+
+                toggleMenuEnablement(false);
+
+                if(extensionOptions.extractImmediate && extensionOptions.useSilentMode && params.allowExtractImmediate) {
+                    params.showZeroAttachmentsMessage = true;
+
+                    extractSilently(extensionOptions);
+                }
+                else {
+
+                    let popup = await browser.windows.create({
+                        type: "popup",
+                        url: "/ui/extractem.html",
+                        allowScriptsToClose: true
+                    });
+
+                    popupId = popup.id;
+                }
+            }
+        }
+    };
+
     const extractSilently = async(extensionOptions) => {
         const attachmentManager = new AttachmentManager({
             folders: params.selectedFolders,
@@ -118,6 +206,13 @@ import { i18nText } from "/module/i18nText.js";
     }
 
     const toggleMenuEnablement = (enable) => {
+        if(enable) {
+            messenger.messageDisplayAction.enable();
+        }
+        else {
+            messenger.messageDisplayAction.disable();
+        }
+
         for(let menuId of menuItems.keys()) {
             messenger.menus.update(menuId, { enabled: enable });
         }
@@ -170,98 +265,21 @@ import { i18nText } from "/module/i18nText.js";
         }
     });
 
+    messenger.messageDisplayAction.onClicked.addListener(async (tab, info) => {
+        const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
 
-    messenger.menus.onClicked.addListener(async (info, tab) => {
+        info.displayedFolder = message.folder;
+        info.displayedFolder.subFolders = [];
+        info.selectedMessages = { messages: [message] };
+
+        handleAction(info, tab, selectionContexts.message);
+    });
+
+    messenger.menus.onClicked.addListener((info, tab) => {
         if(menuItems.has(info.menuItemId)) {
-            if (!popupId) {
+            let selectionContext = menuItems.get(info.menuItemId);
 
-                let selectionContext = menuItems.get(info.menuItemId);
-
-                let accountId = null;
-                const selectedFolders = [];
-                let tabId = null;
-                let selectedMessages;
-
-                if(selectionContext == selectionContexts.folder) {
-
-                    // If an account node has been selected...
-                    if (info.selectedAccount) {
-                        accountId = info.selectedAccount.id;
-                        selectedFolders.push(...info.selectedAccount.folders);
-                        selectionContext = selectionContexts.account;
-                    }
-                    // If a folder node has been selected...
-                    else if (info.selectedFolder) {
-                        accountId = info.selectedFolder.accountId;
-                        selectedFolders.push(info.selectedFolder);
-                    }
-                }
-                else {
-                    accountId = info.displayedFolder.accountId;
-                    selectedFolders.push(info.displayedFolder);
-
-                    switch(selectionContext) {
-                        case selectionContexts.message:
-                            selectedMessages = info.selectedMessages.messages;
-                            break;
-    
-                        case selectionContexts.selected:
-                            tabId = tab.id;
-                            break;
-    
-                        case selectionContexts.listed:
-                            if(CapabilitiesManager.useGetListedMessages) {
-                                tabId = tab.id;
-                            }
-                            else {
-                                selectionContext = selectionContexts.folder;
-                            }
-
-                            break;
-                    }
-                }
-
-
-                if (selectedFolders.length > 0) {
-                    const extensionOptions = await OptionsManager.retrieve();
-
-                    await OptionsManager.tagging.initializeGlobalTag();
-
-                    if(selectionContext == selectionContexts.message) {
-                        extensionOptions.packageAttachments = false;
-                    }
-
-                    params = {
-                        accountId: accountId,
-                        tabId: tabId,
-                        selectionContext: selectionContext,
-                        selectedFolders: selectedFolders,
-                        selectedMessages: selectedMessages,
-                        allowExtractImmediate: selectionContext !== selectionContexts.account && (
-                            selectionContext !== selectionContexts.folder ||
-                            (extensionOptions.extractImmediate && selectedFolders.length == 1 && (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders))
-                        )
-                    };
-
-                    toggleMenuEnablement(false);
-
-                    if(extensionOptions.extractImmediate && extensionOptions.useSilentMode && params.allowExtractImmediate) {
-                        params.showZeroAttachmentsMessage = true;
-
-                        extractSilently(extensionOptions);
-                    }
-                    else {
-    
-                        let popup = await browser.windows.create({
-                            type: "popup",
-                            url: "/ui/extractem.html",
-                            allowScriptsToClose: true
-                        });
-    
-                        popupId = popup.id;
-                    }
-                }
-            }
+            handleAction(info, tab, selectionContext);
         }
     });
 

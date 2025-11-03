@@ -653,5 +653,9 @@
     },
     "rn1_8_8_New02": {
         "message": "A mellékletként elismert inline képek állandó leválasztáshoz rendelkezésre állnak (csak a Thunderbird 140+)"
-    }    
+    },
+
+    "rn1_8_9_New01": {
+        "message": "Kivonat gomb hozzáadva az Üzenetmegjelenítés eszköztárhoz; csak egy kiválasztott üzenetre vonatkozik."
+    }
 }

@@ -75,6 +75,9 @@ export class SaveManager {
             };
 
             const handleChanged = (progress) => {
+
+                console.log(`Save state changed: state=${progress.state.current}; progressId=${progress.id}; downloadId=${downloadId}`);
+
                 if(progress.id == downloadId) {
     //                console.log("Save state changed");
 

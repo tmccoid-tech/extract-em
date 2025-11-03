@@ -719,5 +719,9 @@
     },
     "rn1_8_8_New02": {
         "message": "Inline -Bilder, die als Anhänge erkannt werden, stehen für eine dauerhafte Ablösung zur Verfügung (nur Thunderbird 140+)."
-    }
+    },
+
+    "rn1_8_9_New01": {
+        "message": "Extraktionsschaltfläche zur Nachrichtenanzeige-Symbolleiste hinzugefügt; Gilt nur für eine einzelne ausgewählte Nachricht."
+    }    
 }

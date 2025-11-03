@@ -418,6 +418,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 packagingCurrentSpan.innerText = info.includedCount.toString();
                 embedPackagingCurrentSpan.innerText = info.includedEmbedCount.toString();
                 
+                console.log(`Report save: staus=${info.status}; filesCreated=${info.filesCreated}; fileCount=${info.fileCount}`);
+
                 packagingFileCurrentSpan.innerText = info.filesCreated.toString();
                 preparationAlterationsSpan.innerText = info.alterationCount.toString();
                 packagingErrorCountSpan.innerText = info.errorCount.toString();        
@@ -456,7 +458,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 break;
 
             default: // "packaging"
-
                 savingCurrentSpan.innerText = info.includedCount.toString();
                 embedSavingCurrentSpan.innerText = info.includedEmbedCount.toString();
                 

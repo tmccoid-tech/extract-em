@@ -1196,12 +1196,18 @@ export class AttachmentManager {
 
                 const isFinal = (packagingTracker.currentPackageIndex == packagingTracker.extractionSubsets.length);
 
+                console.log(`Packaging_1: package index=${this.#packagingTracker.currentPackageIndex}; subsets=${packagingTracker.extractionSubsets.length}; final=${isFinal}`);
+                console.log(saveResult);
+
                 if(saveResult.success) {
                     storageProgressInfo.filesCreated++;
 
                     this.#reportStorageProgress(storageProgressInfo);
 
                     await this.#updateDownloadLocations(saveResult.downloadId);
+
+                    console.log(`Packaging_2: has embeds=${hasEmbeds}; items=${packagingTracker.items.length}; detachable=${packagingTracker.detachableCount}`);
+                    console.log(packagingTracker.downloadLocations);
 
                     if(isFinal && !hasEmbeds) {
                         saveResult.attachmentCount = packagingTracker.items.length;

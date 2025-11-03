@@ -567,5 +567,9 @@
     },
     "rn1_8_8_New02": {
         "message": "Inline images recognized as attachments will be available for permanent detachment (Thunderbird 140+ only)"
+    },
+
+    "rn1_8_9_New01": {
+        "message": "Added extraction button to the Message Display toolbar; applies to single selected message only."
     }
 }

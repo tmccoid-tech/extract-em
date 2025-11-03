@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.8.8",
+  "version": "1.8.9",
   "author": "tmccoid.tech",
   "browser_specific_settings": {
     "gecko": {
@@ -36,5 +36,9 @@
     "messagesTags",
     "messagesTagsList"
   ],
-  "default_locale": "en"
+  "default_locale": "en",
+  "message_display_action": {
+    "default_label": "",
+    "default_icon": "icons/extractem-32px.png"
+  }
 }

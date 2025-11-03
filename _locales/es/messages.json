@@ -720,5 +720,9 @@
     },
     "rn1_8_8_New02": {
         "message": "Las imágenes en línea reconocidas como archivos adjuntos estarán disponibles para destacamento permanente (solo Thunderbird 140+)"
-    }
+    },
+
+    "rn1_8_9_New01": {
+        "message": "Se agregó un botón de extracción a la barra de herramientas de visualización de mensajes; Se aplica únicamente a un único mensaje seleccionado."
+    }    
 }

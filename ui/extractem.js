@@ -198,7 +198,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const reportItemTemplate = elem("report-item-template");
 
     const releaseNotesOverlay = elem("release-notes-overlay");
-    const closeReleaseNotesButton = elem("close-release-notes-button");
 
     const folderRowSet = new Map();
 
@@ -715,15 +714,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
 
             if(CapabilitiesManager.extensionVersion !== extensionOptions.lastLoadedVersion && !extractImmediate) {
-                closeReleaseNotesButton.addEventListener("click", closeReleaseNotes);
-                const releaseNotesPanel = document.querySelector(`.release-notes-panel[version^='${CapabilitiesManager.featureVersion}']`);
-
-                if(releaseNotesPanel) {
-                    releaseNotesPanel.classList.remove("hidden");
-                    releaseNotesOverlay.classList.remove("hidden");
-                }
-
-                OptionsManager.setOption("lastLoadedVersion", CapabilitiesManager.extensionVersion);
+                displayReleaseNotes();
             }
 
             if(displayQuickmenu) {
@@ -1718,10 +1709,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = true; });            
     }
 
+    async function displayReleaseNotes() {
+        const templateSource = new DOMParser().parseFromString(await (await fetch("/ui/releasenotes.html")).text(), "text/html");
+
+        i18n.updateAnyDocument(templateSource);
+
+        const template = templateSource.body.querySelector("#release-notes-close-panel");
+
+        releaseNotesOverlay.appendChild(template.cloneNode(true));
+
+        const closeReleaseNotesButton = elem("close-release-notes-button");
+
+        closeReleaseNotesButton.classList.remove("hidden");
+
+        closeReleaseNotesButton.addEventListener("click", closeReleaseNotes);
+        const releaseNotesPanel = document.querySelector(`.release-notes-panel[version^='${CapabilitiesManager.featureVersion}']`);
+
+        if(releaseNotesPanel) {
+            releaseNotesPanel.classList.remove("hidden");
+            releaseNotesOverlay.classList.remove("hidden");
+        }
+
+        OptionsManager.setOption("lastLoadedVersion", CapabilitiesManager.extensionVersion);
+
+        messenger.runtime.sendMessage({ action: "resetBrowserAction" });
+    }
+
     function closeReleaseNotes(event) {
         releaseNotesOverlay.classList.add("hidden");
     }
-
 
     function alwaysShowQuickmenuOptionChanged(event) {
         const displayQuickmenu = alwaysShowQuickmenuCheckbox.checked;

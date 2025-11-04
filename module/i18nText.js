@@ -1,5 +1,6 @@
 export class i18nText {
     static #keys = [
+        "about",
         "attachments",
         "bytesLabel",
         "detachComplete",
@@ -17,6 +18,7 @@ export class i18nText {
         "listedMessages",
         "mbLabel",
         "missingAttachment",
+        "newVersion",
         "noAttachmentsMessage",
         "noMessagesMessage",
         "report",

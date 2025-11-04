@@ -571,5 +571,21 @@
 
     "rn1_8_9_New01": {
         "message": "Added extraction button to the Message Display toolbar; applies to single selected message only."
+    },
+
+    "about": {
+        "message": "About"
+    },
+    "newVersion": {
+        "message": "New Version"
+    },
+    "reportProblemsTo": {
+        "message": "Please report problems to"
+    },
+    "rn1_9_1_New01": {
+        "message": "Extraction button in Message Display toolbar now indicates attachment count (excludes deleted, detached, and remotely stored attachments)"
+    },
+    "rn1_9_1_New02": {
+        "message": "Added Release Notes (About) button"
     }
 }

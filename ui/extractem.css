@@ -677,12 +677,23 @@ td.summary-header {
     padding-right: 12px;
 }
 
+.release-notes-container {
+    width: initial !important;
+}
+
 #release-notes-close-panel {
     background: white url("tiled_paperclip.png") center/124px repeat;
-    height: 90vh;
-    width: 90vw;
     padding: 8px;
     overflow-y: auto;
+}
+
+#release-notes-overlay > #release-notes-close-panel {
+    height: 90vh;
+    width: 90vw;
+}
+
+.release-notes-version-divider {
+    border: 1px dashed #94642a;
 }
 
 #download-folders-panel {

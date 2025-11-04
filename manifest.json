@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.8.9",
+  "version": "1.9.1",
   "author": "tmccoid.tech",
   "browser_specific_settings": {
     "gecko": {
@@ -37,8 +37,22 @@
     "messagesTagsList"
   ],
   "default_locale": "en",
-  "message_display_action": {
+  "browser_action": {
+    "default_title": " ",
     "default_label": "",
-    "default_icon": "icons/extractem-32px.png"
+    "default_icon": {
+      "64": "icons/extractem-64px.png",
+      "32": "icons/extractem-32px.png",
+      "16": "icons/extractem-16px.png"
+    }
+  },  
+  "message_display_action": {
+    "default_title": " ",
+    "default_label": "",
+    "default_icon": {
+      "64": "icons/extractem-64px.png",
+      "32": "icons/extractem-32px.png",
+      "16": "icons/extractem-16px.png"
+    }
   }
 }

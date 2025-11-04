@@ -48,3 +48,9 @@ export const selectionContexts = {
     listed: "listed"
 };
 
+export const menuIconPaths = {
+    "64": "/icons/extractem-64px.png",
+    "32": "/icons/extractem-32px.png",
+    "16": "/icons/extractem-16px.png"
+};
+

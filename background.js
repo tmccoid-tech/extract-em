@@ -1,29 +1,34 @@
-import { CapabilitiesManager, selectionContexts } from "/module/capabilitiesmanager.js";
+import { CapabilitiesManager, selectionContexts, menuIconPaths } from "/module/capabilitiesmanager.js";
 import { OptionsManager } from "/module/optionsmanager.js";
 import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { i18nText } from "/module/i18nText.js";
 
-(async (document) => {
+(async (document, messenger) => {
 
     const documentTitle = i18nText.extensionName;
 
     document.addEventListener("DOMContentLoaded", () => { document.title = documentTitle; });    
 
-    const { create } = messenger.menus;
+    const { browserAction, menus, messageDisplay, messageDisplayAction, messages, runtime, windows } = messenger;
 
-    const thisMessageMenuId = await create({ title: i18nText.thisMessage, contexts: ["message_list"] });
+    const { create } = menus;
+
+    const thisMessageMenuId = await create({ title: i18nText.thisMessage, contexts: ["message_list"], icons: menuIconPaths });
 
     const menuItems = new Map([
         [ await create({ title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
         [ thisMessageMenuId, selectionContexts.message ],
-        [ await create({ title: i18nText.selectedMessages, contexts: ["message_list"] }), selectionContexts.selected ],
-        [ await create({ title: i18nText.listedMessages, contexts: ["message_list"] }), selectionContexts.listed ]
+        [ await create({ title: i18nText.selectedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.selected ],
+        [ await create({ title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.listed ]
     ]);
 
     let params = null;
 
     let popupId = null;
+    let releaseNotesPopupId = null;
+
+    let messageDisplayTab = null;
 
     const handleAction = async (info, tab, selectionContext) => {
         if (!popupId) {
@@ -101,13 +106,11 @@ import { i18nText } from "/module/i18nText.js";
                 }
                 else {
 
-                    let popup = await browser.windows.create({
+                    popupId = (await browser.windows.create({
                         type: "popup",
                         url: "/ui/extractem.html",
                         allowScriptsToClose: true
-                    });
-
-                    popupId = popup.id;
+                    })).id;
                 }
             }
         }
@@ -185,7 +188,7 @@ import { i18nText } from "/module/i18nText.js";
         };
     
         attachmentManager.discoverAttachments(discoveryOptions);
-    }
+    };
 
     const assembleFolderPaths = (folder) => {
         var result = [folder.path];
@@ -195,7 +198,7 @@ import { i18nText } from "/module/i18nText.js";
         });
 
         return result;
-    }
+    };
 
     const updateSaveResult = (info) => {
         if(info.status != "started") {
@@ -203,25 +206,75 @@ import { i18nText } from "/module/i18nText.js";
 
             toggleMenuEnablement(true);
         }
-    }
+    };
 
-    const toggleMenuEnablement = (enable) => {
-        if(enable) {
-            messenger.messageDisplayAction.enable();
+    const toggleMenuEnablement = async (enable) => {
+        if(enable && messageDisplayTab) {
+            const message = await messageDisplay.getDisplayedMessage(messageDisplayTab.id);
+
+            configureDisplayAction(messageDisplayTab, message);
         }
         else {
-            messenger.messageDisplayAction.disable();
+            messageDisplayAction.disable();
         }
 
         for(let menuId of menuItems.keys()) {
-            messenger.menus.update(menuId, { enabled: enable });
+            menus.update(menuId, { enabled: enable });
         }
+    };
+
+    const configureDisplayAction = async (tab, message) => {
+        messageDisplayTab = tab;
+
+        messageDisplayAction.disable();
+
+        const attachments = await messages.listAttachments(message.id);
+
+        let attachmentCount = 0;
+
+        for(let attachment of attachments) {
+            if(attachment.contentType != "text/x-moz-deleted") {
+                if(!(attachment.headers && (!!attachment.headers["x-mozilla-altered"] || !!attachment.headers["x-mozilla-external-attachment-url"]))) {
+                    attachmentCount++;
+                }
+            }
+        }
+
+        if(attachmentCount == 0) {
+            messageDisplayAction.setBadgeText({ tabId: tab.id, text: "" });
+        }
+        else {
+            messageDisplayAction.setBadgeText({ tabId: tab.id, text: attachmentCount.toString() });
+            if(!popupId) {
+                messageDisplayAction.enable();
+            }
+        }
+    };
+
+    const resetBrowserAction = () => {
+        browserAction.setTitle({ title: `${i18nText.about} ${i18nText.extensionName}` });
+        browserAction.setBadgeBackgroundColor({ color: "#94642a" });
+        browserAction.setBadgeText({ text: "?" });
+    };
+
+    const initialExtensionOptions = await OptionsManager.retrieve();
+
+    if(CapabilitiesManager.extensionVersion !== initialExtensionOptions.lastLoadedVersion) {
+        browserAction.setTitle({ title: `${i18nText.newVersion}: ${CapabilitiesManager.extensionVersion}` });
+        browserAction.setBadgeBackgroundColor({ color: "red" });
+        browserAction.setBadgeText({ text: "!" });
     }
+    else {
+        resetBrowserAction();
+    }
+
+    messageDisplayAction.setTitle({ title: `${i18nText.extensionName} (${i18nText.thisMessage})`});
+    messageDisplayAction.setBadgeBackgroundColor({ color: "#94642a" });
 
 
     // Event handlers
     
-    messenger.messages.onNewMailReceived.addListener(async (folder, messages) => {
+    messages.onNewMailReceived.addListener(async (folder, newMessages) => {
         const extensionOptions = await OptionsManager.retrieve();
 
         if(extensionOptions.extractOnReceiveEnabled) {
@@ -233,7 +286,7 @@ import { i18nText } from "/module/i18nText.js";
                 selectionContext: selectionContexts.message,
                 selectedFolders: [folder],
                 tabId: null,
-                selectedMessages: messages.messages,
+                selectedMessages: newMessages.messages,
                 preserveFolderStructure: extensionOptions.preserveFolderStructure,
                 allowExtractImmediate: true
             };
@@ -242,7 +295,7 @@ import { i18nText } from "/module/i18nText.js";
         }
     });
 
-    messenger.runtime.onMessage.addListener((request, sender, respond) => {
+    runtime.onMessage.addListener((request, sender, respond) => {
         if(request && request.action) {
             switch(request.action) {
                 case "getParams":
@@ -250,23 +303,37 @@ import { i18nText } from "/module/i18nText.js";
                     break;
 
                 case "close":
-                    messenger.windows.remove(popupId);
+                    windows.remove(popupId);
+                    break;
+
+                case "resetBrowserAction":
+                    resetBrowserAction();
                     break;
             }
         }
     });
 
-    messenger.menus.onShown.addListener(async (info, tab) => {
+    menus.onShown.addListener(async (info, tab) => {
         if(!popupId && info.contexts.includes("message_list")) {
             if(info.selectedMessages && info.selectedMessages.messages) {
-                await messenger.menus.update(thisMessageMenuId, { enabled: info.selectedMessages.messages.length == 1 });
-                messenger.menus.refresh();
+                await menus.update(thisMessageMenuId, { enabled: info.selectedMessages.messages.length == 1 });
+                menus.refresh();
             }
         }
     });
 
-    messenger.messageDisplayAction.onClicked.addListener(async (tab, info) => {
-        const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
+    menus.onClicked.addListener((info, tab) => {
+        if(menuItems.has(info.menuItemId)) {
+            let selectionContext = menuItems.get(info.menuItemId);
+
+            handleAction(info, tab, selectionContext);
+        }
+    });
+
+    messageDisplay.onMessageDisplayed.addListener(configureDisplayAction);
+
+    messageDisplayAction.onClicked.addListener(async (tab, info) => {
+        const message = await messageDisplay.getDisplayedMessage(tab.id);
 
         info.displayedFolder = message.folder;
         info.displayedFolder.subFolders = [];
@@ -275,20 +342,35 @@ import { i18nText } from "/module/i18nText.js";
         handleAction(info, tab, selectionContexts.message);
     });
 
-    messenger.menus.onClicked.addListener((info, tab) => {
-        if(menuItems.has(info.menuItemId)) {
-            let selectionContext = menuItems.get(info.menuItemId);
+    browserAction.onClicked.addListener(async (tab, info) => {
+        if(releaseNotesPopupId) {
+            windows.update(releaseNotesPopupId, { focused: true });
+        }
+        else {
+            releaseNotesPopupId = (await browser.windows.create({
+                type: "popup",
+                url: "/ui/releasenotes.html",
+                allowScriptsToClose: true
+            })).id;
 
-            handleAction(info, tab, selectionContext);
+            if(CapabilitiesManager.extensionVersion !== initialExtensionOptions.lastLoadedVersion) {
+                OptionsManager.setOption("lastLoadedVersion", CapabilitiesManager.extensionVersion);
+            }
+
+            resetBrowserAction();
         }
     });
 
-    messenger.windows.onRemoved.addListener(async (windowId) => {
+    windows.onRemoved.addListener(async (windowId) => {
         if (windowId == popupId) {
             params = null;
             popupId = null;
 
             toggleMenuEnablement(true);
         }
+
+        if(windowId == releaseNotesPopupId) {
+            releaseNotesPopupId = null;
+        }
     });
-})(document);
+})(document, messenger);

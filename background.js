@@ -228,14 +228,16 @@ import { i18nText } from "/module/i18nText.js";
 
         messageDisplayAction.disable();
 
-        const attachments = await messages.listAttachments(message.id);
-
         let attachmentCount = 0;
 
-        for(let attachment of attachments) {
-            if(attachment.contentType != "text/x-moz-deleted") {
-                if(!(attachment.headers && (!!attachment.headers["x-mozilla-altered"] || !!attachment.headers["x-mozilla-external-attachment-url"]))) {
-                    attachmentCount++;
+        if(message) {
+            const attachments = await messages.listAttachments(message.id);
+
+            for(let attachment of attachments) {
+                if(attachment.contentType != "text/x-moz-deleted") {
+                    if(!(attachment.headers && (!!attachment.headers["x-mozilla-altered"] || !!attachment.headers["x-mozilla-external-attachment-url"]))) {
+                        attachmentCount++;
+                    }
                 }
             }
         }

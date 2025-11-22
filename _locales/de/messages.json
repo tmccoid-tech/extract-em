@@ -723,5 +723,21 @@
 
     "rn1_8_9_New01": {
         "message": "Extraktionsschaltfläche zur Nachrichtenanzeige-Symbolleiste hinzugefügt; Gilt nur für eine einzelne ausgewählte Nachricht."
+    },
+
+    "about": {
+        "message": "Um"
+    },
+    "newVersion": {
+        "message": "Neue Version"
+    },
+    "reportProblemsTo": {
+        "message": "Bitte melden Sie Probleme an"
+    },
+    "rn1_9_1_New01": {
+        "message": "Die Schaltfläche „Extrahieren“ in der Symbolleiste „Nachrichtenanzeige“ zeigt jetzt die Anzahl der Anhänge an (ausgenommen gelöschte, getrennte und remote gespeicherte Anhänge)."
+    },
+    "rn1_9_1_New02": {
+        "message": "Schaltfläche „Versionshinweise“ (Info) hinzugefügt"
     }    
 }

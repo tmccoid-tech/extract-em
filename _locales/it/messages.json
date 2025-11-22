@@ -724,5 +724,20 @@
 
     "rn1_8_9_New01": {
         "message": "Aggiunto pulsante di estrazione alla barra degli strumenti Visualizzazione messaggi; si applica solo al singolo messaggio selezionato."
-    }    
+    },
+    "about": {
+        "message": "Di"
+    },
+    "newVersion": {
+        "message": "Nuova versione"
+    },
+    "reportProblemsTo": {
+        "message": "Si prega di segnalare problemi a"
+    },
+    "rn1_9_1_New01": {
+        "message": "Il pulsante di estrazione nella barra degli strumenti Visualizzazione messaggio ora indica il conteggio degli allegati (esclude gli allegati eliminati, scollegati e archiviati in remoto)"
+    },
+    "rn1_9_1_New02": {
+        "message": "Aggiunto il pulsante Note sulla versione (Informazioni)."
+    }
 }

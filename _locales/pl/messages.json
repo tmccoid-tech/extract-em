@@ -724,5 +724,21 @@
 
     "rn1_8_9_New01": {
         "message": "Dodano przycisk wyodrębniania do paska narzędzi Wyświetlania wiadomości; dotyczy tylko pojedynczej wybranej wiadomości."
-    }    
+    },
+
+    "about": {
+        "message": "O"
+    },
+    "newVersion": {
+        "message": "Nowa wersja"
+    },
+    "reportProblemsTo": {
+        "message": "Prosimy o zgłaszanie problemów do"
+    },
+    "rn1_9_1_New01": {
+        "message": "Przycisk wyodrębniania na pasku narzędzi Wyświetlania wiadomości wskazuje teraz liczbę załączników (z wyłączeniem załączników usuniętych, odłączonych i przechowywanych zdalnie)"
+    },
+    "rn1_9_1_New02": {
+        "message": "Dodano przycisk Informacje o wydaniu (Informacje)."
+    }
 }

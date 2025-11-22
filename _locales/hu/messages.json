@@ -657,5 +657,21 @@
 
     "rn1_8_9_New01": {
         "message": "Kivonat gomb hozzáadva az Üzenetmegjelenítés eszköztárhoz; csak egy kiválasztott üzenetre vonatkozik."
-    }
+    },
+
+    "about": {
+        "message": "Körülbelül"
+    },
+    "newVersion": {
+        "message": "Új verzió"
+    },
+    "reportProblemsTo": {
+        "message": "Kérjük, jelezze a problémákat"
+    },
+    "rn1_9_1_New01": {
+        "message": "Az Üzenetmegjelenítés eszköztáron található Kivonat gomb mostantól a mellékletek számát jelzi (kivéve a törölt, leválasztott és távolról tárolt mellékleteket)"
+    },
+    "rn1_9_1_New02": {
+        "message": "Hozzáadott kiadási megjegyzések (Névjegy) gomb"
+    }    
 }

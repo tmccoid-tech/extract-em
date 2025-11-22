@@ -724,5 +724,21 @@
 
     "rn1_8_9_New01": {
         "message": "Se agregó un botón de extracción a la barra de herramientas de visualización de mensajes; Se aplica únicamente a un único mensaje seleccionado."
-    }    
+    },
+
+    "about": {
+        "message": "Acerca de"
+    },
+    "newVersion": {
+        "message": "Nueva versión"
+    },
+    "reportProblemsTo": {
+        "message": "Por favor reporte problemas a"
+    },
+    "rn1_9_1_New01": {
+        "message": "El botón de extracción en la barra de herramientas de visualización de mensajes ahora indica el recuento de archivos adjuntos (excluye archivos adjuntos eliminados, desconectados y almacenados de forma remota)"
+    },
+    "rn1_9_1_New02": {
+        "message": "Se agregó el botón Notas de la versión (Acerca de)"
+    }
 }

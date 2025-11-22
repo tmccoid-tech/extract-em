@@ -724,5 +724,21 @@
 
     "rn1_8_9_New01": {
         "message": "Ajout d'un bouton d'extraction à la barre d'outils d'affichage des messages ; s'applique uniquement à un seul message sélectionné."
-    }    
+    },
+    
+    "about": {
+        "message": "À propos"
+    },
+    "newVersion": {
+        "message": "Nouvelle version"
+    },
+    "reportProblemsTo": {
+        "message": "Veuillez signaler les problèmes à"
+    },
+    "rn1_9_1_New01": {
+        "message": "Le bouton d'extraction dans la barre d'outils d'affichage des messages indique désormais le nombre de pièces jointes (exclut les pièces jointes supprimées, détachées et stockées à distance)"
+    },
+    "rn1_9_1_New02": {
+        "message": "Ajout du bouton Notes de version (À propos)"
+    }     
 }

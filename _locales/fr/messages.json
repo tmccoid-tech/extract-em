@@ -740,5 +740,9 @@
     },
     "rn1_9_1_New02": {
         "message": "Ajout du bouton Notes de version (À propos)"
-    }     
+    },
+
+    "rn1_9_2_Fixed01": {
+        "message": "Correction de l'affichage incorrect du badge de notification de nouvelle version sur le bouton Notes de version/À propos."
+    }
 }

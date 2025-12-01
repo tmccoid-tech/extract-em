@@ -740,5 +740,9 @@
     },
     "rn1_9_1_New02": {
         "message": "Se agregó el botón Notas de la versión (Acerca de)"
+    },
+
+    "rn1_9_2_Fixed01": {
+        "message": "Se corrigió la visualización incorrecta de la insignia de notificación de nueva versión en el botón Notas de la versión/Acerca de"
     }
 }

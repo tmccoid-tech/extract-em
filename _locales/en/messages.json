@@ -587,5 +587,9 @@
     },
     "rn1_9_1_New02": {
         "message": "Added Release Notes (About) button"
+    },
+
+    "rn1_9_2_Fixed01": {
+        "message": "Corrected improper display of new version notification badge on the Release Notes/About button"
     }
 }

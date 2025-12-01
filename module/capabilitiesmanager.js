@@ -1,12 +1,18 @@
 export class CapabilitiesManager {
     static {
-        browser.runtime.getBrowserInfo()
-            .then((browserInfo) => {
-                this.appVersion = browserInfo.version;
-                const appVersionNumbers = this.appVersion.split(".").map((n) => parseInt(n));
+        Promise
+            .all([
+                browser.runtime.getBrowserInfo(),
+                browser.runtime.getManifest()
+            ])
+            .then(([
+                { version: appVersion },
+                { version: extensionVersion }
+            ]) => {
+                const appVersionNumbers = appVersion.split(".").map((n) => parseInt(n));
         
-                this.extensionVersion = browser.runtime.getManifest().version;
-                const extensionVersionNumbers = this.extensionVersion.split(".").map((n) => parseInt(n));
+                this.extensionVersion = extensionVersion;
+                const extensionVersionNumbers = extensionVersion.split(".").map((n) => parseInt(n));
                 this.featureVersion = extensionVersionNumbers.slice(0,2).join(".");
         
                 this.permitDetachment = (this.#isSufficientVersion(extensionVersionNumbers, [1, 2]) && !!messenger.messages.deleteAttachments);       //  >= EE 1.2
@@ -42,7 +48,7 @@ export class CapabilitiesManager {
 
 export const selectionContexts = {
     account: "account",
-    folder: " folder",
+    folder: "folder",
     message: "message",
     selected: "selected",
     listed: "listed"

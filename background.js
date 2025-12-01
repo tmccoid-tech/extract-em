@@ -6,11 +6,11 @@ import { i18nText } from "/module/i18nText.js";
 
 (async (document, messenger) => {
 
+    // Initialize menu items
+
     const documentTitle = i18nText.extensionName;
 
-    document.addEventListener("DOMContentLoaded", () => { document.title = documentTitle; });    
-
-    const { browserAction, menus, messageDisplay, messageDisplayAction, messages, runtime, windows } = messenger;
+    const { browserAction, menus, messageDisplay, messageDisplayAction, messages, runtime, tabs, windows } = messenger;
 
     const { create } = menus;
 
@@ -23,12 +23,70 @@ import { i18nText } from "/module/i18nText.js";
         [ await create({ title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.listed ]
     ]);
 
+    // Initialize action buttons
+
+    const resetBrowserAction = () => {
+        browserAction.setTitle({ title: `${i18nText.about} ${i18nText.extensionName}` });
+        browserAction.setBadgeBackgroundColor({ color: "#94642a" });
+        browserAction.setBadgeText({ text: "?" });
+    };
+
+    const initialExtensionOptions = await OptionsManager.retrieve();
+
+    const extensionVersion = (await browser.runtime.getManifest()).version;
+
+    if(extensionVersion !== initialExtensionOptions.lastLoadedVersion) {
+        browserAction.setTitle({ title: `${i18nText.newVersion}: ${extensionVersion}` });
+        browserAction.setBadgeBackgroundColor({ color: "#31b125ff" });
+        browserAction.setBadgeText({ text: "!" });
+    }
+    else {
+        resetBrowserAction();
+    }
+
+    let messageDisplayTab = null;
+
+    messageDisplayAction.setTitle({ title: `${i18nText.extensionName} (${i18nText.thisMessage})`});
+    messageDisplayAction.setBadgeBackgroundColor({ color: "#94642a" });
+    messageDisplayAction.disable();
+
+    const configureDisplayAction = async (tab, message) => {
+        messageDisplayTab = tab;
+
+        messageDisplayAction.disable();
+
+        let attachmentCount = 0;
+
+        if(message) {
+            const attachments = await messages.listAttachments(message.id);
+
+            for(let attachment of attachments) {
+                if(attachment.contentType != "text/x-moz-deleted") {
+                    if(!(attachment.headers && (!!attachment.headers["x-mozilla-altered"] || !!attachment.headers["x-mozilla-external-attachment-url"]))) {
+                        attachmentCount++;
+                    }
+                }
+            }
+        }
+
+        if(attachmentCount == 0) {
+            messageDisplayAction.setBadgeText({ tabId: tab.id, text: "" });
+        }
+        else {
+            messageDisplayAction.setBadgeText({ tabId: tab.id, text: attachmentCount.toString() });
+            if(!popupId) {
+                messageDisplayAction.enable();
+            }
+        }
+    };
+
+
+    // Background extraction methods
+
     let params = null;
 
     let popupId = null;
     let releaseNotesPopupId = null;
-
-    let messageDisplayTab = null;
 
     const handleAction = async (info, tab, selectionContext) => {
         if (!popupId) {
@@ -223,57 +281,6 @@ import { i18nText } from "/module/i18nText.js";
         }
     };
 
-    const configureDisplayAction = async (tab, message) => {
-        messageDisplayTab = tab;
-
-        messageDisplayAction.disable();
-
-        let attachmentCount = 0;
-
-        if(message) {
-            const attachments = await messages.listAttachments(message.id);
-
-            for(let attachment of attachments) {
-                if(attachment.contentType != "text/x-moz-deleted") {
-                    if(!(attachment.headers && (!!attachment.headers["x-mozilla-altered"] || !!attachment.headers["x-mozilla-external-attachment-url"]))) {
-                        attachmentCount++;
-                    }
-                }
-            }
-        }
-
-        if(attachmentCount == 0) {
-            messageDisplayAction.setBadgeText({ tabId: tab.id, text: "" });
-        }
-        else {
-            messageDisplayAction.setBadgeText({ tabId: tab.id, text: attachmentCount.toString() });
-            if(!popupId) {
-                messageDisplayAction.enable();
-            }
-        }
-    };
-
-    const resetBrowserAction = () => {
-        browserAction.setTitle({ title: `${i18nText.about} ${i18nText.extensionName}` });
-        browserAction.setBadgeBackgroundColor({ color: "#94642a" });
-        browserAction.setBadgeText({ text: "?" });
-    };
-
-    const initialExtensionOptions = await OptionsManager.retrieve();
-
-    if(CapabilitiesManager.extensionVersion !== initialExtensionOptions.lastLoadedVersion) {
-        browserAction.setTitle({ title: `${i18nText.newVersion}: ${CapabilitiesManager.extensionVersion}` });
-        browserAction.setBadgeBackgroundColor({ color: "red" });
-        browserAction.setBadgeText({ text: "!" });
-    }
-    else {
-        resetBrowserAction();
-    }
-
-    messageDisplayAction.setTitle({ title: `${i18nText.extensionName} (${i18nText.thisMessage})`});
-    messageDisplayAction.setBadgeBackgroundColor({ color: "#94642a" });
-
-
     // Event handlers
     
     messages.onNewMailReceived.addListener(async (folder, newMessages) => {
@@ -329,6 +336,16 @@ import { i18nText } from "/module/i18nText.js";
             let selectionContext = menuItems.get(info.menuItemId);
 
             handleAction(info, tab, selectionContext);
+        }
+    });
+
+    tabs.onActivated.addListener(async ({ tabId }) => {
+        const tab = await tabs.get(tabId);
+
+        if(tab.mailTab) {
+            const message = await messageDisplay.getDisplayedMessage(tabId);
+
+            configureDisplayAction(tab, message);
         }
     });
 

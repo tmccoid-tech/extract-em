@@ -673,5 +673,9 @@
     },
     "rn1_9_1_New02": {
         "message": "Hozzáadott kiadási megjegyzések (Névjegy) gomb"
-    }    
+    },
+
+    "rn1_9_2_Fixed01": {
+        "message": "Javítva az új verzióról szóló értesítés helytelen megjelenítése a Kiadási megjegyzések/Névjegy gombon"
+    }
 }

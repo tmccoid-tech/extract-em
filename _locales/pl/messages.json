@@ -740,5 +740,9 @@
     },
     "rn1_9_1_New02": {
         "message": "Dodano przycisk Informacje o wydaniu (Informacje)."
+    },
+
+    "rn1_9_2_Fixed01": {
+        "message": "Poprawiono nieprawidłowe wyświetlanie plakietki powiadomienia o nowej wersji na przycisku Informacje o wersji/Informacje"
     }
 }

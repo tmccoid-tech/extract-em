@@ -739,5 +739,9 @@
     },
     "rn1_9_1_New02": {
         "message": "Schaltfläche „Versionshinweise“ (Info) hinzugefügt"
-    }    
+    },
+
+    "rn1_9_2_Fixed01": {
+        "message": "Die fehlerhafte Anzeige des Benachrichtigungssymbols für neue Versionen auf der Schaltfläche „Versionshinweise/Info“ wurde korrigiert"
+    }
 }

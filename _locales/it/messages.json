@@ -739,5 +739,9 @@
     },
     "rn1_9_1_New02": {
         "message": "Aggiunto il pulsante Note sulla versione (Informazioni)."
+    },
+
+    "rn1_9_2_Fixed01": {
+        "message": "Corretta la visualizzazione errata del badge di notifica della nuova versione sul pulsante Note sulla versione/Informazioni"
     }
 }

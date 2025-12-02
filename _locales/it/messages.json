@@ -743,5 +743,9 @@
 
     "rn1_9_2_Fixed01": {
         "message": "Corretta la visualizzazione errata del badge di notifica della nuova versione sul pulsante Note sulla versione/Informazioni"
+    },
+
+    "rn1_9_3_Notice01": {
+        "message": "La funzione \"Distacca permanentemente\" non sarà disponibile nel prossimo futuro. Si prega di rivedere la seguente discussione per i dettagli."
     }
 }

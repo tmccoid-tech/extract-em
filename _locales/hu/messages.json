@@ -677,5 +677,9 @@
 
     "rn1_9_2_Fixed01": {
         "message": "Javítva az új verzióról szóló értesítés helytelen megjelenítése a Kiadási megjegyzések/Névjegy gombon"
+    },
+
+    "rn1_9_3_Notice01": {
+        "message": "A „Végleges leválasztás” funkció a belátható jövőben nem lesz elérhető. Kérjük, olvassa el a következő beszélgetést a részletekért."
     }
 }

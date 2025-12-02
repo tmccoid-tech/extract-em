@@ -744,5 +744,9 @@
 
     "rn1_9_2_Fixed01": {
         "message": "Se corrigió la visualización incorrecta de la insignia de notificación de nueva versión en el botón Notas de la versión/Acerca de"
+    },
+
+    "rn1_9_3_Notice01": {
+        "message": "La función \"Desconectar permanentemente\" no estará disponible en el futuro previsible. Revise la siguiente discusión para obtener más detalles."
     }
 }

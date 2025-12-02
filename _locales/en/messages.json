@@ -591,5 +591,9 @@
 
     "rn1_9_2_Fixed01": {
         "message": "Corrected improper display of new version notification badge on the Release Notes/About button"
+    },
+
+    "rn1_9_3_Notice01": {
+        "message": "The \"Permanently Detach\" feature will be unavailable for the foreseeable future. Please review the following discussion for details."
     }
 }

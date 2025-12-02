@@ -743,5 +743,9 @@
 
     "rn1_9_2_Fixed01": {
         "message": "Die fehlerhafte Anzeige des Benachrichtigungssymbols für neue Versionen auf der Schaltfläche „Versionshinweise/Info“ wurde korrigiert"
+    },
+
+    "rn1_9_3_Notice01": {
+        "message": "Die Funktion „Permanent trennen“ wird auf absehbare Zeit nicht verfügbar sein. Weitere Informationen finden Sie in der folgenden Diskussion."
     }
 }

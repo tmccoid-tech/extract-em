@@ -15,7 +15,8 @@ export class CapabilitiesManager {
                 const extensionVersionNumbers = extensionVersion.split(".").map((n) => parseInt(n));
                 this.featureVersion = extensionVersionNumbers.slice(0,2).join(".");
         
-                this.permitDetachment = (this.#isSufficientVersion(extensionVersionNumbers, [1, 2]) && !!messenger.messages.deleteAttachments);       //  >= EE 1.2
+                //this.permitDetachment = (this.#isSufficientVersion(extensionVersionNumbers, [1, 2]) && !!messenger.messages.deleteAttachments);       //  >= EE 1.2
+                this.permitDetachment = false;
                 this.useAdvancedGetRaw = this.#isSufficientVersion(appVersionNumbers, [115, 3, 2]);                                                   //  >= TB 115.3.2
                 this.useMailFolderId = this.#isSufficientVersion(appVersionNumbers, [121]);                                                           //  >= TB 121
 

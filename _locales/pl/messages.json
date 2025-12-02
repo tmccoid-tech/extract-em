@@ -744,5 +744,9 @@
 
     "rn1_9_2_Fixed01": {
         "message": "Poprawiono nieprawidłowe wyświetlanie plakietki powiadomienia o nowej wersji na przycisku Informacje o wersji/Informacje"
+    },
+
+    "rn1_9_3_Notice01": {
+        "message": "Funkcja „Odłącz na stałe” będzie niedostępna w dającej się przewidzieć przyszłości. Aby poznać szczegóły, przejrzyj poniższą dyskusję."
     }
 }

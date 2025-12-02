@@ -744,5 +744,9 @@
 
     "rn1_9_2_Fixed01": {
         "message": "Correction de l'affichage incorrect du badge de notification de nouvelle version sur le bouton Notes de version/À propos."
+    },
+
+    "rn1_9_3_Notice01": {
+        "message": "La fonctionnalité « Détacher définitivement » ne sera pas disponible dans un avenir prévisible. Veuillez consulter la discussion suivante pour plus de détails."
     }
 }

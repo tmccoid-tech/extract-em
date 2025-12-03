@@ -595,5 +595,9 @@
 
     "rn1_9_3_Notice01": {
         "message": "The \"Permanently Detach\" feature will be unavailable for the foreseeable future. Please review the following discussion for details."
+    },
+
+    "rn1_9_4_Notice01": {
+        "message": "The \"Permanently Detach\" feature has been reinstated. Please review the following discussion for details."
     }
 }

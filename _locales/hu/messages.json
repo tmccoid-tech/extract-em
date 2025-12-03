@@ -681,5 +681,9 @@
 
     "rn1_9_3_Notice01": {
         "message": "A „Végleges leválasztás” funkció a belátható jövőben nem lesz elérhető. Kérjük, olvassa el a következő beszélgetést a részletekért."
+    },
+
+    "rn1_9_4_Notice01": {
+        "message": "A „Végleges leválasztás” funkció visszaállításra került. Kérjük, olvassa el a következő beszélgetést a részletekért."
     }
 }

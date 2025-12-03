@@ -747,5 +747,9 @@
 
     "rn1_9_3_Notice01": {
         "message": "Die Funktion „Permanent trennen“ wird auf absehbare Zeit nicht verfügbar sein. Weitere Informationen finden Sie in der folgenden Diskussion."
+    },
+
+    "rn1_9_4_Notice01": {
+        "message": "Die Funktion „Permanent trennen“ wurde wieder eingeführt. Weitere Informationen finden Sie in der folgenden Diskussion."
     }
 }

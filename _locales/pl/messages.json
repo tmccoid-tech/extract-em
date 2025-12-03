@@ -748,5 +748,9 @@
 
     "rn1_9_3_Notice01": {
         "message": "Funkcja „Odłącz na stałe” będzie niedostępna w dającej się przewidzieć przyszłości. Aby poznać szczegóły, przejrzyj poniższą dyskusję."
+    },
+
+    "rn1_9_4_Notice01": {
+        "message": "Przywrócono funkcję „Odłącz na stałe”. Aby poznać szczegóły, przejrzyj poniższą dyskusję."
     }
 }

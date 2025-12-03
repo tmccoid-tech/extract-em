@@ -714,6 +714,10 @@ td.summary-header {
     border: solid 1px red;
     padding: 4px;
 }
+.notice-panel.affirmative {
+    background-color: #00800047;
+    border: solid 1px green;
+}
 
 #imap-detachment-notice,
 #detach-include-inline-notice {

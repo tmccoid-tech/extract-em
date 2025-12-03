@@ -747,5 +747,9 @@
 
     "rn1_9_3_Notice01": {
         "message": "La funzione \"Distacca permanentemente\" non sarà disponibile nel prossimo futuro. Si prega di rivedere la seguente discussione per i dettagli."
+    },
+
+    "rn1_9_4_Notice01": {
+        "message": "La funzione \"Distacco permanente\" è stata ripristinata. Si prega di rivedere la seguente discussione per i dettagli."
     }
 }

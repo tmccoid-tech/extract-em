@@ -748,5 +748,9 @@
 
     "rn1_9_3_Notice01": {
         "message": "La función \"Desconectar permanentemente\" no estará disponible en el futuro previsible. Revise la siguiente discusión para obtener más detalles."
+    },
+
+    "rn1_9_4_Notice01": {
+        "message": "Se ha restablecido la función \"Desconectar permanentemente\". Revise la siguiente discusión para obtener más detalles."
     }
 }

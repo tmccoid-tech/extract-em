@@ -748,5 +748,9 @@
 
     "rn1_9_3_Notice01": {
         "message": "La fonctionnalité « Détacher définitivement » ne sera pas disponible dans un avenir prévisible. Veuillez consulter la discussion suivante pour plus de détails."
+    },
+
+    "rn1_9_4_Notice01": {
+        "message": "La fonctionnalité « Détacher définitivement » a été rétablie. Veuillez consulter la discussion suivante pour plus de détails."
     }
 }

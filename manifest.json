@@ -1,13 +1,13 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.9.4",
+  "version": "2.0.1",
   "author": "tmccoid.tech",
   "browser_specific_settings": {
     "gecko": {
       "id": "extractem@tmccoid.tech",
-      "strict_min_version": "115.0"
+      "strict_min_version": "128.0"
     }
   },
   "icons": {
@@ -16,12 +16,12 @@
     "16": "icons/extractem-16px.png"
   },
   "background": {
-    "page": "background.html"
+    "type": "module",
+    "scripts": [ "background.js" ]
   },
   "options_ui": {
     "page": "/options/options.html",
-    "open_in_tab": false,
-    "browser_style": true
+    "open_in_tab": false
   },
   "permissions": [
     "messagesRead",
@@ -37,7 +37,7 @@
     "messagesTagsList"
   ],
   "default_locale": "en",
-  "browser_action": {
+  "action": {
     "default_title": " ",
     "default_label": "",
     "default_icon": {
@@ -53,6 +53,16 @@
       "64": "icons/extractem-64px.png",
       "32": "icons/extractem-32px.png",
       "16": "icons/extractem-16px.png"
+    }
+  },
+  "experiment_apis": {
+    "ExtractionFilterAction": {
+      "schema": "api/ExtractionFilterAction/schema.json",
+      "parent": {
+        "scopes": [ "addon_parent" ],
+        "paths": [ [ "ExtractionFilterAction" ] ],
+        "script": "api/ExtractionFilterAction/implementation.js"
+      }
     }
   }
 }

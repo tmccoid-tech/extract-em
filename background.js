@@ -4,23 +4,25 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { i18nText } from "/module/i18nText.js";
 
-(async (document, messenger) => {
+(async (messenger) => {
 
     // Initialize menu items
 
     const documentTitle = i18nText.extensionName;
 
-    const { browserAction, menus, messageDisplay, messageDisplayAction, messages, runtime, tabs, windows } = messenger;
+    const { action: browserAction, menus, messageDisplay, messageDisplayAction, messages, runtime, tabs, windows } = messenger;
 
     const { create } = menus;
 
-    const thisMessageMenuId = await create({ title: i18nText.thisMessage, contexts: ["message_list"], icons: menuIconPaths });
+    await menus.removeAll();
+
+    const thisMessageMenuId = await create({ id: "extractem.thisMessage", title: i18nText.thisMessage, contexts: ["message_list"], icons: menuIconPaths });
 
     const menuItems = new Map([
-        [ await create({ title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
+        [ await create({ id: "extractem.folder" , title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
         [ thisMessageMenuId, selectionContexts.message ],
-        [ await create({ title: i18nText.selectedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.selected ],
-        [ await create({ title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.listed ]
+        [ await create({ id: "extractem.selectedMessages", title: i18nText.selectedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.selected ],
+        [ await create({ id: "extractem.listedMessages", title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.listed ]
     ]);
 
     // Initialize action buttons
@@ -50,14 +52,15 @@ import { i18nText } from "/module/i18nText.js";
     messageDisplayAction.setBadgeBackgroundColor({ color: "#94642a" });
     messageDisplayAction.disable();
 
-    const configureDisplayAction = async (tab, message) => {
+    const configureDisplayAction = async (tab, displayedMessages) => {
         messageDisplayTab = tab;
 
         messageDisplayAction.disable();
 
         let attachmentCount = 0;
 
-        if(message) {
+        if(displayedMessages && displayedMessages.messages.length == 1) {
+            const [ message ] = displayedMessages.messages;
             const attachments = await messages.listAttachments(message.id);
 
             for(let attachment of attachments) {
@@ -80,6 +83,9 @@ import { i18nText } from "/module/i18nText.js";
         }
     };
 
+    // ExtractionFilterAction experiment registration
+
+    browser.ExtractionFilterAction.test();
 
     // Background extraction methods
 
@@ -97,21 +103,35 @@ import { i18nText } from "/module/i18nText.js";
 
             if(selectionContext == selectionContexts.folder) {
 
+                const [ selectedFolder ] = info.selectedFolders;
+
+                if(selectedFolder.isRoot) {
+                    info.selectedAccount = await messenger.accounts.get(selectedFolder.accountId, true);
+                }
+
                 // If an account node has been selected...
                 if (info.selectedAccount) {
                     accountId = info.selectedAccount.id;
-                    selectedFolders.push(...info.selectedAccount.folders);
+                    selectedFolders.push(...info.selectedAccount.rootFolder.subFolders);
                     selectionContext = selectionContexts.account;
                 }
                 // If a folder node has been selected...
-                else if (info.selectedFolder) {
-                    accountId = info.selectedFolder.accountId;
-                    selectedFolders.push(info.selectedFolder);
+                else {
+//                else if (info.selectedFolders) {
+//                    const [selectedFolder] = selectedFolders;
+
+                    accountId = selectedFolder.accountId;
+                    selectedFolders.push(await messenger.folders.get(selectedFolder.id, true));
                 }
             }
             else {
-                accountId = info.displayedFolder.accountId;
-                selectedFolders.push(info.displayedFolder);
+
+                const { displayedFolder } = info;
+
+                accountId = displayedFolder.accountId;
+                displayedFolder.subFolders = [];
+
+                selectedFolders.push(displayedFolder);
 
                 switch(selectionContext) {
                     case selectionContexts.message:
@@ -163,7 +183,6 @@ import { i18nText } from "/module/i18nText.js";
                     extractSilently(extensionOptions);
                 }
                 else {
-
                     popupId = (await browser.windows.create({
                         type: "popup",
                         url: "/ui/extractem.html",
@@ -268,9 +287,9 @@ import { i18nText } from "/module/i18nText.js";
 
     const toggleMenuEnablement = async (enable) => {
         if(enable && messageDisplayTab) {
-            const message = await messageDisplay.getDisplayedMessage(messageDisplayTab.id);
+            const displayedMessages = await messageDisplay.getDisplayedMessages(messageDisplayTab.id);
 
-            configureDisplayAction(messageDisplayTab, message);
+            configureDisplayAction(messageDisplayTab, displayedMessages);
         }
         else {
             messageDisplayAction.disable();
@@ -342,17 +361,17 @@ import { i18nText } from "/module/i18nText.js";
     tabs.onActivated.addListener(async ({ tabId }) => {
         const tab = await tabs.get(tabId);
 
-        if(tab.mailTab) {
-            const message = await messageDisplay.getDisplayedMessage(tabId);
+        if(tab.type == "mail") {
+            const displayedMessages = await messageDisplay.getDisplayedMessages(tabId);
 
-            configureDisplayAction(tab, message);
+            configureDisplayAction(tab, displayedMessages);
         }
     });
 
-    messageDisplay.onMessageDisplayed.addListener(configureDisplayAction);
+    messageDisplay.onMessagesDisplayed.addListener(configureDisplayAction);
 
     messageDisplayAction.onClicked.addListener(async (tab, info) => {
-        const message = await messageDisplay.getDisplayedMessage(tab.id);
+        const [ message ] = (await messageDisplay.getDisplayedMessages(tab.id)).messages;
 
         info.displayedFolder = message.folder;
         info.displayedFolder.subFolders = [];
@@ -392,4 +411,4 @@ import { i18nText } from "/module/i18nText.js";
             releaseNotesPopupId = null;
         }
     });
-})(document, messenger);
+})(messenger);

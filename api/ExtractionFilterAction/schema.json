@@ -1,0 +1,12 @@
+[
+    {
+        "namespace": "ExtractionFilterAction",
+        "functions": [
+            {
+                "name": "test",
+                "type": "function",
+                "parameters": []
+            }
+        ]
+    }
+]

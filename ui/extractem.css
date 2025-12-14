@@ -523,6 +523,7 @@ td.summary-header {
 #zip-panel {
     width: 100%;
     height: 100%;
+    max-width: 1000px;
     max-height: 900px;
     background: white url("tiled_paperclip.png") center/124px repeat;
     display: grid;

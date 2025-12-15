@@ -12,6 +12,18 @@
                     }
                 ]
             }
+        ],
+        "events": [
+            {
+                "name": "onFilterExecuted",
+                "type": "function",
+                "parameters": [
+                    {
+                        "name": "messageList",
+                        "$ref": "messages.MessageList"
+                    }
+                ]
+            }
         ]
     }
 ]

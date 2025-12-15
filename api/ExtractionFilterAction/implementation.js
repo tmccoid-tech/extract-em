@@ -2,11 +2,12 @@
 
 (function (exports) {
 
-     class ExtractionFilterAction extends ExtensionCommon.ExtensionAPI {
-        static extractFilteredId = "tech.tmccoid.extractem#extractFiltered";
+    const extractFilteredId = "tech.tmccoid.extractem#extractFiltered";
 
-        getAPI(content) {
-            const { extractFilteredId } = ExtractionFilterAction;
+    const eventEmitter = new ExtensionCommon.EventEmitter();
+
+    class ExtractionFilterAction extends ExtensionCommon.ExtensionAPI {
+        getAPI(context) {
 
             return {
                 ExtractionFilterAction: {
@@ -33,12 +34,16 @@
                             MailServices.filters.addCustomAction({
                                 id: extractFilteredId,
                                 name: extensionName,
-                                isValidForType: function(t, s) { return true },
+                                isValidForType: function(t, s) { return true; },
                                 validateActionValue: function(v, f, t) { return null; },
                                 allowDuplicates: false,
-                                applyAction: function (aMsgHdrs, aActionValue, copyListener, _aType, _aMsgWindow) {
-                                    console.log("Filter action applied!");
+                                
+                                applyAction: async function (aMsgHdrs, aActionValue, copyListener, _aType, _aMsgWindow) {
+                                    const messageList = await context.extension.messageManager.startMessageList(aMsgHdrs);
+                                    
+                                    eventEmitter.emit("filter-executed", messageList);
                                 },
+                                
                                 isAsync: true,
                                 needsBody: false
                             });
@@ -47,7 +52,27 @@
                         }
 
                         console.log("ExtractionFilterAction experminent API initialization complete.");
-                    }
+                    },
+
+                    onFilterExecuted: new ExtensionCommon.EventManager({
+                        context,
+                        module: "ExtractionFilterAction",
+                        event: "onFilterExecuted",
+                        extensionApi: this,
+                        
+                        register: (invoke) => {
+                            const callback = (_, messageList) => {
+                                invoke.async(messageList);
+                            };
+
+                            eventEmitter.on("filter-executed", callback);
+
+                            return () => {
+                                eventEmitter.off("filter-executed", callback);
+                            };
+                        }
+                            
+                    }).api()
                 }
             }
         }
@@ -59,7 +84,7 @@
 
             Services.obs.notifyObservers(null, "startupcache-invalidate", null);
 
-            console.log(`${ExtractionFilterAction.extractFilteredId} cache cleared.`)
+            console.log(`${extractFilteredId} cache cleared.`)
         }
     };
 

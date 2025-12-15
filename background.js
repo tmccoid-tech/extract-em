@@ -87,6 +87,10 @@ import { i18nText } from "/module/i18nText.js";
 
     browser.ExtractionFilterAction.initialize(extensionName);
 
+    browser.ExtractionFilterAction.onFilterExecuted.addListener(async (messageList) => {
+        console.log(messageList);
+    });
+
     // Background extraction methods
 
     let params = null;

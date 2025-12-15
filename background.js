@@ -8,7 +8,7 @@ import { i18nText } from "/module/i18nText.js";
 
     // Initialize menu items
 
-    const documentTitle = i18nText.extensionName;
+    const { extensionName } = i18nText;
 
     const { action: browserAction, menus, messageDisplay, messageDisplayAction, messages, runtime, tabs, windows } = messenger;
 
@@ -19,7 +19,7 @@ import { i18nText } from "/module/i18nText.js";
     const thisMessageMenuId = await create({ id: "extractem.thisMessage", title: i18nText.thisMessage, contexts: ["message_list"], icons: menuIconPaths });
 
     const menuItems = new Map([
-        [ await create({ id: "extractem.folder" , title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
+        [ await create({ id: "extractem.folder" , title: extensionName, contexts: ["folder_pane"] }), selectionContexts.folder ],
         [ thisMessageMenuId, selectionContexts.message ],
         [ await create({ id: "extractem.selectedMessages", title: i18nText.selectedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.selected ],
         [ await create({ id: "extractem.listedMessages", title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.listed ]
@@ -85,7 +85,7 @@ import { i18nText } from "/module/i18nText.js";
 
     // ExtractionFilterAction experiment registration
 
-    browser.ExtractionFilterAction.test();
+    browser.ExtractionFilterAction.initialize(extensionName);
 
     // Background extraction methods
 

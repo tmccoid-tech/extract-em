@@ -3,9 +3,14 @@
         "namespace": "ExtractionFilterAction",
         "functions": [
             {
-                "name": "test",
+                "name": "initialize",
                 "type": "function",
-                "parameters": []
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "extensionName"
+                    }
+                ]
             }
         ]
     }

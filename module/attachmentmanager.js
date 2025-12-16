@@ -255,6 +255,7 @@ export class AttachmentManager {
 
         switch(selectionContext) {
             case selectionContexts.message:
+            case selectionContexts.messageDirect:
                 await this.#processPages(selectedFolders[0], () => ({ messages: selectedMessages }));
                 break;
             case selectionContexts.selected:

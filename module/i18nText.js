@@ -6,6 +6,7 @@ export class i18nText {
         "detachComplete",
         "detached",
         "detachErrorMessage",
+        "direct",
         "embeds",
         "error",
         "extensionName",

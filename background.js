@@ -15,10 +15,12 @@ import { i18nText } from "/module/i18nText.js";
     const { create } = menus;
 
     const thisMessageMenuId = await create({ title: i18nText.thisMessage, contexts: ["message_list"], icons: menuIconPaths });
+    const thisMessageDirectMenuId = await create({ title: `${i18nText.thisMessage} (${i18nText.direct})`, contexts: ["message_list"], icons: menuIconPaths });
 
     const menuItems = new Map([
         [ await create({ title: documentTitle, contexts: ["folder_pane"] }), selectionContexts.folder ],
         [ thisMessageMenuId, selectionContexts.message ],
+        [ thisMessageDirectMenuId, selectionContexts.messageDirect ],
         [ await create({ title: i18nText.selectedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.selected ],
         [ await create({ title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.listed ]
     ]);
@@ -115,6 +117,7 @@ import { i18nText } from "/module/i18nText.js";
 
                 switch(selectionContext) {
                     case selectionContexts.message:
+                    case selectionContexts.messageDirect:
                         selectedMessages = info.selectedMessages.messages;
                         break;
 
@@ -139,10 +142,6 @@ import { i18nText } from "/module/i18nText.js";
 
                 await OptionsManager.tagging.initializeGlobalTag();
 
-                if(selectionContext == selectionContexts.message) {
-                    extensionOptions.packageAttachments = false;
-                }
-
                 params = {
                     accountId: accountId,
                     tabId: tabId,
@@ -152,7 +151,8 @@ import { i18nText } from "/module/i18nText.js";
                     allowExtractImmediate: selectionContext !== selectionContexts.account && (
                         selectionContext !== selectionContexts.folder ||
                         (extensionOptions.extractImmediate && selectedFolders.length == 1 && (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders))
-                    )
+                    ),
+                    forceIndividualSave: (selectionContext == selectionContexts.messageDirect)
                 };
 
                 toggleMenuEnablement(false);
@@ -191,7 +191,7 @@ import { i18nText } from "/module/i18nText.js";
                         {
                             preserveFolderStructure: extensionOptions.preserveFolderStructure,
                             includeEmbeds: extensionOptions.includeEmbeds,
-                            packageAttachments: extensionOptions.packageAttachments,
+                            packageAttachments: (extensionOptions.packageAttachments && !params.forceIndividualSave),
                             tagMessages: extensionOptions.enableMessageTagging                  // Tag if enabled as .tagMessages not assignable in this context
                         }
                     );
@@ -287,17 +287,17 @@ import { i18nText } from "/module/i18nText.js";
         const extensionOptions = await OptionsManager.retrieve();
 
         if(extensionOptions.extractOnReceiveEnabled) {
-            extensionOptions.packageAttachments = false;
             folder.subFolders = [];
 
             params = {
                 accountId: folder.accountId,
-                selectionContext: selectionContexts.message,
+                selectionContext: selectionContexts.messageDirect,
                 selectedFolders: [folder],
                 tabId: null,
                 selectedMessages: newMessages.messages,
                 preserveFolderStructure: extensionOptions.preserveFolderStructure,
-                allowExtractImmediate: true
+                allowExtractImmediate: true,
+                forceIndividualSave: true
             };
 
             extractSilently(extensionOptions);
@@ -325,7 +325,11 @@ import { i18nText } from "/module/i18nText.js";
     menus.onShown.addListener(async (info, tab) => {
         if(!popupId && info.contexts.includes("message_list")) {
             if(info.selectedMessages && info.selectedMessages.messages) {
-                await menus.update(thisMessageMenuId, { enabled: info.selectedMessages.messages.length == 1 });
+                const enabled = info.selectedMessages.messages.length == 1;
+
+                await menus.update(thisMessageMenuId, { enabled: enabled });
+                await menus.update(thisMessageDirectMenuId, { enabled: enabled });
+                
                 menus.refresh();
             }
         }
@@ -358,7 +362,7 @@ import { i18nText } from "/module/i18nText.js";
         info.displayedFolder.subFolders = [];
         info.selectedMessages = { messages: [message] };
 
-        handleAction(info, tab, selectionContexts.message);
+        handleAction(info, tab, selectionContexts.messageDirect);
     });
 
     browserAction.onClicked.addListener(async (tab, info) => {

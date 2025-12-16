@@ -599,5 +599,9 @@
 
     "rn1_9_4_Notice01": {
         "message": "The \"Permanently Detach\" feature has been reinstated. Please review the following discussion for details."
+    },
+
+    "direct": {
+        "message": "Direct"
     }
 }

@@ -163,30 +163,32 @@ Context-menu invocation revision
 
 
 
-LQ
+Options issue (Ubuntu only?)
 
-XXX where
+Message List context menu behavior
 
-XXX join
-XXX ljoin
-XXX rjoin
-XXX cross
 
-union
 
-XXX asc
-XXX desc
+>>>
 
-group
+JoeLEV
 
-XXX project
+@JoeLev65 said:
+> intuitively, when i select "show quick menu" and "ask for directory to save" i would expect that this is done alqways, whether i select a whole folder or just 1 or 2 single mails. The behaviour is inconsistent at this point. I do not want to save the attachment somewhere automatically...that is why i choose the corresponding settings and the extension does not follow them.
 
-agg
+> The acess right are not a problem and `[selected folder]` exists..that cannot be the problem.
 
-toMap
-toSet
-exec or ()
+> I would expect the extention to behave always the same, regardless of the number of mails i want to extract from. 
 
+There are three separate issues here:
+
+1) Saving to the incorrect directory: I don't have an explanation for this at the moment, though I do have a theory which I need to investigate.  This behavior did not occur when I tested it.
+
+2) Not packaging (as per the settings): the Extract 'Em! option "This Message" in the context menu of the Message List was only recently introduced, and the extension's save settings were really geared towards batch extraction operations (account or folder level). When it was implemented, I operated under the assumption that in most cases a single or very limited number of attachments would be involved and packaging would not make a lot of sense for MOST people. It might make sense to package if there is more than a single attachment; I will consider that.
+
+3) Not prompting for a save directory (as per the settings): Here we come to a limitation of the TB Extensions API.  The whole reason packaging was implemented in the first place is that it is (unfortunately) not possible for an extension to prompt for a save directory and then save all attachments to that directory.  Given that I chose to save attachments from a single email individually rather than packaging, prompting was impractical.
+
+What might make sense would be to add a context menu option so that in one case the behavior you are requesting is observed, and another the existing behavior is preserved.  Given that the holidays are approaching, I can
 
 
 

@@ -50,6 +50,7 @@ export const selectionContexts = {
     account: "account",
     folder: "folder",
     message: "message",
+    messageDirect: "messageDirect",
     selected: "selected",
     listed: "listed"
 };

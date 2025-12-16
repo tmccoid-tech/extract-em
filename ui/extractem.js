@@ -231,6 +231,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     let isMessageListContext = false;
     let tagIfEnabled = false;
 
+    let packageAttachments = true;
+
 //    var capabilities = new Capabilities();
     
     const updateProcessingFolder = async (folderPath) => {
@@ -630,7 +632,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const { selectionContext } = params;
 
-            isMessageListContext = (selectionContext == selectionContexts.message || selectionContext == selectionContexts.selected || selectionContext == selectionContexts.listed);
+            isMessageListContext = (selectionContext == selectionContexts.message || selectionContext == selectionContexts.messageDirect || selectionContext == selectionContexts.selected || selectionContext == selectionContexts.listed);
 
             let displayQuickmenu = extensionOptions.displayQuickmenu && selectedFolders.length == 1 && !isMessageListContext;
             const extractImmediate = params.allowExtractImmediate;
@@ -676,6 +678,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
 
+            packageAttachments = extensionOptions.packageAttachments && !params.forceIndividualSave;
+
             attachmentManager = new AttachmentManager({
                 folders: selectedFolders,
                 silentModeInvoked: false,
@@ -686,7 +690,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 reportFolderProcessed: updateProcessedFolder,
                 reportProcessingComplete: updateProcessingComplete,
 
-                reportStorageProgress: (extensionOptions.packageAttachments)
+                reportStorageProgress: (packageAttachments)
                     ? updatePackagingProgress
                     : updateSavingProgress,
                 
@@ -730,7 +734,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     hideCloseButton: true,
                     selectionContext: selectionContext,
                     tabId: params.tabId,
-                    selectedMessages: params.selectedMessages
+                    selectedMessages: params.selectedMessages,
+                    packageAttachments: packageAttachments
                 });
             }
             else {
@@ -811,8 +816,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 fileTypeFilter = FilterManager.assembleFileTypeFilter();
             }
         
-            packagingProgressRow.classList.toggle("hidden", !extensionOptions.packageAttachments);
-            savingProgessRow.classList.toggle("hidden", extensionOptions.packageAttachments);
+            packagingProgressRow.classList.toggle("hidden", !packageAttachments);
+            savingProgessRow.classList.toggle("hidden", packageAttachments);
 
             const discoveryOptions = {
                 selectedFolderPaths: new Set(selectedFolderPaths),
@@ -864,11 +869,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         switch(action) {
             case "extract-single":
-                invokeExtractImmediate({ includeSubfolders: false, hideCloseButton: false });
+                invokeExtractImmediate({ includeSubfolders: false, hideCloseButton: false, packageAttachments: packageAttachments });
                 break;
             
             case "extract-recursive":
-                invokeExtractImmediate({ includeSubfolders: true, hideCloseButton: false });
+                invokeExtractImmediate({ includeSubfolders: true, hideCloseButton: false, packageAttachments: packageAttachments });
                 break;
 
             case "standard-selection":
@@ -1232,14 +1237,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         fileTypeFilterAppliedSpan.classList.toggle("hidden", !extensionOptions.useFileTypeFilter);
 
-        packagingProgressRow.classList.toggle("hidden", !extensionOptions.packageAttachments);
-        savingProgessRow.classList.toggle("hidden", extensionOptions.packageAttachments);
+        packagingProgressRow.classList.toggle("hidden", !packageAttachments);
+        savingProgessRow.classList.toggle("hidden", packageAttachments);
 
         flexContainer.classList.add("modal");
         zipOverlay.classList.remove("hidden");
 
         attachmentManager.extract(list, getInfo, {
-            packageAttachments: extensionOptions.packageAttachments,
+            packageAttachments: packageAttachments,
             preserveFolderStructure: extensionOptions.preserveFolderStructure,
             includeEmbeds: includeEmbeds,
             tagMessages: extensionOptions.tagMessages || (extensionOptions.enableMessageTagging && (isMessageListContext || tagIfEnabled))
@@ -1299,9 +1304,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function updateZipDiscoveryInfo(selectedAttachmentCount, selectedAttachmentSize, selectedEmbedCount) {
         immediateDiscoveryProgress.value = 1;
         const attachmentCounts = attachmentManager.getAttachmentCounts();
-        // discoverySelectionMessageDiv.innerHTML = messenger.i18n.getMessage("discoverySelectionMessage", [selectedAttachmentCount.toString(), attachmentCounts.attachmentCount.toString()]);
-        // embedDiscoverySelectionMessageDiv.innerHTML =  messenger.i18n.getMessage("embedDiscoverySelectionMessage", [selectedEmbedCount.toString(), attachmentCounts.embedCount.toString()]);
-        // discoverySizeLabel.innerHTML = abbreviateFileSize(selectedAttachmentSize);
+
         discoverySelectionMessageDiv.textContent = messenger.i18n.getMessage("discoverySelectionMessage", [selectedAttachmentCount.toString(), attachmentCounts.attachmentCount.toString()]);
         embedDiscoverySelectionMessageDiv.textContent =  messenger.i18n.getMessage("embedDiscoverySelectionMessage", [selectedEmbedCount.toString(), attachmentCounts.embedCount.toString()]);
         discoverySizeLabel.textContent = abbreviateFileSize(selectedAttachmentSize);

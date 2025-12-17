@@ -16,15 +16,15 @@ import { i18nText } from "/module/i18nText.js";
 
     await menus.removeAll();
 
-    const thisMessageMenuId = await create({ id: "extractem.thisMessage", title: i18nText.thisMessage, contexts: ["message_list"], icons: menuIconPaths });
-    const thisMessageDirectMenuId = await create({ title: `${i18nText.thisMessage} (${i18nText.direct})`, contexts: ["message_list"], icons: menuIconPaths });
+    const thisMessageMenuId = await create({ id: "extractem.message", title: i18nText.thisMessage, contexts: ["message_list"], icons: menuIconPaths });
+    const thisMessageDirectMenuId = await create({ id: "extractem.messageDirect", title: `${i18nText.thisMessage} (${i18nText.direct})`, contexts: ["message_list"], icons: menuIconPaths });
 
     const menuItems = new Map([
         [ await create({ id: "extractem.folder" , title: extensionName, contexts: ["folder_pane"] }), selectionContexts.folder ],
         [ thisMessageMenuId, selectionContexts.message ],
         [ thisMessageDirectMenuId, selectionContexts.messageDirect ],
-        [ await create({ title: i18nText.selectedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.selected ],
-        [ await create({ title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.listed ]
+        [ await create({ id: "extractem.selected", title: i18nText.selectedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.selected ],
+        [ await create({ id: "extractem.listed", title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.listed ]
     ]);
 
     // Initialize action buttons
@@ -90,7 +90,24 @@ import { i18nText } from "/module/i18nText.js";
     browser.ExtractionFilterAction.initialize(extensionName);
 
     browser.ExtractionFilterAction.onFilterExecuted.addListener(async (messageList) => {
-        console.log(messageList);
+        const messagePages = [messageList]
+
+        let pageId = messageList.id;
+        let pageIndex = 0;
+
+        while(pageId) {
+            messagePages.push(await messages.continueList(pageId));
+            pageId = messagePages[++pageIndex].id;
+        }
+
+        console.log(messagePages);
+/*
+
+        for(let message of messageList.messages) {
+            console.log(await messages.get(message.id));
+        }
+*/
+
     });
 
     // Background extraction methods

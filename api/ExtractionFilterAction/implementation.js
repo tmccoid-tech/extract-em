@@ -39,9 +39,9 @@
                                 allowDuplicates: false,
                                 
                                 applyAction: async function (aMsgHdrs, aActionValue, copyListener, _aType, _aMsgWindow) {
-                                    const messageList = await context.extension.messageManager.startMessageList(aMsgHdrs);
+                                    const result = await context.extension.messageManager.startMessageList(aMsgHdrs);
                                     
-                                    eventEmitter.emit("filter-executed", messageList);
+                                    eventEmitter.emit("filter-executed", result);
                                 },
                                 
                                 isAsync: true,

@@ -19,6 +19,10 @@
                 "type": "function",
                 "parameters": [
                     {
+                        "name": "filterContext",
+                        "type": "string"
+                    },
+                    {
                         "name": "messageList",
                         "$ref": "messages.MessageList"
                     }

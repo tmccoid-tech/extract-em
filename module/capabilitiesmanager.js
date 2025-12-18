@@ -52,7 +52,9 @@ export const selectionContexts = {
     message: "message",
     messageDirect: "messageDirect",
     selected: "selected",
-    listed: "listed"
+    listed: "listed",
+    manualFilter: "manualFilter",
+    messageReceiptFilter: "messageReceiptFilter"
 };
 
 export const menuIconPaths = {

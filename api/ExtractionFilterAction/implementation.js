@@ -34,14 +34,18 @@
                             MailServices.filters.addCustomAction({
                                 id: extractFilteredId,
                                 name: extensionName,
-                                isValidForType: function(t, s) { return true; },
+                                isValidForType: function(t, s) {
+                                    const { InboxRule, Manual } = Ci.nsMsgFilterType;
+
+                                    return (t & InboxRule == InboxRule) || (t & Manual == Manual);
+                                },
                                 validateActionValue: function(v, f, t) { return null; },
                                 allowDuplicates: false,
                                 
-                                applyAction: async function (aMsgHdrs, aActionValue, copyListener, _aType, _aMsgWindow) {
+                                applyAction: async function (aMsgHdrs, _aActionValue, _copyListener, aType, _aMsgWindow) {
                                     const result = await context.extension.messageManager.startMessageList(aMsgHdrs);
                                     
-                                    eventEmitter.emit("filter-executed", result);
+                                    eventEmitter.emit("filter-executed", aType, result);
                                 },
                                 
                                 isAsync: true,
@@ -61,8 +65,19 @@
                         extensionApi: this,
                         
                         register: (invoke) => {
-                            const callback = (_, messageList) => {
-                                invoke.async(messageList);
+                            const callback = (_, actionType, messageList) => {
+                                const { InboxRule, Manual } = Ci.nsMsgFilterType;
+
+                                let filterContext = "invalid";
+
+                                if(actionType & Manual == Manual) {
+                                    filterContext = "manualFilter";
+                                }
+                                else if(actionType & InboxRule == InboxRule) {
+                                    filterContext = "messageReceiptFilter";
+                                }
+
+                                invoke.async(filterContext, messageList);
                             };
 
                             eventEmitter.on("filter-executed", callback);

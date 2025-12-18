@@ -603,5 +603,8 @@
 
     "direct": {
         "message": "Direct"
+    },
+    "existingInstanceMessage": {
+        "message": "Execution canceled; an instance of the extension is already running."
     }
 }

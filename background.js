@@ -89,26 +89,6 @@ import { i18nText } from "/module/i18nText.js";
 
     browser.ExtractionFilterAction.initialize(extensionName);
 
-    browser.ExtractionFilterAction.onFilterExecuted.addListener(async (messageList) => {
-        const messagePages = [messageList]
-
-        let pageId = messageList.id;
-        let pageIndex = 0;
-
-        while(pageId) {
-            messagePages.push(await messages.continueList(pageId));
-            pageId = messagePages[++pageIndex].id;
-        }
-
-        console.log(messagePages);
-/*
-
-        for(let message of messageList.messages) {
-            console.log(await messages.get(message.id));
-        }
-*/
-
-    });
 
     // Background extraction methods
 
@@ -140,15 +120,11 @@ import { i18nText } from "/module/i18nText.js";
                 }
                 // If a folder node has been selected...
                 else {
-//                else if (info.selectedFolders) {
-//                    const [selectedFolder] = selectedFolders;
-
                     accountId = selectedFolder.accountId;
                     selectedFolders.push(await messenger.folders.get(selectedFolder.id, true));
                 }
             }
             else {
-
                 const { displayedFolder } = info;
 
                 accountId = displayedFolder.accountId;
@@ -174,6 +150,12 @@ import { i18nText } from "/module/i18nText.js";
                             selectionContext = selectionContexts.folder;
                         }
 
+                        break;
+
+                    case selectionContexts.manualFilter:
+                        break;
+
+                    case selectionContexts.messageReceiptFilter:
                         break;
                 }
             }
@@ -323,6 +305,21 @@ import { i18nText } from "/module/i18nText.js";
 
     // Event handlers
     
+    browser.ExtractionFilterAction.onFilterExecuted.addListener(async (filterContext, messageList) => {
+        console.log(filterContext);
+
+        switch(filterContext) {
+            case selectionContexts.manualFilter:
+            case selectionContexts.messageReceiptFilter:
+                break;
+            default:
+                console.log("Unsupported filter action.");
+                return;
+        }
+
+        handleAction({ messageList }, null, filterContext);
+    });
+
     messages.onNewMailReceived.addListener(async (folder, newMessages) => {
         const extensionOptions = await OptionsManager.retrieve();
 

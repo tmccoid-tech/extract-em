@@ -751,5 +751,12 @@
 
     "rn1_9_4_Notice01": {
         "message": "La funzione \"Distacco permanente\" è stata ripristinata. Si prega di rivedere la seguente discussione per i dettagli."
+    },
+
+    "direct": {
+        "message": "Diretto"
+    },
+    "rn1_9_5_New01": {
+        "message": "L'opzione di estrazione \"Questo messaggio\" (e-mail singola) ora salva gli allegati in base alle impostazioni di archiviazione dell'estensione; la nuova opzione \"Questo messaggio (diretto)\" salverà sempre gli allegati come singoli file."
     }
 }

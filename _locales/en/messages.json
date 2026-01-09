@@ -603,5 +603,8 @@
 
     "direct": {
         "message": "Direct"
+    },
+    "rn1_9_5_New01": {
+        "message": "The 'This Message' (single email) extraction option now saves attachments according to the extension's storage settings; the new 'This Message (Direct)' option will always save attachments as individual files."
     }
 }

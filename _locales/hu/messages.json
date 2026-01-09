@@ -685,5 +685,12 @@
 
     "rn1_9_4_Notice01": {
         "message": "A „Végleges leválasztás” funkció visszaállításra került. Kérjük, olvassa el a következő beszélgetést a részletekért."
+    },
+
+    "direct": {
+        "message": "Közvetlen"
+    },
+    "rn1_9_5_New01": {
+        "message": "Az „Ez az üzenet” (egyetlen e-mail) kibontási lehetőség mostantól a bővítmény tárolási beállításai szerint menti a mellékleteket; az új \"Ez az üzenet (Közvetlen)\" opció mindig külön fájlként menti a mellékleteket."
     }
 }

@@ -752,5 +752,12 @@
 
     "rn1_9_4_Notice01": {
         "message": "Przywrócono funkcję „Odłącz na stałe”. Aby poznać szczegóły, przejrzyj poniższą dyskusję."
+    },
+
+    "direct": {
+        "message": "Bezpośredni"
+    },
+    "rn1_9_5_New01": {
+        "message": "Opcja wyodrębniania „Ta wiadomość” (pojedyncza wiadomość e-mail) zapisuje teraz załączniki zgodnie z ustawieniami przechowywania rozszerzenia; nowa opcja „Ta wiadomość (bezpośrednia)” będzie zawsze zapisywać załączniki jako pojedyncze pliki."
     }
 }

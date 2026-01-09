@@ -752,5 +752,12 @@
 
     "rn1_9_4_Notice01": {
         "message": "La fonctionnalité « Détacher définitivement » a été rétablie. Veuillez consulter la discussion suivante pour plus de détails."
+    },
+
+    "direct": {
+        "message": "Direct"
+    },
+    "rn1_9_5_New01": {
+        "message": "L'option d'extraction « Ce message » (e-mail unique) enregistre désormais les pièces jointes en fonction des paramètres de stockage de l'extension ; la nouvelle option « Ce message (direct) » enregistrera toujours les pièces jointes sous forme de fichiers individuels."
     }
 }

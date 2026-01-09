@@ -752,5 +752,12 @@
 
     "rn1_9_4_Notice01": {
         "message": "Se ha restablecido la función \"Desconectar permanentemente\". Revise la siguiente discusión para obtener más detalles."
+    },
+
+    "direct": {
+        "message": "Directo"
+    },
+    "rn1_9_5_New01": {
+        "message": "La opción de extracción 'Este mensaje' (correo electrónico único) ahora guarda los archivos adjuntos según la configuración de almacenamiento de la extensión; la nueva opción 'Este mensaje (directo)' siempre guardará los archivos adjuntos como archivos individuales."
     }
 }

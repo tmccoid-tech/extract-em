@@ -6,11 +6,40 @@
 
     const eventEmitter = new ExtensionCommon.EventEmitter();
 
-    class ExtractionFilterAction extends ExtensionCommon.ExtensionAPI {
+    const { InboxRule, Manual, PostPlugin } = Ci.nsMsgFilterType;
+
+    class ExtractionFilterAction extends ExtensionCommon.ExtensionAPIPersistent {
+
+        PERSISTENT_EVENTS = {
+            onFilterExecuted({ fire }) {
+                function callback(_, actionType, messageList) {
+                    let filterContext = "invalid";
+
+                    if((actionType & Manual) == Manual) {
+                        filterContext = "manualFilter";
+                    }
+                    else if(((actionType & InboxRule) == InboxRule) || ((actionType & PostPlugin) == PostPlugin)) {
+                        filterContext = "messageReceiptFilter";
+                    }
+
+                    return fire.async(filterContext, messageList);
+                }
+
+                eventEmitter.on("filter-executed", callback);
+
+                return {
+                    unregister: () => {
+                        eventEmitter.off("filter-executed", callback);
+                    },
+                    convert(_fire) {
+                        fire = _fire;
+                    }
+                };
+            }
+        }
+
         getAPI(context) {
 //            const eventEmitter = context.extension.emitter;
-
-            const { InboxRule, Manual, PostPlugin } = Ci.nsMsgFilterType;
 
             const emit = (aType, result) => {
                 eventEmitter.emit("filter-executed", aType, result);
@@ -73,30 +102,7 @@
                         context,
                         module: "ExtractionFilterAction",
                         event: "onFilterExecuted",
-                        extensionApi: this,
-                        
-                        register(invoke) {
-                            function callback(_, actionType, messageList) {
-                                let filterContext = "invalid";
-
-                                if((actionType & Manual) == Manual) {
-                                    filterContext = "manualFilter";
-                                }
-                                else if(((actionType & InboxRule) == InboxRule) || ((actionType & PostPlugin) == PostPlugin)) {
-                                    filterContext = "messageReceiptFilter";
-                                }
-
-                                return invoke.async(filterContext, messageList);
-                            };
-
-                            console.log("Event callback registered!");
-
-                            eventEmitter.on("filter-executed", callback);
-
-                            return function() {
-                                eventEmitter.off("filter-executed", callback);
-                            };
-                        }
+                        extensionApi: this
                     }).api()
                 }
             }
@@ -107,9 +113,9 @@
                 return;
             }
 
-            Services.obs.notifyObservers(null, "startupcache-invalidate", null);
+//            Services.obs.notifyObservers(null, "startupcache-invalidate", null);
 
-            console.log(`${extractFilteredId} cache cleared.`)
+//            console.log(`${extractFilteredId} cache cleared.`)
         }
     };
 

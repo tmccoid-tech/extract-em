@@ -11,6 +11,11 @@
                         "name": "extensionName"
                     }
                 ]
+            },
+            {
+                "name": "testEmit",
+                "type": "function",
+                "parameters": []
             }
         ],
         "events": [

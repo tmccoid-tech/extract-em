@@ -10,7 +10,7 @@ import { i18nText } from "/module/i18nText.js";
 
     const { extensionName } = i18nText;
 
-    const { action: browserAction, menus, messageDisplay, messageDisplayAction, messages, runtime, tabs, windows } = messenger;
+    const { accounts, action: browserAction, menus, messageDisplay, messageDisplayAction, messages, runtime, tabs, windows } = messenger;
 
     const { create } = menus;
 
@@ -103,6 +103,7 @@ import { i18nText } from "/module/i18nText.js";
             const selectedFolders = [];
             let tabId = null;
             let selectedMessages;
+            let messageList;
 
             if(selectionContext == selectionContexts.folder) {
 
@@ -124,6 +125,21 @@ import { i18nText } from "/module/i18nText.js";
                     selectedFolders.push(await messenger.folders.get(selectedFolder.id, true));
                 }
             }
+            
+            else if (selectionContext == selectionContexts.manualFilter || selectionContext == selectionContexts.messageReceiptFilter) {
+                const
+                    [ firstMessage ] = info.messageList.messages,
+                    { folder } = firstMessage,
+                    { accountId } = folder
+                ;
+
+                folder.subFolders = [];
+
+                selectedFolders.push(folder);
+
+                messageList = info.messageList;
+            }
+
             else {
                 const { displayedFolder } = info;
 
@@ -151,12 +167,6 @@ import { i18nText } from "/module/i18nText.js";
                         }
 
                         break;
-
-                    case selectionContexts.manualFilter:
-                        break;
-
-                    case selectionContexts.messageReceiptFilter:
-                        break;
                 }
             }
 
@@ -171,17 +181,23 @@ import { i18nText } from "/module/i18nText.js";
                     selectionContext: selectionContext,
                     selectedFolders: selectedFolders,
                     selectedMessages: selectedMessages,
-                    allowExtractImmediate: selectionContext !== selectionContexts.account && (
-                        selectionContext !== selectionContexts.folder ||
-                        (extensionOptions.extractImmediate && selectedFolders.length == 1 && (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders))
-                    ),
-                    forceIndividualSave: (selectionContext == selectionContexts.messageDirect)
+                    messageList: messageList,
+
+                    allowExtractImmediate:
+                        selectionContext == selectionContexts.messageReceiptFilter ||
+                        selectionContext == selectionContexts.manualFilter ||
+                        (selectionContext !== selectionContexts.account && (
+                            selectionContext !== selectionContexts.folder ||
+                            (extensionOptions.extractImmediate && selectedFolders.length == 1 && (selectedFolders[0].subFolders.length == 0 || extensionOptions.includeSubfolders))
+                        )),
+
+                    forceIndividualSave: (selectionContext == selectionContexts.messageDirect || selectionContext == selectionContexts.messageReceiptFilter)
                 };
 
                 toggleMenuEnablement(false);
 
-                if(extensionOptions.extractImmediate && extensionOptions.useSilentMode && params.allowExtractImmediate) {
-                    params.showZeroAttachmentsMessage = true;
+                if(selectionContext == selectionContexts.messageReceiptFilter || (extensionOptions.extractImmediate && extensionOptions.useSilentMode && params.allowExtractImmediate)) {
+                    params.showZeroAttachmentsMessage = (selectionContext != selectionContexts.messageReceiptFilter);
 
                     extractSilently(extensionOptions);
                 }
@@ -264,7 +280,8 @@ import { i18nText } from "/module/i18nText.js";
             fileTypeFilter: fileTypeFilter,
             selectionContext: params.selectionContext,
             tabId: params.tabId,
-            selectedMessages: params.selectedMessages
+            selectedMessages: params.selectedMessages,
+            messageList: params.messageList
         };
     
         attachmentManager.discoverAttachments(discoveryOptions);
@@ -317,8 +334,15 @@ import { i18nText } from "/module/i18nText.js";
                 return;
         }
 
+        if(!messageList) {
+            console.log("Emission test successful!");
+            return;
+        }
+
         handleAction({ messageList }, null, filterContext);
     });
+
+    browser.ExtractionFilterAction.testEmit();
 
     messages.onNewMailReceived.addListener(async (folder, newMessages) => {
         const extensionOptions = await OptionsManager.retrieve();
@@ -432,5 +456,5 @@ import { i18nText } from "/module/i18nText.js";
         if(windowId == releaseNotesPopupId) {
             releaseNotesPopupId = null;
         }
-    });
+    }); 
 })(messenger);

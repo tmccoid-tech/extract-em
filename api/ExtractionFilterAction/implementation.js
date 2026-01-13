@@ -8,6 +8,13 @@
 
     class ExtractionFilterAction extends ExtensionCommon.ExtensionAPI {
         getAPI(context) {
+//            const eventEmitter = context.extension.emitter;
+
+            const { InboxRule, Manual, PostPlugin } = Ci.nsMsgFilterType;
+
+            const emit = (aType, result) => {
+                eventEmitter.emit("filter-executed", aType, result);
+            };
 
             return {
                 ExtractionFilterAction: {
@@ -35,9 +42,7 @@
                                 id: extractFilteredId,
                                 name: extensionName,
                                 isValidForType: function(t, s) {
-                                    const { InboxRule, Manual } = Ci.nsMsgFilterType;
-
-                                    return (t & InboxRule == InboxRule) || (t & Manual == Manual);
+                                    return ((t & InboxRule) == InboxRule) || ((t & Manual) == Manual) || ((t & PostPlugin) == PostPlugin);
                                 },
                                 validateActionValue: function(v, f, t) { return null; },
                                 allowDuplicates: false,
@@ -45,7 +50,7 @@
                                 applyAction: async function (aMsgHdrs, _aActionValue, _copyListener, aType, _aMsgWindow) {
                                     const result = await context.extension.messageManager.startMessageList(aMsgHdrs);
                                     
-                                    eventEmitter.emit("filter-executed", aType, result);
+                                    emit(aType, result);
                                 },
                                 
                                 isAsync: true,
@@ -58,35 +63,40 @@
                         console.log("ExtractionFilterAction experminent API initialization complete.");
                     },
 
+                    testEmit: function() {
+                        console.log("Test emit");
+
+                        emit(48, null);
+                    },
+
                     onFilterExecuted: new ExtensionCommon.EventManager({
                         context,
                         module: "ExtractionFilterAction",
                         event: "onFilterExecuted",
                         extensionApi: this,
                         
-                        register: (invoke) => {
-                            const callback = (_, actionType, messageList) => {
-                                const { InboxRule, Manual } = Ci.nsMsgFilterType;
-
+                        register(invoke) {
+                            function callback(_, actionType, messageList) {
                                 let filterContext = "invalid";
 
-                                if(actionType & Manual == Manual) {
+                                if((actionType & Manual) == Manual) {
                                     filterContext = "manualFilter";
                                 }
-                                else if(actionType & InboxRule == InboxRule) {
+                                else if(((actionType & InboxRule) == InboxRule) || ((actionType & PostPlugin) == PostPlugin)) {
                                     filterContext = "messageReceiptFilter";
                                 }
 
-                                invoke.async(filterContext, messageList);
+                                return invoke.async(filterContext, messageList);
                             };
+
+                            console.log("Event callback registered!");
 
                             eventEmitter.on("filter-executed", callback);
 
-                            return () => {
+                            return function() {
                                 eventEmitter.off("filter-executed", callback);
                             };
                         }
-                            
                     }).api()
                 }
             }

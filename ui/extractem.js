@@ -632,7 +632,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const { selectionContext } = params;
 
-            isMessageListContext = (selectionContext == selectionContexts.message || selectionContext == selectionContexts.messageDirect || selectionContext == selectionContexts.selected || selectionContext == selectionContexts.listed);
+            isMessageListContext = (
+                selectionContext == selectionContexts.message ||
+                selectionContext == selectionContexts.messageDirect ||
+                selectionContext == selectionContexts.selected ||
+                selectionContext == selectionContexts.listed ||
+                selectionContext == selectionContexts.manualFilter
+            );
 
             let displayQuickmenu = extensionOptions.displayQuickmenu && selectedFolders.length == 1 && !isMessageListContext;
             const extractImmediate = params.allowExtractImmediate;
@@ -735,6 +741,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     selectionContext: selectionContext,
                     tabId: params.tabId,
                     selectedMessages: params.selectedMessages,
+                    messageList: params.messageList,
                     packageAttachments: packageAttachments
                 });
             }
@@ -826,6 +833,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 selectionContext: extractOptions.selectionContext,
                 tabId: extractOptions.tabId,
                 selectedMessages: extractOptions.selectedMessages,
+                messageList: extractOptions.messageList
             };
     
             attachmentManager.discoverAttachments(discoveryOptions);

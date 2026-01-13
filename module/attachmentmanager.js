@@ -264,6 +264,12 @@ export class AttachmentManager {
             case selectionContexts.listed:
                 await this.#processPages(selectedFolders[0], () => api.getListedMessages(tabId));           // messenger.mailTabs.getListedMessages(tabId)
                 break;
+
+            case selectionContexts.manualFilter:
+            case selectionContexts.messageReceiptFilter:
+                await this.#processPages(selectedFolders[0], () => discoveryOptions.messageList);
+                break;
+
             default:
                 const folderQueue = ((this.#silentModeInvoked)
                     ? selectedFolders

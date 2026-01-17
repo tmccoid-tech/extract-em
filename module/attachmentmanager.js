@@ -1873,10 +1873,27 @@ export class AttachmentManager {
     }
 
     #normalizeFileName(filename) {
+        let result = filename.trim();
+
+        const { groups } = /^=\?utf-8\?B\?(?<b64>[a-z0-9=+/_\-]{4,})\?=/i.exec(result) ?? {};
+
+        if(groups && groups.b64) {
+            const options = {};
+
+            if(/[_\-]+/.test(groups.b64)) {
+                options.alphabet = "base64url";
+            }
+
+            try {
+                result = new TextDecoder().decode(Uint8Array.fromBase64(groups.b64, options));
+            }
+            catch {
+                // Silently ignore
+            }
+        }
+
         const windowsForbiddenCharacterRegex = /[<>:"|?*\/\\]/g;
         const trailingDataDelimiterRegex = /.+?(?=;(?!.*\.+)|$)/;
-
-        let result = filename.trim();
 
         const trailingDataFilter = result.match(trailingDataDelimiterRegex);
 

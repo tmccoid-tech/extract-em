@@ -758,5 +758,9 @@
     },
     "rn1_9_5_New01": {
         "message": "L'opzione di estrazione \"Questo messaggio\" (e-mail singola) ora salva gli allegati in base alle impostazioni di archiviazione dell'estensione; la nuova opzione \"Questo messaggio (diretto)\" salverà sempre gli allegati come singoli file."
+    },
+
+    "rn1_9_6_Fixed01": {
+        "message": "I nomi dei file allegati codificati (principalmente quelli contenenti caratteri non standard) ora sono decodificati correttamente"
     }
 }

@@ -759,5 +759,9 @@
     },
     "rn1_9_5_New01": {
         "message": "Opcja wyodrębniania „Ta wiadomość” (pojedyncza wiadomość e-mail) zapisuje teraz załączniki zgodnie z ustawieniami przechowywania rozszerzenia; nowa opcja „Ta wiadomość (bezpośrednia)” będzie zawsze zapisywać załączniki jako pojedyncze pliki."
+    },
+
+    "rn1_9_6_Fixed01": {
+        "message": "Zakodowane nazwy plików załączników (głównie te zawierające niestandardowe znaki) są teraz poprawnie dekodowane"
     }
 }

@@ -759,5 +759,9 @@
     },
     "rn1_9_5_New01": {
         "message": "La opción de extracción 'Este mensaje' (correo electrónico único) ahora guarda los archivos adjuntos según la configuración de almacenamiento de la extensión; la nueva opción 'Este mensaje (directo)' siempre guardará los archivos adjuntos como archivos individuales."
+    },
+
+    "rn1_9_6_Fixed01": {
+        "message": "Los nombres de archivos adjuntos codificados (principalmente aquellos que contienen caracteres no estándar) ahora están correctamente decodificados"
     }
 }

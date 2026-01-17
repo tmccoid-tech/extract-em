@@ -607,7 +607,11 @@
     "rn1_9_5_New01": {
         "message": "The 'This Message' (single email) extraction option now saves attachments according to the extension's storage settings; the new 'This Message (Direct)' option will always save attachments as individual files."
     },
-    
+
+    "rn1_9_6_Fixed01": {
+        "message": "Encoded attachment filenames (primarily those containing non-standard characters) now properly decoded"
+    },
+
     "existingInstanceMessage": {
         "message": "Execution canceled; an instance of the extension is already running."
     }

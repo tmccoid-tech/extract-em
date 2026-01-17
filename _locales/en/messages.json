@@ -611,7 +611,7 @@
     "rn1_9_6_Fixed01": {
         "message": "Encoded attachment filenames (primarily those containing non-standard characters) now properly decoded"
     },
-
+    
     "existingInstanceMessage": {
         "message": "Execution canceled; an instance of the extension is already running."
     }

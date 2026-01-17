@@ -759,5 +759,9 @@
     },
     "rn1_9_5_New01": {
         "message": "L'option d'extraction « Ce message » (e-mail unique) enregistre désormais les pièces jointes en fonction des paramètres de stockage de l'extension ; la nouvelle option « Ce message (direct) » enregistrera toujours les pièces jointes sous forme de fichiers individuels."
+    },
+
+    "rn1_9_6_Fixed01": {
+        "message": "Les noms de fichiers joints codés (principalement ceux contenant des caractères non standard) sont désormais correctement décodés"
     }
 }

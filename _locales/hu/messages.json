@@ -692,5 +692,9 @@
     },
     "rn1_9_5_New01": {
         "message": "Az „Ez az üzenet” (egyetlen e-mail) kibontási lehetőség mostantól a bővítmény tárolási beállításai szerint menti a mellékleteket; az új \"Ez az üzenet (Közvetlen)\" opció mindig külön fájlként menti a mellékleteket."
+    },
+
+    "rn1_9_6_Fixed01": {
+        "message": "A kódolt mellékletfájlnevek (elsősorban azok, amelyek nem szabványos karaktereket tartalmaznak) megfelelően dekódolva"
     }
 }

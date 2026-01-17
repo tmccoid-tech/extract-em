@@ -758,5 +758,9 @@
     },
     "rn1_9_5_New01": {
         "message": "Die Extraktionsoption „Diese Nachricht“ (einzelne E-Mail) speichert Anhänge jetzt gemäß den Speichereinstellungen der Erweiterung. Mit der neuen Option „Diese Nachricht (direkt)“ werden Anhänge immer als einzelne Dateien gespeichert."
+    },
+    
+    "rn1_9_6_Fixed01": {
+        "message": "Verschlüsselte Dateinamen von Anhängen (hauptsächlich solche, die nicht standardmäßige Zeichen enthalten) werden jetzt ordnungsgemäß dekodiert"
     }
 }

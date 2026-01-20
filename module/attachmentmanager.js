@@ -26,6 +26,7 @@ export class AttachmentManager {
     #silentModeInvoked = false;
     #alwaysPromptForDownloadLocation = true;
     #includeEmbeds = false;
+    #ignoreJunk = true;
     #useAdvancedGetRaw = true;
     #useEnhancedLogging = false;
 
@@ -140,6 +141,7 @@ export class AttachmentManager {
         this.#filenamePattern = options.filenamePattern;
         this.#maxFilenameSubjectLength = options.maxFilenameSubjectLength;
 
+        this.#ignoreJunk = options.ignoreJunk;
         this.#omitDuplicates = options.omitDuplicates;
 
         this.#tagMessagesEnabled = options.tagMessagesEnabled;
@@ -324,7 +326,7 @@ export class AttachmentManager {
     async #processPage(page, folderStats) {
         for (const message of page.messages) {
 
-            if(!(this.#tagMessagesEnabled && OptionsManager.tagging.isTagged(message.tags))) {
+            if(!((this.#ignoreJunk && message.junk) || (this.#tagMessagesEnabled && OptionsManager.tagging.isTagged(message.tags)))) {
                 await this.#processMessage(message, folderStats);
             }
 

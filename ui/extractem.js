@@ -708,6 +708,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 filenamePattern: extensionOptions.filenamePattern,
                 maxFilenameSubjectLength: extensionOptions.maxFilenameSubjectLength,
 
+                ignoreJunk: extensionOptions.ignoreJunk,
                 omitDuplicates: extensionOptions.omitDuplicates,
                 tagMessagesEnabled: extensionOptions.enableMessageTagging,
 

@@ -610,5 +610,15 @@
 
     "rn1_9_6_Fixed01": {
         "message": "Encoded attachment filenames (primarily those containing non-standard characters) now properly decoded"
+    },
+
+    "ignoreJunkAttachments": {
+        "message": "Ignore attachments in junk messages"
+    },
+    "ignoreJunkAttachmentsDesc": {
+        "message": "Omits items in messages flagged as junk from processing"
+    },
+    "rn1_9_7_New01": {
+        "message": "Attachments in messages flagged as junk are now ignored by default"
     }
 }

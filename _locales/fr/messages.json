@@ -763,5 +763,15 @@
 
     "rn1_9_6_Fixed01": {
         "message": "Les noms de fichiers joints codés (principalement ceux contenant des caractères non standard) sont désormais correctement décodés"
+    },
+
+    "ignoreJunkAttachments": {
+        "message": "Ignorer les pièces jointes dans les messages indésirables"
+    },
+    "ignoreJunkAttachmentsDesc": {
+        "message": "Omet les éléments des messages signalés comme indésirables lors du traitement"
+    },
+    "rn1_9_7_New01": {
+        "message": "Les pièces jointes des messages signalés comme indésirables sont désormais ignorées par défaut"
     }
 }

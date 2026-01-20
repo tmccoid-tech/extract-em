@@ -32,9 +32,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         secondaryEditButton: null,
         secondaryFileTypeList: null
     };
+    const ignoreJunkCheckbox = elem("ignore-junk-checkbox");
     const omitDuplicatesCheckbox = elem("omit-duplicates-checkbox");
     const enableMessageTaggingCheckbox= elem("enable-message-tagging-checkbox");
     const resetMessageTagsButton = elem("reset-message-tags-button");
+
     const defaultGroupingSelect = elem("default-grouping-select");
     const imagePreviewSelect = elem("image-preview-select");
 
@@ -82,6 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Discovery Options
         listen(includeEmbedsCheckbox, (e) => setOption(e, (c) => c.checked));
+        listen(ignoreJunkCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(omitDuplicatesCheckbox, (e) => onOmitDuplicateOrEnableMessageTaggingOptionChanged(e));
         listen(enableMessageTaggingCheckbox, (e) => onOmitDuplicateOrEnableMessageTaggingOptionChanged(e));
         listen(defaultGroupingSelect, (e) => setOption(e));
@@ -89,6 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         resetMessageTagsButton.addEventListener("click", resetExtractedTag);
 
         includeEmbedsCheckbox.checked = extensionOptions.includeEmbeds;
+        ignoreJunkCheckbox.checked = extensionOptions.ignoreJunk;
         omitDuplicatesCheckbox.checked = extensionOptions.omitDuplicates;
         enableMessageTaggingCheckbox.checked = extensionOptions.enableMessageTagging;
         resetMessageTagsButton.disabled = !extensionOptions.enableMessageTagging;

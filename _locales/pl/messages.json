@@ -763,5 +763,15 @@
 
     "rn1_9_6_Fixed01": {
         "message": "Zakodowane nazwy plików załączników (głównie te zawierające niestandardowe znaki) są teraz poprawnie dekodowane"
+    },
+
+    "ignoreJunkAttachments": {
+        "message": "Ignoruj ​​załączniki w wiadomościach-śmieciach"
+    },
+    "ignoreJunkAttachmentsDesc": {
+        "message": "Pomija elementy w wiadomościach oznaczonych jako śmieci podczas przetwarzania"
+    },
+    "rn1_9_7_New01": {
+        "message": "Załączniki do wiadomości oznaczonych jako śmieci są teraz domyślnie ignorowane"
     }
 }

@@ -220,6 +220,7 @@ import { i18nText } from "/module/i18nText.js";
             filenamePattern: extensionOptions.filenamePattern,
             maxFilenameSubjectLength: extensionOptions.maxFilenameSubjectLength,
 
+            ignoreJunk: extensionOptions.ignoreJunk,
             omitDuplicates: extensionOptions.omitDuplicates,
 
             tagMessagesEnabled: extensionOptions.enableMessageTagging,

@@ -23,12 +23,13 @@ export class OptionsManager {
             ["~aud", new Set()],
             ["~vid", new Set()]
         ]),
+        ignoreJunk: true,
+
         omitDuplicates: true,
-        
         enableMessageTagging: false,
         tagKey: null,
         tagMessages: false,
-        
+
         defaultGrouping: "None",
         defaultImagePreview: "None",
 

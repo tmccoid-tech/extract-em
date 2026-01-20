@@ -762,5 +762,15 @@
     
     "rn1_9_6_Fixed01": {
         "message": "Verschlüsselte Dateinamen von Anhängen (hauptsächlich solche, die nicht standardmäßige Zeichen enthalten) werden jetzt ordnungsgemäß dekodiert"
+    },
+    
+    "ignoreJunkAttachments": {
+        "message": "Ignorieren Sie Anhänge in Junk-Nachrichten"
+    },
+    "ignoreJunkAttachmentsDesc": {
+        "message": "Elemente in Nachrichten, die als Junk gekennzeichnet sind, werden von der Verarbeitung ausgeschlossen"
+    },
+    "rn1_9_7_New01": {
+        "message": "Anhänge in als Junk gekennzeichneten Nachrichten werden jetzt standardmäßig ignoriert"
     }
 }

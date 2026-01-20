@@ -763,5 +763,15 @@
 
     "rn1_9_6_Fixed01": {
         "message": "Los nombres de archivos adjuntos codificados (principalmente aquellos que contienen caracteres no estándar) ahora están correctamente decodificados"
+    },
+
+    "ignoreJunkAttachments": {
+        "message": "Ignorar archivos adjuntos en mensajes basura"
+    },
+    "ignoreJunkAttachmentsDesc": {
+        "message": "Omite del procesamiento elementos en mensajes marcados como basura"
+    },
+    "rn1_9_7_New01": {
+        "message": "Los archivos adjuntos en mensajes marcados como basura ahora se ignoran de forma predeterminada"
     }
 }

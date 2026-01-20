@@ -762,5 +762,15 @@
 
     "rn1_9_6_Fixed01": {
         "message": "I nomi dei file allegati codificati (principalmente quelli contenenti caratteri non standard) ora sono decodificati correttamente"
+    },
+
+    "ignoreJunkAttachments": {
+        "message": "Ignora gli allegati nei messaggi indesiderati"
+    },
+    "ignoreJunkAttachmentsDesc": {
+        "message": "Omette dall'elaborazione gli elementi nei messaggi contrassegnati come spazzatura"
+    },
+    "rn1_9_7_New01": {
+        "message": "Gli allegati nei messaggi contrassegnati come spazzatura ora vengono ignorati per impostazione predefinita"
     }
 }

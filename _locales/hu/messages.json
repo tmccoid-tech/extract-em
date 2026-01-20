@@ -696,5 +696,15 @@
 
     "rn1_9_6_Fixed01": {
         "message": "A kódolt mellékletfájlnevek (elsősorban azok, amelyek nem szabványos karaktereket tartalmaznak) megfelelően dekódolva"
+    },
+    
+    "ignoreJunkAttachments": {
+        "message": "Figyelmen kívül hagyja a kéretlen üzenetek mellékleteit"
+    },
+    "ignoreJunkAttachmentsDesc": {
+        "message": "Kihagyja a szemétként megjelölt üzenetek elemeit a feldolgozásból"
+    },
+    "rn1_9_7_New01": {
+        "message": "A levélszemétként megjelölt üzenetek mellékleteit a rendszer alapértelmezés szerint figyelmen kívül hagyja"
     }
 }

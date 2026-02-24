@@ -1,6 +1,6 @@
 "use strict";
 
-(function (exports) {
+// (function (exports) {
 
     const extractFilteredId = "tech.tmccoid.extractem#extractFiltered";
 
@@ -119,6 +119,6 @@
         }
     };
 
-    exports.ExtractionFilterAction = ExtractionFilterAction;
+    this.ExtractionFilterAction = ExtractionFilterAction;
 
-}) (this);
+// }) (this);

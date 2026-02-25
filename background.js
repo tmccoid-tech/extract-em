@@ -4,7 +4,6 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { i18nText } from "/module/i18nText.js";
 
-//(async (messenger) => {
 
     // Initialize menu items
 
@@ -20,9 +19,6 @@ import { i18nText } from "/module/i18nText.js";
         extractem_listed: selectionContexts.listed
     };
 
-//    let thisMessageMenuId;
-//    let thisMessageDirectMenuId;
-
     let params = null;
 
     let popupId = null;
@@ -32,7 +28,9 @@ import { i18nText } from "/module/i18nText.js";
 
     runtime.onInstalled.addListener(async (details) =>
     {
-        console.log(details);
+        messageDisplayAction.setTitle({ title: `${i18nText.extensionName} (${i18nText.thisMessage})`});
+        messageDisplayAction.setBadgeBackgroundColor({ color: "#94642a" });
+        messageDisplayAction.disable();
 
         await menus.removeAll();
         
@@ -52,20 +50,11 @@ import { i18nText } from "/module/i18nText.js";
                         console.log(result.reason);
                     }
                 })
-            });
-/*
-        thisMessageMenuId = await create({ id: "extractem_message", title: i18nText.thisMessage, contexts: ["message_list"], icons: menuIconPaths });
-        thisMessageDirectMenuId = await create({ id: "extractem_messageDirect", title: `${i18nText.thisMessage} (${i18nText.direct})`, contexts: ["message_list"], icons: menuIconPaths });
 
-        menuItems = new Map([
-            [ await create({ id: "extractem_folder" , title: extensionName, contexts: ["folder_pane"] }), selectionContexts.folder ],
-            [ thisMessageMenuId, selectionContexts.message ],
-            [ thisMessageDirectMenuId, selectionContexts.messageDirect ],
-            [ await create({ id: "extractem_selected", title: i18nText.selectedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.selected ],
-            [ await create({ id: "extractem_listed", title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.listed ]
-        ]);
-*/
+                console.log(`${extensionName} installation/initialization complete.`);
+            });
     });
+
 
     // Event handler registrations
 
@@ -105,26 +94,15 @@ import { i18nText } from "/module/i18nText.js";
         onWindowRemoved(windowId);
     });
 
+    browser.ExtractionFilterAction.initialize(extensionName);    
+
     browser.ExtractionFilterAction.onFilterExecuted.addListener((filterContext, messageList) => {
         onFilterExecuted(filterContext, messageList);
     });
 
-
-//    await menus.removeAll();
-
-/*
-    const thisMessageMenuId = await create({ id: "extractem.message", title: i18nText.thisMessage, contexts: ["message_list"], icons: menuIconPaths });
-    const thisMessageDirectMenuId = await create({ id: "extractem.messageDirect", title: `${i18nText.thisMessage} (${i18nText.direct})`, contexts: ["message_list"], icons: menuIconPaths });
+    //    browser.ExtractionFilterAction.testEmit();
 
 
-    const menuItems = new Map([
-        [ await create({ id: "extractem.folder" , title: extensionName, contexts: ["folder_pane"] }), selectionContexts.folder ],
-        [ thisMessageMenuId, selectionContexts.message ],
-        [ thisMessageDirectMenuId, selectionContexts.messageDirect ],
-        [ await create({ id: "extractem.selected", title: i18nText.selectedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.selected ],
-        [ await create({ id: "extractem.listed", title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths }), selectionContexts.listed ]
-    ]);
-*/
 
     // Initialize action buttons
 
@@ -146,10 +124,6 @@ import { i18nText } from "/module/i18nText.js";
     else {
         resetBrowserAction();
     }
-
-    messageDisplayAction.setTitle({ title: `${i18nText.extensionName} (${i18nText.thisMessage})`});
-    messageDisplayAction.setBadgeBackgroundColor({ color: "#94642a" });
-    messageDisplayAction.disable();
 
     const configureDisplayAction = async (tab, displayedMessages) => {
         messageDisplayTab = tab;
@@ -181,10 +155,6 @@ import { i18nText } from "/module/i18nText.js";
             }
         }
     };
-
-    // ExtractionFilterAction experiment registration
-
-    browser.ExtractionFilterAction.initialize(extensionName);
 
 
     // Background extraction methods
@@ -412,8 +382,6 @@ import { i18nText } from "/module/i18nText.js";
             menus.update(menuId, { enabled: enable });
         }
     };
-
-    //    browser.ExtractionFilterAction.testEmit();
     
 
     // Event handlers
@@ -552,5 +520,3 @@ import { i18nText } from "/module/i18nText.js";
 
         handleAction({ messageList }, null, filterContext);
     };
-
-// })(messenger);

@@ -40,7 +40,7 @@ import { i18nText } from "/module/i18nText.js";
             .allSettled([
                 create({ id: "extractem_message", title: i18nText.thisMessage, contexts: ["message_list"], icons: menuIconPaths }),
                 create({ id: "extractem_messageDirect", title: `${i18nText.thisMessage} (${i18nText.direct})`, contexts: ["message_list"], icons: menuIconPaths }),
-                create({ id: "extractem_folder", title: extensionName, contexts: ["folder_pane"] }),
+                create({ id: "extractem_folder", title: extensionName, contexts: ["folder_pane"], icons: menuIconPaths }),
                 create({ id: "extractem_selected", title: i18nText.selectedMessages, contexts: ["message_list"], icons: menuIconPaths }),
                 create({ id: "extractem_listed", title: i18nText.listedMessages, contexts: ["message_list"], icons: menuIconPaths })
             ])
@@ -54,7 +54,6 @@ import { i18nText } from "/module/i18nText.js";
                 console.log(`${extensionName} installation/initialization complete.`);
             });
     });
-
 
     // Event handler registrations
 
@@ -94,36 +93,10 @@ import { i18nText } from "/module/i18nText.js";
         onWindowRemoved(windowId);
     });
 
-    browser.ExtractionFilterAction.initialize(extensionName);    
-
     browser.ExtractionFilterAction.onFilterExecuted.addListener((filterContext, messageList) => {
         onFilterExecuted(filterContext, messageList);
     });
 
-    //    browser.ExtractionFilterAction.testEmit();
-
-
-
-    // Initialize action buttons
-
-    const resetBrowserAction = () => {
-        browserAction.setTitle({ title: `${i18nText.about} ${i18nText.extensionName}` });
-        browserAction.setBadgeBackgroundColor({ color: "#94642a" });
-        browserAction.setBadgeText({ text: "?" });
-    };
-
-    const initialExtensionOptions = await OptionsManager.retrieve();
-
-    const extensionVersion = (await browser.runtime.getManifest()).version;
-
-    if(extensionVersion !== initialExtensionOptions.lastLoadedVersion) {
-        browserAction.setTitle({ title: `${i18nText.newVersion}: ${extensionVersion}` });
-        browserAction.setBadgeBackgroundColor({ color: "#31b125ff" });
-        browserAction.setBadgeText({ text: "!" });
-    }
-    else {
-        resetBrowserAction();
-    }
 
     const configureDisplayAction = async (tab, displayedMessages) => {
         messageDisplayTab = tab;
@@ -154,6 +127,25 @@ import { i18nText } from "/module/i18nText.js";
                 messageDisplayAction.enable();
             }
         }
+    };
+
+    const onTabActivated = async ({ tabId }) => {
+        const tab = await tabs.get(tabId);
+
+        if(tab.type == "mail") {
+            const displayedMessages = await messageDisplay.getDisplayedMessages(tabId);
+
+            configureDisplayAction(tab, displayedMessages);
+        }
+    };
+
+
+    // Initialize action buttons
+
+    const resetBrowserAction = () => {
+        browserAction.setTitle({ title: `${i18nText.about} ${i18nText.extensionName}` });
+        browserAction.setBadgeBackgroundColor({ color: "#94642a" });
+        browserAction.setBadgeText({ text: "?" });
     };
 
 
@@ -407,16 +399,6 @@ import { i18nText } from "/module/i18nText.js";
         }
     };
 
-    const onTabActivated = async ({ tabId }) => {
-        const tab = await tabs.get(tabId);
-
-        if(tab.type == "mail") {
-            const displayedMessages = await messageDisplay.getDisplayedMessages(tabId);
-
-            configureDisplayAction(tab, displayedMessages);
-        }
-    };
-
     const onMessageDisplayActionClicked = async (tab, info) => {
         const [ message ] = (await messageDisplay.getDisplayedMessages(tab.id)).messages;
 
@@ -520,3 +502,18 @@ import { i18nText } from "/module/i18nText.js";
 
         handleAction({ messageList }, null, filterContext);
     };
+   
+    const initialExtensionOptions = await OptionsManager.retrieve();
+
+    const extensionVersion = (await browser.runtime.getManifest()).version;
+
+    if(extensionVersion !== initialExtensionOptions.lastLoadedVersion) {
+        browserAction.setTitle({ title: `${i18nText.newVersion}: ${extensionVersion}` });
+        browserAction.setBadgeBackgroundColor({ color: "#31b125ff" });
+        browserAction.setBadgeText({ text: "!" });
+    }
+    else {
+        resetBrowserAction();
+    }
+
+    browser.ExtractionFilterAction.initialize(extensionName);

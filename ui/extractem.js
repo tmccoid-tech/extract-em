@@ -1735,7 +1735,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         closeReleaseNotesButton.classList.remove("hidden");
 
         closeReleaseNotesButton.addEventListener("click", closeReleaseNotes);
-        const releaseNotesPanel = document.querySelector(`.release-notes-panel[version^='${CapabilitiesManager.featureVersion}']`);
+        let releaseNotesPanel = document.querySelector(`.release-notes-panel[version^='${CapabilitiesManager.featureVersion}']`);
+
+        if(!releaseNotesPanel) {
+            releaseNotesPanel = document.querySelector(`.release-notes-panel[version^='error']`);
+
+            if(releaseNotesPanel) {
+                const missingVersionSpan = releaseNotesPanel.querySelector(".missing-release-notes-version-span");
+                missingVersionSpan.innerText = CapabilitiesManager.featureVersion;
+            }
+        }
 
         if(releaseNotesPanel) {
             releaseNotesPanel.classList.remove("hidden");

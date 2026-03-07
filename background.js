@@ -65,16 +65,16 @@ import { i18nText } from "/module/i18nText.js";
         onMenuClicked(info, tab);
     });
 
-    tabs.onActivated.addListener((activeInfo) => {
-        onTabActivated(activeInfo);
-    });
-
     messageDisplay.onMessagesDisplayed.addListener((tab, displayedMessages) => {
         configureDisplayAction(tab, displayedMessages);
     });
 
     messageDisplayAction.onClicked.addListener((tab, info) => {
         onMessageDisplayActionClicked(tab, info);
+    });
+
+    tabs.onActivated.addListener((activeInfo) => {
+        onTabActivated(activeInfo);
     });
 
     browserAction.onClicked.addListener((tab, info) => {
@@ -97,6 +97,29 @@ import { i18nText } from "/module/i18nText.js";
         onFilterExecuted(filterContext, messageList);
     });
 
+
+    // Event handlers
+
+    const onMenuShown = async (info, tab) => {
+        if(!popupId && info.contexts.includes("message_list")) {
+            if(info.selectedMessages && info.selectedMessages.messages) {
+                const enabled = info.selectedMessages.messages.length == 1;
+
+                await menus.update("extractem_message", { enabled: enabled });
+                await menus.update("extractem_messageDirect", { enabled: enabled });
+                
+                menus.refresh();
+            }
+        }
+    };
+
+    const onMenuClicked = (info, tab) => {
+        if(menuItems[info.menuItemId]) {
+            let selectionContext = menuItems[info.menuItemId];
+
+            handleAction(info, tab, selectionContext);
+        }
+    };
 
     const configureDisplayAction = async (tab, displayedMessages) => {
         messageDisplayTab = tab;
@@ -129,6 +152,16 @@ import { i18nText } from "/module/i18nText.js";
         }
     };
 
+    const onMessageDisplayActionClicked = async (tab, info) => {
+        const [ message ] = (await messageDisplay.getDisplayedMessages(tab.id)).messages;
+
+        info.displayedFolder = message.folder;
+        info.displayedFolder.subFolders = [];
+        info.selectedMessages = { messages: [message] };
+
+        handleAction(info, tab, selectionContexts.messageDirect);
+    };
+
     const onTabActivated = async ({ tabId }) => {
         const tab = await tabs.get(tabId);
 
@@ -139,13 +172,120 @@ import { i18nText } from "/module/i18nText.js";
         }
     };
 
-
-    // Initialize action buttons
-
     const resetBrowserAction = () => {
         browserAction.setTitle({ title: `${i18nText.about} ${i18nText.extensionName}` });
         browserAction.setBadgeBackgroundColor({ color: "#94642a" });
         browserAction.setBadgeText({ text: "?" });
+    };
+
+    const onBrowserActionClicked = async (tab, info) => {
+        if(releaseNotesPopupId) {
+            windows.update(releaseNotesPopupId, { focused: true });
+        }
+        else {
+            releaseNotesPopupId = (await browser.windows.create({
+                type: "popup",
+                url: "/ui/releasenotes.html",
+                allowScriptsToClose: true
+            })).id;
+
+            const extensionOptions = await OptionsManager.retrieve();
+
+            if(CapabilitiesManager.extensionVersion !== extensionOptions.lastLoadedVersion) {
+                OptionsManager.setOption("lastLoadedVersion", CapabilitiesManager.extensionVersion);
+            }
+
+            resetBrowserAction();
+        }
+    };
+
+    // Executed when new mail arrives
+    const onNewMailReceived = async (folder, newMessages) => {
+        const extensionOptions = await OptionsManager.retrieve();
+
+        if(extensionOptions.extractOnReceiveEnabled) {
+            folder.subFolders = [];
+
+            params = {
+                accountId: folder.accountId,
+                selectionContext: selectionContexts.messageDirect,
+                selectedFolders: [folder],
+                tabId: null,
+                selectedMessages: newMessages.messages,
+                preserveFolderStructure: extensionOptions.preserveFolderStructure,
+                allowExtractImmediate: true,
+                forceIndividualSave: true
+            };
+
+            extractSilently(extensionOptions);
+        }
+    };
+
+    // Handles instructions from the main extension page script
+    const onInstructionReceived = (request, sender, respond) => {
+        if(request && request.action) {
+            switch(request.action) {
+                case "getParams":
+                    respond(params);
+                    break;
+
+                case "close":
+                    windows.remove(popupId);
+                    break;
+
+                case "resetBrowserAction":
+                    resetBrowserAction();
+                    break;
+            }
+        }
+    };
+
+    const toggleMenuEnablement = async (enable) => {
+        if(enable && messageDisplayTab) {
+            const displayedMessages = await messageDisplay.getDisplayedMessages(messageDisplayTab.id);
+
+            configureDisplayAction(messageDisplayTab, displayedMessages);
+        }
+        else {
+            messageDisplayAction.disable();
+        }
+
+        for(let menuId in menuItems) {
+            menus.update(menuId, { enabled: enable });
+        }
+    };
+
+    const onWindowRemoved = async (windowId) => {
+        if (windowId == popupId) {
+            params = null;
+            popupId = null;
+
+            toggleMenuEnablement(true);
+        }
+
+        if(windowId == releaseNotesPopupId) {
+            releaseNotesPopupId = null;
+        }
+    };
+
+    const onFilterExecuted = (filterContext, messageList) => {
+        console.log(filterContext);
+
+        switch(filterContext) {
+            case selectionContexts.manualFilter:
+            case selectionContexts.messageReceiptFilter:
+                break;
+            default:
+                console.log("Unsupported filter action.");
+                return;
+        }
+
+        if(!messageList) {
+            console.log("Emission test successful!");
+            return;
+        }
+
+        handleAction({ messageList }, null, filterContext);
     };
 
 
@@ -360,154 +500,12 @@ import { i18nText } from "/module/i18nText.js";
         }
     };
 
-    const toggleMenuEnablement = async (enable) => {
-        if(enable && messageDisplayTab) {
-            const displayedMessages = await messageDisplay.getDisplayedMessages(messageDisplayTab.id);
-
-            configureDisplayAction(messageDisplayTab, displayedMessages);
-        }
-        else {
-            messageDisplayAction.disable();
-        }
-
-        for(let menuId in menuItems) {
-            menus.update(menuId, { enabled: enable });
-        }
-    };
-    
-
-    // Event handlers
-
-    const onMenuShown = async (info, tab) => {
-        if(!popupId && info.contexts.includes("message_list")) {
-            if(info.selectedMessages && info.selectedMessages.messages) {
-                const enabled = info.selectedMessages.messages.length == 1;
-
-                await menus.update("extractem_message", { enabled: enabled });
-                await menus.update("extractem_messageDirect", { enabled: enabled });
-                
-                menus.refresh();
-            }
-        }
-    };
-
-    const onMenuClicked = (info, tab) => {
-        if(menuItems[info.menuItemId]) {
-            let selectionContext = menuItems[info.menuItemId];
-
-            handleAction(info, tab, selectionContext);
-        }
-    };
-
-    const onMessageDisplayActionClicked = async (tab, info) => {
-        const [ message ] = (await messageDisplay.getDisplayedMessages(tab.id)).messages;
-
-        info.displayedFolder = message.folder;
-        info.displayedFolder.subFolders = [];
-        info.selectedMessages = { messages: [message] };
-
-        handleAction(info, tab, selectionContexts.messageDirect);
-    };
-
-    const onBrowserActionClicked = async (tab, info) => {
-        if(releaseNotesPopupId) {
-            windows.update(releaseNotesPopupId, { focused: true });
-        }
-        else {
-            releaseNotesPopupId = (await browser.windows.create({
-                type: "popup",
-                url: "/ui/releasenotes.html",
-                allowScriptsToClose: true
-            })).id;
-
-            if(CapabilitiesManager.extensionVersion !== initialExtensionOptions.lastLoadedVersion) {
-                OptionsManager.setOption("lastLoadedVersion", CapabilitiesManager.extensionVersion);
-            }
-
-            resetBrowserAction();
-        }
-    };
-
-
-    // Executed when new mail arrives
-    const onNewMailReceived = async (folder, newMessages) => {
-        const extensionOptions = await OptionsManager.retrieve();
-
-        if(extensionOptions.extractOnReceiveEnabled) {
-            folder.subFolders = [];
-
-            params = {
-                accountId: folder.accountId,
-                selectionContext: selectionContexts.messageDirect,
-                selectedFolders: [folder],
-                tabId: null,
-                selectedMessages: newMessages.messages,
-                preserveFolderStructure: extensionOptions.preserveFolderStructure,
-                allowExtractImmediate: true,
-                forceIndividualSave: true
-            };
-
-            extractSilently(extensionOptions);
-        }
-    };
-
-    // Handles instructions from the main extension page script
-    const onInstructionReceived = (request, sender, respond) => {
-        if(request && request.action) {
-            switch(request.action) {
-                case "getParams":
-                    respond(params);
-                    break;
-
-                case "close":
-                    windows.remove(popupId);
-                    break;
-
-                case "resetBrowserAction":
-                    resetBrowserAction();
-                    break;
-            }
-        }
-    };
-
-    const onWindowRemoved = async (windowId) => {
-        if (windowId == popupId) {
-            params = null;
-            popupId = null;
-
-            toggleMenuEnablement(true);
-        }
-
-        if(windowId == releaseNotesPopupId) {
-            releaseNotesPopupId = null;
-        }
-    };
-
-    const onFilterExecuted = (filterContext, messageList) => {
-        console.log(filterContext);
-
-        switch(filterContext) {
-            case selectionContexts.manualFilter:
-            case selectionContexts.messageReceiptFilter:
-                break;
-            default:
-                console.log("Unsupported filter action.");
-                return;
-        }
-
-        if(!messageList) {
-            console.log("Emission test successful!");
-            return;
-        }
-
-        handleAction({ messageList }, null, filterContext);
-    };
    
-    const initialExtensionOptions = await OptionsManager.retrieve();
+    const { lastLoadedVersion } = await OptionsManager.retrieve();
 
-    const extensionVersion = (await browser.runtime.getManifest()).version;
+    const { version: extensionVersion } = await runtime.getManifest();
 
-    if(extensionVersion !== initialExtensionOptions.lastLoadedVersion) {
+    if(extensionVersion !== lastLoadedVersion) {
         browserAction.setTitle({ title: `${i18nText.newVersion}: ${extensionVersion}` });
         browserAction.setBadgeBackgroundColor({ color: "#31b125ff" });
         browserAction.setBadgeText({ text: "!" });

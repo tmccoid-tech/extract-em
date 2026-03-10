@@ -706,5 +706,9 @@
     },
     "rn1_9_7_New01": {
         "message": "A levélszemétként megjelölt üzenetek mellékleteit a rendszer alapértelmezés szerint figyelmen kívül hagyja"
+    },
+
+    "rn1_9_8_Fixed01": {
+        "message": "A kódolt mellékletfájlnevek (speciális \"osztott kódolás\" eset) most megfelelően dekódolva"
     }
 }

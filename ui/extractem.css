@@ -697,6 +697,16 @@ td.summary-header {
     border: 1px dashed #94642a;
 }
 
+li.whats-new {
+    list-style-type: "\1F381";
+    padding-left: 8px;
+}
+
+li.whats-fixed {
+    list-style-type: "\1F527";
+    padding-left: 8px;
+}
+
 #download-folders-panel {
     background-color:white;
     padding: 8px;

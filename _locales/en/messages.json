@@ -621,6 +621,10 @@
     "rn1_9_7_New01": {
         "message": "Attachments in messages flagged as junk are now ignored by default"
     },
+
+    "rn1_9_8_Fixed01": {
+        "message": "Encoded attachment filenames (special \"split encoding\" case) now properly decoded"
+    },
     
     "existingInstanceMessage": {
         "message": "Execution canceled; an instance of the extension is already running."

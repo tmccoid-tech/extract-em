@@ -772,5 +772,9 @@
     },
     "rn1_9_7_New01": {
         "message": "Anhänge in als Junk gekennzeichneten Nachrichten werden jetzt standardmäßig ignoriert"
+    },
+
+    "rn1_9_8_Fixed01": {
+        "message": "Verschlüsselte Dateinamen von Anhängen (Sonderfall der „geteilten Kodierung“) werden jetzt ordnungsgemäß dekodiert"
     }
 }

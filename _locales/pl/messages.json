@@ -773,5 +773,9 @@
     },
     "rn1_9_7_New01": {
         "message": "Załączniki do wiadomości oznaczonych jako śmieci są teraz domyślnie ignorowane"
+    },
+
+    "rn1_9_8_Fixed01": {
+        "message": "Zakodowane nazwy plików załączników (specjalny przypadek „dzielonego kodowania”) są teraz poprawnie dekodowane"
     }
 }

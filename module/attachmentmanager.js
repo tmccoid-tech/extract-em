@@ -1871,20 +1871,26 @@ export class AttachmentManager {
     #normalizeFileName(filename) {
         let result = filename.trim();
 
-        const { groups } = /^=\?utf-8\?B\?(?<b64>[a-z0-9=+/_\-]{4,})\?=/i.exec(result) ?? {};
+        const encodedMatches = [...result.matchAll(/\w?=\?utf-8\?B\?(?<b64>[a-z0-9=+/_\-]{4,})\?=/gi)];
 
-        if(groups && groups.b64) {
-            const options = {};
+        if(encodedMatches.length > 0) {
+            result = "";
 
-            if(/[_\-]+/.test(groups.b64)) {
-                options.alphabet = "base64url";
-            }
+            for(const { groups } of encodedMatches) {
+                if(groups && groups.b64) {
+                    const options = {};
 
-            try {
-                result = new TextDecoder().decode(Uint8Array.fromBase64(groups.b64, options));
-            }
-            catch {
-                // Silently ignore
+                    if(/[_\-]+/.test(groups.b64)) {
+                        options.alphabet = "base64url";
+                    }
+
+                    try {
+                        result += new TextDecoder().decode(Uint8Array.fromBase64(groups.b64, options));
+                    }
+                    catch {
+                        // Silently ignore
+                    }
+                }
             }
         }
 

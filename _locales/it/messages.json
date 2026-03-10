@@ -772,5 +772,9 @@
     },
     "rn1_9_7_New01": {
         "message": "Gli allegati nei messaggi contrassegnati come spazzatura ora vengono ignorati per impostazione predefinita"
+    },
+
+    "rn1_9_8_Fixed01": {
+        "message": "I nomi dei file allegati codificati (caso speciale di \"codifica divisa\") ora sono decodificati correttamente"
     }
 }

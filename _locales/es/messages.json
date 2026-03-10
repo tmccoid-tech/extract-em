@@ -773,5 +773,9 @@
     },
     "rn1_9_7_New01": {
         "message": "Los archivos adjuntos en mensajes marcados como basura ahora se ignoran de forma predeterminada"
+    },
+
+    "rn1_9_8_Fixed01": {
+        "message": "Los nombres de archivos adjuntos codificados (caso especial de \"codificación dividida\") ahora están correctamente decodificados"
     }
 }

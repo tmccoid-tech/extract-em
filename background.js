@@ -4,6 +4,8 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { i18nText } from "/module/i18nText.js";
 
+import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
+
 
     // Initialize menu items
 
@@ -515,3 +517,5 @@ import { i18nText } from "/module/i18nText.js";
     }
 
     browser.ExtractionFilterAction.initialize(extensionName);
+
+    vfs.init({ enableExternalProviders: true, configStorageKey: "vfs-toolkit-config-data" });

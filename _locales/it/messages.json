@@ -776,5 +776,9 @@
 
     "rn1_9_8_Fixed01": {
         "message": "I nomi dei file allegati codificati (caso speciale di \"codifica divisa\") ora sono decodificati correttamente"
+    },
+
+    "rn1_9_9_Fixed01": {
+        "message": "Il filtraggio del tipo di file non fa più sì che gli allegati omessi vengano riconosciuti erroneamente come incorporamenti"
     }
 }

@@ -777,5 +777,9 @@
 
     "rn1_9_8_Fixed01": {
         "message": "Les noms de fichiers joints codés (cas spécial « codage fractionné ») sont désormais correctement décodés"
+    },
+
+    "rn1_9_9_Fixed01": {
+        "message": "Le filtrage par type de fichier n'entraîne plus la reconnaissance incorrecte des pièces jointes omises comme des intégrations."
     }
 }

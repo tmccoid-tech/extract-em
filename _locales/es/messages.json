@@ -777,5 +777,9 @@
 
     "rn1_9_8_Fixed01": {
         "message": "Los nombres de archivos adjuntos codificados (caso especial de \"codificación dividida\") ahora están correctamente decodificados"
+    },
+
+    "rn1_9_9_Fixed01": {
+        "message": "El filtrado de tipos de archivos ya no da como resultado que los archivos adjuntos omitidos se reconozcan incorrectamente como incrustados."
     }
 }

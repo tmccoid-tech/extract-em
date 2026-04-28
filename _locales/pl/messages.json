@@ -777,5 +777,9 @@
 
     "rn1_9_8_Fixed01": {
         "message": "Zakodowane nazwy plików załączników (specjalny przypadek „dzielonego kodowania”) są teraz poprawnie dekodowane"
+    },
+
+    "rn1_9_9_Fixed01": {
+        "message": "Filtrowanie typów plików nie powoduje już nieprawidłowego rozpoznawania pominiętych załączników jako osadzonych"
     }
 }

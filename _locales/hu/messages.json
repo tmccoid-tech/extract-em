@@ -710,5 +710,9 @@
 
     "rn1_9_8_Fixed01": {
         "message": "A kódolt mellékletfájlnevek (speciális \"osztott kódolás\" eset) most megfelelően dekódolva"
+    },
+
+    "rn1_9_9_Fixed01": {
+        "message": "A fájltípus-szűrés többé nem eredményezi azt, hogy a kihagyott mellékleteket a rendszer nem megfelelően ismeri fel beágyazottként"
     }
 }

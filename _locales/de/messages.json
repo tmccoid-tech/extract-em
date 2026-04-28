@@ -776,5 +776,9 @@
 
     "rn1_9_8_Fixed01": {
         "message": "Verschlüsselte Dateinamen von Anhängen (Sonderfall der „geteilten Kodierung“) werden jetzt ordnungsgemäß dekodiert"
+    },
+
+    "rn1_9_9_Fixed01": {
+        "message": "Die Filterung nach Dateitypen führt nicht mehr dazu, dass ausgelassene Anhänge fälschlicherweise als Einbettungen erkannt werden"
     }
 }

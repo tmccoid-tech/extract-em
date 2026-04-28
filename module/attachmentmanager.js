@@ -371,7 +371,8 @@ export class AttachmentManager {
             hasAttachments: false,
             fullMessage: null,
             omissionSet: new Set(),
-            isEncrypted: false
+            isEncrypted: false,
+            hasError: false
         };
 
         let messageAttachmentList = [];
@@ -395,6 +396,8 @@ export class AttachmentManager {
             this.#log(errorInfo, true);
 
             this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
+
+            result.hasError = true;
 
             return result;
         }
@@ -420,6 +423,8 @@ export class AttachmentManager {
 
                 this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
 
+                result.hasError = true;
+
                 return result;
             }
 
@@ -430,8 +435,6 @@ export class AttachmentManager {
 
             this.#log(`Generate alteration map: ${message.date} - ${message.subject}`);
             const alterationMap = this.#generateAlterationMap(fullMessage.parts, message, folderStats.folderPath);
-
-            const fileTypeFilter = this.#fileTypeFilter;
 
             for (const attachment of messageAttachmentList) {
                 if(attachment.name == "") {
@@ -468,6 +471,7 @@ export class AttachmentManager {
 
                     if(attachmentPart) {
                         if(attachmentPart.contentType == "application/pgp-keys") {
+                            result.omissionSet.add(attachment.partName);
                             continue;
                         }
                         else if (attachmentPart.headers) {
@@ -496,10 +500,9 @@ export class AttachmentManager {
 
                 let { filename, extension } = this.#processFileName(attachment.name, attachment.contentType);
 
-                if (fileTypeFilter) {
-                    if(!(fileTypeFilter.selectedExtensions.has(extension) || (fileTypeFilter.includeUnlisted && !fileTypeFilter.listedExtensions.has(extension)))) {
-                        continue;
-                    }
+                if(!this.#isIncludedFileType(extension)) {
+                    result.omissionSet.add(attachment.partName);
+                    continue;
                 }
 
                 let charset = null;
@@ -601,7 +604,7 @@ export class AttachmentManager {
     async #identifyEmbeds(message, folderStats, identifyAttachmentsResult) {
         let result = false;
 
-        if(this.#includeEmbeds) {
+        if(this.#includeEmbeds && !identifyAttachmentsResult.hasError) {
             let {
                 hasAttachments,
                 fullMessage,
@@ -643,30 +646,40 @@ export class AttachmentManager {
                         messageCharset = identifyMessageCharsetResult.charset;
                     }
 
+                    const includedEmbeds = [];
+
                     for(const embed of embeds) {
                         let { filename, extension } = this.#processFileName(embed.originalFilename, embed.contentType);
+
+                        if(!this.#isIncludedFileType(extension)) {
+                            continue;
+                        }
 
                         embed.folderPath = folderStats.folderPath;
                         embed.outputFilename = filename;
                         embed.extension = extension;
                         embed.charset = messageCharset;
+
+                        includedEmbeds.push(embed);
                     }
 
-                    this.attachmentList.push(...embeds);
+                    if(includedEmbeds.length > 0) {
+                        this.attachmentList.push(...includedEmbeds);
 
-                    folderStats.lastFileName = embeds[0].originalFilename;
+                        folderStats.lastFileName = includedEmbeds[0].originalFilename;
 
-                    this.#embedCount+= embeds.length;
-                    folderStats.embedCount+= embeds.length;
+                        this.#embedCount+= includedEmbeds.length;
+                        folderStats.embedCount+= includedEmbeds.length;
 
-                    if(!hasAttachments) {
-                        this.#attachmentMessageCount++;
-                        folderStats.attachmentMessageCount++;
+                        if(!hasAttachments) {
+                            this.#attachmentMessageCount++;
+                            folderStats.attachmentMessageCount++;
+                        }
+
+                        this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
+
+                        result = true;
                     }
-
-                    this.#reportAttachmentStats(this.#compileAttachmentStats(folderStats));
-
-                    result = true;
                 }
             }
 
@@ -1966,6 +1979,19 @@ export class AttachmentManager {
         tracker.set(duplicateKey, sequenceNumber)
 
         return result;
+    }
+
+    #isIncludedFileType(extension) {
+        const fileTypeFilter = this.#fileTypeFilter;
+
+        if(fileTypeFilter) {
+            if(fileTypeFilter.selectedExtensions.has(extension))
+                return true;
+
+            return (fileTypeFilter.includeUnlisted && !fileTypeFilter.listedExtensions.has(extension));
+        }
+
+        return true;
     }
 
     #log(message, condition = this.#useEnhancedLogging) {

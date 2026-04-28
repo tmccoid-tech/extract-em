@@ -624,5 +624,9 @@
 
     "rn1_9_8_Fixed01": {
         "message": "Encoded attachment filenames (special \"split encoding\" case) now properly decoded"
+    },
+
+    "rn1_9_9_Fixed01" : {
+        "message": "File-type filtering no longer results in omitted attachments being improperly recognized as embeds"
     }
 }

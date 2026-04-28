@@ -109,12 +109,12 @@ export class EmbedManager {
             let itemFilename;
 
             if(contentDispositionHeader) {
-                itemFilename = /;\s*filename\*?=(?<fn>"[^"]*"|'[^']*'|[^;'"]*)/mi
+                itemFilename = /;\s*filename\*?=\s*(?<fn>"[^"]*"|'[^']*'|[^;'"]*)/mi
                     .exec(contentDispositionHeader)?.groups?.fn;
             }
     
             if(!itemFilename) {
-                itemFilename = /;\s*name\*?=(?<fn>"[^"]*"|'[^']*'|[^;'"]*)/mi
+                itemFilename = /;\s*name\*?=\s*(?<fn>"[^"]*"|'[^']*'|[^;'"]*)/mi
                     .exec(contentTypeHeader)?.groups?.fn;
             }
     
@@ -281,7 +281,9 @@ export class EmbedManager {
                 // Replace reserved regex characters: . * + ? ^ $ { } ( ) | [ ] \
                 .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
                 // Replace whitespace characters with generic whitespace token
-                .replace(/;.s*/g, ";\\s*")
+//                .replace(/;.s*/g, ";\\s*")
+                .replace(/;\s+/g, ";\\s+")
+                .replace(/=\s+/g, "=\\s+")
             ;
 
             startIndex = text.substring(lastEndIndex).search(new RegExp(contentTypeHeaderRegexString));

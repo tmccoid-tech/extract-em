@@ -170,3 +170,7 @@ hr {
 .editor-checkbox-label {
     font-weight: normal;
 }
+
+#automation-folders-selector-container {
+    background-color: white;
+}

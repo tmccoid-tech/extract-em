@@ -1,6 +1,7 @@
 // Classes
 import { OptionsManager } from "/module/optionsmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
+import { AutomationManager } from "/module/automationmanager.js";
 import { SaveManager } from "/module/savemanager.js";
 import { i18n } from "/module/i18n.mjs";
 import { i18nText } from "/module/i18nText.js";
@@ -18,7 +19,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const extractImmediateSubfoldersCheckbox = elem("extract-immediate-subfolders-checkbox");
     const useSilentModeCheckbox = elem("use-silent-mode-checkbox");
     const standardUiModeCheckbox = elem("standard-ui-mode-checkbox");
-    const enableExtractOnReceiveCheckbox = elem("enable-extract-on-receive-checkbox");
+
+    //Automated Extraction
+    const automationElements = {
+        editorOverlay: elem("automation-folders-selector-overlay"),
+        enableExtractOnReceiveCheckbox: elem("enable-extract-on-receive-checkbox"),
+        limitAutomationFoldersCheckbox: elem("limit-automation-folders-checkbox"),
+        editButton: elem("edit-automation-folders-button"),
+        selectedAutomationFoldersDiv: elem("selected-automation-folders-div"),
+        automationFoldersListContainer: elem("automation-folders-list-container"),
+        saveButton: elem("automation-folders-save-button"),
+        cancelButton: elem("automation-folders-cancel-button"),
+        accountPanelTemplate: document.querySelector("#account-panel-template"),
+        folderSelectorTemplate: document.querySelector("#folder-selector-template")
+    };
 
     // Discovery Options
     const includeEmbedsCheckbox = elem("include-embeds-checkbox");
@@ -59,6 +73,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await FilterManager.initializeEditor(filterElements, extensionOptions);
 
+    await AutomationManager.initializeEditor(automationElements, extensionOptions);
+
     const currentSaveDirectory = await SaveManager.determineDownloadDirectory();
 
     i18n.updateDocument();
@@ -70,14 +86,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         listen(extractImmediateSubfoldersCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(useSilentModeCheckbox, (e) => setOption(e, (c) => c.checked));
         listen(standardUiModeCheckbox, onUserInteractionOptionChanged);
-        listen(enableExtractOnReceiveCheckbox, (e) => setOption(e, (c) => c.checked));
+//        listen(enableExtractOnReceiveCheckbox, (e) => setOption(e, (c) => c.checked));
 
         displayQuickmenuCheckbox.checked = extensionOptions.displayQuickmenu;
         extractImmediateCheckbox.checked = extensionOptions.extractImmediate;
         extractImmediateSubfoldersCheckbox.checked = extensionOptions.includeSubfolders;
         useSilentModeCheckbox.checked = extensionOptions.useSilentMode;
         standardUiModeCheckbox.checked = !(extensionOptions.displayQuickmenu || extensionOptions.extractImmediate);
-        enableExtractOnReceiveCheckbox.checked = extensionOptions.extractOnReceiveEnabled;
+//        enableExtractOnReceiveCheckbox.checked = extensionOptions.extractOnReceiveEnabled;
 
         extractImmediateSubfoldersCheckbox.disabled = !extensionOptions.extractImmediate;
         useSilentModeCheckbox.disabled = !extensionOptions.extractImmediate;

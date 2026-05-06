@@ -6,7 +6,6 @@ import { FilterManager } from "/module/filtering/filtermanager.js";
 import { SaveManager } from "/module/savemanager.js";
 import { i18n } from "/module/i18n.mjs";
 import { i18nText } from "/module/i18nText.js";
-import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 
 const _filterSelect = function* (test, select) {
     for(const item of this) {
@@ -585,9 +584,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // MAIN ENTRY POINT
 
     async function main() {
-//        vfs.showDirectoryPicker();
-
-
         closeZipPanelButton.addEventListener("click", closeZipPanel);
         exitExtensionButton.addEventListener("click", (event) => { window.close(); });
         

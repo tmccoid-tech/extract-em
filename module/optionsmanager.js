@@ -10,7 +10,11 @@ export class OptionsManager {
         extractImmediate: false,
         includeSubfolders: false,
         useSilentMode: false,
+
+        // Automated Extraction
         extractOnReceiveEnabled: false,
+        limitAutomationToSpecificFolders: false,
+        automationFolders: new Map(),
         
         // Discovery Options
         includeEmbeds: false,

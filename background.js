@@ -4,8 +4,6 @@ import { AttachmentManager } from "/module/attachmentmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { i18nText } from "/module/i18nText.js";
 
-import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
-
 
     // Initialize menu items
 
@@ -95,9 +93,11 @@ import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
         onWindowRemoved(windowId);
     });
 
+    /*
     browser.ExtractionFilterAction.onFilterExecuted.addListener((filterContext, messageList) => {
         onFilterExecuted(filterContext, messageList);
     });
+    */
 
 
     // Event handlers
@@ -205,11 +205,27 @@ import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
     const onNewMailReceived = async (folder, newMessages) => {
         const extensionOptions = await OptionsManager.retrieve();
 
+        const { accountId } = folder;
+
         if(extensionOptions.extractOnReceiveEnabled) {
+            if(extensionOptions.limitAutomationToSpecificFolders) {
+                const { automationFolders } = extensionOptions;
+
+                if(!automationFolders.has(accountId)) {
+                    return;
+                }
+
+                const selectedAutomationFolders = automationFolders.get(accountId);
+
+                if(!selectedAutomationFolders.has(folder.id)) {
+                    return;
+                }
+            }
+
             folder.subFolders = [];
 
             params = {
-                accountId: folder.accountId,
+                accountId: accountId,
                 selectionContext: selectionContexts.messageDirect,
                 selectedFolders: [folder],
                 tabId: null,
@@ -270,6 +286,7 @@ import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
         }
     };
 
+    /*
     const onFilterExecuted = (filterContext, messageList) => {
         console.log(filterContext);
 
@@ -289,6 +306,7 @@ import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 
         handleAction({ messageList }, null, filterContext);
     };
+    */
 
 
     // Background extraction methods
@@ -516,6 +534,5 @@ import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
         resetBrowserAction();
     }
 
-    browser.ExtractionFilterAction.initialize(extensionName);
-
-    vfs.init({ enableExternalProviders: true, configStorageKey: "vfs-toolkit-config-data" });
+//    browser.ExtractionFilterAction.initialize(extensionName);
+   

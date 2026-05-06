@@ -39,7 +39,19 @@
             <dt>
                 <label><input type="checkbox" id="enable-extract-on-receive-checkbox" option-name="extractOnReceiveEnabled" /> <span data-i18n-textContent="enableExtractOnReceive"></span></label>
             </dt>
-            <dd data-i18n-textContent="enableExtractOnReceiveDescription"></dd>
+            <dd>
+                <span data-i18n-textContent="enableExtractOnReceiveDescription"></span>
+                <dl>
+                    <dt>
+                        <label><input type="checkbox" id="limit-automation-folders-checkbox" option-name="limitAutomationToSpecificFolders" disabled="disabled"/> <span data-i18n-textContent="limitToSpecificFolders"></span></label>
+                        <button type="button" id="edit-automation-folders-button" class="options-control" disabled="disabled" data-i18n-textContent="edit"></button>
+                    </dt>
+                    <dd>
+                        <span data-i18n-textContent="limitToSpecificFoldersDesc"></span>
+                        <div id="selected-automation-folders-div">...</div>
+                    </dd>
+                </dl>
+            </dd>
         </dl>
 
         <h4 data-i18n-textContent="discoveryOptions"></h4>
@@ -50,7 +62,7 @@
             <dd data-i18n-textContent="includeEmbeddedImagesDescription"></dd>
 
             <dt>
-                <label><input type="checkbox" id="use-file-type-filter-checkbox" option-name="useFileTypeFilter" /> <span data-i18n-textContent="useFileTypeFilter"></span></label>
+                <label><input type="checkbox" id="use-file-type-filter-checkbox" option-name="useFileTypeFilter" dis/> <span data-i18n-textContent="useFileTypeFilter"></span></label>
                 <button type="button" id="edit-file-type-filter-button" class="options-control" disabled="disabled" data-i18n-textContent="edit"></button>
             </dt>
             <dd>
@@ -206,6 +218,31 @@
         <div id="filter-editor-container">
         </div>
     </div>
+
+    <div id="automation-folders-selector-overlay" class="modal-overlay hidden">
+        <div id="automation-folders-selector-container">
+            <div id="automation-folders-list-container">
+
+            </div>
+            <div id="buttons-panel">
+                <button type="button" id="automation-folders-cancel-button" class="fp-editor-button" data-i18n-textcontent="__MSG_cancel__"></button>
+                <button type="button" id="automation-folders-save-button" class="fp-editor-button" data-i18n-textcontent="__MSG_save__"></button>
+            </div>
+        </div>
+    </div>
+
+    <template id="account-panel-template">
+        <div class="account-panel">
+            <div class="account-name-span"></div>
+            <div class="account-folders-container"></div>
+        </div>
+    </template>
+
+    <template id="folder-selector-template">
+        <div>
+            <label><input type="checkbox" class="account-folder-checkbox" /> <span class="folder-path-label"></span></label>
+        </div>
+    </template>"
 
     <script type="module" src="options.js"></script>
 </body> 

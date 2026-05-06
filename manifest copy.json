@@ -58,5 +58,15 @@
       "32": "icons/extractem-32px.png",
       "16": "icons/extractem-16px.png"
     }
+  },
+  "experiment_apis": {
+    "ExtractionFilterAction": {
+      "schema": "api/ExtractionFilterAction/schema.json",
+      "parent": {
+        "scopes": [ "addon_parent" ],
+        "paths": [ [ "ExtractionFilterAction" ] ],
+        "script": "api/ExtractionFilterAction/implementation.js"
+      }
+    }
   }
 }

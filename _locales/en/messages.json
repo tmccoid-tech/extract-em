@@ -632,5 +632,12 @@
     
     "existingInstanceMessage": {
         "message": "Execution canceled; an instance of the extension is already running."
+    },
+
+    "limitToSpecificFolders": {
+        "message": "Limit to specific folders"
+    },
+    "limitToSpecificFoldersDesc": {
+        "message": "Automated extraction only applies to selected folders"
     }
 }

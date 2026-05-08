@@ -12,33 +12,41 @@ export class AutomationManager {
             enableExtractOnReceiveCheckbox,
             limitAutomationFoldersCheckbox,
             editButton,
+            selectedAutomationFoldersDiv,            
             saveButton,
             cancelButton
         } = elements;
 
-        enableExtractOnReceiveCheckbox.checked = extensionOptions.extractOnReceiveEnabled;
-        limitAutomationFoldersCheckbox.checked = extensionOptions.limitAutomationFolders;
+        const { extractOnReceiveEnabled, limitAutomationToSpecificFolders } = extensionOptions;
+
+        enableExtractOnReceiveCheckbox.checked = extractOnReceiveEnabled;
+        limitAutomationFoldersCheckbox.checked = limitAutomationToSpecificFolders;
 
         enableExtractOnReceiveCheckbox.addEventListener("change", (e) => this.#enableExtractOnReceiveCheckboxChanged(e));
         limitAutomationFoldersCheckbox.addEventListener("change", (e) => this.#limitAutomationFoldersCheckboxChanged(e));
         editButton.addEventListener("click", (e) => this.#editButtonClicked(e));
         saveButton.addEventListener("click", (e) => this.#saveButtonClicked(e));
         cancelButton.addEventListener("click", (e) => this.#cancelButtonClicked(e));
+
+        limitAutomationFoldersCheckbox.disabled = !extractOnReceiveEnabled;
+        editButton.disabled = !(extractOnReceiveEnabled && limitAutomationToSpecificFolders);
+
+        this.#setDisplay(extensionOptions.automationFolders);
     }
 
     static async #enableExtractOnReceiveCheckboxChanged(event) {
-        const enableExtractOnReceive = event.srcElement.checked;
+        const extractOnReceiveEnabled = event.srcElement.checked;
 
-        await OptionsManager.setOption("enableExtractOnReceive", enableExtractOnReceive);
-        this.#extensionOptions.enableExtractOnReceive = enableExtractOnReceive;
+        await OptionsManager.setOption("extractOnReceiveEnabled", extractOnReceiveEnabled);
+        this.#extensionOptions.extractOnReceiveEnabled = extractOnReceiveEnabled;
 
         const {
             limitAutomationFoldersCheckbox,
             editButton,
         } = this.#elements;
 
-        limitAutomationFoldersCheckbox.disabled = !enableExtractOnReceive;
-        editButton.disabled = !(enableExtractOnReceive && this.#extensionOptions.limitAutomationToSpecificFolders);
+        limitAutomationFoldersCheckbox.disabled = !extractOnReceiveEnabled;
+        editButton.disabled = !(extractOnReceiveEnabled && this.#extensionOptions.limitAutomationToSpecificFolders);
     }
 
     static async #limitAutomationFoldersCheckboxChanged(event) {
@@ -70,25 +78,56 @@ export class AutomationManager {
             folderSelectorTemplate,
         } = this.#elements;
 
+        const { automationFolders } = this.#extensionOptions;
 
         const accounts = await messenger.accounts.list(true);
 
-        for(let account of accounts) {
+        const generateFolderPanels = (subFolders, container, account, folderPaths) => {
+            for(let folder of subFolders) {
+                if(folder.isVirtual) {
+                    continue;
+                }
 
+/*
+                if(!(
+                    folder.specialUse.length == 0 ||
+                    (folder.specialUse.length == 1 && folder.specialUse[0].toLowerCase() == "inbox")
+                )) {
+                    continue;
+                }
+*/
+
+                const folderSelector = folderSelectorTemplate.content.cloneNode(true);
+
+                folderSelector.querySelector(".folder-path-label").textContent = folder.path;
+
+                const checkbox = folderSelector.querySelector(".account-folder-checkbox");
+                checkbox.setAttribute("account-id", account.id);
+                checkbox.setAttribute("account-name", account.name)
+                checkbox.setAttribute("folder-path", folder.path);
+
+                if(folderPaths && folderPaths.has(folder.path)) {
+                    checkbox.checked = true;
+                }
+
+                container.appendChild(folderSelector);
+
+                if(folder.subFolders) {
+                    generateFolderPanels(folder.subFolders, container, account, folderPaths);
+                }
+            }
+        }
+
+        for(let account of accounts) {
             const accountPanel = accountPanelTemplate.content.cloneNode(true);
 
             accountPanel.querySelector(".account-name-span").textContent = account.name;
 
             const container = accountPanel.querySelector(".account-folders-container");
 
-            const folders = await messenger.folders.query({ accountId: account.id});
-            for(let folder of folders) {
-                const folderSelector = folderSelectorTemplate.content.cloneNode(true);
+            const folderPaths = (automationFolders.has(account.id) ? automationFolders.get(account.id).folderPaths : null);
 
-                folderSelector.querySelector(".folder-path-label").textContent = folder.path;
-
-                container.appendChild(folderSelector);
-            }
+            generateFolderPanels(account.rootFolder.subFolders, container, account, folderPaths);
 
             automationFoldersListContainer.appendChild(accountPanel);
         }
@@ -109,22 +148,67 @@ export class AutomationManager {
             editorOverlay,
             limitAutomationFoldersCheckbox,
             editButton,
-            automationFoldersListContainer,
+            selectedAutomationFoldersDiv,
+            automationFoldersListContainer
         } = this.#elements;
 
         const extensionOptions = this.#extensionOptions;
 
         if(withSave) {
-            // Collect selected folders 
+            const automationFolders = new Map();
+
+            const checkboxes = automationFoldersListContainer.querySelectorAll(".account-folder-checkbox:is(:checked)");
+
+            for(let checkbox of checkboxes) {
+                const accountId = checkbox.getAttribute("account-id");
+                const accountName = checkbox.getAttribute("account-name");
+                const folderPath = checkbox.getAttribute("folder-path");
+
+                if(automationFolders.has(accountId)) {
+                    automationFolders.get(accountId).folderPaths.add(folderPath);
+                }
+                else {
+                    automationFolders.set(accountId, { name: accountName, folderPaths: new Set([folderPath]) });
+                }
+            }
+
+
+            OptionsManager.setOption("automationFolders", automationFolders);
+            extensionOptions.automationFolders = automationFolders;
+
+            OptionsManager.setOption("limitAutomationToSpecificFolders", automationFolders.size > 0);
+            extensionOptions.limitAutomationToSpecificFolders = automationFolders.size > 0;
+
+            this.#setDisplay(extensionOptions.automationFolders);
         }
 
-        if(extensionOptions.automationFolders.size == 0) {
-            limitAutomationFoldersCheckbox.checked = false;
-            editButton.disabled = true;
-        }
+        const hasAutomationFolders = (extensionOptions.automationFolders.size > 0);
+
+        limitAutomationFoldersCheckbox.checked = hasAutomationFolders;
+        editButton.disabled = !hasAutomationFolders;
 
         editorOverlay.classList.add("hidden");
 
         automationFoldersListContainer.replaceChildren();
+    }
+
+    static async #setDisplay(automationFolders) {
+        let text = "...";
+
+        let selectedFolderCount = 0;
+        for(const account of automationFolders.values()) {
+            selectedFolderCount += account.folderPaths.size;
+
+            if(selectedFolderCount == 1) {
+                const [folderPath] = account.folderPaths.values();
+                text = `${ account.name }: ${ folderPath }`;
+            }
+        }
+
+        if(selectedFolderCount > 1) {
+            text = `${selectedFolderCount} selected`;
+        }
+
+        this.#elements.selectedAutomationFoldersDiv.textContent = text;
     }
 }

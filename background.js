@@ -83,7 +83,7 @@ import { i18nText } from "/module/i18nText.js";
 
     messages.onNewMailReceived.addListener((folder, newMessages) => {
         onNewMailReceived(folder, newMessages);
-    });
+    }, true);
 
     runtime.onMessage.addListener((request, sender, respond) => {
         onInstructionReceived(request, sender, respond);
@@ -217,7 +217,7 @@ import { i18nText } from "/module/i18nText.js";
 
                 const selectedAutomationFolders = automationFolders.get(accountId);
 
-                if(!selectedAutomationFolders.has(folder.id)) {
+                if(!selectedAutomationFolders.has(folder.path)) {
                     return;
                 }
             }

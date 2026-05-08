@@ -638,6 +638,9 @@
         "message": "Limit to specific folders"
     },
     "limitToSpecificFoldersDesc": {
-        "message": "Automated extraction only applies to selected folders"
+        "message": "Automated extraction only applies to selected folders (virtual folders are excluded from selection)"
+    },
+    "select": {
+        "message": "Select"
     }
 }

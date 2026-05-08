@@ -172,5 +172,22 @@ hr {
 }
 
 #automation-folders-selector-container {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
     background-color: white;
+}
+
+.account-panel {
+    margin: 4px;
+}
+
+.account-name-span {
+    background-color: antiquewhite;
+    border: solid 1px goldenrod;
+    padding: 4px;
+}
+
+.folder-path-label {
+    font-weight: normal;
 }

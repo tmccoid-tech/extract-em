@@ -182,7 +182,7 @@ hr {
     margin: 4px;
 }
 
-.account-name-span {
+.account-name-div {
     background-color: antiquewhite;
     border: solid 1px goldenrod;
     padding: 4px;
@@ -190,4 +190,16 @@ hr {
 
 .folder-path-label {
     font-weight: normal;
+}
+
+.link-button:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.link-button {
+  border: none;
+  background-color: transparent;
+  color: blue;
+  text-decoration: underline;
 }

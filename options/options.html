@@ -233,14 +233,14 @@
 
     <template id="account-panel-template">
         <div class="account-panel">
-            <div class="account-name-span"></div>
+            <div class="account-name-div"><label><input type="checkbox" class="account-folder-toggle-checkbox" /> <span class="account-name-span"></span></label></div>
             <div class="account-folders-container"></div>
         </div>
     </template>
 
     <template id="folder-selector-template">
         <div>
-            <label><input type="checkbox" class="account-folder-checkbox" /> <span class="folder-path-label"></span></label>
+            <label><input type="checkbox" class="account-folder-checkbox" /> <span class="spacer"></span><button class="folder-selector-button link-button"></button></label>
         </div>
     </template>
 

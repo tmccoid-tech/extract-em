@@ -42,7 +42,10 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
         const sampleResultPanel = elem("sample-result-panel");
 
         const sourceSampleLabel = elem("source-sample-label");
+        const subjectSampleLabel = elem("subject-sample-label");
+        const originalFilenameSampleLabel = elem("original-filename-sample-label");
         const dateFormatSampleLabel = elem("date-format-sample-label");
+        const timestampSampleLabel = elem("timestamp-sample-label");
 
 
         const clearButton = elem("clear-button");
@@ -147,8 +150,11 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
             const sourceValue = sourceSelect.value;
             const dateFormatValue = dateFormatSelect.value;
 
-            sourceSampleLabel.innerText = (sourceValue) ? tokenSampleTextMap.get(sourceValue) : "";
-            dateFormatSampleLabel.innerText = (dateFormatValue) ? tokenSampleTextMap.get(dateFormatValue) : "";
+            sourceSampleLabel.innerText = (sourceValue) ? tokenSampleTextMap.get(sourceValue) : "...";
+            subjectSampleLabel.innerText = (subjectCheckbox.checked) ? tokenSampleTextMap.get("{subject}") : "..."
+            originalFilenameSampleLabel.innerText = (filenameCheckbox.checked) ? tokenSampleTextMap.get("{filename}") : "...";
+            dateFormatSampleLabel.innerText = (dateFormatValue) ? tokenSampleTextMap.get(dateFormatValue) : "...";
+            timestampSampleLabel.innerText = (timestampCheckbox.checked) ? tokenSampleTextMap.get("{timestamp}") : "...";
 
             const spanify = (value) => { return (value) ? `<span>${tokenSampleTextMap.get(value)}</span>` : ""; };
 
@@ -175,7 +181,7 @@ export let initializeEditor = (filenamePattern, dismissEditorDelegate) => { };
 //            const sampleText = `<div>${(sampleLabelText) ? `${sampleLabelText}.ext` : "--"}</div>`;
 //            sampleResultPanel.replaceChild(document.createRange().createContextualFragment(sampleText), sampleResultPanel.firstElementChild);
 
-            const sampleText = `<html><body><div>${(sampleLabelText) ? `${sampleLabelText}.ext` : "--"}</div></body></html>`;
+            const sampleText = `<html><body><div>${(sampleLabelText) ? `${sampleLabelText}.ext` : "---"}</div></body></html>`;
             sampleResultPanel.replaceChild(domParser.parseFromString(sampleText, "text/html").body.firstElementChild, sampleResultPanel.firstElementChild);
         }
 

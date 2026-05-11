@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>__MSG_extensionName__ __MSG_options__</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="options.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/module/filtering/filtering.css">
+</head>
+<body id="body">
+    <div>
+        <h4 data-i18n-textContent="uiMode"></h4>    
+        <dl>
+            <dt>
+                <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> <span data-i18n-textContent="displayQuickmenu"></span></label></dt>
+            <dd data-i18n-textContent="displayQuickmenuDescription"></dd>
+
+            <dt>
+                <label><input type="radio" name="user-interaction-option" id="extract-immediate-checkbox" value="immediate"/> <span data-i18n-textContent="extractImmediate"></span></label>
+            </dt>
+            <dd>
+                <span data-i18n-textContent="extractImmediateDescription"></span>
+                <dl>
+                    <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" option-name="includeSubfolders" disabled="disabled"/> <span data-i18n-textContent="includeSubFolders"></span></label></dt>
+                    <dd data-i18n-textContent="includeSubFoldersDescription"></dd>
+
+                    <dt>
+                        <label><input type="checkbox" id="use-silent-mode-checkbox" option-name="useSilentMode" disabled="disabled"/> <span data-i18n-textContent="useSilentMode"></span></label>
+                    </dt>
+                    <dd data-i18n-textContent="useSilentModeDescription"></dd>
+                </dl>
+            </dd>
+
+            <dt>
+                <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> <span data-i18n-textContent="letMeChoose"></span></label>
+            </dt>
+            <dd data-i18n-textContent="useInteractiveUiDescription"></dd>
+
+            <dt>
+                <label><input type="checkbox" id="enable-extract-on-receive-checkbox" option-name="extractOnReceiveEnabled" /> <span data-i18n-textContent="enableExtractOnReceive"></span></label>
+            </dt>
+            <dd>
+                <span data-i18n-textContent="enableExtractOnReceiveDescription"></span>
+                <dl>
+                    <dt>
+                        <label><input type="checkbox" id="limit-automation-folders-checkbox" option-name="limitAutomationToSpecificFolders" disabled="disabled"/> <span data-i18n-textContent="limitToSpecificFolders"></span></label>
+                        <button type="button" id="edit-automation-folders-button" class="options-control" disabled="disabled" data-i18n-textContent="select"></button>
+                    </dt>
+                    <dd>
+                        <div id="selected-automation-folders-div">...</div>
+                        <span data-i18n-textContent="limitToSpecificFoldersDesc"></span>
+                    </dd>
+                </dl>
+            </dd>
+        </dl>
+
+        <h4 data-i18n-textContent="discoveryOptions"></h4>
+        <dl>
+            <dt>
+                <label><input type="checkbox" id="include-embeds-checkbox" option-name="includeEmbeds" /> <span data-i18n-textContent="includeEmbeddedImages"></span></label>
+            </dt>
+            <dd data-i18n-textContent="includeEmbeddedImagesDescription"></dd>
+
+            <dt>
+                <label><input type="checkbox" id="use-file-type-filter-checkbox" option-name="useFileTypeFilter" dis/> <span data-i18n-textContent="useFileTypeFilter"></span></label>
+                <button type="button" id="edit-file-type-filter-button" class="options-control" disabled="disabled" data-i18n-textContent="edit"></button>
+            </dt>
+            <dd>
+                <div id="file-type-filter-list-div" class="filter-list-div ghost">...</div>
+                <span data-i18n-textContent="useFileTypeFilterDescription"></span>
+            </dd>
+
+            <dt>
+                <label><input type="checkbox" id="ignore-junk-checkbox" option-name="ignoreJunk" /> <span data-i18n-textContent="ignoreJunkAttachments"></span></label>
+            </dt>
+            <dd data-i18n-textContent="ignoreJunkAttachmentsDesc"></dd>
+
+            <dt>
+                <hr>
+                <em data-i18n-textContent="mutuallyExclusiveDescription"></em>
+            </dt>
+            <dd>
+            </dd>
+
+            <dt>
+                <label><input type="checkbox" id="omit-duplicates-checkbox" option-name="omitDuplicates" /> <span data-i18n-textContent="omitDuplicates"></span></label>
+            </dt>
+            <dd data-i18n-textContent="omitDuplicatesDescription"></dd>
+
+            <dt>
+                <label><input type="checkbox" id="enable-message-tagging-checkbox" option-name="enableMessageTagging" /> <span data-i18n-textContent="enableMessageTagging"></span></label>
+                <button type="button" id="reset-message-tags-button" class="options-control" disabled="disabled" data-i18n-textContent="reset"></button>
+            </dt>
+            <dd data-i18n-textContent="enableMessageTaggingDescription"></dd>
+
+            <dt>
+                <hr>
+                <label><span data-i18n-textContent="attachmentList"></span> - <span data-i18n-textContent="defaultGrouping"></span>: <select id="default-grouping-select" class="options-control" option-name="defaultGrouping">
+                    <option value="None" selected data-i18n-textContent="none"></option>
+                    <option value="Author" data-i18n-textContent="defaultGroupingByAuthor"></option>
+                    <option value="Folder" data-i18n-textContent="defaultGroupingByFolder"></option>
+                    <option value="Extension" data-i18n-textContent="defaultGroupingByExtension"></option>
+                </select></label>
+            </dt>
+            <dd data-i18n-textContent="defaultGroupingDescription"></dd>
+
+            <dt>
+                <label><span data-i18n-textContent="attachmentList"></span> - <span data-i18n-textContent="imagePreview"></span>: <select id="image-preview-select" class="options-control" option-name="defaultImagePreview">
+                    <option value="None" selected data-i18n-textContent="none"></option>
+                    <option value="sm" data-i18n-textContent="imagePreviewSmall"></option>
+                    <option value="md" data-i18n-textContent="imagePreviewMedium"></option>
+                    <option value="lg" data-i18n-textContent="imagePreviewLarge"></option>
+                </select></label>
+            </dt>
+            <dd data-i18n-textContent="imagePreviewDescription"></dd>
+        </dl>
+
+        <h4 data-i18n-textContent="storageOptions"></h4>    
+        <dl>
+            <dt>
+                <label><input type="radio" name="storage-option" id="package-attachments-radio" value="true"> <span data-i18n-textContent="packageAttachments"></span></label>
+            </dt>
+            <dd>
+                <span data-i18n-textContent="packageAttachmentsDesc"></span>
+                <dl>
+                    <dt>
+                        <label><input type="checkbox" id="always-prompt-for-donwload-location-checkbox" option-name="alwaysPromptForDownloadLocation" /> <span data-i18n-textContent="alwaysPromptForDownloadLocation"></span></label>
+                    </dt>
+                    <dd data-i18n-textContent="alwaysPromptForDownloadLocationMessage"></dd>
+
+                    <dt>
+                        <label><input type="checkbox" id="preserve-folder-structure-checkbox" option-name="preserveFolderStructure" /> <span data-i18n-textContent="preserveFolderStructure"></span></label>
+                    </dt>
+                    <dd data-i18n-textContent="preserveFolderStructureDescription"></dd>
+                </dl>
+            </dd>
+
+            <dt>
+                <label><input type="radio" name="storage-option" id="direct-save-radio" value="false"> <span data-i18n-textContent="directSave"></span></label>
+            </dt>
+            <dd data-i18n-textContent="directSaveDesc"></dd>
+
+            <dt>
+                * <span data-i18n-textContent="currentSaveDirectory"></span>:
+            </dt>
+            <dd>
+                <span id="current-save-directory-span" data-i18n-textContent="unavailable"></span>
+            </dd>
+            <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> <span data-i18n-textContent="useFilenamePattern"></span></label></dt>
+            <dd>
+                <input type="text" id="filename-pattern-display-textbox" disabled="disabled"><button type="button" id="filename-pattern-edit-button" class="options-control" disabled="disabled" data-i18n-textContent="edit"></button><br/>
+                <span data-i18n-textContent="useFilenamePatternDescription"></span><br/>
+                <dl>
+                    <dt><label data-i18n-textContent="subjectFieldCharacterLimit"></label> <input id="max-filename-subject-length-textbox" type="number" min="1" max="200" maxlength="3" disabled="disabled"/></dt>
+                    <dd data-i18n-textContent="subjectFieldCharacterLimitDescription"></dd>
+                </dl>
+            </dd>
+        </dl>
+
+        <dl>
+            <dt>
+                <label><input type="checkbox" id="use-enhanced-logging-checkbox" option-name="useEnhancedLogging" /> <span data-i18n-textContent="useEnhancedLogging"></span></label>
+            </dt>
+            <dd data-i18n-textContent="useEnhancedLoggingDescription"></dd>
+        </dl>
+    </div>
+
+    <div id="filename-editor-overlay" class="modal-overlay hidden">
+        <div id="filename-editor-div">
+            <div id="pattern-label">__MSG_pattern__</div>
+            <div id="pattern-content">
+                <input type="text" id="fp-textbox">
+            </div>
+            <div id="edit-buttons-panel">
+                <button type="button" id="clear-button" class="fp-editor-button">__MSG_clear__</button>
+                <button type="button" id="revert-button" class="fp-editor-button">__MSG_revert__</button>
+            </div>
+            
+            <div id="placeholders-label">__MSG_placeholders__</div>
+
+            <div id="placeholders-panel">
+                <div>__MSG_from__: </div>
+                <label><select id="source-select" class="placeholder-select" lastValue="">
+                    <option value="">__MSG_none__</option>
+                    <option value="{sender}">__MSG_sender__</option>
+                    <option value="{author}">__MSG_author__</option>
+                </select>&nbsp;&nbsp;<span id="source-sample-label" class="sample-label"></span></label>
+                <label class="editor-checkbox-label"><input type="checkbox" id="filename-checkbox" value="{filename}"> __MSG_originalFilename__</label>
+
+                <div>__MSG_date__: </div>
+                <label><select id="date-format-select" class="placeholder-select" lastValue="">
+                    <option value="">__MSG_none__</option>
+                    <option value="{mm-dd-yyyy}">MM-DD-YYYY</option>
+                    <option value="{dd-mm-yyyy}">DD-MM-YYYY</option>
+                    <option value="{yyyy-mm-dd}">YYYY-MM-DD</option>
+                    <option value="{dd.mm.yyyy}">DD.MM.YYYY</option>
+                    <option value="{yyyy.mm.dd}">YYYY.MM.DD</option>
+                    <option value="{yyyymmdd}">YYYYMMDD</option>
+                </select>&nbsp;&nbsp;<span id="date-format-sample-label" class="sample-label"></span></label>
+                <label class="editor-checkbox-label"><input type="checkbox" id="subject-checkbox" value="{subject}"> __MSG_subject__</label>
+
+                <div>&nbsp;</div>
+                <div><label class="editor-checkbox-label"><input type="checkbox" id="timestamp-checkbox" value="{timestamp}"> __MSG_timestamp__</label></div>
+                <div>&nbsp;</div>
+            </div>
+
+            <div id="sample-result-label">__MSG_sample__</div>
+            <div id="sample-result-panel"><div></div></div>
+
+            <div id="buttons-panel">
+                <button type="button" id="cancel-button" class="fp-editor-button" data-i18n-textcontent="__MSG_cancel__"></button>
+                <button type="button" id="save-button" class="fp-editor-button" data-i18n-textcontent="__MSG_save__"></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="filter-overlay" class="modal-overlay hidden">
+        <div id="filter-editor-container">
+        </div>
+    </div>
+
+    <div id="automation-folders-selector-overlay" class="modal-overlay hidden">
+        <div id="automation-folders-selector-container">
+            <div id="automation-folders-list-container">
+
+            </div>
+            <div id="buttons-panel">
+                <button type="button" id="automation-folders-cancel-button" class="fp-editor-button" data-i18n-textcontent="__MSG_cancel__"></button>
+                <button type="button" id="automation-folders-save-button" class="fp-editor-button" data-i18n-textcontent="__MSG_save__"></button>
+            </div>
+        </div>
+    </div>
+
+    <template id="account-panel-template">
+        <div class="account-panel">
+            <div class="account-name-div"><label><input type="checkbox" class="account-folder-toggle-checkbox" /> <span class="account-name-span"></span></label></div>
+            <div class="account-folders-container"></div>
+        </div>
+    </template>
+
+    <template id="folder-selector-template">
+        <div>
+            <label><input type="checkbox" class="account-folder-checkbox" /> <span class="spacer"></span><button class="folder-selector-button link-button"></button></label>
+        </div>
+    </template>
+
+    <script type="module" src="options.js"></script>
+</body> 
+</html>

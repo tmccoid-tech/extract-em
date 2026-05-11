@@ -47,7 +47,8 @@ export class OptionsManager {
         
         useEnhancedLogging: false,
 
-        lastLoadedVersion: ""
+        lastLoadedVersion: "",
+        lastOptionsContext: "general"
     };
 
     static #options = null;

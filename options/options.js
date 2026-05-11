@@ -11,6 +11,11 @@ import { initializeEditor } from "/options/filename-pattern.js"
 
 
 document.addEventListener("DOMContentLoaded", async () => {
+
+    for(let button of document.querySelectorAll(".nav-button")) {
+        button.addEventListener("click", onTabChanged);
+    }
+
     const elem = (id) => document.getElementById(id);
 
     // UI Mode
@@ -70,6 +75,12 @@ document.addEventListener("DOMContentLoaded", async () => {
    
 
     const extensionOptions = await OptionsManager.retrieve();
+
+    const { lastOptionsContext } = extensionOptions;
+
+    console.log(lastOptionsContext);
+
+    setSelectedTab(lastOptionsContext, document.querySelector(`.nav-button[context='${lastOptionsContext}']`));
 
     await FilterManager.initializeEditor(filterElements, extensionOptions);
 
@@ -144,6 +155,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const body = elem("body");
         body.classList.add("shown");
+    }
+
+    async function onTabChanged(event) {
+        const { srcElement } = event;
+        const context = srcElement.getAttribute("context");
+
+        setSelectedTab(context, srcElement);
+
+        OptionsManager.setOption("lastOptionsContext", context);
+    }
+
+    function setSelectedTab(context, selectedTabButton) {
+        if(selectedTabButton.classList.contains("selected")) {
+            return;
+        }
+
+        document.querySelector(".section-tab.selected").classList.remove("selected");
+        document.querySelector(`.section-tab[context='${context}']`).classList.add("selected");
+
+        document.querySelector(".nav-button.selected").classList.remove("selected");
+        selectedTabButton.classList.add("selected");
     }
 
     function listen(element, handler) {

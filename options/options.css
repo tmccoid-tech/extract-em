@@ -63,31 +63,29 @@ hr {
     justify-content: center;
     align-items: center;    
 }
-
 .modal-overlay.hidden {
     display: none;
 }
 
 #filename-editor-div {
-    position: fixed;
-    bottom: 24px;
-    display: grid;
-    min-width: 620px;
-    max-width: 800px;
-    grid-template-columns: 100px 1fr 120px;
-    grid-template-areas: 
-        "pt-label       pt-content      pt-buttons"
-        "ph-label       ph-panel        ph-panel"
-        "sample-label   sample-value    buttons"
-    ;
-    row-gap: 10px;
-    padding: 12px;
-    background-color: antiquewhite;
-    border: solid 1px darkgoldenrod;                
+    background-color: white;
+    max-height: 100%;
+    width: 100%;
+    padding: 16px;
+    overflow-y: auto;
 }
 
-#pattern-label {
-    grid-area: pt-label;
+#pattern-panel {
+    margin-bottom: 6px;
+    padding: 6px;
+    background-color: antiquewhite;
+    border: solid 1px goldenrod;
+}
+
+#pattern-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
 }
 
 #pattern-content {
@@ -103,16 +101,21 @@ hr {
 }
 
 #placeholders-label {
-    grid-area: ph-label;
-    display: flex;
-    align-items: center;
+    margin-top: 24px;
+    margin-bottom: 6px;
+    padding: 6px;
+    background-color: antiquewhite;
+    border: solid 1px goldenrod;
 }
 
 #placeholders-panel {
-    grid-area: ph-panel;
     display: grid;
-    grid-template-columns: 48px 1fr 1fr;
-    row-gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 6px;
+}
+
+#placeholders-panel label {
+    font-weight: normal;
 }
 
 #sample-result-label {
@@ -120,13 +123,22 @@ hr {
 }
 
 #sample-result-panel {
-    grid-area: sample-value;
+    height: 16px;
+    width: 100%;
+    text-align:center;
 }
 
 #buttons-panel {
     grid-area: buttons;
     display: flex;
     justify-content: end;
+}
+
+#folder-buttons-panel {
+    grid-area: buttons;
+    display: flex;
+    justify-content: end;
+    padding: 16px;
 }
 
 #fp-textbox {
@@ -155,7 +167,7 @@ hr {
 }
 
 .sample-label {
-    margin-right: 12px;
+/*    margin-right: 12px;   */
     white-space: nowrap;
     color: #00000064;
 }
@@ -193,13 +205,63 @@ hr {
 }
 
 .link-button:hover {
-  text-decoration: none;
-  cursor: pointer;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .link-button {
-  border: none;
-  background-color: transparent;
-  color: blue;
-  text-decoration: underline;
+    border: none;
+    background-color: transparent;
+    color: blue;
+    text-decoration: underline;
+}
+
+
+/* Reorg */
+
+html {
+    height: 100vh;
+}
+
+body {
+    height: 100vh;
+}
+
+.main-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0px; 
+}
+
+nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 46px;
+}
+
+.nav-button {
+    opacity: .5;
+    background-color: antiquewhite;
+    border-color: goldenrod;
+    color: darkgoldenrod;
+    font-weight: bold;
+}
+
+.nav-button.selected {
+    opacity: 1;
+}
+
+.section-tab {
+    display: none;
+}
+
+.section-tab.selected {
+    display: initial;
+}
+
+#current-save-directory-panel {
+    padding: 2px;
+    background-color: aliceblue;
+    border: solid 1px #6262d9;
 }

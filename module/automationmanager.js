@@ -170,6 +170,8 @@ export class AutomationManager {
         }
 
         editorOverlay.classList.remove("hidden");
+
+        automationFoldersListContainer.parentElement.scrollTo(0, 0);
     }
 
     static async #saveButtonClicked(event) {

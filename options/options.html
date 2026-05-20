@@ -8,67 +8,14 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/module/filtering/filtering.css">
 </head>
 <body id="body">
-    <div id="main-section">
+<!--    <div id="main-section">     -->
         <nav>
-            <button type="button" class="nav-button selected" context="general" data-i18n-textContent="general"></button>
-            <button type="button" class="nav-button" context="discovery" data-i18n-textContent="discoveryOptions"></button>
+            <button type="button" class="nav-button selected" context="discovery" data-i18n-textContent="discoveryOptions"></button>
             <button type="button" class="nav-button" context="storage" data-i18n-textContent="storageOptions"></button>
+            <button type="button" class="nav-button" context="general" data-i18n-textContent="general"></button>
         </nav>
 
-        <div id="general-section-tab" class="section-tab selected" context="general">
-            <dl>
-                <dt>
-                    <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> <span data-i18n-textContent="displayQuickmenu"></span></label></dt>
-                <dd data-i18n-textContent="displayQuickmenuDescription"></dd>
-
-                <dt>
-                    <label><input type="radio" name="user-interaction-option" id="extract-immediate-checkbox" value="immediate"/> <span data-i18n-textContent="extractImmediate"></span></label>
-                </dt>
-                <dd>
-                    <span data-i18n-textContent="extractImmediateDescription"></span>
-                    <dl>
-                        <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" option-name="includeSubfolders" disabled="disabled"/> <span data-i18n-textContent="includeSubFolders"></span></label></dt>
-                        <dd data-i18n-textContent="includeSubFoldersDescription"></dd>
-
-                        <dt>
-                            <label><input type="checkbox" id="use-silent-mode-checkbox" option-name="useSilentMode" disabled="disabled"/> <span data-i18n-textContent="useSilentMode"></span></label>
-                        </dt>
-                        <dd data-i18n-textContent="useSilentModeDescription"></dd>
-                    </dl>
-                </dd>
-
-                <dt>
-                    <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> <span data-i18n-textContent="letMeChoose"></span></label>
-                </dt>
-                <dd data-i18n-textContent="useInteractiveUiDescription"></dd>
-
-                <dt>
-                    <label><input type="checkbox" id="enable-extract-on-receive-checkbox" option-name="extractOnReceiveEnabled" /> <span data-i18n-textContent="enableExtractOnReceive"></span></label>
-                </dt>
-                <dd>
-                    <span data-i18n-textContent="enableExtractOnReceiveDescription"></span>
-                    <dl>
-                        <dt>
-                            <label><input type="checkbox" id="limit-automation-folders-checkbox" option-name="limitAutomationToSpecificFolders" disabled="disabled"/> <span data-i18n-textContent="limitToSpecificFolders"></span></label>
-                            <button type="button" id="edit-automation-folders-button" class="options-control" disabled="disabled" data-i18n-textContent="select"></button>
-                        </dt>
-                        <dd>
-                            <div id="selected-automation-folders-div">...</div>
-                            <span data-i18n-textContent="limitToSpecificFoldersDesc"></span>
-                        </dd>
-                    </dl>
-                </dd>
-            </dl>
-
-            <dl>
-                <dt>
-                    <label><input type="checkbox" id="use-enhanced-logging-checkbox" option-name="useEnhancedLogging" /> <span data-i18n-textContent="useEnhancedLogging"></span></label>
-                </dt>
-                <dd data-i18n-textContent="useEnhancedLoggingDescription"></dd>
-            </dl>
-        </div>
-
-        <div id="discovery-section-tab" class="section-tab" context="discovery">
+        <div id="discovery-section-tab" class="section-tab selected" context="discovery">
 
             <dl>
                 <dt>
@@ -132,7 +79,6 @@
         </div>
 
         <div id="storage-section-tab" class="section-tab" context="storage">
-
             <dl>
                 <dt>
                     <label><input type="radio" name="storage-option" id="package-attachments-radio" value="true"> <span data-i18n-textContent="packageAttachments"></span></label>
@@ -157,7 +103,10 @@
                 </dt>
                 <dd data-i18n-textContent="directSaveDesc"></dd>
 
-                <dt><label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> <span data-i18n-textContent="useFilenamePattern"></span></label></dt>
+                <dt>
+                    <hr/>
+                    <label><input type="checkbox" id="use-filename-pattern-checkbox" option-name="useFilenamePattern" /> <span data-i18n-textContent="useFilenamePattern"></span></label>
+                </dt>
                 <dd>
                     <input type="text" id="filename-pattern-display-textbox" disabled="disabled"><button type="button" id="filename-pattern-edit-button" class="options-control" disabled="disabled" data-i18n-textContent="edit"></button><br/>
                     <span data-i18n-textContent="useFilenamePatternDescription"></span><br/>
@@ -168,6 +117,60 @@
                 </dd>
             </dl>
 
+        </div>
+
+        <div id="general-section-tab" class="section-tab" context="general">
+            <dl>
+                <dt>
+                    <label><input type="radio" name="user-interaction-option" id="display-quickmenu-checkbox" value="quickmenu"/> <span data-i18n-textContent="displayQuickmenu"></span></label></dt>
+                <dd data-i18n-textContent="displayQuickmenuDescription"></dd>
+
+                <dt>
+                    <label><input type="radio" name="user-interaction-option" id="extract-immediate-checkbox" value="immediate"/> <span data-i18n-textContent="extractImmediate"></span></label>
+                </dt>
+                <dd>
+                    <span data-i18n-textContent="extractImmediateDescription"></span>
+                    <dl>
+                        <dt><label><input type="checkbox" id="extract-immediate-subfolders-checkbox" option-name="includeSubfolders" disabled="disabled"/> <span data-i18n-textContent="includeSubFolders"></span></label></dt>
+                        <dd data-i18n-textContent="includeSubFoldersDescription"></dd>
+
+                        <dt>
+                            <label><input type="checkbox" id="use-silent-mode-checkbox" option-name="useSilentMode" disabled="disabled"/> <span data-i18n-textContent="useSilentMode"></span></label>
+                        </dt>
+                        <dd data-i18n-textContent="useSilentModeDescription"></dd>
+                    </dl>
+                </dd>
+
+                <dt>
+                    <label><input type="radio" name="user-interaction-option" id="standard-ui-mode-checkbox" value="standard"/> <span data-i18n-textContent="letMeChoose"></span></label>
+                </dt>
+                <dd data-i18n-textContent="useInteractiveUiDescription"></dd>
+
+                <dt>
+                    <hr/>
+                    <label><input type="checkbox" id="enable-extract-on-receive-checkbox" option-name="extractOnReceiveEnabled" /> <span data-i18n-textContent="enableExtractOnReceive"></span></label>
+                </dt>
+                <dd>
+                    <span data-i18n-textContent="enableExtractOnReceiveDescription"></span>
+                    <dl>
+                        <dt>
+                            <label><input type="checkbox" id="limit-automation-folders-checkbox" option-name="limitAutomationToSpecificFolders" disabled="disabled"/> <span data-i18n-textContent="limitToSpecificFolders"></span></label>
+                            <button type="button" id="edit-automation-folders-button" class="options-control" disabled="disabled" data-i18n-textContent="select"></button>
+                        </dt>
+                        <dd>
+                            <div id="selected-automation-folders-div">...</div>
+                            <span data-i18n-textContent="limitToSpecificFoldersDesc"></span>
+                        </dd>
+                    </dl>
+                </dd>
+
+                <dt>
+                    <hr/>
+                    <label><input type="checkbox" id="use-enhanced-logging-checkbox" option-name="useEnhancedLogging" /> <span data-i18n-textContent="useEnhancedLogging"></span></label>
+                </dt>
+                <dd data-i18n-textContent="useEnhancedLoggingDescription"></dd>
+
+            </dl>
         </div>
 
         <dl id="current-save-directory-panel">
@@ -254,7 +257,7 @@
                 <button type="button" id="save-button" class="fp-editor-button" data-i18n-textcontent="__MSG_save__"></button>
             </div>
         </div>
-    </div>
+<!--    </div> -->
 
     <template id="account-panel-template">
         <div class="account-panel">

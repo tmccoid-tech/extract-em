@@ -1,5 +1,19 @@
 {
     "existingInstanceMessage": {
         "message": "Execution canceled; an instance of the extension is already running."
+    },
+
+    "limitToSpecificFolders": {
+        "message": "Limit to specific folders"
+    },
+    "limitToSpecificFoldersDesc": {
+        "message": "Automated extraction only applies to selected folders (virtual folders are excluded from selection)"
+    },
+    "select": {
+        "message": "Select"
+    },
+
+    "rn2_0_1_New01": {
+        "message": "Added ability to limit automated extraction (Extract on receive) to specific Thunderbird folders"
     }
 }

@@ -16,17 +16,19 @@ label {
     font-weight: bold;
 }
 
+/*
 dl:not(:last-child) {
     border-bottom: dashed 1px black;
     padding-bottom: 4px;
 }
+*/
 
 dd {
     margin-bottom: 6px;
 }
 
 hr {
-    margin: 8px 24px;
+    margin: 8px 0px;
     border-top: 1px dashed;
     border-bottom: none;
 }
@@ -220,36 +222,30 @@ hr {
 /* Reorg */
 
 html {
-    height: 100vh;
-}
-
-body {
-    height: 100vh;
-}
-
-.main-section {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    min-height: 0px; 
 }
 
 nav {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    height: 46px;
+    min-height: 36px;
 }
 
 .nav-button {
     opacity: .5;
-    background-color: antiquewhite;
+    background-color: white;
     border-color: goldenrod;
-    color: darkgoldenrod;
+    color: black;
     font-weight: bold;
 }
 
 .nav-button.selected {
     opacity: 1;
+    background-color: antiquewhite;
+}
+.nav-button:hover {
+    background-color: antiquewhite;
 }
 
 .section-tab {

@@ -215,9 +215,9 @@ import { i18nText } from "/module/i18nText.js";
                     return;
                 }
 
-                const selectedAutomationFolders = automationFolders.get(accountId);
+                const { folderPaths } = automationFolders.get(accountId);
 
-                if(!selectedAutomationFolders.has(folder.path)) {
+                if(!folderPaths.has(folder.path)) {
                     return;
                 }
             }

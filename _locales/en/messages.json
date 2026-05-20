@@ -642,5 +642,9 @@
     },
     "select": {
         "message": "Select"
+    },
+
+    "rn2_0_1_New01": {
+        "message": "Added ability to limit automated extraction (Extract on receive) to specific Thunderbird folders"
     }
 }

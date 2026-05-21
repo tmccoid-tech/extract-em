@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         enableExtractOnReceiveCheckbox: elem("enable-extract-on-receive-checkbox"),
         limitAutomationFoldersCheckbox: elem("limit-automation-folders-checkbox"),
         editButton: elem("edit-automation-folders-button"),
-        selectedAutomationFoldersDiv: elem("selected-automation-folders-div"),
+        selectedAutomationFoldersList: elem("selected-automation-folders-list"),
         automationFoldersListContainer: elem("automation-folders-list-container"),
         saveButton: elem("automation-folders-save-button"),
         cancelButton: elem("automation-folders-cancel-button"),

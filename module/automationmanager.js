@@ -12,7 +12,7 @@ export class AutomationManager {
             enableExtractOnReceiveCheckbox,
             limitAutomationFoldersCheckbox,
             editButton,
-            selectedAutomationFoldersDiv,            
+            selectedAutomationFoldersList,            
             saveButton,
             cancelButton
         } = elements;
@@ -187,7 +187,6 @@ export class AutomationManager {
             editorOverlay,
             limitAutomationFoldersCheckbox,
             editButton,
-            selectedAutomationFoldersDiv,
             automationFoldersListContainer
         } = this.#elements;
 
@@ -232,23 +231,29 @@ export class AutomationManager {
     }
 
     static async #setDisplay(automationFolders) {
-        let text = "...";
+        const { selectedAutomationFoldersList } = this.#elements;
+
+        selectedAutomationFoldersList.replaceChildren();
 
         let selectedFolderCount = 0;
         for(const account of automationFolders.values()) {
             selectedFolderCount += account.folderPaths.size;
 
-            if(selectedFolderCount == 1) {
-                const [folderPath] = account.folderPaths.values();
-                text = `${ account.name }: ${ folderPath }`;
+            for(let folderPath of account.folderPaths.values()) {
+                const option = document.createElement("option");
+                option.text = `${ account.name }: ${ folderPath }`;
+                selectedAutomationFoldersList.add(option);
             }
         }
 
-        if(selectedFolderCount > 1) {
-            text = `${selectedFolderCount} selected`;
-        }
+        selectedAutomationFoldersList.setAttribute("size", (selectedFolderCount > 3) ? 3 : selectedFolderCount);
 
-        this.#elements.selectedAutomationFoldersDiv.textContent = text;
+        if(selectedFolderCount == 0) {
+            selectedAutomationFoldersList.classList.add("hidden");
+        }
+        else {
+            selectedAutomationFoldersList.classList.remove("hidden");
+        }
     }
 
     static #syncAccountToggler(accountId) {

@@ -643,8 +643,15 @@
     "select": {
         "message": "Select"
     },
+    
+    "deepScanDesc": {
+        "message": "May identify additional embedded items not implicitly discovered"
+    },
 
     "rn2_0_1_New01": {
         "message": "Added ability to limit automated extraction (Extract on receive) to specific Thunderbird folders"
+    },
+    "rn2_0_1_Fixed01": {
+        "message": "Improved settings layout"
     }
 }

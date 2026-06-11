@@ -648,6 +648,9 @@
         "message": "May identify additional embedded items not implicitly discovered"
     },
 
+    "rn2_0_1_Notice01": {
+        "message": "The Permanently Detach feature is not recommended for Gmail accounts. Please see the following Github discussion for details."
+    },
     "rn2_0_1_New01": {
         "message": "Added ability to limit automated extraction (Extract on receive) to specific Thunderbird folders"
     },

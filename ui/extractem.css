@@ -737,6 +737,7 @@ li.whats-fixed {
 #imap-detachment-notice,
 #detach-include-inline-notice {
     margin-top: 8px;
+    margin-bottom: 8px;;
 }
 
 #flex-container.prompt {

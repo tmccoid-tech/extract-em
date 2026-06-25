@@ -714,5 +714,30 @@
 
     "rn1_9_9_Fixed01": {
         "message": "A fájltípus-szűrés többé nem eredményezi azt, hogy a kihagyott mellékleteket a rendszer nem megfelelően ismeri fel beágyazottként"
+    },
+
+    "existingInstanceMessage": {
+        "message": "Végrehajtás törölve; a bővítmény egy példánya már fut."
+    },
+    "limitToSpecificFolders": {
+        "message": "Korlátozás meghatározott mappákra"
+    },
+    "limitToSpecificFoldersDesc": {
+        "message": "Az automatikus kibontás csak a kiválasztott mappákra vonatkozik (a virtuális mappák ki vannak zárva a kiválasztásból)"
+    },
+    "select": {
+        "message": "Válassza ki"
+    },
+    "deepScanDesc": {
+        "message": "Azonosíthat további beágyazott elemeket, amelyeket implicit módon nem fedeztek fel"
+    },
+    "rn2_0_1_Notice01": {
+        "message": "A Végleges leválasztás funkció nem ajánlott Gmail-fiókokhoz. Kérjük, olvassa el a következő Github-beszélgetést a részletekért."
+    },
+    "rn2_0_1_New01": {
+        "message": "Hozzáadott lehetőség az automatikus kibontás korlátozására (Kivonat vételkor) bizonyos Thunderbird mappákra"
+    },
+    "rn2_0_1_Fixed01": {
+        "message": "Továbbfejlesztett beállítások elrendezése"
     }
 }

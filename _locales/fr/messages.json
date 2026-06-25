@@ -40,7 +40,7 @@
         "message": "Toujours afficher ce menu rapide",
         "description": "Étiquette pour la case à cocher de persistance du menu rapide"
     },
-"noAttachmentsMessage": {
+    "noAttachmentsMessage": {
         "message": "Il n'y a pas de pièces jointes dans le dossier ou les messages sélectionnés.",
         "description": ""
     },
@@ -781,5 +781,30 @@
 
     "rn1_9_9_Fixed01": {
         "message": "Le filtrage par type de fichier n'entraîne plus la reconnaissance incorrecte des pièces jointes omises comme des intégrations."
+    },
+
+    "existingInstanceMessage": {
+        "message": "Exécution annulée ; une instance de l'extension est déjà en cours d'exécution."
+    },
+    "limitToSpecificFolders": {
+        "message": "Limiter à des dossiers spécifiques"
+    },
+    "limitToSpecificFoldersDesc": {
+        "message": "L'extraction automatisée s'applique uniquement aux dossiers sélectionnés (les dossiers virtuels sont exclus de la sélection)"
+    },
+    "select": {
+        "message": "Sélectionner"
+    },
+    "deepScanDesc": {
+        "message": "Peut identifier des éléments intégrés supplémentaires non implicitement découverts"
+    },
+    "rn2_0_1_Notice01": {
+        "message": "La fonctionnalité Détacher définitivement n'est pas recommandée pour les comptes Gmail. Veuillez consulter la discussion Github suivante pour plus de détails."
+    },
+    "rn2_0_1_New01": {
+        "message": "Ajout de la possibilité de limiter l'extraction automatique (Extraire à la réception) à des dossiers Thunderbird spécifiques"
+    },
+    "rn2_0_1_Fixed01": {
+        "message": "Disposition des paramètres améliorée"
     }
 }

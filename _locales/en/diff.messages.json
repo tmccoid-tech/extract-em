@@ -1,29 +1,2 @@
 {
-    "existingInstanceMessage": {
-        "message": "Execution canceled; an instance of the extension is already running."
-    },
-
-    "limitToSpecificFolders": {
-        "message": "Limit to specific folders"
-    },
-    "limitToSpecificFoldersDesc": {
-        "message": "Automated extraction only applies to selected folders (virtual folders are excluded from selection)"
-    },
-    "select": {
-        "message": "Select"
-    },
-    
-    "deepScanDesc": {
-        "message": "May identify additional embedded items not implicitly discovered"
-    },
-
-    "rn2_0_1_Notice01": {
-        "message": "The Permanently Detach feature is not recommended for Gmail accounts. Please see the following Github discussion for details."
-    },
-    "rn2_0_1_New01": {
-        "message": "Added ability to limit automated extraction (Extract on receive) to specific Thunderbird folders"
-    },
-    "rn2_0_1_Fixed01": {
-        "message": "Improved settings layout"
-    }
 }

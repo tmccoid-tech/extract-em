@@ -781,5 +781,30 @@
 
     "rn1_9_9_Fixed01": {
         "message": "Filtrowanie typów plików nie powoduje już nieprawidłowego rozpoznawania pominiętych załączników jako osadzonych"
+    },
+
+    "existingInstanceMessage": {
+        "message": "Wykonanie anulowane; instancja rozszerzenia jest już uruchomiona."
+    },
+    "limitToSpecificFolders": {
+        "message": "Ogranicz do określonych folderów"
+    },
+    "limitToSpecificFoldersDesc": {
+        "message": "Automatyczne wyodrębnianie dotyczy tylko wybranych folderów (foldery wirtualne są wyłączone z wyboru)"
+    },
+    "select": {
+        "message": "Wybierać"
+    },
+    "deepScanDesc": {
+        "message": "Może identyfikować dodatkowe osadzone elementy, które nie zostały w sposób dorozumiany odkryte"
+    },
+    "rn2_0_1_Notice01": {
+        "message": "Funkcja Odłącz na stałe nie jest zalecana w przypadku kont Gmail. Aby uzyskać szczegółowe informacje, zobacz następującą dyskusję na Githubie."
+    },
+    "rn2_0_1_New01": {
+        "message": "Dodano możliwość ograniczenia automatycznego wyodrębniania (Wyodrębnianie po odebraniu) do określonych folderów Thunderbirda"
+    },
+    "rn2_0_1_Fixed01": {
+        "message": "Ulepszony układ ustawień"
     }
 }

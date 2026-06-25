@@ -781,5 +781,30 @@
 
     "rn1_9_9_Fixed01": {
         "message": "El filtrado de tipos de archivos ya no da como resultado que los archivos adjuntos omitidos se reconozcan incorrectamente como incrustados."
+    },
+
+    "existingInstanceMessage": {
+        "message": "Ejecución cancelada; Ya se está ejecutando una instancia de la extensión."
+    },
+    "limitToSpecificFolders": {
+        "message": "Limitar a carpetas específicas"
+    },
+    "limitToSpecificFoldersDesc": {
+        "message": "La extracción automatizada solo se aplica a las carpetas seleccionadas (las carpetas virtuales están excluidas de la selección)"
+    },
+    "select": {
+        "message": "Seleccionar"
+    },
+    "deepScanDesc": {
+        "message": "Puede identificar elementos incrustados adicionales que no se descubren implícitamente"
+    },
+    "rn2_0_1_Notice01": {
+        "message": "La función Desconectar permanentemente no se recomienda para cuentas de Gmail. Consulte la siguiente discusión sobre Github para obtener más detalles."
+    },
+    "rn2_0_1_New01": {
+        "message": "Se agregó la capacidad de limitar la extracción automatizada (Extraer al recibir) a carpetas específicas de Thunderbird."
+    },
+    "rn2_0_1_Fixed01": {
+        "message": "Diseño de configuración mejorado"
     }
 }

@@ -780,5 +780,30 @@
 
     "rn1_9_9_Fixed01": {
         "message": "Die Filterung nach Dateitypen führt nicht mehr dazu, dass ausgelassene Anhänge fälschlicherweise als Einbettungen erkannt werden"
+    },
+
+    "existingInstanceMessage": {
+        "message": "Hinrichtung abgebrochen; Eine Instanz der Erweiterung wird bereits ausgeführt."
+    },
+    "limitToSpecificFolders": {
+        "message": "Beschränken Sie sich auf bestimmte Ordner"
+    },
+    "limitToSpecificFoldersDesc": {
+        "message": "Die automatische Extraktion gilt nur für ausgewählte Ordner (virtuelle Ordner sind von der Auswahl ausgeschlossen)"
+    },
+    "select": {
+        "message": "Wählen"
+    },
+    "deepScanDesc": {
+        "message": "Kann zusätzliche eingebettete Elemente identifizieren, die nicht implizit erkannt wurden"
+    },
+    "rn2_0_1_Notice01": {
+        "message": "Die Funktion „Dauerhafte Trennung“ wird für Gmail-Konten nicht empfohlen. Weitere Informationen finden Sie in der folgenden Github-Diskussion."
+    },
+    "rn2_0_1_New01": {
+        "message": "Möglichkeit hinzugefügt, die automatische Extraktion (Extrahieren beim Empfang) auf bestimmte Thunderbird-Ordner zu beschränken"
+    },
+    "rn2_0_1_Fixed01": {
+        "message": "Verbessertes Einstellungslayout"
     }
 }

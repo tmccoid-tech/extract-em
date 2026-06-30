@@ -28,10 +28,6 @@ import { i18nText } from "/module/i18nText.js";
 
     runtime.onInstalled.addListener(async (details) =>
     {
-        messageDisplayAction.setTitle({ title: `${i18nText.extensionName} (${i18nText.thisMessage})`});
-        messageDisplayAction.setBadgeBackgroundColor({ color: "#94642a" });
-        messageDisplayAction.disable();
-
         await menus.removeAll();
         
         const { create } = menus;
@@ -254,6 +250,10 @@ import { i18nText } from "/module/i18nText.js";
                 case "resetBrowserAction":
                     resetBrowserAction();
                     break;
+
+                case "keepAlive":
+                    // A popup window remains open...
+                    break;
             }
         }
     };
@@ -421,6 +421,8 @@ import { i18nText } from "/module/i18nText.js";
                         url: "/ui/extractem.html",
                         allowScriptsToClose: true
                     })).id;
+
+                    console.log(`Extract 'Em! popupId: ${popupId}`);
                 }
             }
         }
@@ -533,6 +535,9 @@ import { i18nText } from "/module/i18nText.js";
     else {
         resetBrowserAction();
     }
+
+    messageDisplayAction.setTitle({ title: `${i18nText.extensionName} (${i18nText.thisMessage})`});
+    messageDisplayAction.setBadgeBackgroundColor({ color: "#94642a" });
 
 //    browser.ExtractionFilterAction.initialize(extensionName);
    

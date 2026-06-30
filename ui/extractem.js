@@ -32,6 +32,8 @@ NodeList.prototype.toSet = _toSet;
 
 
 document.addEventListener("DOMContentLoaded", async () => {
+    setInterval(() => messenger.runtime.sendMessage({ action: "keepAlive" }), 20000);
+
     const errorText = i18nText.error;
 
     const elem = (id) => document.getElementById(id);
@@ -419,7 +421,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 packagingCurrentSpan.innerText = info.includedCount.toString();
                 embedPackagingCurrentSpan.innerText = info.includedEmbedCount.toString();
                 
-                console.log(`Report save: staus=${info.status}; filesCreated=${info.filesCreated}; fileCount=${info.fileCount}`);
+                console.log(`Report save: status=${info.status}; filesCreated=${info.filesCreated}; fileCount=${info.fileCount}`);
 
                 packagingFileCurrentSpan.innerText = info.filesCreated.toString();
                 preparationAlterationsSpan.innerText = info.alterationCount.toString();

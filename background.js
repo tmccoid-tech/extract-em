@@ -539,5 +539,9 @@ import { i18nText } from "/module/i18nText.js";
     messageDisplayAction.setTitle({ title: `${i18nText.extensionName} (${i18nText.thisMessage})`});
     messageDisplayAction.setBadgeBackgroundColor({ color: "#94642a" });
 
+    for(const { id: tabId } of await messenger.tabs.query({type: "mail"})) {
+        onTabActivated({ tabId });
+    }
+
 //    browser.ExtractionFilterAction.initialize(extensionName);
    

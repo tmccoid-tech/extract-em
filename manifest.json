@@ -37,8 +37,7 @@
     "downloads.open",
     "messagesModifyPermanent",
     "messagesTags",
-    "messagesTagsList",
-    "management"
+    "messagesTagsList"
   ],
   "default_locale": "en",
   "action": {

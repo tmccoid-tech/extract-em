@@ -387,7 +387,7 @@
         "message": "Téma"
     },
     "timestamp": {
-        "message": "Időbélyeg (óóóóó)",
+        "message": "Időbélyeg",
         "description": "h = óra, m = perc, s = másodperc; időformátumot jelent (154230 = 15:42:30)"
     },
     "sample": {

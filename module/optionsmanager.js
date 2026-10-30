@@ -45,6 +45,9 @@ export class OptionsManager {
         filenamePattern: "",
         maxFilenameSubjectLength: 200,
         
+        enablePurgeMode: false,
+        purgeInlineAttachments: false,
+
         useEnhancedLogging: false,
 
         lastLoadedVersion: "",

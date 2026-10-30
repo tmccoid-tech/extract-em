@@ -1,4 +1,5 @@
 // Classes
+import { CapabilitiesManager } from "/module/capabilitiesmanager.js";
 import { OptionsManager } from "/module/optionsmanager.js";
 import { FilterManager } from "/module/filtering/filtermanager.js";
 import { AutomationManager } from "/module/automationmanager.js";
@@ -7,8 +8,7 @@ import { i18n } from "/module/i18n.mjs";
 import { i18nText } from "/module/i18nText.js";
 
 // Methods
-import { initializeEditor } from "/options/filename-pattern.js"
-
+import { initializeEditor } from "/options/filename-pattern.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -70,6 +70,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const filenamePatternEditButton = elem("filename-pattern-edit-button");
     const maxFilenameSubjectLengthTextbox = elem("max-filename-subject-length-textbox");
     const filenameEditorOverlay = elem("filename-editor-overlay");
+
+    const enablePurgeModeCheckbox = elem("enable-purge-mode-checkbox");
+    const purgeInlineAttachmentsCheckbox = elem("purge-inline-attachments-checkbox");
+
+    // Purge options
+    if(await CapabilitiesManager.get((CM) => CM.permitDetachment)) {
+        enablePurgeModeCheckbox.disabled = false;
+
+        for(let container of document.querySelectorAll(".purge-options-container")) {
+            container.classList.remove("hidden");
+        }
+    }
+
 
     const useEnhancedLoggingCheckbox = elem("use-enhanced-logging-checkbox");
    
@@ -148,6 +161,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         preserveFolderStructureCheckbox.disabled = !extensionOptions.packageAttachments;
         toggleFilenamePatternChildControls(extensionOptions.useFilenamePattern);
         maxFilenameSubjectLengthTextbox.disabled = !extensionOptions.useFilenamePattern;
+
+        listen(enablePurgeModeCheckbox, onEnablePurgeModeToggled);
+        listen(purgeInlineAttachmentsCheckbox, (e) => setOption(e, (c) => c.checked));
+
+        enablePurgeModeCheckbox.checked = extensionOptions.enablePurgeMode;
+        purgeInlineAttachmentsCheckbox.checked = extensionOptions.purgeInlineAttachments;
+
+        purgeInlineAttachmentsCheckbox.disabled = !extensionOptions.enablePurgeMode;
 
         listen(useEnhancedLoggingCheckbox, (e) => setOption(e, (c) => c.checked));
 
@@ -277,6 +298,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             filenamePatternEditButton.setAttribute("disabled", "disabled");
             maxFilenameSubjectLengthTextbox.setAttribute("disabled", "disabled");
         }
+    }
+
+    function onEnablePurgeModeToggled(event) {
+        const { checked } = event.srcElement;
+        
+        setOption(event, (c) => c.checked);
+
+        purgeInlineAttachmentsCheckbox.disabled = !checked;
     }
 
     function onOmitDuplicateOrEnableMessageTaggingOptionChanged(event) {

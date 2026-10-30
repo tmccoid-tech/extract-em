@@ -278,7 +278,7 @@
         "message": "Soggetto"
     },
     "timestamp": {
-        "message": "Timestamp (hhmmss)",
+        "message": "Timestamp",
         "description": "h = ora, m = minuto, s= secondo; implica un formato orario (154230 = 15:42:30)"
     },
     "sample": {

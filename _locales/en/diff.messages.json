@@ -1,2 +1,50 @@
 {
+    "purgeOnly": {
+        "message": "Purge only"
+    },
+    "purging": {
+        "message": "Purging"
+    },
+    "purged": {
+        "message": "purged"
+    },
+    "purgeComplete": {
+        "message": "Purge complete!"
+    },
+    "purgeErrorMessage": {
+        "message": "One or more attachments failed to purge."
+    },
+
+    "enablePurgeMode": {
+        "message": "Enable Purge Mode"
+    },
+    "enablePurgeModeDesc": {
+        "message": "Permits deleting attachments directly, without first saving them to file"
+    },
+    "purgeInlineAttachments": {
+        "message": "Purge inline attachments"
+    },
+    "purgeInlineAttachmentsDesc": {
+        "message": "Includes inline attachments in the purge operation"
+    },
+
+    "purge" : {
+        "message": "Purge"
+    },
+    "purgeModeEnabled": {
+        "message": "Purge Mode is enabled"
+    },
+    "purgeModeOptionsConfirmation": {
+        "message": "Select the action to perfrom on the attachments"
+    },
+
+    "rn2_0_2_Notice01": {
+        "message": "Announcing \"Purge Mode\": when this mode is enabled in the settings, a prompt is presented after attachment discovery offering options to delete (purge) attachments in addition to, or instead of saving them."
+    },
+    "rn2_0_2_New01": {
+        "message": " Added \"Purge Mode\" feature (see above)"
+    },
+    "rn2_0_2_New02": {
+        "message": "Added timestamp format selections to filename pattern feature"
+    }
 }

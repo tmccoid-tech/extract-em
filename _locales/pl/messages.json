@@ -278,7 +278,7 @@
         "message": "Temat"
     },
     "timestamp": {
-        "message": "Znacznik czasu (hhmmss)",
+        "message": "Znacznik czasu",
         "description": "h = godzina, m = minuta, s = sekunda; implikuje format czasu (154230 = 15:42:30)"
     },
     "sample": {

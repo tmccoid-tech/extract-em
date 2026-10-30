@@ -119,6 +119,22 @@
                         <dd data-i18n-textContent="subjectFieldCharacterLimitDescription"></dd>
                     </dl>
                 </dd>
+
+                <dt class="purge-options-container hidden">
+                    <hr/>
+                    <label><input type="checkbox" id="enable-purge-mode-checkbox" option-name="enablePurgeMode" disabled/> <span data-i18n-textContent="enablePurgeMode"></span></label>
+                </dt>
+                <dd class="purge-options-container hidden">
+                    <span data-i18n-textContent="enablePurgeModeDesc"></span>
+                    <dl>
+                        <dt>
+                            <label><input type="checkbox" id="purge-inline-attachments-checkbox" option-name="purgeInlineAttachments" disabled/> <span data-i18n-textContent="purgeInlineAttachments"></span></label>
+                        </dt>
+                        <dd>
+                            <span data-i18n-textContent="purgeInlineAttachmentsDesc"></span>
+                        </dd>
+                    </dl>
+                </dd>
             </dl>
 
         </div>
@@ -254,7 +270,18 @@
                 </div>
                 <span id="date-format-sample-label" class="sample-label"></span>                
 
+                <div>
+                    <label> __MSG_timestamp__: <select id="timestamp-format-select" class="placeholder-select" lastValue="">
+                        <option value="">__MSG_none__</option>
+                        <option value="{hhmmss}">hhmmss</option>
+                        <option value="{hh-mm-ss}">hh-mm-ss</option>
+                        <option value="{hhmm}">hhmm</option>
+                        <option value="{hh-mm}">hh-mm</option>
+                    </select></label>
+                </div>
+<!--
                 <div><label class="editor-checkbox-label"><input type="checkbox" id="timestamp-checkbox" value="{timestamp}"> __MSG_timestamp__</label></div>
+-->                                
                 <span id="timestamp-sample-label" class="sample-label"></span>
             </div>
 

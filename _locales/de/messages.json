@@ -278,7 +278,7 @@
         "message": "Thema"
     },
     "timestamp": {
-        "message": "Zeitstempel (hhmmss)",
+        "message": "Zeitstempel",
         "description": "h = Stunde, m = Minute, s= Sekunde; impliziert ein Zeitformat (154230 = 15:42:30 Uhr)"
     },
     "sample": {

@@ -278,7 +278,7 @@
         "message": "Sujet"
     },
     "timestamp": {
-        "message": "Horodatage (hhmmss)",
+        "message": "Horodatage",
         "description": "h = heure, m = minute, s = seconde; implique un format d'heure (154230 = 15:42:30 PM)"
     },
     "sample": {

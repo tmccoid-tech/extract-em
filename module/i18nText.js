@@ -22,6 +22,8 @@ export class i18nText {
         "newVersion",
         "noAttachmentsMessage",
         "noMessagesMessage",
+        "purgeComplete",
+        "purgeErrorMessage",
         "report",
         "resetMessageTagsConfirmationText",
         "saveCanceled",

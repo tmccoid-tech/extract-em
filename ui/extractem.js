@@ -137,6 +137,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const embedDuplicateSpan = elem("embed-duplicate-span");
     const duplicatesSizeLabel = elem("duplicates-size-label");
 
+    const purgeModeConfirmationRow = elem("purge-mode-confirmation-row");
+
     const packagingProgressRow = elem("packaging-progress-row");
     const packagingCurrentSpan = elem("packaging-current-span");
     const packagingTotalSpan = elem("packaging-total-span");
@@ -155,6 +157,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const savingSizeSpan = elem("saving-size-span");
     const embedSavingSizeSpan = elem("embed-saving-size-span");
     const savingProgress = elem("saving-progress");
+
+    const purgingProgressRow = elem("purging-progress-row");
+    const purgingProgress = elem("purging-progress");
+    const purgingCurrentSpan = elem("purging-current-span");
+    const purgingTotalSpan = elem("purging-total-span");
+    const purgingSizeSpan = elem("purging-size-span");
 
     const lastFileNameDiv = elem("last-filename-div");
 
@@ -234,9 +242,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     let tagIfEnabled = false;
 
     let packageAttachments = true;
-
-//    var capabilities = new Capabilities();
     
+    let standardModePurgeParameters;
+    
+        
     const updateProcessingFolder = async (folderPath) => {
         if(!useImmediateMode) {
             const row = folderRowSet.get(folderPath).row;
@@ -338,7 +347,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             
             if(hasAttachments) {
-                extractImmediate();
+                if(extensionOptions.enablePurgeMode) {
+                    for(let button of document.querySelectorAll(".purge-option-button")) {
+                        button.disabled = false;
+                    }
+
+                    purgeModeConfirmationRow.classList.remove("hidden");
+                }
+                else {
+                    extractImmediate();
+                }
             }
             else {
                 const alterationCount = attachmentManager.getAlterationCount();
@@ -481,8 +499,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    const updateSaveResult = async (info) =>
-    {
+    const updateSaveResult = async (info) => {
         const success = (info.status == "success");
 
         zipLogoImage.classList.remove("rotating");
@@ -520,65 +537,107 @@ document.addEventListener("DOMContentLoaded", async () => {
             viewReportButton.classList.remove("hidden");
         }
 
-        if(!(CapabilitiesManager.permitDetachment && success && info.attachmentCount > 0 && info.detachableCount > 0)) {
+        if(extensionOptions.enablePurgeMode || !(await CapabilitiesManager.get((CM) => CM.permitDetachment) && success && info.attachmentCount > 0 && info.detachableCount > 0)) {
             permanentlyDetachButton.classList.add("hidden");
         }
         else if(useSpecialImapDetachmentHandling) {
             imapDetachmentNoticePanel.classList.remove("hidden");
         }
 
-        saveResultDiv.classList.add("materialize");
+        if(success && info.purgeAfterSave) {
+            attachmentManager.purgeAttachmentsDirect(extensionOptions.purgeInlineAttachments);
+        }
+        else {
+            standardModePurgeParameters = null;
 
-        const saveResult = (success) ? "success" : "error";
+            saveResultDiv.classList.add("materialize");
 
-        saveResultBorderDiv.classList.add(saveResult);
+            const saveResult = (success) ? "success" : "error";
+
+            saveResultBorderDiv.classList.add(saveResult);
+        }
     };
 
     const updateDetachProgress = async (info) => {
+        if(info.isPurgeMode) {
+            if(info.status == "started") {
+                purgingProgress.setAttribute("max", info.totalItems);
+                purgingTotalSpan.innerText = info.totalItems.toString();
+            }
+            else {
+                purgingCurrentSpan.innerText = info.processedCount.toString();
+                purgingProgress.value = info.processedCount + info.errorCount;
+                purgingSizeSpan.innerText = abbreviateFileSize(info.cumulativeSize);
+            }
+        }
+        else {
+            if(info.status == "started") {
+                detachmentProgress.setAttribute("max", info.totalItems);
+                permanentDetachTotalSpan.innerText = info.totalItems.toString();
+            }
+            else {
+                permanentDetachCurrentSpan.innerText = info.processedCount.toString();
+                detachmentProgress.value = info.processedCount + info.errorCount;
+            }
+        }
+
         if(info.status == "started") {
-            detachmentProgress.setAttribute("max", info.totalItems);
-            permanentDetachTotalSpan.innerText = info.totalItems.toString();
             zipLogoImage.classList.add("rotating");
         }
         else {
-            permanentDetachCurrentSpan.innerText = info.processedCount.toString();
-            detachmentProgress.value = info.processedCount + info.errorCount;
             lastFileNameDiv.innerText = info.lastFileName;
         }
     };
 
     const updateDetachResult = async (info) => {
         zipLogoImage.classList.remove("rotating");
-        lastFileNameDiv.innerText = "...";
-        detachResultDiv.classList.add("materialize");
+        lastFileNameDiv.textContent = "...";
+
+        permanentlyDetachButton.classList.add("hidden");
+
+        document.querySelectorAll(".close-button.disablable").forEach((button) => { button.disabled = false; });
 
         let success = info.errorCount == 0 ;
+
+        const detachResult = (success) ? "success" : "error";
 
         if(info.status == "failed") {
             success = false;
             info.errorCount = "1+";
         }
+        
+        if(info.isPurgeMode) {
+            standardModePurgeParameters = null;
 
-        if(success) {
-            // detachResultLabel.innerHTML = i18nText.detachComplete;
-            detachResultLabel.textContent = i18nText.detachComplete;
+            saveResultDiv.classList.add("materialize");
+
+            if(success) {
+                saveResultLabel.textContent = i18nText.purgeComplete;
+            }
+            else {
+                saveResultLabel.textContent = i18nText.purgeErrorMessage;
+            }
+
+            saveResultBorderDiv.classList.add(detachResult);
         }
         else {
-            // detachResultLabel.innerHTML =i18nText.detachErrorMessage;
-            detachResultLabel.textContent = i18nText.detachErrorMessage;
-            detachErrorCountSpan.innerText = info.errorCount.toString();
+            detachResultDiv.classList.add("materialize");
+
+           if(success) {
+                detachResultLabel.textContent = i18nText.detachComplete;
+            }
+            else {
+                detachResultLabel.textContent = i18nText.detachErrorMessage;
+                detachErrorCountSpan.innerText = info.errorCount.toString();
+            }
+
+            detachResultBorderDiv.classList.add(detachResult);
         }
-
-        const detachResult = (success) ? "success" : "error";
-
-        detachResultBorderDiv.classList.add(detachResult);
     };
 
     function updateDiscoveryProgressMessage(attachmentCount = 0, attachmentMessageCount = 0 , messageCount = 0, cumulativeAttachmentSize = 0, embedCount = 0) {
-        // immediateDiscoveryProgressMessageDiv.innerHTML = messenger.i18n.getMessage("discoveryProgressMessage", [attachmentCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
         immediateDiscoveryProgressMessageDiv.textContent = messenger.i18n.getMessage("discoveryProgressMessage", [attachmentCount.toString(), attachmentMessageCount.toString(), messageCount.toString()]);
         immediateDiscoveredEmbedsSpan.innerText = embedCount.toString();
-        // discoverySizeLabel.innerHTML = abbreviateFileSize(cumulativeAttachmentSize);
         discoverySizeLabel.textContent = abbreviateFileSize(cumulativeAttachmentSize);
     }
 
@@ -607,6 +666,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         toggleSelectedAttachmentsCheckbox.addEventListener("change", onToggleSelectedAttachmentsCheckboxChanged);
 
+        for(let button of document.querySelectorAll(".purge-option-button")) {
+            button.addEventListener("click", onPurgeOptionSelected);
+        }
+
         updateDiscoveryProgressMessage();
 
         const params = await messenger.runtime.sendMessage({ action: "getParams" });
@@ -616,7 +679,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.title = `${i18nText.extensionName} (${account.name})`;
             // zipAccountNameLabel.innerHTML = account.name;
             zipAccountNameLabel.textContent = account.name;
-            useSpecialImapDetachmentHandling = CapabilitiesManager.useSpecialImapDetachmentHandling(account.type);
+            useSpecialImapDetachmentHandling = await CapabilitiesManager.get((CM) => CM.useSpecialImapDetachmentHandling(account.type));
         }
 
         selectedFolders = params?.selectedFolders;
@@ -657,11 +720,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 displayQuickmenu = true;
             }
 
-            if(CapabilitiesManager.permitDetachment) {
+            if(await CapabilitiesManager.get((CM) => CM.permitDetachment)) {
                 detachOperationRow.classList.remove("hidden");
             }
 
-            if(!CapabilitiesManager.useLegacyEmbedIdentification) {
+            if(!(await CapabilitiesManager.get((CM) => CM.useLegacyEmbedIdentification))) {
                 proceedDetachIncludeInlineButton.classList.remove("hidden");
                 detachIncludeInlineNoticePanel.classList.remove("hidden");
             }
@@ -709,7 +772,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 alwaysPromptForDownloadLocation: extensionOptions.alwaysPromptForDownloadLocation,
 
-                useAdvancedGetRaw: CapabilitiesManager.useAdvancedGetRaw,
+                useAdvancedGetRaw: await CapabilitiesManager.get((CM) => CM.useAdvancedGetRaw),
                 useEnhancedLogging: extensionOptions.useEnhancedLogging,
 
                 useFilenamePattern: extensionOptions.useFilenamePattern,
@@ -720,13 +783,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 omitDuplicates: extensionOptions.omitDuplicates,
                 tagMessagesEnabled: extensionOptions.enableMessageTagging,
 
-                useMailFolderId: CapabilitiesManager.useMailFolderId,
+                useMailFolderId: await CapabilitiesManager.get((CM) => CM.useMailFolderId),
                 useSpecialImapDetachmentHandling: useSpecialImapDetachmentHandling,
 
-                useLegacyEmbedIdentification: CapabilitiesManager.useLegacyEmbedIdentification
+                useLegacyEmbedIdentification: await CapabilitiesManager.get((CM) => CM.useLegacyEmbedIdentification)
             });
 
-            if(CapabilitiesManager.extensionVersion !== extensionOptions.lastLoadedVersion && !extractImmediate) {
+            if(await CapabilitiesManager.get((CM) => CM.extensionVersion) !== extensionOptions.lastLoadedVersion && !extractImmediate) {
                 displayReleaseNotes();
             }
 
@@ -826,8 +889,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 fileTypeFilter = FilterManager.assembleFileTypeFilter();
             }
         
-            packagingProgressRow.classList.toggle("hidden", !packageAttachments);
-            savingProgessRow.classList.toggle("hidden", packageAttachments);
+            if(!extensionOptions.enablePurgeMode) {
+                packagingProgressRow.classList.toggle("hidden", !packageAttachments);
+                savingProgessRow.classList.toggle("hidden", packageAttachments);
+            }
 
             const discoveryOptions = {
                 selectedFolderPaths: new Set(selectedFolderPaths),
@@ -1238,7 +1303,45 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    async function extract(list, getInfo, includeEmbeds) {
+    async function onPurgeOptionSelected(event) {
+        const action = event.srcElement.getAttribute("purge-option");
+
+        purgeModeConfirmationRow.classList.add("hidden");
+
+        switch(action) {
+            case "save-purge":
+                lastFileNameDiv.classList.add("hidden");
+
+                if(standardModePurgeParameters) {
+                    standardModePurgeParameters.saveAction(true);
+                }
+                else {
+                    extractImmediate(true);
+                }
+                break;
+            case "purge-only":
+                purgingProgressRow.classList.remove("hidden");
+                
+                if(standardModePurgeParameters) {
+                    attachmentManager.purgeAttachmentsDirect(extensionOptions.purgeInlineAttachments, standardModePurgeParameters.purgeList);
+                }
+                else {
+                    attachmentManager.purgeAttachmentsDirect(extensionOptions.purgeInlineAttachments);
+                }
+                break;
+            default:        // "save"
+                if(standardModePurgeParameters) {
+                    standardModePurgeParameters.saveAction(false);
+                }
+                else {
+                    extractImmediate();
+                }
+
+                break;
+        }
+    }
+
+    function displayZipPanel() {
         if(!useImmediateMode) {
             immediateDiscoveryMessageDiv.classList.add("hidden");
             prediscoveryMessageDiv.classList.remove("hidden");
@@ -1246,23 +1349,31 @@ document.addEventListener("DOMContentLoaded", async () => {
             zipLogoImage.classList.add("rotating");
         }
 
+        flexContainer.classList.add("modal");
+        zipOverlay.classList.remove("hidden");
+    }
+
+    async function extract(list, getInfo, includeEmbeds, purgeAfterSave = false) {
         fileTypeFilterAppliedSpan.classList.toggle("hidden", !extensionOptions.useFileTypeFilter);
 
         packagingProgressRow.classList.toggle("hidden", !packageAttachments);
         savingProgessRow.classList.toggle("hidden", packageAttachments);
+        purgingProgressRow.classList.toggle("hidden", !purgeAfterSave);
 
-        flexContainer.classList.add("modal");
-        zipOverlay.classList.remove("hidden");
+        displayZipPanel();
 
         attachmentManager.extract(list, getInfo, {
             packageAttachments: packageAttachments,
             preserveFolderStructure: extensionOptions.preserveFolderStructure,
             includeEmbeds: includeEmbeds,
-            tagMessages: extensionOptions.tagMessages || (extensionOptions.enableMessageTagging && (isMessageListContext || tagIfEnabled))
+            tagMessages: extensionOptions.tagMessages || (extensionOptions.enableMessageTagging && (isMessageListContext || tagIfEnabled)),
+            purgeAfterSave: purgeAfterSave
         });
     }
 
-    function extractBySet(list, includeEmbeds = extensionOptions.includeEmbeds) {
+    function extractBySet(list, options) {
+        const { includeEmbeds = extensionOptions.includeEmbeds, purgeAfterSave = false } = options;
+
         extract(list,
             (attachment) => {
                 return {
@@ -1270,14 +1381,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                     partName: attachment.partName
                 };
             },
-            includeEmbeds
+            includeEmbeds,
+            purgeAfterSave
         );
     }
 
-    function extractImmediate() {
-        extractBySet(attachmentManager.attachmentList);
+    function extractImmediate(purgeAfterSave = false) {
+        extractBySet(attachmentManager.attachmentList, { purgeAfterSave });
     }
 
+    // Invoked from Let Me Choose option
     function extractFolders() {
         const selectedFolderSet = document.querySelectorAll(".folder-checkbox:checked")
             .toSet((items) => items.filterSelect((checkbox) => true, (checkbox) => checkbox.value));
@@ -1293,9 +1406,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         updateZipDiscoveryInfo(selectionCounts.selectedAttachmentCount, selectionCounts.selectedAttachmentSize, selectionCounts.selectedEmbedCount);
 
-        extractBySet(filteredAttachmentList, includeEmbedsCheckbox.checked);
+        const execute = (p) => extractBySet(filteredAttachmentList, { includeEmbeds: includeEmbedsCheckbox.checked, purgeAfterSave: p });
+
+        if(extensionOptions.enablePurgeMode) {
+            standardModePurgeParameters = {
+                saveAction: execute,
+                purgeList: filteredAttachmentList
+            };
+            
+            for(let button of document.querySelectorAll(".purge-option-button")) {
+                button.disabled = false;
+            }
+
+            purgeModeConfirmationRow.classList.remove("hidden");
+
+            displayZipPanel();
+        }
+        else {
+            execute(false);
+
+            //extractBySet(filteredAttachmentList, { includeEmbeds: includeEmbedsCheckbox.checked });
+        }
     }
 
+    // Invoked from Let Me Choose/individual file selection option
     function extractSelected() {
         const selections = getSelectedAttachmentCheckboxes();
 
@@ -1336,13 +1470,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         saveResultDiv.classList.remove("hidden");
     }
 
+    // "Classic" detachment, via Permanently Detach button
     function proceedDetach(includeInline) {
 //        imapDetachmentNoticePanel.classList.add("hidden");
         detachNoticesDiv.classList.add("hidden");
         detachActionButtonsDiv.classList.add("hidden");
         detachOperationRow.classList.add("materialize");
 
-        attachmentManager.deleteAttachments(includeInline);
+        attachmentManager.purgeExtractedAttachments(includeInline);
     }
 
     function resetProgressElement(element) {
@@ -1630,7 +1765,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 detachShowFilesButton.value = "*";
             }
 
-            if(CapabilitiesManager.permitReportTab) {
+            if(await CapabilitiesManager.get((CM) => CM.permitReportTab)) {
                 messenger.tabs.create({ url: saveResult.reportFilename });
             }
         }
@@ -1682,6 +1817,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         embedSavingSizeSpan.innerText = abbreviateFileSize();
         savingProgessRow.classList.add("hidden");
 
+        //Purging
+
+        standardModePurgeParameters = null;
+
+        purgingProgressRow.classList.add("hidden");
+
+        purgingProgress.value = 0;
+        purgingProgress.setAttribute("max", 1);
+
+        purgingCurrentSpan.innerText = "0";
+        purgingTotalSpan.innerText = "0";
+
+        purgeModeConfirmationRow.classList.add("hidden");
+        
+        for(let button of document.querySelectorAll(".purge-option-button")) {
+            button.disabled = true;
+        }
+
         //Detaching
 
         detachOperationRow.classList.add("hidden");
@@ -1692,6 +1845,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         permanentDetachTotalSpan.innerText = "0";
         
         lastFileNameDiv.innerText = "...";
+        lastFileNameDiv.classList.remove("hidden");
 
         saveResultBorderDiv.classList.remove("success", "error");
         saveResultDiv.classList.remove("materialize", "hidden");
@@ -1737,14 +1891,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         closeReleaseNotesButton.classList.remove("hidden");
 
         closeReleaseNotesButton.addEventListener("click", closeReleaseNotes);
-        let releaseNotesPanel = document.querySelector(`.release-notes-panel[version^='${CapabilitiesManager.featureVersion}']`);
+
+        const featureVersion = await CapabilitiesManager.get((CM) => CM.featureVersion);
+
+        let releaseNotesPanel = document.querySelector(`.release-notes-panel[version^='${featureVersion}']`);
 
         if(!releaseNotesPanel) {
             releaseNotesPanel = document.querySelector(`.release-notes-panel[version^='error']`);
 
             if(releaseNotesPanel) {
                 const missingVersionSpan = releaseNotesPanel.querySelector(".missing-release-notes-version-span");
-                missingVersionSpan.innerText = CapabilitiesManager.featureVersion;
+                missingVersionSpan.innerText = featureVersion;
             }
         }
 
@@ -1753,7 +1910,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             releaseNotesOverlay.classList.remove("hidden");
         }
 
-        OptionsManager.setOption("lastLoadedVersion", CapabilitiesManager.extensionVersion);
+        OptionsManager.setOption("lastLoadedVersion", await CapabilitiesManager.get((CM) => CM.extensionVersion));
 
         messenger.runtime.sendMessage({ action: "resetBrowserAction" });
     }

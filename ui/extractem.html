@@ -117,6 +117,7 @@
                         <span>__MSG_tagMessages__</span>
                     </div>
                     <hr class="tag-messages-container hidden"/>
+                    
                     <button type="button" id="extract-all-button" class="summary-button" disabled="disabled">__MSG_extensionName__</button>
                     <button type="button" id="reset-summary-button" class="summary-button">__MSG_reset__</button>
                 </div>
@@ -174,6 +175,21 @@
                         <div>&nbsp;</div>
                     </td>
                 </tr>
+
+                <tr id="purge-mode-confirmation-row" class="hidden">
+                    <td colspan="3">
+                        <div id="purge-mode-confirmation-container">
+                            <div class="notice-panel">__MSG_purgeModeEnabled__</div>
+                            <div>__MSG_purgeModeOptionsConfirmation__:</div>
+                            <div>
+                                <button class="purge-option-button" purge-option="save" disabled>__MSG_save__</button>
+                                <button class="purge-option-button" purge-option="save-purge" disabled>__MSG_save__ + __MSG_purge__</button>
+                                <button class="purge-option-button" purge-option="purge-only" disabled>__MSG_purgeOnly__</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
                 <tr id="packaging-progress-row" class="hidden">
                     <td>
                         <div class="zip-operation-label">__MSG_packaging__</div>
@@ -189,6 +205,7 @@
                         <div><span id="embed-packaging-size-span">0 __MSG_bytesLabel__</span></div>
                     </td>
                 </tr>
+
                 <tr id="saving-progress-row" class="hidden">
                     <td>
                         <div class="zip-operation-label">__MSG_saving__</div>
@@ -203,6 +220,20 @@
                         <div><span id="embed-saving-size-span">0 __MSG_bytesLabel__</span></div>
                     </td>
                 </tr>
+                
+                <tr id="purging-progress-row" class="hidden">
+                    <td>
+                        <div class="zip-operation-label">__MSG_purging__</div>
+                        <progress id="purging-progress" value="0" max="1"></progress>
+                    </td>
+                    <td>
+                        <span id="purging-current-span">0</span> __MSG_of__ <span id="purging-total-span">0</span> __MSG_purged__
+                    </td>
+                    <td>
+                        <span id="purging-size-span">0 __MSG_bytesLabel__</span>
+                    </td>
+                </tr>
+
                 <tr id="exclusions-row">
                     <td>
                         <div>&nbsp;</div>
@@ -258,8 +289,7 @@
             <div id="save-result-div">
                 <div id="save-result-border-div"></div>
                 <div class="save-result-content-div">
-                    <div class="zip-operation-label">__MSG_result__</div>
-                    <span id="save-result-label"></span>
+                    <span class="zip-operation-label">__MSG_result__</span>: <span id="save-result-label"></span>
                 </div>
                 <div class="result-button-container save-result-content-div">
                     <button id="show-files-button" class="permanently-detach-container close-button hidden">__MSG_showFiles__</button>

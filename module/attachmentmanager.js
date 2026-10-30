@@ -896,9 +896,10 @@ export class AttachmentManager {
             preserveFolderStructure,
             includeEmbeds,
             packageAttachments,
-            tagMessages
+            tagMessages,
+            purgeAfterSave
         } = extractOptions;
-
+ 
         this.#tagMessages = this.#tagMessagesEnabled && tagMessages;
 
         const storageProgressInfo = {
@@ -924,7 +925,9 @@ export class AttachmentManager {
             filesCreated: 0,
 
             packageAttachments: packageAttachments,
-            lastFileName: ""
+            lastFileName: "",
+
+            purgeAfterSave
         };
 
         this.#reportStorageProgress(storageProgressInfo);
@@ -1235,6 +1238,7 @@ export class AttachmentManager {
                         saveResult.attachmentCount = packagingTracker.items.length;
                         saveResult.detachableCount = packagingTracker.detachableCount;
                         saveResult.downloadLocations = packagingTracker.downloadLocations;
+                        saveResult.purgeAfterSave = storageProgressInfo.purgeAfterSave;
 
                         this.#reportSaveResult(saveResult);
                     }
@@ -1264,7 +1268,8 @@ export class AttachmentManager {
                     message: i18nText.saveComplete,
                     attachmentCount: packagingTracker.items.length,
                     detachableCount: packagingTracker.detachableCount,
-                    downloadLocations: packagingTracker.downloadLocations                    
+                    downloadLocations: packagingTracker.downloadLocations,
+                    purgeAfterSave: storageProgressInfo.purgeAfterSave                    
                 });
             }
         }
@@ -1487,6 +1492,7 @@ export class AttachmentManager {
                 saveResult.attachmentCount = packagingTracker.items.length;
                 saveResult.detachableCount = packagingTracker.detachableCount;
                 saveResult.downloadLocations = packagingTracker.downloadLocations;
+                saveResult.purgeAfterSave = storageProgressInfo.purgeAfterSave;
             }
 
             saveResult.downloadLocations = packagingTracker.downloadLocations;
@@ -1504,7 +1510,8 @@ export class AttachmentManager {
                 message: i18nText.saveComplete,
                 attachmentCount: packagingTracker.items.length,
                 detachableCount: packagingTracker.detachableCount,
-                downloadLocations: packagingTracker.downloadLocations
+                downloadLocations: packagingTracker.downloadLocations,
+                purgeAfterSave: storageProgressInfo.purgeAfterSave
             });
         }
     }
@@ -1569,10 +1576,15 @@ export class AttachmentManager {
         }
     }
 
-    async deleteAttachments(includeInline) {
-        const packagedItems = this.#packagingTracker.items;
-        const duplicateItems = this.#duplicateFileTracker;
-        
+    purgeAttachmentsDirect (includeInline, sourceItems = this.attachmentList) {
+        this.purgeAttachments(true, includeInline, sourceItems.filter((item) => ! item.isEmbed));
+    }
+
+    purgeExtractedAttachments(includeInline) {
+        this.purgeAttachments(false, includeInline, this.#packagingTracker.items, this.#duplicateFileTracker);
+    }
+
+    async purgeAttachments(isPurgeMode, includeInline, sourceItems, duplicateItems = []) {
         const filter = (includeInline)
             ? (item) => !item.hasError
             : (item) => !(item.isInline || item.hasError)
@@ -1584,7 +1596,7 @@ export class AttachmentManager {
 
         let itemCount = 0;
 
-        for (let item of [...packagedItems.filter(filter), ...duplicateItems.filter(filter)]) {
+        for (let item of [...sourceItems.filter(filter), ...duplicateItems.filter(filter)]) {
             const { messageId } = item;           
             const message = messageList.get(messageId);
 
@@ -1603,9 +1615,11 @@ export class AttachmentManager {
 
         const info = {
             status: "started",
+            isPurgeMode: isPurgeMode,
             totalItems: itemCount,
             processedCount: 0,
             errorCount: 0,
+            cumulativeSize: 0,
             lastFileName: "..."
         };
 
@@ -1652,6 +1666,7 @@ export class AttachmentManager {
                 }
 
                 info.processedCount += partNames.length;
+                info.cumulativeSize += cumulativeSize;
             }
             catch(e) {
                 this.#detachmentErrorList.push({
@@ -1767,9 +1782,18 @@ export class AttachmentManager {
             }
         }
 
+        for(let timestampFormat of ["{hhmmss}", "{hh-mm-ss}", "{hhmm}", "{hh-mm}"]) {
+            if(result.indexOf(timestampFormat) > -1) {
+                result = result.replace(timestampFormat, this.#getFormattedDate(message.date, timestampFormat));
+                break;
+            }
+        }
+
+/*
         if(result.indexOf("{timestamp}") > -1) {
             result = result.replace("{timestamp}", this.#getFormattedTimestamp(message.date));
         }
+*/            
 
         if(result.indexOf("{subject}") > -1) {
             result = result.replace("{subject}", message.subject.substring(0, this.#maxFilenameSubjectLength));
@@ -1848,10 +1872,29 @@ export class AttachmentManager {
         }
     }
 
-    #getFormattedTimestamp(date) {
+    #getFormattedTimestamp(date, formatString) {
+        const timeParts = {
+            hh: date.getHours().toString().padStart(2, "0"),
+            mm: date.getHours().toString().padStart(2, "0"),
+            ss: date.getHours().toString().padStart(2, "0")
+        };
+
+        switch(formatString) {
+            case "{hh-mm-ss}":
+                return `${timeParts.hh}-${timeParts.mm}-${timeParts.ss}`;
+            case "{hhmm}":
+                return `${timeParts.hh}${timeParts.mm}`;
+            case "{hh-mm}":
+                return `${timeParts.hh}-${timeParts.mm}`;
+            default:
+                return `${timeParts.hh}${timeParts.mm}${timeParts.ss}`;
+        }
+
+/*
         const formatTimeElement = (v) => v.toString().padStart(2, "0");
 
         return `${formatTimeElement(date.getHours())}${formatTimeElement(date.getMinutes())}${formatTimeElement(date.getSeconds())}`;
+*/
     }
 
     #processFileName(originalFilename, contentType) {

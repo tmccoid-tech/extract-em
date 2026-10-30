@@ -580,7 +580,7 @@ td.summary-header {
 }
 
 #zip-account-name-label {
-    font-size: 18pt;
+    font-size: 14pt;
     font-weight: bold;
     font-style: italic;
 }
@@ -604,8 +604,8 @@ td.summary-header {
 
 #save-result-div, #detach-result-div {
     position: relative;
-    margin: 8px;
-    padding: 8px;
+    margin: 4px;
+    padding: 4px;
 }
 
 #save-result-border-div, #detach-result-border-div {
@@ -625,12 +625,12 @@ td.summary-header {
 }
 
 #save-result-border-div.success, #detach-result-border-div.success {
-    border: solid 6px green;
+    border: solid 4px green;
     animation: save-result 1.5s forwards;
 }
 
 #save-result-border-div.error, #detach-result-border-div.error {
-    border: solid 6px red;
+    border: solid 4px red;
     animation: save-result 1.5s forwards;
 }
 
@@ -650,7 +650,7 @@ td.summary-header {
 .close-button {
     height: 40px;
     min-width: 100px;
-    margin: 8px;
+    margin: 4px 8px;
 }
 
 .permanently-detach-container {
@@ -727,6 +727,7 @@ li.whats-fixed {
 .notice-panel {
     background-color: #ca444469;
     border: solid 1px red;
+    margin-bottom: 2px;
     padding: 4px;
 }
 .notice-panel.affirmative {
@@ -746,4 +747,22 @@ li.whats-fixed {
 
 .prompt-message-item {
     text-align: center;
+}
+
+/* Purge Mode */
+
+#purge-mode-confirmation-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border: solid 1px black;
+    padding: 8px;
+    margin: 4px;
+    border-radius: 10px;
+    row-gap: 6px;    
+}
+
+.purge-option-button {
+  min-width: 120px;
+  margin: 4px;
 }

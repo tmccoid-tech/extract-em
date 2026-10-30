@@ -128,14 +128,20 @@ import { i18nText } from "/module/i18nText.js";
 
         if(displayedMessages && displayedMessages.messages.length == 1) {
             const [ message ] = displayedMessages.messages;
-            const attachments = await messages.listAttachments(message.id);
 
-            for(let attachment of attachments) {
-                if(attachment.contentType != "text/x-moz-deleted") {
-                    if(!(attachment.headers && (!!attachment.headers["x-mozilla-altered"] || !!attachment.headers["x-mozilla-external-attachment-url"]))) {
-                        attachmentCount++;
+            try {
+                const attachments = await messages.listAttachments(message.id);
+
+                for(let attachment of attachments) {
+                    if(attachment.contentType != "text/x-moz-deleted") {
+                        if(!(attachment.headers && (!!attachment.headers["x-mozilla-altered"] || !!attachment.headers["x-mozilla-external-attachment-url"]))) {
+                            attachmentCount++;
+                        }
                     }
                 }
+            }
+            catch {
+                // Silently bail, nothing to see here folks...
             }
         }
 
@@ -189,8 +195,10 @@ import { i18nText } from "/module/i18nText.js";
 
             const extensionOptions = await OptionsManager.retrieve();
 
-            if(CapabilitiesManager.extensionVersion !== extensionOptions.lastLoadedVersion) {
-                OptionsManager.setOption("lastLoadedVersion", CapabilitiesManager.extensionVersion);
+            const currentExtensionVersion = await CapabilitiesManager.get((CM) => CM.extensionVersion);
+
+            if(currentExtensionVersion !== extensionOptions.lastLoadedVersion) {
+                OptionsManager.setOption("lastLoadedVersion", currentExtensionVersion);
             }
 
             resetBrowserAction();
@@ -373,7 +381,7 @@ import { i18nText } from "/module/i18nText.js";
                         break;
 
                     case selectionContexts.listed:
-                        if(CapabilitiesManager.useGetListedMessages) {
+                        if(await CapabilitiesManager.get((CM) => CM.useGetListedMessages)) {
                             tabId = tab.id;
                         }
                         else {
@@ -467,7 +475,7 @@ import { i18nText } from "/module/i18nText.js";
 
             alwaysPromptForDownloadLocation: extensionOptions.alwaysPromptForDownloadLocation,
 
-            useAdvancedGetRaw: CapabilitiesManager.useAdvancedGetRaw,
+            useAdvancedGetRaw: await CapabilitiesManager.get((CM) =>CM.useAdvancedGetRaw),
             useEnhancedLogging: extensionOptions.useEnhancedLogging,
 
             useFilenamePattern: extensionOptions.useFilenamePattern,
@@ -479,8 +487,8 @@ import { i18nText } from "/module/i18nText.js";
 
             tagMessagesEnabled: extensionOptions.enableMessageTagging,
 
-            useMailFolderId: CapabilitiesManager.useMailFolderId,
-            useLegacyEmbedIdentification: CapabilitiesManager.useLegacyEmbedIdentification
+            useMailFolderId: await CapabilitiesManager.get((CM) => CM.useMailFolderId),
+            useLegacyEmbedIdentification: await CapabilitiesManager.get((CM) => CM.useLegacyEmbedIdentification)
         });
 
         const selectedFolderPaths = (params.selectionContext == selectionContexts.folder && extensionOptions.includeSubfolders)

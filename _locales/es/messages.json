@@ -278,7 +278,7 @@
         "message": "Sujeto"
     },
     "timestamp": {
-        "message": "Marca de tiempo (hhmmss)",
+        "message": "Marca de tiempo",
         "description": "h = hora, m = minuto, s= segundo; implica un formato de hora (154230 = 3:42:30 p.m.)"
     },
     "sample": {

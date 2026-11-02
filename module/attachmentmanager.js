@@ -1784,7 +1784,7 @@ export class AttachmentManager {
 
         for(let timestampFormat of ["{hhmmss}", "{hh-mm-ss}", "{hhmm}", "{hh-mm}"]) {
             if(result.indexOf(timestampFormat) > -1) {
-                result = result.replace(timestampFormat, this.#getFormattedDate(message.date, timestampFormat));
+                result = result.replace(timestampFormat, this.#getFormattedTimestamp(message.date, timestampFormat));
                 break;
             }
         }
@@ -1875,8 +1875,8 @@ export class AttachmentManager {
     #getFormattedTimestamp(date, formatString) {
         const timeParts = {
             hh: date.getHours().toString().padStart(2, "0"),
-            mm: date.getHours().toString().padStart(2, "0"),
-            ss: date.getHours().toString().padStart(2, "0")
+            mm: date.getMinutes().toString().padStart(2, "0"),
+            ss: date.getSeconds().toString().padStart(2, "0")
         };
 
         switch(formatString) {

@@ -806,5 +806,51 @@
     },
     "rn2_0_1_Fixed01": {
         "message": "Disposition des paramètres améliorée"
+    },
+
+    "purgeOnly": {
+        "message": "Purgez uniquement"
+    },
+    "purging": {
+        "message": "Purification"
+    },
+    "purged": {
+        "message": "purgé"
+    },
+    "purgeComplete": {
+        "message": "Purge terminée !"
+    },
+    "purgeErrorMessage": {
+        "message": "Une ou plusieurs pièces jointes n'ont pas pu être supprimées."
+    },
+    "enablePurgeMode": {
+        "message": "Activer le mode Purge"
+    },
+    "enablePurgeModeDesc": {
+        "message": "Permet de supprimer les pièces jointes directement, sans les enregistrer d'abord dans un fichier"
+    },
+    "purgeInlineAttachments": {
+        "message": "Purger les pièces jointes intégrées"
+    },
+    "purgeInlineAttachmentsDesc": {
+        "message": "Inclut les pièces jointes en ligne dans l'opération de purge"
+    },
+    "purge": {
+        "message": "Purges"
+    },
+    "purgeModeEnabled": {
+        "message": "Le mode Purge est activé"
+    },
+    "purgeModeOptionsConfirmation": {
+        "message": "Sélectionnez l'action à effectuer sur les pièces jointes"
+    },
+    "rn2_0_2_Notice01": {
+        "message": "Annonce de « Mode Purge » : lorsque ce mode est activé dans les paramètres, une invite est présentée après la découverte de pièce jointe offrant des options pour supprimer (purger) les pièces jointes en plus de, ou au lieu de, les enregistrer. Veuillez consulter la discussion Github suivante pour plus de détails."
+    },
+    "rn2_0_2_New01": {
+        "message": "Ajout de la fonctionnalité « Mode Purge » (voir ci-dessus)"
+    },
+    "rn2_0_2_New02": {
+        "message": "Ajout des sélections de format de horodatage à la fonction de modèle de nom de fichier"
     }
 }

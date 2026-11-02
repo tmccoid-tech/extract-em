@@ -739,5 +739,51 @@
     },
     "rn2_0_1_Fixed01": {
         "message": "Továbbfejlesztett beállítások elrendezése"
+    },
+
+    "purgeOnly": {
+        "message": "Csak tisztítás"
+    },
+    "purging": {
+        "message": "Tisztítás"
+    },
+    "purged": {
+        "message": "kitisztított"
+    },
+    "purgeComplete": {
+        "message": "Tisztítás kész!"
+    },
+    "purgeErrorMessage": {
+        "message": "Egy vagy több melléklet törlése sikertelen volt."
+    },
+    "enablePurgeMode": {
+        "message": "Purge mód engedélyezése"
+    },
+    "enablePurgeModeDesc": {
+        "message": "Lehetővé teszi a mellékletek közvetlen törlését, anélkül hogy először fájlba mentenénk őket"
+    },
+    "purgeInlineAttachments": {
+        "message": "Sorozatban csatolt mellékletek törlése"
+    },
+    "purgeInlineAttachmentsDesc": {
+        "message": "A törlési műveletben szerepelnek beágyazott csatolmányok"
+    },
+    "purge": {
+        "message": "Tisztogatás"
+    },
+    "purgeModeEnabled": {
+        "message": "A tisztítási mód engedélyezve van"
+    },
+    "purgeModeOptionsConfirmation": {
+        "message": "Válassza ki a végrehajtandó műveletet a csatolmányokon"
+    },
+    "rn2_0_2_Notice01": {
+        "message": "Bejelentjük a „Purge Mode” (Tisztító mód) funkciót: amikor ez a mód engedélyezve van a beállításokban, egy felugró ablak jelenik meg a csatolmányok felfedezése után, amely lehetőségeket kínál a csatolmányok törlésére (tisztítására), a mentésük mellett vagy helyett. Részletekért kérjük, tekintse meg a következő Github beszélgetést."
+    },
+    "rn2_0_2_New01": {
+        "message": "Hozzáadva a \"Tisztító mód\" funkció (lásd fent)"
+    },
+    "rn2_0_2_New02": {
+        "message": "Hozzáadva az időbélyeg formátum kiválasztása a fájlnév mintázat funkcióhoz"
     }
 }

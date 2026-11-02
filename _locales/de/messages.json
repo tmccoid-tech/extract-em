@@ -805,5 +805,51 @@
     },
     "rn2_0_1_Fixed01": {
         "message": "Verbessertes Einstellungslayout"
+    },
+
+    "purgeOnly": {
+        "message": "Nur säubern"
+    },
+    "purging": {
+        "message": "Reinigung"
+    },
+    "purged": {
+        "message": "gesäubert"
+    },
+    "purgeComplete": {
+        "message": "Löschung abgeschlossen!"
+    },
+    "purgeErrorMessage": {
+        "message": "Ein oder mehrere Anhänge konnten nicht gelöscht werden."
+    },
+    "enablePurgeMode": {
+        "message": "Löschen-Modus aktivieren"
+    },
+    "enablePurgeModeDesc": {
+        "message": "Erlaubt das Löschen von Anhängen direkt, ohne sie zuerst in einer Datei zu speichern"
+    },
+    "purgeInlineAttachments": {
+        "message": "Inline-Anhänge löschen"
+    },
+    "purgeInlineAttachmentsDesc": {
+        "message": "Beinhaltet eingebettete Anhänge beim Löschvorgang"
+    },
+    "purge": {
+        "message": "Säuberung"
+    },
+    "purgeModeEnabled": {
+        "message": "Reinigungsmodus ist aktiviert"
+    },
+    "purgeModeOptionsConfirmation": {
+        "message": "Wählen Sie die Aktion aus, die auf die Anhänge ausgeführt werden soll"
+    },
+    "rn2_0_2_Notice01": {
+        "message": "Ankündigung von \"Purge-Modus\": Wenn dieser Modus in den Einstellungen aktiviert ist, wird nach der Entdeckung von Anhängen eine Aufforderung angezeigt, die Optionen zum Löschen (Bereinigen) von Anhängen zusätzlich zu oder anstelle des Speicherns anbietet. Weitere Details finden Sie in der folgenden Github-Diskussion."
+    },
+    "rn2_0_2_New01": {
+        "message": "Funktion „Purge Mode“ hinzugefügt (siehe oben)"
+    },
+    "rn2_0_2_New02": {
+        "message": "Zeitstempelformat-Auswahl zur Dateinamensmuster-Funktion hinzugefügt"
     }
 }

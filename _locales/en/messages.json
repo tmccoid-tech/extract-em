@@ -698,7 +698,7 @@
     },
 
     "rn2_0_2_Notice01": {
-        "message": "Announcing \"Purge Mode\": when this mode is enabled in the settings, a prompt is presented after attachment discovery offering options to delete (purge) attachments in addition to, or instead of saving them."
+        "message": "Announcing \"Purge Mode\": when this mode is enabled in the settings, a prompt is presented after attachment discovery offering options to delete (purge) attachments in addition to, or instead of saving them. Please see the following Github discussion for details."
     },
     "rn2_0_2_New01": {
         "message": " Added \"Purge Mode\" feature (see above)"

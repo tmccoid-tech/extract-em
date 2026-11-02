@@ -805,5 +805,51 @@
     },
     "rn2_0_1_Fixed01": {
         "message": "Layout delle impostazioni migliorato"
+    },
+    
+    "purgeOnly": {
+        "message": "Solo purga"
+    },
+    "purging": {
+        "message": "Purificazione"
+    },
+    "purged": {
+        "message": "epurato"
+    },
+    "purgeComplete": {
+        "message": "Pulizia completata!"
+    },
+    "purgeErrorMessage": {
+        "message": "Uno o più allegati non sono stati eliminati correttamente."
+    },
+    "enablePurgeMode": {
+        "message": "Abilita la modalità di pulizia"
+    },
+    "enablePurgeModeDesc": {
+        "message": "Consente di eliminare gli allegati direttamente, senza salvarli prima su file"
+    },
+    "purgeInlineAttachments": {
+        "message": "Elimina gli allegati inline"
+    },
+    "purgeInlineAttachmentsDesc": {
+        "message": "Include allegati inline nell'operazione di pulizia"
+    },
+    "purge": {
+        "message": "Purga"
+    },
+    "purgeModeEnabled": {
+        "message": "La modalità Purge è attivata"
+    },
+    "purgeModeOptionsConfirmation": {
+        "message": "Seleziona l'azione da eseguire sugli allegati"
+    },
+    "rn2_0_2_Notice01": {
+        "message": "Annunciando \"Modalità Purge\": quando questa modalità è abilitata nelle impostazioni, viene presentato un prompt dopo la rilevazione degli allegati che offre opzioni per eliminare (purge) gli allegati oltre a, o invece di salvarli. Si prega di consultare la seguente discussione su Github per i dettagli."
+    },
+    "rn2_0_2_New01": {
+        "message": "Aggiunta la funzione \"Modalità Purga\" (vedi sopra)"
+    },
+    "rn2_0_2_New02": {
+        "message": "Aggiunte selezioni del formato timestamp alla funzione del modello di nome file"
     }
 }

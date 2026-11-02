@@ -806,5 +806,51 @@
     },
     "rn2_0_1_Fixed01": {
         "message": "Diseño de configuración mejorado"
+    },
+
+    "purgeOnly": {
+        "message": "Solo purga"
+    },
+    "purging": {
+        "message": "Depuración"
+    },
+    "purged": {
+        "message": "depurado"
+    },
+    "purgeComplete": {
+        "message": "¡Limpieza completa!"
+    },
+    "purgeErrorMessage": {
+        "message": "Uno o más archivos adjuntos no se pudieron eliminar."
+    },
+    "enablePurgeMode": {
+        "message": "Activar modo de purga"
+    },
+    "enablePurgeModeDesc": {
+        "message": "Permite eliminar archivos adjuntos directamente, sin necesidad de guardarlos primero en un archivo"
+    },
+    "purgeInlineAttachments": {
+        "message": "Eliminar archivos adjuntos en línea"
+    },
+    "purgeInlineAttachmentsDesc": {
+        "message": "Incluye archivos adjuntos en línea en la operación de purga"
+    },
+    "purge": {
+        "message": "Purgar"
+    },
+    "purgeModeEnabled": {
+        "message": "El modo de purga está activado"
+    },
+    "purgeModeOptionsConfirmation": {
+        "message": "Seleccione la acción a realizar sobre los archivos adjuntos"
+    },
+    "rn2_0_2_Notice01": {
+        "message": "Anunciando \"Modo Purga\": cuando este modo está habilitado en la configuración, se presenta un aviso después del descubrimiento de archivos adjuntos ofreciendo opciones para eliminar (purgar) archivos adjuntos además de, o en lugar de, guardarlos. Por favor, vea la siguiente discusión en Github para más detalles."
+    },
+    "rn2_0_2_New01": {
+        "message": "Se agregó la función \"Modo Purga\" (ver arriba)"
+    },
+    "rn2_0_2_New02": {
+        "message": "Se agregaron opciones de formato de marca de tiempo a la función de patrón de nombre de archivo"
     }
 }

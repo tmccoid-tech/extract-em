@@ -806,5 +806,51 @@
     },
     "rn2_0_1_Fixed01": {
         "message": "Ulepszony układ ustawień"
+    },
+
+    "purgeOnly": {
+        "message": "Tylko czyszczenie"
+    },
+    "purging": {
+        "message": "Oczyszczanie"
+    },
+    "purged": {
+        "message": "oczyszczony"
+    },
+    "purgeComplete": {
+        "message": "Czyszczenie zakończone!"
+    },
+    "purgeErrorMessage": {
+        "message": "Jedno lub więcej załączników nie udało się usunąć."
+    },
+    "enablePurgeMode": {
+        "message": "Włącz tryb oczyszczania"
+    },
+    "enablePurgeModeDesc": {
+        "message": "Pozwala na usuwanie załączników bezpośrednio, bez uprzedniego zapisywania ich do pliku"
+    },
+    "purgeInlineAttachments": {
+        "message": "Oczyść załączniki w linii"
+    },
+    "purgeInlineAttachmentsDesc": {
+        "message": "Uwzględnia załączniki osadzone w operacji czyszczenia"
+    },
+    "purge": {
+        "message": "Oczyszczenie"
+    },
+    "purgeModeEnabled": {
+        "message": "Tryb oczyszczania jest włączony"
+    },
+    "purgeModeOptionsConfirmation": {
+        "message": "Wybierz działanie do wykonania na załącznikach"
+    },
+    "rn2_0_2_Notice01": {
+        "message": "Ogłaszamy „Tryb Oczyszczania”: po włączeniu tego trybu w ustawieniach, po wykryciu załącznika pojawia się monit oferujący opcje usunięcia (oczyszczenia) załączników, oprócz ich zapisywania lub zamiast tego. Szczegóły w dyskusji na GitHubie."
+    },
+    "rn2_0_2_New01": {
+        "message": "Dodano funkcję „Tryb oczyszczania” (patrz wyżej)"
+    },
+    "rn2_0_2_New02": {
+        "message": "Dodano wybór formatu znacznika czasu do funkcji wzorca nazwy pliku"
     }
 }

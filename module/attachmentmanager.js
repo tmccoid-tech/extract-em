@@ -1478,7 +1478,12 @@ export class AttachmentManager {
             storageProgressInfo.lastFileName = "...";
             this.#reportStorageProgress(storageProgressInfo);
             
-            const saveResult = await this.#saveZipFile(zipEm, storageProgressInfo, "embeds");
+            let saveResult = await this.#saveZipFile(zipEm, storageProgressInfo, "embeds");
+
+            // TODO: Handle properly; insufficient disk space one known culprit
+            if(!saveResult) {
+                saveResult = { success: false , status: "error", errorMessage: i18nText.saveFailed };
+            }
 
             if(saveResult.success) {
                 storageProgressInfo.filesCreated++;

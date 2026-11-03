@@ -1217,7 +1217,12 @@ export class AttachmentManager {
                 storageProgressInfo.status = "downloading";
                 this.#reportStorageProgress(storageProgressInfo);
 
-                const saveResult = await this.#saveZipFile(zipEm, storageProgressInfo);
+                let saveResult = await this.#saveZipFile(zipEm, storageProgressInfo);
+
+                // TODO: Handle properly; insufficient disk space one known culprit
+                if(!saveResult) {
+                    saveResult = { success: false , status: "error", errorMessage: i18nText.saveFailed };
+                }
 
                 const isFinal = (packagingTracker.currentPackageIndex == packagingTracker.extractionSubsets.length);
 

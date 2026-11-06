@@ -37,7 +37,7 @@ export class CapabilitiesManager {
                     this.useAdvancedGetRaw = this.#isSufficientVersion(appVersionNumbers, [115, 3, 2]);                                                   //  >= TB 115.3.2
                     this.useMailFolderId = this.#isSufficientVersion(appVersionNumbers, [121]);                                                           //  >= TB 121
 
-                    this.permitReportTab = !this.#isSufficientVersion(appVersionNumbers, [134]);                                                          // < TB 134
+//                    this.permitReportTab = !this.#isSufficientVersion(appVersionNumbers, [134]);                                                          // < TB 134
 
                     this.useLegacyEmbedIdentification = !this.#isSufficientVersion(appVersionNumbers, [140]);                                             // < TB 140
                     

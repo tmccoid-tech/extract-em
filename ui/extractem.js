@@ -1764,10 +1764,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 showFilesButton.value = "*";
                 detachShowFilesButton.value = "*";
             }
-
+/*
             if(await CapabilitiesManager.get((CM) => CM.permitReportTab)) {
                 messenger.tabs.create({ url: saveResult.reportFilename });
             }
+*/
         }
     }
 

@@ -31,10 +31,8 @@
     "messagesUpdate",
     "accountsRead",
     "menus",
-    "menus.overrideContext",
     "storage",
     "downloads",
-    "downloads.open",
     "messagesModifyPermanent",
     "messagesTags",
     "messagesTagsList"
